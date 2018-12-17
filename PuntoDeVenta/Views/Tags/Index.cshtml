@@ -1,0 +1,246 @@
+﻿@model PuntoDeVenta.Models.Tags
+
+@{
+    ViewBag.Title = "Tags";
+}
+
+<h2 class="titulo1">Tags</h2>
+<!-- Button trigger modal -->
+<button type="button" class="btn botonstyle2" data-toggle="modal" data-target="#exampleModalCenter">
+    Recargar saldo tag
+</button>
+<br />
+<br />
+
+@if (ViewData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @ViewData["Success"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+@if (ViewData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @ViewData["Error"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Recargar tag</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("RecargarSaldo", "Tags", FormMethod.Post, htmlAttributes: new { @id = "Form0" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.NumTag, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.NumTag, new { htmlAttributes = new { @class = "form-control formulario1", @type = "number" } })
+                        @Html.ValidationMessageFor(model => model.NumTag, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.SaldoARecargar, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.SaldoARecargar, new { htmlAttributes = new { @class = "form-control formulario1", @type = "number" } })
+                        @Html.ValidationMessageFor(model => model.SaldoARecargar, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ConfSaldoARecargar, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.ConfSaldoARecargar, new { htmlAttributes = new { @class = "form-control formulario1", @type = "number" } })
+                        @Html.ValidationMessageFor(model => model.ConfSaldoARecargar, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn botonstyle3" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn botonstyle2" id="saldoTag">Recargar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle1">¡Advertencia!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    Número de tag: <label id="numtagVal"></label>
+                </div>
+                <div class="form-group">
+                    Saldo a recargar: <label id="saldoarecargarVal"></label>
+                </div>
+                <div class="form-group">
+                    ¿Seguro de recargar?
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn botonstyle3" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn botonstyle2" id="submitForm">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="example">
+    <div id="grid"></div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            $(function () {
+                var serviceURL = "@Url.Action("GetDataTags", "Tags")";
+
+                $.ajax({
+                    url: serviceURL,
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        GridDataBind(data);
+                        console.log(data);
+                    },
+                    error: function (ex) {
+                        alert(ex);
+                    }
+                });
+            });
+
+            function GridDataBind(gridData) {
+                $("#grid").kendoGrid({
+                    dataSource: {
+                        data: gridData,
+                        text: "es-ES",
+                        sort: { field: "DateTTag", dir: "desc" },
+                        schema: {
+                            model: {
+                                fields: {
+                                    Id: { type: "number" },
+                                    NumTag: { type: "number" },
+                                    SaldoTag: { type: "number" },
+                                    StatusTag: { type: "boolean" },
+                                    DateTTag: { type: "date" },
+                                }
+                            }
+                        },
+                        pageSize: 20,
+                        serverPaging: true,
+                    },
+                    sortable: true,
+                    height: 550,
+                    filterable: {
+                        mode: "row"
+                    },
+                    pageable: true,
+                    columns:
+                        [{
+                            field: "NumTag",
+                            title: "Número de tag",
+                            width:250,
+                            filterable: {
+                                cell: {
+                                    showOperators: false
+                                }
+                            }
+                        },
+                        {
+                            field: "SaldoTag",
+                            title: "Saldo de tag",
+                            width: 250,
+                            filterable: {
+                                cell: {
+                                    showOperators: false
+                                }
+                            }
+                        },
+                        {
+                            field: "StatusTag",
+                            title: "Estatus",
+                            width: 100,
+                            template: "#= StatusTag ? 'Sí' : 'No' #",
+                        },
+                        {
+                            field: "DateTTag",
+                            title: "Fecha registro",
+                            width:200,
+                            template: "#= kendo.toString(kendo.parseDate(DateTTag, 'yyyy-MM-dd'), 'MM/dd/yyyy') #",
+                            filterable: {
+                                ui: "datetimepicker" // use Kendo UI DateTimePicker
+                            },
+                            format: "{0:M/d/yy}",
+                        },
+                        @*{
+                            command: [{
+                                name: "Detalles",
+                                click: function (e) {
+                                    // prevent page scroll position change
+                                    e.preventDefault();
+                                    // e.target is the DOM element representing the button
+                                    var tr = $(e.target).closest("tr"); // get the current table row (tr)
+                                    // get the data bound to the current table row
+                                    var data = this.dataItem(tr);
+                                    window.location.href = '@(Url.Action("Details", "Tags").ToString())?id=' + data.Id;
+                                },
+                            }]
+                        },*@
+                        {
+                            command: [{
+                                name: "Eliminar",
+                                click: function (e) {
+                                    // prevent page scroll position change
+                                    e.preventDefault();
+                                    // e.target is the DOM element representing the button
+                                    var tr = $(e.target).closest("tr"); // get the current table row (tr)
+                                    // get the data bound to the current table row
+                                    var data = this.dataItem(tr);
+                                    window.location.href = '@(Url.Action("Delete", "Tags").ToString())?id=' + data.Id;
+                                },
+                            }], width: 100
+                        }],
+                });
+            }
+
+            $('#saldoTag').on('click', function (e) {
+                e.preventDefault();
+                var form = $("#Form0").validate();
+
+                if (form.valid() && $("#NumTag").val() != "" && $("#SaldoARecargar").val() != "" && $("#ConfSaldoARecargar").val() != "") {
+                    $('#exampleModalCenter').modal('hide');
+
+                    $("#numtagVal").text($("#NumTag").val());
+                    $("#saldoarecargarVal").text($("#SaldoARecargar").val());
+
+                    $('#exampleModalCenter1').modal('show');
+                }
+            });
+
+            $('#submitForm').on('click', function (e) {
+                e.preventDefault();
+                $("#Form0").submit();
+            });
+        });
+
+    </script>
+}

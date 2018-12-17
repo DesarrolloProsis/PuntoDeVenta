@@ -8,7 +8,7 @@ namespace PuntoDeVenta.Models
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext() : base ("name=DefaultConnection")
+        public AppDbContext() : base("name=DefaultConnection")
         {
             Database.SetInitializer<AppDbContext>(new CreateDatabaseIfNotExists<AppDbContext>());
         }
@@ -21,6 +21,7 @@ namespace PuntoDeVenta.Models
         public DbSet<OperacionesCajero> OperacionesCajeros { get; set; }
         public DbSet<MontosRecargables> MontosRecargables { get; set; }
         public DbSet<Parametrizable> Parametrizables { get; set; }
+        public DbSet<Historico> Historicos { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

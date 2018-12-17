@@ -1,0 +1,363 @@
+﻿@using Microsoft.AspNet.Identity;
+@model PuntoDeVenta.Models.CuentasTelepeaje
+
+@{
+    ViewBag.Title = "Clientes";
+}
+
+<h2 class="titulo1">Clientes</h2>
+<p>
+    @Html.ActionLink("Crear nuevo cliente", "Create", routeValues: null, htmlAttributes: new { @class = "btn botonstyle2" })
+</p>
+
+@if (ViewData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @ViewData["Success"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+@if (ViewData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @ViewData["Error"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+<div id="example">
+    <div id="grid"></div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Crear cuenta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("Create", "CuentasTelepeajes", FormMethod.Post, htmlAttributes: new { @id = "Form0" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        <label for="numcliente">Número de cliente</label>
+                        <input id="numcliente" class="form-control formulario1" type="text" placeholder="Readonly input here…" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="nomcliente">Nombre</label>
+                        <input id="nomcliente" class="form-control formulario1" type="text" placeholder="Readonly input here…" readonly>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.TypeCuenta, htmlAttributes: new { @for = "TypeCuenta" })
+                        @Html.DropDownListFor(model => model.TypeCuenta, (SelectList)ViewBag.TipoCuentas, htmlAttributes: new { @class = "form-control formulario2" })
+                        @Html.ValidationMessageFor(model => model.TypeCuenta, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div id="fromTo">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.SaldoCuenta, htmlAttributes: new { @class = "control-label" })
+                            @Html.EditorFor(model => model.SaldoCuenta, new { htmlAttributes = new { @class = "form-control formulario1", @type = "number" } })
+                            @Html.ValidationMessageFor(model => model.SaldoCuenta, "", new { @class = "text-danger" })
+
+                        </div>
+                    </div>
+                    @Html.Hidden("ClienteId")
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn botonstyle3" data-dismiss="modal">Cancelar</button>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn botonstyle2" id="crear">Crear</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!--------------------------------------------------------------------------------------------->
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle1">¡Advertencia!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        Número de cliente: <label id="numclienteVal"></label>
+                    </div>
+                    <div class="form-group">
+                        Nombre: <label id="nomclienteVal"></label>
+                    </div>
+                    <div id="saldovalID">
+                        <div class="form-group">
+                            Saldo inicial: <label id="saldoVal"></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        ¿Seguro de crear la cuenta?
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn botonstyle3" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn botonstyle2" id="submitForm">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+
+            $(function () {
+
+                var serviceURL = "@Url.Action("GetDataClientes", "Clientes")";
+
+                $.ajax({
+                    url: serviceURL,
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        GridDataBind(data);
+                        console.log(data);
+                    },
+                    error: function (ex) {
+                        alert(ex);
+                    }
+                });
+            });
+
+            function GridDataBind(gridData) {
+                $("#grid").kendoGrid({
+                    dataSource: {
+                        data: gridData,
+                        text: "es-ES",
+                        sort: { field: "DateTCliente", dir: "desc" },
+                        schema: {
+                            model: {
+                                fields: {
+                                    Id: { type: "number" },
+                                    NumCliente: { type: "number" },
+                                    NombreCompleto: { type: "string" },
+                                    EmailCliente: { type: "string" },
+                                    AddressCliente: { type: "string" },
+                                    PhoneCliente: { type: "number" },
+                                    StatusCliente: { type: "boolean" },
+                                    DateTCliente: { type: "date" }
+                                }
+                            }
+                        },
+                        pageSize: 20,
+                        serverPaging: true,
+                    },
+                    sortable: true,
+                    height: 550,
+                    filterable: {
+                        mode: "row"
+                    },
+                    pageable: true,
+                    columns:
+                        [{
+                            field: "NumCliente",
+                            title: "Número de cliente",
+                            width: 200,
+                            filterable: {
+                                cell: {
+                                    showOperators: false
+                                }
+                            }
+                        },
+                        {
+                            field: "NombreCompleto",
+                            title: "Nombre completo",
+                            width: 300,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    suggestionOperator: "contains"
+                                }
+                            }
+                        },
+                        {
+                            field: "EmailCliente",
+                            title: "E-mail",
+                            width:300,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                     suggestionOperator: "contains"
+                                }
+                            }
+                        },
+                        {
+                            field: "AddressCliente",
+                            title: "Dirección",
+                            width: 300,
+                            filterable: {
+                                cell: {
+                                    operator: "contains",
+                                    suggestionOperator: "contains"
+                                }
+                            }
+                        },
+                        {
+                            field: "PhoneCliente",
+                            title: "Telefóno",
+                            width: 150,
+                            filterable: {
+                                cell: {
+                                    showOperators: false
+                                }
+                            }
+                        },
+                        {
+                            field: "StatusCliente",
+                            title: "Estatus",
+                            width: 100,
+                            template: "#= StatusCliente ? 'Sí' : 'No' #"
+                        },
+                        {
+                            field: "DateTCliente",
+                            title: "Fecha de registro",
+                            width: 250,
+                            template: "#= kendo.toString(kendo.parseDate(DateTCliente, 'yyyy-MM-dd'), 'MM/dd/yyyy') #",
+                            filterable: {
+                                ui: "datetimepicker" // use Kendo UI DateTimePicker
+                            },
+                            format: "{0:M/d/yy}",
+                        },
+                        {
+                            command: {
+                                text: "Nueva cuenta",
+                                className: "ncuenta",
+                                
+                            },
+                            width: 100
+                        },
+                        {
+                            command: [{
+                                name: "Editar",
+                                click: function (e) {
+                                    // prevent page scroll position change
+                                    e.preventDefault();
+                                    // e.target is the DOM element representing the button
+                                    var tr = $(e.target).closest("tr"); // get the current table row (tr)
+                                    // get the data bound to the current table row
+                                    var data = this.dataItem(tr);
+                                    window.location.href = '@(Url.Action("Edit", "Clientes").ToString())?id=' + data.Id;
+                                },
+                            }], width: 100
+                        },
+                        {
+                            command: [{
+                                name: "Eliminar",
+                                click: function (e) {
+                                    // prevent page scroll position change
+                                    e.preventDefault();
+                                    // e.target is the DOM element representing the button
+                                    var tr = $(e.target).closest("tr"); // get the current table row (tr)
+                                    // get the data bound to the current table row
+                                    var data = this.dataItem(tr);
+                                    window.location.href = '@(Url.Action("Delete", "Clientes").ToString())?id=' + data.Id;
+                                },   
+                            }], width:100
+                        },
+                        {
+                            command: [{
+                                name: "Ver cuentas",
+                                click: function (e) {
+                                    // prevent page scroll position change
+                                    e.preventDefault();
+                                    // e.target is the DOM element representing the button
+                                    var tr = $(e.target).closest("tr"); // get the current table row (tr)
+                                    // get the data bound to the current table row
+                                    var data = this.dataItem(tr);
+                                    window.location.href = '@(Url.Action("ListCuentas", "CuentasTelepeajes").ToString())?id=' + data.Id;
+                                },
+                            }], width:120
+                        }],
+                });
+
+                $(".ncuenta").on("click", function (e) {
+                    var grid = $("#grid").data("kendoGrid");
+                    var row = $(e.target).closest("tr");
+                    var dataItem = grid.dataItem(row);
+
+                    $('#exampleModalCenter').modal('show');
+
+                    $("#numcliente").val(dataItem.NumCliente);
+                    $("#nomcliente").val(dataItem.NombreCompleto);
+                    $("#ClienteId").val(dataItem.Id);
+
+                    console.log(dataItem);
+
+                    e.preventDefault();
+                });
+            }
+
+            $('#TypeCuenta').change(function (e) {
+                var ddlValue = $(this).val();
+
+                if (ddlValue == "Colectiva") {
+                    $('#fromTo').show();
+                }
+                else if (ddlValue == "Individual") {
+                    // show fromTo div, hide time div
+                    $('#fromTo').hide();
+                }
+
+                e.preventDefault();
+            });
+
+            $('#crear').on('click', function (e) {
+                var form = $("#Form0").validate();
+
+                if (form.valid()) {
+                    $('#exampleModalCenter').modal('hide');
+
+                    var val = $("#TypeCuenta option:selected").val();
+
+                    if (val == "Individual") {
+                        $("#saldovalID").hide();
+                    } else if (val == "Colectiva") {
+                        $("#saldoVal").text($("#SaldoCuenta").val());
+                        $("#saldovalID").show();
+                    }
+
+                    $("#numclienteVal").text($("#numcliente").val());
+                    $("#nomclienteVal").text($("#nomcliente").val());
+
+
+                    $('#exampleModalCenter1').modal('show');
+                }
+                e.preventDefault();
+            });
+
+            $('#submitForm').on('click', function (e) {
+                $("#Form0").submit();
+                e.preventDefault();
+            });
+
+        });
+    </script>
+
+}

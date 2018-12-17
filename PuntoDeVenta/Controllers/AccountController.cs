@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
@@ -22,7 +23,7 @@ namespace PuntoDeVenta.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -34,9 +35,9 @@ namespace PuntoDeVenta.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -79,7 +80,8 @@ namespace PuntoDeVenta.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    //return RedirectToLocal(returnUrl);
+                    return RedirectToAction("Index", "home", new { verfiAction = "NewLogin" });
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -120,7 +122,7 @@ namespace PuntoDeVenta.Controllers
             // Si un usuario introduce códigos incorrectos durante un intervalo especificado de tiempo, la cuenta del usuario 
             // se bloqueará durante un período de tiempo especificado. 
             // Puede configurar el bloqueo de la cuenta en IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -136,6 +138,7 @@ namespace PuntoDeVenta.Controllers
 
         //
         // GET: /Account/Register
+        //[Authorize(Roles = "SuperUsuario")]
         [AllowAnonymous]
         public ActionResult Register()
         {
@@ -155,8 +158,8 @@ namespace PuntoDeVenta.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
                     // Para obtener más información sobre cómo habilitar la confirmación de cuentas y el restablecimiento de contraseña, visite https://go.microsoft.com/fwlink/?LinkID=320771
                     // Enviar correo electrónico con este vínculo
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
@@ -386,14 +389,43 @@ namespace PuntoDeVenta.Controllers
         }
 
         //
-        // POST: /Account/LogOff
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        // GET: /Account/LogOff
+        [HttpGet]
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
         }
+
+        ////
+        //// POST: /Account/LogOff
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult LogOff(CortesCajero model)
+        //{
+        //    if (model.Id != 0)
+        //    {
+        //        using (var db = new AppDbContext())
+        //        {
+        //            model.DateTCierre = DateTime.Now;
+        //            if (ModelState.IsValid)
+        //            {
+        //                db.Entry(model).State = EntityState.Modified;
+        //                db.SaveChanges();
+
+        //                AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+        //                return RedirectToAction("Index", "Home");
+        //            }
+        //        }
+        //    }
+
+        //    AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+
+        //    return RedirectToAction("Index", "Home");
+
+        //    //AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+        //    //return RedirectToAction("Index", "Home", new { verfiAction = "LogOut" });
+        //}
 
         //
         // GET: /Account/ExternalLoginFailure

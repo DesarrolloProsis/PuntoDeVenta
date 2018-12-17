@@ -14,35 +14,43 @@ namespace PuntoDeVenta.Models
         [Key]
         public long Id { get; set; }
 
+        [Display(Name = "Número de cliente")]
         [StringLength(30)]
         [Required]
         public string NumCliente { get; set; }
 
+        [Display(Name = "Nombre del cliente")]
         [StringLength(150)]
         [Required]
         public string Nombre { get; set; }
 
+        [Display(Name = "Apellidos del cliente")]
         [StringLength(150)]
         [Required]
         public string Apellidos { get; set; }
 
+        [Display(Name = "Correo electrónico del cliente")]
         [StringLength(150)]
         [DataType(DataType.EmailAddress)]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "Invalid Email Address.")]
         [Required]
         public string EmailCliente { get; set; }
 
+        [Display(Name = "Dirección del cliente")]
         [StringLength(300)]
         public string AddressCliente { get; set; }
 
+        [Display(Name = "Número telefónico del cliente")]
         [StringLength(50)]
-        [Phone]
+        [Phone(ErrorMessage = "Invalid Phone Number.")]
         [Required]
         public string PhoneCliente { get; set; }
 
+        [Display(Name = "Estatus del cliente")]
         [Required]
         public bool StatusCliente { get; set; }
 
+        [Display(Name = "Fecha registro del cliente")]
         [Required]
         public DateTime DateTCliente { get; set; }
 
@@ -52,6 +60,10 @@ namespace PuntoDeVenta.Models
         public string IdCajero { get; set; }
 
         public ICollection<CuentasTelepeaje> CuentasTelepeajes { get; set; }
+
+        [NotMapped]
+        [Display(Name = "Nombre completo")]
+        public string NombreCompleto { get; set; }
 
     }
 }

@@ -1,0 +1,82 @@
+﻿@model PuntoDeVenta.Models.CuentasTelepeaje
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Cuenta Telepeaje</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Clientes.NumCliente)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Clientes.NumCliente)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NumCuenta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumCuenta)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SaldoCuenta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SaldoCuenta)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TypeCuenta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TypeCuenta)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StatusCuenta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StatusCuenta)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StatusResidenteCuenta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StatusResidenteCuenta)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateTCuenta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateTCuenta)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IdCajero)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IdCajero)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

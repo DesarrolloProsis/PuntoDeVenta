@@ -1,18 +1,24 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.EntityFramework;
+@using PuntoDeVenta.Models;
+<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Mi aplicación ASP.NET</title>
+    <title>@ViewBag.Title - Punto de venta</title>
     @Styles.Render("~/Content/css")
+    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2018.2.516/styles/kendo.default.min.css" />
+    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2018.2.516/styles/kendo.default.mobile.min.css" />
+    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2018.2.516/styles/kendo.common-bootstrap.min.css" />
     @Scripts.Render("~/bundles/modernizr")
-
+    @RenderSection("styles", required: false)
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            @Html.ActionLink("Nombre de aplicación", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark navstyle fixed-top">
+        <div class="container-fluid">
+            @Html.ActionLink("Autopista Palín-Escuintla", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -21,29 +27,54 @@
                     <li class="nav-item @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">
                         @Html.ActionLink("Inicio", "Index", "Home", routeValues: null, htmlAttributes: new { @class = "nav-link" })
                     </li>
-                    <li class="nav-item @(ViewContext.RouteData.Values["Action"].ToString() == "About" ? "active" : "")">
-                        @Html.ActionLink("Acerca de", "About", "Home", routeValues: null, htmlAttributes: new { @class = "nav-link" })
+                    <li class="nav-item" @(ViewContext.RouteData.Values["Controller"].ToString() == "Clientes" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")>
+                        @Html.ActionLink("Clientes", "Index", "Clientes", routeValues: null, htmlAttributes: new { @class = "nav-link" })
                     </li>
-                    <li class="nav-item @(ViewContext.RouteData.Values["Action"].ToString() == "Contact" ? "active" : "")">
-                        @Html.ActionLink("Contacto", "Contact", "Home", routeValues: null, htmlAttributes: new { @class = "nav-link" })
-                    <li>
+                    <li class="nav-item" @(ViewContext.RouteData.Values["Controller"].ToString() == "CuentasTelepeajes" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")>
+                        @Html.ActionLink("Cuentas", "Index", "CuentasTelepeajes", routeValues: null, htmlAttributes: new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item" @(ViewContext.RouteData.Values["Controller"].ToString() == "Tags" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")>
+                        @Html.ActionLink("Tags", "Index", "Tags", routeValues: null, htmlAttributes: new { @class = "nav-link" })
+                    </li>
+                    @{
+                        if (User.Identity.IsAuthenticated)
+                        {
+                            using (ApplicationDbContext app = new ApplicationDbContext())
+                            {
+                                var IdUser = User.Identity.GetUserId();
+                                var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
+
+                                if (userManager.IsInRole(IdUser, "SuperUsuario"))
+                                {
+                                    <li class="nav-item @(ViewContext.RouteData.Values["Action"].ToString() == "Register" ? "active" : "")">
+                                        @Html.ActionLink("Registrarse", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", @class = "nav-link" })
+                                    </li>
+                                }
+                            }
+                        }
+                    }
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
     </nav>
-    <div class="container body-content">
+    <div class="container-fluid body-content">
         @RenderBody()
-        <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - Mi aplicación ASP.NET</p>
+            <p id="footerstyle"><img class="imgfooterstyle" src="~/Content/css-yisus/img/Logo.png" /></p>
         </footer>
     </div>
 
+    <!-- Use as a Vanilla JS plugin -->
+    @Scripts.Render("~/bundles/intlTelInput.min.js")
     @Scripts.Render("~/bundles/jquery")
+    <script src="http://kendo.cdn.telerik.com/2018.2.516/js/kendo.all.min.js"></script>
+    <script src="http://kendo.cdn.telerik.com/2018.2.516/js/kendo.timezones.min.js"></script>
+    <script src="http://kendo.cdn.telerik.com/2018.2.516/js/kendo.aspnetmvc.min.js"></script>
+    <script src="http://kendo.cdn.telerik.com/2018.2.516/js/messages/kendo.messages.es-ES.min.js"></script>
     @Scripts.Render("~/bundles/popper")
     @Scripts.Render("~/bundles/bootstrap")
-    @Scripts.Render("~/bundles/ajax")
+    @Scripts.Render("~/bundles/intlTelInput-jquery.min")
     @RenderSection("scripts", required: false)
 </body>
 </html>

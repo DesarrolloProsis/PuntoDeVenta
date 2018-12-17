@@ -1,0 +1,81 @@
+﻿@model PuntoDeVenta.Models.CuentasTelepeaje
+
+@{
+    ViewBag.Title = "Eliminar";
+}
+
+<h2 class="titulo1">Eliminar</h2>
+
+<h3 class="titulo2">¿Seguro de eliminar?</h3>
+<div>
+    <h4 class="titulo2">CuentasTelepeaje</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Clientes.NumCliente)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Clientes.NumCliente)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NumCuenta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumCuenta)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SaldoCuenta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SaldoCuenta)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TypeCuenta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TypeCuenta)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StatusCuenta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StatusCuenta)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StatusResidenteCuenta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StatusResidenteCuenta)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateTCuenta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateTCuenta)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Eliminar" class="btn botonstyle2" /> |
+            @Html.ActionLink("Regresar a la lista", "Index", routeValues: null, htmlAttributes: new { @Class = "link1" })
+        </div>
+    }
+</div>

@@ -13,22 +13,27 @@ namespace PuntoDeVenta.Models
         [Key]
         public long Id { get; set; }
 
+        [Display(Name = "Número de cuenta")]
         [StringLength(30)]
         [Required]
         public string NumCuenta { get; set; }
 
-        [Required]
-        public double SaldoCuenta { get; set; }
+        [Display(Name = "Saldo de cuenta")]
+        [Range(100, 5000, ErrorMessage = "Saldo no valido")]
+        public double? SaldoCuenta { get; set; }
 
+        [Display(Name = "Tipo de cuenta")]
         [StringLength(20)]
         [Required]
         public string TypeCuenta { get; set; }
 
+        [Display(Name = "Estatus de cuenta")]
         [Required]
         public bool StatusCuenta { get; set; }
 
         public bool StatusResidenteCuenta { get; set; }
 
+        [Display(Name = "Fecha registro de cuenta")]
         [Required]
         public DateTime DateTCuenta { get; set; }
 
@@ -42,5 +47,16 @@ namespace PuntoDeVenta.Models
         public string IdCajero { get; set; }
 
         public ICollection<Tags> Tags { get; set; }
+
+        [Display(Name = "Saldo a recargar")]
+        [NotMapped]
+        [Range(100, 5000, ErrorMessage = "Saldo no valido.")]
+        public double SaldoARecargar { get; set; }
+
+        [Display(Name = "Confirmar saldo a recargar")]
+        [NotMapped]
+        [Range(0, 2000, ErrorMessage = "Saldo no valido")]
+        [Compare("SaldoARecargar", ErrorMessage = "Los saldos no coinciden.")]
+        public double ConfSaldoARecargar { get; set; }
     }
 }

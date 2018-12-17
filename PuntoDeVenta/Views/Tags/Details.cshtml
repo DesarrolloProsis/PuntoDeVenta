@@ -1,0 +1,74 @@
+﻿@model PuntoDeVenta.Models.Tags
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Tags</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CuentasTelepeaje.NumCuenta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CuentasTelepeaje.NumCuenta)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NumTag)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumTag)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SaldoTag)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SaldoTag)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StatusTag)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StatusTag)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StatusResidente)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StatusResidente)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateTTag)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateTTag)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IdCajero)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IdCajero)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

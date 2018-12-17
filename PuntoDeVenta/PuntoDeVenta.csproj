@@ -47,6 +47,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Kendo.Mvc">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Progress\Telerik UI for ASP.NET MVC R2 2018\wrappers\aspnetmvc\Binaries\Mvc5\Kendo.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AI.DependencyCollector, Version=2.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.8.1\lib\net45\Microsoft.AI.DependencyCollector.dll</HintPath>
     </Reference>
@@ -204,10 +207,25 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ClientesController.cs" />
+    <Compile Include="Controllers\CuentasTelepeajesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\TagsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201812072240045_requiredSaldoCuentaIsNull.cs" />
+    <Compile Include="Migrations\201812072240045_requiredSaldoCuentaIsNull.Designer.cs">
+      <DependentUpon>201812072240045_requiredSaldoCuentaIsNull.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201812131830582_saldotagnull.cs" />
+    <Compile Include="Migrations\201812131830582_saldotagnull.Designer.cs">
+      <DependentUpon>201812131830582_saldotagnull.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201812171833035_addtablehistorico.cs" />
+    <Compile Include="Migrations\201812171833035_addtablehistorico.Designer.cs">
+      <DependentUpon>201812171833035_addtablehistorico.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -215,6 +233,7 @@
     <Compile Include="Models\Clientes.cs" />
     <Compile Include="Models\CortesCajero.cs" />
     <Compile Include="Models\CuentasTelepeaje.cs" />
+    <Compile Include="Models\Historico.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MontosRecargables.cs" />
@@ -232,6 +251,120 @@
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\css-yisus\estilos.css" />
+    <Content Include="Content\css-yisus\img\Logo.png" />
+    <Content Include="Content\css-yisus\img\Marhnoswithred.png" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\.gitignore" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\.grenrc.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\build\css\demo.css" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\build\css\intlTelInput.css" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\build\css\intlTelInput.min.css" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\build\img\flags%402x.png" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\build\img\flags.png" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\build\js\intlTelInput-jquery.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\build\js\intlTelInput-jquery.min.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\build\js\intlTelInput.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\build\js\intlTelInput.min.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\build\js\utils.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\demo.html" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\css\countrySync.css" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\css\isValidNumber.css" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\css\prism.css" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\gen\country-sync.html" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\gen\default-country-ip.html" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\gen\display-number.html" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\gen\hidden-input.html" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\gen\init-promise.html" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\gen\is-valid-number.html" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\gen\js\countrySync.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\gen\js\defaultCountryIp.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\gen\js\displayNumber.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\gen\js\hiddenInput.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\gen\js\initPromise.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\gen\js\isValidNumber.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\gen\js\modifyCountryData.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\gen\js\multipleInstances.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\gen\js\nationalMode.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\gen\js\onlyCountriesEurope.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\gen\modify-country-data.html" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\gen\multiple-instances.html" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\gen\national-mode.html" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\gen\only-countries-europe.html" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\js\prism.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\partials\countrySync.html" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\partials\defaultCountryIp.html" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\partials\displayNumber.html" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\partials\hiddenInput.html" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\partials\initPromise.html" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\partials\isValidNumber.html" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\partials\multipleInstances.html" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\partials\nationalMode.html" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\partials\simpleInput.html" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\Gruntfile.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\grunt\babel.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\grunt\bump.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\grunt\concat.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\grunt\cssmin.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\grunt\eslint.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\grunt\exec.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\grunt\imagemin.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\grunt\jasmine.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\grunt\replace.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\grunt\responsive_images.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\grunt\retinafy.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\grunt\sass.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\grunt\shell.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\grunt\sprite.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\grunt\template.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\grunt\uglify.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\grunt\watch.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\index.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\screenshots\separateDialCode.png" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\screenshots\vanilla.png" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\spec.html" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\js\data.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\js\intlTelInput.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\js\intro-jquery.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\js\intro.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\js\outro-jquery.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\js\outro.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\js\utils.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\helpers\helpers.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\core\closecountrydropdownEvent.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\core\countrychangeEvent.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\core\dropdownShortcuts.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\core\initialValues.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\core\multipleInstances.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\core\usingDropdown.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\core\usingInput.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\methods\destroy.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\methods\getExtension.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\methods\getNumber.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\methods\getNumberType.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\methods\getSelectedCountryData.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\methods\getValidationError.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\methods\isValidNumber.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\methods\setCountry.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\methods\setNumber.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\methods\setPlaceholderNumberType.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\options\allowDropdown.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\options\autoHideDialCode.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\options\autoPlaceholder.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\options\customPlaceholder.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\options\dropdownContainer.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\options\excludeCountries.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\options\formatOnDisplay.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\options\geoIpLookup.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\options\initialCountry.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\options\nationalMode.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\options\onlyCountries.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\options\placeholderNumberType.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\options\preferredCountries.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\options\separateDialCode.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\options\utilsScript.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\static\defaults.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\static\getCountryData.js" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\spec\tests\static\loadUtils.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -260,6 +393,34 @@
     <Content Include="Scripts\esm\popper.js.map" />
     <Content Include="Scripts\esm\popper-utils.min.js.map" />
     <Content Include="Scripts\esm\popper-utils.js.map" />
+    <Content Include="Content\css-yisus\FjallaOne-Regular.ttf" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\.eslintignore" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\.eslintrc" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\.github\CONTRIBUTING.md" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\.github\ISSUE_TEMPLATE.md" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\.travis.yml" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\bower.json" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\CHANGELOG.md" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\composer.json" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\js\countrySync.js.ejs" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\js\defaultCountryIp.js.ejs" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\js\displayNumber.js.ejs" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\js\hiddenInput.js.ejs" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\js\initPromise.js.ejs" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\js\isValidNumber.js.ejs" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\js\modifyCountryData.js.ejs" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\js\multipleInstances.js.ejs" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\js\nationalMode.js.ejs" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\js\onlyCountriesEurope.js.ejs" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\examples\template.html.ejs" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\grunt\tmpl\sprite.scss.mustache" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\LICENSE" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\package-lock.json" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\package.json" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\README.md" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\css\demo.scss" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\css\intlTelInput.scss" />
+    <Content Include="Content\css-yisus\intl-tel-input-master\src\css\sprite.scss" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -322,6 +483,23 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
+    <Content Include="Views\Clientes\Create.cshtml" />
+    <Content Include="Views\Clientes\Delete.cshtml" />
+    <Content Include="Views\Clientes\Details.cshtml" />
+    <Content Include="Views\Clientes\Edit.cshtml" />
+    <Content Include="Views\Clientes\Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
+    <Content Include="Views\CuentasTelepeajes\Create.cshtml" />
+    <Content Include="Views\CuentasTelepeajes\Delete.cshtml" />
+    <Content Include="Views\CuentasTelepeajes\Details.cshtml" />
+    <Content Include="Views\CuentasTelepeajes\Edit.cshtml" />
+    <Content Include="Views\CuentasTelepeajes\Index.cshtml" />
+    <Content Include="Views\Tags\Create.cshtml" />
+    <Content Include="Views\Tags\Delete.cshtml" />
+    <Content Include="Views\Tags\Details.cshtml" />
+    <Content Include="Views\Tags\Edit.cshtml" />
+    <Content Include="Views\Tags\Index.cshtml" />
+    <Content Include="Views\CuentasTelepeajes\_AddTags.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -336,6 +514,17 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\index.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201812072240045_requiredSaldoCuentaIsNull.resx">
+      <DependentUpon>201812072240045_requiredSaldoCuentaIsNull.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812131830582_saldotagnull.resx">
+      <DependentUpon>201812131830582_saldotagnull.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812171833035_addtablehistorico.resx">
+      <DependentUpon>201812171833035_addtablehistorico.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

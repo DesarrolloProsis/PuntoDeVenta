@@ -13,19 +13,23 @@ namespace PuntoDeVenta.Models
         [Key]
         public long Id { get; set; }
 
+        [Display(Name = "Número de tag")]
         [StringLength(50)]
         [Required]
         public string NumTag { get; set; }
 
-        [Required]
-        public double SaldoTag { get; set; }
+        [Display(Name = "Saldo de tag")]
+        [Range(100, 5000, ErrorMessage = "Saldo a recargar invalido.")]
+        public double? SaldoTag { get; set; }
 
+        [Display(Name = "Estatus de tag")]
         [Required]
         public bool StatusTag { get; set; }
 
         [Required]
         public bool StatusResidente { get; set; }
 
+        [Display(Name = "Fecha registro de tag")]
         [Required]
         public DateTime DateTTag { get; set; }
 
@@ -41,5 +45,22 @@ namespace PuntoDeVenta.Models
         public ICollection<OperacionesSerBIpagos> OperacionesSerBIpagos { get; set; }
 
         public ICollection<OperacionesCajero> OperacionesCajeros { get; set; }
+
+        [Display(Name = "Cobro por tag")]
+        [NotMapped]
+        [Required]
+        [Range(0, 100, ErrorMessage = "Cobro por tag invalido.")]
+        public double CobroTag { get; set; }
+
+        [Display(Name = "Saldo a recargar")]
+        [NotMapped]
+        [Range(100, 5000, ErrorMessage = "Saldo no valido.")]
+        public double SaldoARecargar { get; set; }
+
+        [Display(Name = "Confirmar saldo a recargar")]
+        [NotMapped]
+        [Range(100, 5000, ErrorMessage = "Saldo no valido")]
+        [Compare("SaldoARecargar", ErrorMessage = "Los saldos no coinciden.")]
+        public double ConfSaldoARecargar { get; set; }
     }
 }

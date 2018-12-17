@@ -1,0 +1,96 @@
+﻿@model PuntoDeVenta.Models.Tags
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle2" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle2">Agregar tag</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("Create", "Tags", FormMethod.Post, htmlAttributes: new { @id = "Form1" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        <label for="numcuenta">Número de cuenta</label>
+                        <input id="numcuenta" class="form-control formulario1" type="text" placeholder="Readonly input here…" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipocuenta">Tipo de cuenta:</label>
+                        <input id="tipocuenta" class="form-control formulario1" type="text" placeholder="Readonly input here…" readonly>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.NumTag, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.NumTag, new { htmlAttributes = new { @class = "form-control formulario1", @type = "number" } })
+                        @Html.ValidationMessageFor(model => model.NumTag, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CobroTag, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.CobroTag, new { htmlAttributes = new { @class = "form-control formulario1", @type = "number", @readonly = "readonly" } })
+                        @Html.ValidationMessageFor(model => model.CobroTag, "", new { @class = "text-danger" })
+                    </div>
+                    <div id="fromTo">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.SaldoTag, htmlAttributes: new { @class = "control-label" })
+                            @Html.EditorFor(model => model.SaldoTag, new { htmlAttributes = new { @class = "form-control formulario1", @type = "number" } })
+                            @Html.ValidationMessageFor(model => model.SaldoTag, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    @Html.HiddenFor(model => model.CuentaId)
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn botonstyle3" data-dismiss="modal">Cancelar</button>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn botonstyle2" id="crearTag">Crear</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle3" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle3">¡Advertencia!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        Número de cuenta: <label id="Tagnumcuenta"></label>
+                    </div>
+                    <div class="form-group">
+                        Número de tag: <label id="Tagnum"></label>
+                    </div>
+                    <div class="form-group">
+                        Costo del tag: <label id="TagCosto"></label>
+                    </div>
+                    <div id="fromtotag">
+                        <div class="form-group">
+                            Saldo a recargar: <label id="TagSaldo"></label>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="form-group">
+                        Total: <label id="total"></label>
+                    </div>
+                    <div class="form-group">
+                        ¿Seguro de agregar el tag a la cuenta?
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn botonstyle3" data-dismiss="modal">Close</button>
+                <button type="button" class="btn botonstyle2" id="submitForm0">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>

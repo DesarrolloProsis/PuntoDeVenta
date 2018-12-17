@@ -23,10 +23,18 @@ namespace PuntoDeVenta
                         "~/Scripts/bootstrap.min.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                        "~/Content/bootstrap.min.css"));
+                        "~/Content/bootstrap.min.css",
+                        "~/Content/css-yisus/estilos.css",
+                        "~/Content/css-yisus/intl-tel-input-master/build/css/intlTelInput.min.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/popper").Include(
                         "~/Scripts/popper.min.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/intlTelInput-jquery.min").Include(
+                        "~/Content/css-yisus/intl-tel-input-master/build/js/intlTelInput-jquery.min.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/intlTelInput.min.js").Include(
+                        "~/Content/css-yisus/intl-tel-input-master/build/js/intlTelInput.min.js"));
         }
     }
 }

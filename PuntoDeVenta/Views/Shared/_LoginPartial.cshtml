@@ -6,11 +6,15 @@
         @Html.AntiForgeryToken()
 
         <ul class="navbar-nav ml-auto">
-            <li class="nav-item @(ViewContext.RouteData.Values["Controller"].ToString() == "Manage" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">
-                @Html.ActionLink("Hola " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @class = "nav-link" })
-            </li>
             <li class="nav-item">
-                <a href="javascript:document.getElementById('logoutForm').submit()" class="nav-link">Cerrar sesión</a>
+                @*@Html.ActionLink("Hola " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @class = "nav-link" })*@
+                <a class="nav-link">¡Hola @User.Identity.GetUserName()!</a>
+            </li>
+            @*<li class="nav-item">
+                    <a href="javascript:document.getElementById('logoutForm').submit()" class="nav-link">Cerrar sesión</a>
+                </li>*@
+            <li class="nav-item">
+                @Html.ActionLink("Cerrar sesión", "Index", "Home", routeValues: new { verfiAction = "LogOut" }, htmlAttributes: new { @class = "nav-link" })
             </li>
         </ul>
     }
@@ -18,9 +22,9 @@
 else
 {
     <ul class="navbar-nav ml-auto">
-        <li class="nav-item @(ViewContext.RouteData.Values["Action"].ToString() == "Register" ? "active" : "")">
-            @Html.ActionLink("Registrarse", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", @class = "nav-link" })
-        </li>
+        @*<li class="nav-item @(ViewContext.RouteData.Values["Action"].ToString() == "Register" ? "active" : "")">
+                @Html.ActionLink("Registrarse", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", @class = "nav-link" })
+            </li>*@
         <li class="nav-item @(ViewContext.RouteData.Values["Action"].ToString() == "Login" ? "active" : "")">
             @Html.ActionLink("Iniciar sesión", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "nav-link" })
         </li>
