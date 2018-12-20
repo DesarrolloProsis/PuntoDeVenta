@@ -15,7 +15,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PuntoDeVenta</RootNamespace>
     <AssemblyName>PuntoDeVenta</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
@@ -27,6 +27,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TypeScriptToolsVersion>3.0</TypeScriptToolsVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -68,15 +69,15 @@
     <Reference Include="Microsoft.ApplicationInsights, Version=2.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.2.8.1\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.TelemetryCorrelation.1.0.4\lib\net45\Microsoft.AspNet.TelemetryCorrelation.dll</HintPath>
+    <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.TelemetryCorrelation.1.0.5\lib\net45\Microsoft.AspNet.TelemetryCorrelation.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -84,8 +85,8 @@
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.5.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http.Formatting, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.6\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -94,28 +95,28 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.Helpers.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Http, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.6\lib\net45\System.Web.Http.dll</HintPath>
+    <Reference Include="System.Web.Http, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.7\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Http.WebHost, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.6\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.7\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Mvc, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.6\lib\net45\System.Web.Mvc.dll</HintPath>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.6\lib\net45\System.Web.Razor.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
@@ -211,6 +212,7 @@
     <Compile Include="Controllers\CuentasTelepeajesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\ReportesController.cs" />
     <Compile Include="Controllers\TagsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -227,6 +229,14 @@
     <Compile Include="Migrations\201812171833035_addtablehistorico.Designer.cs">
       <DependentUpon>201812171833035_addtablehistorico.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201812191816374_changebdlistanegra.cs" />
+    <Compile Include="Migrations\201812191816374_changebdlistanegra.Designer.cs">
+      <DependentUpon>201812191816374_changebdlistanegra.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201812191822274_changeopecajero.cs" />
+    <Compile Include="Migrations\201812191822274_changeopecajero.Designer.cs">
+      <DependentUpon>201812191822274_changeopecajero.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AppDbContext.cs" />
@@ -235,6 +245,7 @@
     <Compile Include="Models\CuentasTelepeaje.cs" />
     <Compile Include="Models\Historico.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\ListaNegra.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MontosRecargables.cs" />
     <Compile Include="Models\OperacionesCajero.cs" />
@@ -421,11 +432,56 @@
     <Content Include="Content\css-yisus\intl-tel-input-master\src\css\demo.scss" />
     <Content Include="Content\css-yisus\intl-tel-input-master\src\css\intlTelInput.scss" />
     <Content Include="Content\css-yisus\intl-tel-input-master\src\css\sprite.scss" />
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\intlTelInput-jquery.js" />
+    <Content Include="Scripts\intlTelInput-jquery.min.js" />
+    <Content Include="Scripts\intlTelInput.js" />
+    <Content Include="Scripts\intlTelInput.min.js" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\.gitignore" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\dist\jquery.mask.js" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\dist\jquery.mask.min.js" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\Gruntfile.js" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\package.js" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\src\jquery.mask.js" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\test\jquery.mask.test.js" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\test\qunit.css" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\test\qunit.js" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\test\sinon-1.10.3.js" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\test\sinon-qunit-1.0.0.js" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\test\sinon-qunit.js" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\test\test-for-jquery-1.11.1.html" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\test\test-for-jquery-1.7.2.html" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\test\test-for-jquery-1.8.3.html" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\test\test-for-jquery-1.9.1.html" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\test\test-for-jquery-2.1.1.html" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\test\test-for-jquery-3.0.0.html" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\test\test-for-zepto.html" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\test\zepto\data.js" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\test\zepto\event.js" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\test\zepto\zepto.min.js" />
+    <Content Include="Scripts\jquery.mask.js" />
+    <Content Include="Scripts\utils.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\.jshintrc" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\.ruby-version" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\.travis.yml" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\bower.json" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\CHANGELOG.md" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\component.json" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\composer.json" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\CONTRIBUTING.md" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\deploy.rb" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\docker-compose.yml" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\Dockerfile" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\ISSUE_TEMPLATE.md" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\LICENSE" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\package-lock.json" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\package.json" />
+    <Content Include="Scripts\jQuery-Mask-Plugin-master\README.md" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -500,9 +556,13 @@
     <Content Include="Views\Tags\Edit.cshtml" />
     <Content Include="Views\Tags\Index.cshtml" />
     <Content Include="Views\CuentasTelepeajes\_AddTags.cshtml" />
+    <Content Include="Views\Tags\Activate.cshtml" />
+    <Content Include="Views\Tags\Deshabilitar.cshtml" />
+    <Content Include="Views\Account\_ModalCorte.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Reportes\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -524,6 +584,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201812171833035_addtablehistorico.resx">
       <DependentUpon>201812171833035_addtablehistorico.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812191816374_changebdlistanegra.resx">
+      <DependentUpon>201812191816374_changebdlistanegra.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812191822274_changeopecajero.resx">
+      <DependentUpon>201812191822274_changeopecajero.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

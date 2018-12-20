@@ -25,16 +25,19 @@ namespace PuntoDeVenta
             bundles.Add(new StyleBundle("~/Content/css").Include(
                         "~/Content/bootstrap.min.css",
                         "~/Content/css-yisus/estilos.css",
-                        "~/Content/css-yisus/intl-tel-input-master/build/css/intlTelInput.min.css"));
+                        "~/Content/css-yisus/intl-tel-input-master/build/css/intlTelInput.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/popper").Include(
                         "~/Scripts/popper.min.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/intlTelInput-jquery.min").Include(
-                        "~/Content/css-yisus/intl-tel-input-master/build/js/intlTelInput-jquery.min.js"));
+            bundles.Add(new ScriptBundle("~/bundles/intlTelInputjquery").Include(
+                        "~/Scripts/intlTelInput-jquery.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/intlTelInput.min.js").Include(
-                        "~/Content/css-yisus/intl-tel-input-master/build/js/intlTelInput.min.js"));
+            bundles.Add(new ScriptBundle("~/bundles/intlTelInput").Include(
+                        "~/Scripts/intlTelInput.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/jquerymaskMoney").Include(
+                        "~/Scripts/jquery.mask.js"));
         }
     }
 }

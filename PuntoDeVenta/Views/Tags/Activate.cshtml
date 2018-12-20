@@ -1,0 +1,58 @@
+﻿@model PuntoDeVenta.Models.Tags
+
+@{
+    ViewBag.Title = "Activate";
+}
+
+<h2 class="titulo1">Activar</h2>
+
+<h3 class="titulo2">¿Seguro que quieres reactivar este tag?</h3>
+<div>
+    <h4 class="titulo2">Tags</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CuentasTelepeaje.NumCuenta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CuentasTelepeaje.NumCuenta)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NumTag)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumTag)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SaldoTag)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SaldoTag)
+        </dd>
+
+       
+        <dt>
+            @Html.DisplayNameFor(model => model.DateTTag)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateTTag)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Activar" class="btn botonstyle2" /> |
+            @Html.ActionLink("Regresar a la lista", "Index", routeValues: null, htmlAttributes: new { @Class = "link1" })
+        </div>
+    }
+</div>

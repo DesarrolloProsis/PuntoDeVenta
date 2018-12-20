@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -66,17 +67,20 @@ namespace PuntoDeVenta.Controllers
         // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
+            ModelState.Remove("RememberMe");
+
             if (!ModelState.IsValid)
             {
+                ViewBag.Exist = false;
                 return View(model);
             }
 
             // No cuenta los errores de inicio de sesión para el bloqueo de la cuenta
             // Para permitir que los errores de contraseña desencadenen el bloqueo de la cuenta, cambie a shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, true, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -89,6 +93,7 @@ namespace PuntoDeVenta.Controllers
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Intento de inicio de sesión no válido.");
+                    ViewBag.Exist = false;
                     return View(model);
             }
         }
@@ -391,41 +396,81 @@ namespace PuntoDeVenta.Controllers
         //
         // GET: /Account/LogOff
         [HttpGet]
-        public ActionResult LogOff()
+        public async Task<ActionResult> LogOff(int? id)
         {
+            if (id == null)
+            {
+                AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var db = new AppDbContext();
+
+            CortesCajero corte = await db.CortesCajeros.FindAsync(id);
+            if (corte == null)
+            {
+                return HttpNotFound();
+            }
+
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            ViewBag.Corte = corte;
+            ViewBag.Exist = true;
+
+            var login = new LoginViewModel();
+            return View("Login", login);
         }
 
-        ////
-        //// POST: /Account/LogOff
-        //[HttpPost]
+        //
+        // POST: /Account/LogOff
+        [HttpPost]
+        [AllowAnonymous]
         //[ValidateAntiForgeryToken]
-        //public ActionResult LogOff(CortesCajero model)
-        //{
-        //    if (model.Id != 0)
-        //    {
-        //        using (var db = new AppDbContext())
-        //        {
-        //            model.DateTCierre = DateTime.Now;
-        //            if (ModelState.IsValid)
-        //            {
-        //                db.Entry(model).State = EntityState.Modified;
-        //                db.SaveChanges();
+        public async Task<ActionResult> LogOff(CortesCajero model)
+        {
+            if (model == null)
+            {
+                AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
 
-        //                AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-        //                return RedirectToAction("Index", "Home");
-        //            }
-        //        }
-        //    }
+            using (var db = new AppDbContext())
+            {
+                var corte = await db.CortesCajeros.FindAsync(model.Id);
 
-        //    AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                if (corte == null)
+                {
+                    return HttpNotFound();
+                }
 
-        //    return RedirectToAction("Index", "Home");
+                var detalles = await db.OperacionesCajeros.Where(x => x.CorteId == corte.Id).ToListAsync();
 
-        //    //AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-        //    //return RedirectToAction("Index", "Home", new { verfiAction = "LogOut" });
-        //}
+                double? monto = 0.0d;
+
+                if (detalles != null)
+                {
+                    foreach (var item in detalles)
+                    {
+                        if (item.Monto != null)
+                            monto += Convert.ToDouble(item.Monto);
+                    }
+                }
+
+                corte.Comentario = model.Comentario;
+                corte.DateTCierre = DateTime.Now;
+                corte.MontoTotal = monto;
+
+                if (ModelState.IsValid)
+                {
+                    db.Entry(corte).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+
+                    AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
 
         //
         // GET: /Account/ExternalLoginFailure

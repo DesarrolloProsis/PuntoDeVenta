@@ -22,6 +22,7 @@ namespace PuntoDeVenta.Models
         public DbSet<MontosRecargables> MontosRecargables { get; set; }
         public DbSet<Parametrizable> Parametrizables { get; set; }
         public DbSet<Historico> Historicos { get; set; }
+        public DbSet<ListaNegra> ListaNegras { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -41,10 +42,9 @@ namespace PuntoDeVenta.Models
                 .HasForeignKey(x => x.TagId);
 
             modelBuilder.Entity<OperacionesCajero>()
-                .HasRequired<Tags>(x => x.Tags)
+                .HasRequired<CortesCajero>(x => x.CortesCajero)
                 .WithMany(x => x.OperacionesCajeros)
-                .HasForeignKey(x => x.TagId);
-
+                .HasForeignKey(x => x.CorteId);
 
             base.OnModelCreating(modelBuilder);
         }

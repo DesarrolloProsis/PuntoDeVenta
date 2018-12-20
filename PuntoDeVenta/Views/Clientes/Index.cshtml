@@ -249,7 +249,21 @@
                             command: {
                                 text: "Nueva cuenta",
                                 className: "ncuenta",
-                                
+                                click: function (e) {
+                                    e.preventDefault();
+
+                                    var grid = $("#grid").data("kendoGrid");
+                                    var row = $(e.target).closest("tr");
+                                    var dataItem = grid.dataItem(row);
+
+                                    $('#exampleModalCenter').modal('show');
+
+                                    $("#numcliente").val(dataItem.NumCliente);
+                                    $("#nomcliente").val(dataItem.NombreCompleto);
+                                    $("#ClienteId").val(dataItem.Id);
+
+                                    //console.log(dataItem);
+                                },
                             },
                             width: 100
                         },
@@ -278,7 +292,7 @@
                                     // get the data bound to the current table row
                                     var data = this.dataItem(tr);
                                     window.location.href = '@(Url.Action("Delete", "Clientes").ToString())?id=' + data.Id;
-                                },   
+                                },
                             }], width:100
                         },
                         {
@@ -296,25 +310,11 @@
                             }], width:120
                         }],
                 });
-
-                $(".ncuenta").on("click", function (e) {
-                    var grid = $("#grid").data("kendoGrid");
-                    var row = $(e.target).closest("tr");
-                    var dataItem = grid.dataItem(row);
-
-                    $('#exampleModalCenter').modal('show');
-
-                    $("#numcliente").val(dataItem.NumCliente);
-                    $("#nomcliente").val(dataItem.NombreCompleto);
-                    $("#ClienteId").val(dataItem.Id);
-
-                    console.log(dataItem);
-
-                    e.preventDefault();
-                });
             }
 
             $('#TypeCuenta').change(function (e) {
+
+                e.preventDefault();
                 var ddlValue = $(this).val();
 
                 if (ddlValue == "Colectiva") {
@@ -324,11 +324,11 @@
                     // show fromTo div, hide time div
                     $('#fromTo').hide();
                 }
-
-                e.preventDefault();
             });
 
             $('#crear').on('click', function (e) {
+
+                e.preventDefault();
                 var form = $("#Form0").validate();
 
                 if (form.valid()) {
@@ -349,12 +349,11 @@
 
                     $('#exampleModalCenter1').modal('show');
                 }
-                e.preventDefault();
             });
 
             $('#submitForm').on('click', function (e) {
-                $("#Form0").submit();
                 e.preventDefault();
+                $("#Form0").submit();
             });
 
         });

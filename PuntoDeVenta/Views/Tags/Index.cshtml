@@ -191,9 +191,9 @@
                             },
                             format: "{0:M/d/yy}",
                         },
-                        @*{
+                        {
                             command: [{
-                                name: "Detalles",
+                                name: "Activar",
                                 click: function (e) {
                                     // prevent page scroll position change
                                     e.preventDefault();
@@ -201,10 +201,10 @@
                                     var tr = $(e.target).closest("tr"); // get the current table row (tr)
                                     // get the data bound to the current table row
                                     var data = this.dataItem(tr);
-                                    window.location.href = '@(Url.Action("Details", "Tags").ToString())?id=' + data.Id;
+                                    window.location.href = '@(Url.Action("Activate", "Tags").ToString())?id=' + data.Id;
                                 },
-                            }]
-                        },*@
+                            }], width: 100
+                        },
                         {
                             command: [{
                                 name: "Eliminar",
@@ -216,6 +216,20 @@
                                     // get the data bound to the current table row
                                     var data = this.dataItem(tr);
                                     window.location.href = '@(Url.Action("Delete", "Tags").ToString())?id=' + data.Id;
+                                },
+                            }], width: 100
+                        },
+                        {
+                            command: [{
+                                name: "Deshabilitar",
+                                click: function (e) {
+                                    // prevent page scroll position change
+                                    e.preventDefault();
+                                    // e.target is the DOM element representing the button
+                                    var tr = $(e.target).closest("tr"); // get the current table row (tr)
+                                    // get the data bound to the current table row
+                                    var data = this.dataItem(tr);
+                                    window.location.href = '@(Url.Action("Deshabilitar", "Tags").ToString())?id=' + data.Id;
                                 },
                             }], width: 100
                         }],

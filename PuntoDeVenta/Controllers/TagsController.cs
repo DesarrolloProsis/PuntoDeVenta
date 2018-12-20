@@ -18,6 +18,7 @@ namespace PuntoDeVenta.Controllers
         private AppDbContext db = new AppDbContext();
         static public long? keyCuenta = 0;
 
+        [HttpGet]
         public async Task<ActionResult> GetDataTags()
         {
             List<Tags> model = new List<Tags>();
@@ -41,43 +42,78 @@ namespace PuntoDeVenta.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
         public async Task<ActionResult> RecargarSaldo(Tags model)
         {
-            db.Configuration.ValidateOnSaveEnabled = false;
-            var FoundTag = await db.Tags.Join(
-                                    db.CuentasTelepeajes,
-                                    tag => tag.CuentaId,
-                                    cue => cue.Id,
-                                    (tag, cue) => new { tag, cue })
-                                    .Where(x => x.tag.NumTag == model.NumTag)
-                                    .FirstOrDefaultAsync();
-
-            if (FoundTag != null)
+            try
             {
+                db.Configuration.ValidateOnSaveEnabled = false;
+                var FoundTag = await db.Tags.Join(
+                                        db.CuentasTelepeajes,
+                                        tag => tag.CuentaId,
+                                        cue => cue.Id,
+                                        (tag, cue) => new { tag, cue })
+                                        .Where(x => x.tag.NumTag == model.NumTag)
+                                        .FirstOrDefaultAsync();
+
+                if (FoundTag == null)
+                {
+                    return HttpNotFound();
+                }
+
                 if (FoundTag.cue.TypeCuenta == "Individual")
                 {
-                    if (FoundTag.cue.StatusCuenta == false)
+                    if (FoundTag.cue.StatusCuenta == true)
                     {
                         FoundTag.tag.SaldoTag = FoundTag.tag.SaldoTag + model.SaldoARecargar;
 
                         if (FoundTag.tag.StatusTag == false)
                             FoundTag.tag.StatusTag = true;
 
-                        db.Tags.Attach(FoundTag.tag);
-                        db.Entry(FoundTag.tag).State = EntityState.Modified;
-                        await db.SaveChangesAsync();
+                        var UserId = User.Identity.GetUserId();
 
-                        ViewBag.Success = $"Se recargó correctamente el tag: {FoundTag.tag.NumTag}.";
+                        var lastCorteUser = await db.CortesCajeros
+                                                        .Where(x => x.IdCajero == UserId)
+                                                        .OrderByDescending(x => x.DateTApertura).ToListAsync();
+
+                        if (lastCorteUser.Count > 0)
+                        {
+                            var detalle = new OperacionesCajero
+                            {
+                                Concepto = "TAG RECARGA",
+                                DateTOperacion = DateTime.Now,
+                                Numero = FoundTag.tag.NumTag,
+                                TipoPago = "TAG",
+                                Monto = model.SaldoARecargar,
+                                CorteId = lastCorteUser.FirstOrDefault().Id
+                            };
+
+                            db.OperacionesCajeros.Add(detalle);
+
+                            db.Tags.Attach(FoundTag.tag);
+                            db.Entry(FoundTag.tag).State = EntityState.Modified;
+                            await db.SaveChangesAsync();
+
+                            ViewBag.Success = $"Se recargó correctamente el tag: {FoundTag.tag.NumTag}.";
+                            return View("Index");
+                        }
+
+                        ViewBag.Error = "¡Ups! ocurrio un error inesperado.";
                         return View("Index");
                     }
+
                     ViewBag.Error = "No se puede recargar saldo al tag: " + model.NumTag + " porque la cuenta a la que pertenece está dada de baja.";
                     return View("Index");
                 }
+
                 ViewBag.Error = "El tag: " + model.NumTag + " es colectivo.";
                 return View("Index");
             }
-            ViewBag.Error = "El tag no existe.";
-            return View("Index");
+            catch (Exception ex)
+            {
+                ViewBag.Error = $"¡Ups! ocurrio un error inesperado, {ex.Message}";
+                return View("Index");
+            }
         }
 
         // GET: Tags
@@ -118,55 +154,72 @@ namespace PuntoDeVenta.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "Id,NumTag,SaldoTag,StatusTag,StatusResidente,DateTTag,CuentaId,IdCajero,CobroTag")] Tags tags)
         {
-            //ViewBag.CuentaId = new SelectList(db.CuentasTelepeajes, "Id", "NumCuenta", tags.CuentaId);
-            db.Configuration.ValidateOnSaveEnabled = false;
-            var cuenta = db.CuentasTelepeajes.Find(tags.CuentaId);
-            ModelState.Remove("SaldoARecargar");
-            ModelState.Remove("ConfSaldoARecargar");
-            if (cuenta != null)
+            try
             {
+                //ViewBag.CuentaId = new SelectList(db.CuentasTelepeajes, "Id", "NumCuenta", tags.CuentaId);
+                db.Configuration.ValidateOnSaveEnabled = false;
+
+                ModelState.Remove("SaldoARecargar");
+                ModelState.Remove("ConfSaldoARecargar");
+                ModelState.Remove("IdCajero");
+
+                var cuenta = await db.CuentasTelepeajes.FindAsync(tags.CuentaId);
+
+                if (cuenta == null)
+                {
+                    return HttpNotFound();
+                }
+
                 if (cuenta.StatusCuenta == true)
                 {
                     var query = await db.Tags.Where(x => x.NumTag == tags.NumTag).ToListAsync();
-                    if (query.Count <= 0)
+                    if (query.Count == 0)
                     {
                         tags.StatusResidente = false;
                         tags.StatusTag = true;
                         tags.DateTTag = DateTime.Now.Date;
                         tags.IdCajero = User.Identity.GetUserId();
 
-                        ModelState.Remove("IdCajero");
-
                         switch (cuenta.TypeCuenta)
                         {
-                            case "Individual":
-                                if (ModelState.IsValid)
-                                {
-                                    db.Tags.Add(tags);
-                                    await db.SaveChangesAsync();
-                                    ViewBag.Success = "Se activó correctamente el tag: " + tags.NumTag + ".";
-                                    return View("Index");
-                                }
-
-                                ViewBag.Error = "¡Ups! ocurrio un error inesperado.";
-                                return View("Index");
-
                             case "Colectiva":
                                 tags.SaldoTag = null;
-                                if (ModelState.IsValid)
-                                {
-                                    db.Tags.Add(tags);
-                                    await db.SaveChangesAsync();
-                                    ViewBag.Success = "Se activó correctamente el tag: " + tags.NumTag + ".";
-                                    return View("Index");
-                                }
-
-                                ViewBag.Error = "¡Ups! ocurrio un error inesperado.";
-                                return View("Index");
-
+                                break;
                             default:
                                 break;
                         }
+
+                        if (ModelState.IsValid)
+                        {
+                            var UserId = User.Identity.GetUserId();
+
+                            var lastCorteUser = await db.CortesCajeros
+                                                            .Where(x => x.IdCajero == UserId)
+                                                            .OrderByDescending(x => x.DateTApertura).ToListAsync();
+
+                            if (lastCorteUser.Count > 0)
+                            {
+                                var detalle = new OperacionesCajero
+                                {
+                                    Concepto = "TAG ACTIVADO",
+                                    DateTOperacion = DateTime.Now,
+                                    Numero = tags.NumTag,
+                                    TipoPago = "TAG",
+                                    Monto = tags.SaldoTag,
+                                    CorteId = lastCorteUser.FirstOrDefault().Id
+                                };
+
+                                db.Tags.Add(tags);
+                                db.OperacionesCajeros.Add(detalle);
+
+                                await db.SaveChangesAsync();
+                                ViewBag.Success = "Se activó correctamente el tag: " + tags.NumTag + ".";
+                                return View("Index");
+                            }
+                        }
+
+                        ViewBag.Error = "¡Ups! ocurrio un error inesperado.";
+                        return View("Index");
                     }
                     else
                     {
@@ -178,9 +231,11 @@ namespace PuntoDeVenta.Controllers
                 ViewBag.Error = $"No se puede agregar el tag: {tags.NumTag} a la cuenta porque esta dada de baja.";
                 return View("Index");
             }
-
-            ViewBag.Error = "La cuenta no existe.";
-            return View("Index");
+            catch (Exception ex)
+            {
+                ViewBag.Error = $"¡Ups! ocurrio un error inesperado, {ex.Message}";
+                return View("Index");
+            }
         }
 
         [Authorize(Roles = "SuperUsuario")]
@@ -234,12 +289,48 @@ namespace PuntoDeVenta.Controllers
             }
             return View(tags);
         }
-
         [Authorize(Roles = "SuperUsuario")]
-        // POST: Tags/Delete/5
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(long id)
+        {
+            db.Configuration.ValidateOnSaveEnabled = false;
+            Tags tag = await db.Tags.FindAsync(id);
+
+            if (tag.StatusTag == false)
+            {
+                Tags tags = await db.Tags.FindAsync(id);
+                db.Tags.Remove(tags);
+                ViewBag.Success = $"Se elimino correctamente el tag: {tag.NumTag}.";
+                await db.SaveChangesAsync();
+                return View("Index");
+            }
+
+            ViewBag.Error = "Primero debe deshabilitar el tag.";
+            return View("Index");
+
+        }
+        [Authorize(Roles = "SuperUsuario")]
+        // deshabilitar
+        public async Task<ActionResult> Deshabilitar(long? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Tags tags = await db.Tags.FindAsync(id);
+            if (tags == null)
+            {
+                return HttpNotFound();
+            }
+            return View(tags);
+        }
+        [Authorize(Roles = "SuperUsuario")]
+
+        [HttpPost, ActionName("Deshabilitar")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeshabilitarConfirmed(long id)
         {
             db.Configuration.ValidateOnSaveEnabled = false;
             Tags tag = await db.Tags.FindAsync(id);
@@ -257,6 +348,52 @@ namespace PuntoDeVenta.Controllers
             }
 
             ViewBag.Error = "El tag ya esta dada de baja.";
+            return View("Index");
+            //Tags tags = await db.Tags.FindAsync(id);
+            //db.Tags.Remove(tags);
+            //await db.SaveChangesAsync();
+            //return RedirectToAction("Index");
+        }
+
+
+        [Authorize(Roles = "SuperUsuario")]
+        // GET: Tags/Delete/5
+        public async Task<ActionResult> Activate(long? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Tags tags = await db.Tags.FindAsync(id);
+            if (tags == null)
+            {
+                return HttpNotFound();
+            }
+            return View(tags);
+        }
+
+        [Authorize(Roles = "SuperUsuario")]
+        // POST: Tags/Delete/5
+        [HttpPost, ActionName("Activate")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ActivateConfirmed(long id)
+        {
+            db.Configuration.ValidateOnSaveEnabled = false;
+            Tags tag = await db.Tags.FindAsync(id);
+
+            if (tag.StatusTag == false)
+            {
+                tag.StatusTag = true;
+                db.Tags.Attach(tag);
+                db.Entry(tag).State = EntityState.Modified;
+
+                ViewBag.Success = $"Se dio de Alta correctamente el tag: {tag.NumTag}.";
+
+                await db.SaveChangesAsync();
+                return View("Index");
+            }
+
+            ViewBag.Error = "El tag ya esta dada de Alta.";
             return View("Index");
             //Tags tags = await db.Tags.FindAsync(id);
             //db.Tags.Remove(tags);

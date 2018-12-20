@@ -18,109 +18,117 @@ namespace PuntoDeVenta.Controllers
 
         public async Task<ActionResult> Index(string verfiAction)
         {
-            //var model = new CortesCajero();
-            //var _IdCajero = User.Identity.GetUserId();
+            var model = new CortesCajero();
+            var UserId = User.Identity.GetUserId();
 
-            //if (User.Identity.IsAuthenticated)
-            //{
-            //    switch (verfiAction)
-            //    {
-            //        case "NewLogin":
-            //            var query = await db.CortesCajeros.ToListAsync();
+            try
+            {
+                if (User.Identity.IsAuthenticated)
+                {
+                    switch (verfiAction)
+                    {
+                        case "NewLogin":
+                            var digitoscorte = string.Empty;
+                            var numcorte = string.Empty;
 
-            //            if (query.Count > 0)
-            //            {
-            //                GenerateCorte();
-            //            }
-            //            else
-            //            {
-            //                GenerateCorte();
-            //            }
+                            var date = DateTime.Now.ToString("yyMMdd");
 
-            //            break;
-            //        case "LogOut":
-            //            return RedirectToAction("LogOff", "Account");
-            //        default:
-            //            break;
-            //    }
-            //}
+                            var query = await db.CortesCajeros.Where(x => x.NumCorte.Substring(0, 6) == date).OrderByDescending(x => x.DateTApertura).ToListAsync();
 
-            if (verfiAction == "LogOut")
-                return RedirectToAction("LogOff", "Account");
+                            if (query.Count > 0)
+                            {
+                                var lastCorteUser = await db.CortesCajeros
+                                                           .Where(x => x.IdCajero == UserId)
+                                                           .OrderByDescending(x => x.DateTApertura).ToListAsync();
 
+                                if (lastCorteUser.Count > 0)
+                                {
+                                    if (lastCorteUser.FirstOrDefault().DateTCierre == null && lastCorteUser.FirstOrDefault().Comentario == null)
+                                        return RedirectToAction("LogOff", "Account", routeValues: new { id = lastCorteUser.FirstOrDefault().Id });
+                                }
 
-            return View();
+                                digitoscorte = query.FirstOrDefault().NumCorte.Substring(6, 3);
+                                numcorte = DateTime.Now.ToString("yyMMdd") + (int.Parse(digitoscorte) + 1).ToString("D3");
+
+                                var verificar = db.CortesCajeros.Where(x => x.NumCorte == numcorte).ToList();
+
+                                if (verificar.Count == 0)
+                                {
+                                    var corte = new CortesCajero
+                                    {
+                                        NumCorte = numcorte,
+                                        DateTApertura = DateTime.Now,
+                                        IdCajero = User.Identity.GetUserId()
+                                    };
+
+                                    db.CortesCajeros.Add(corte);
+                                    await db.SaveChangesAsync();
+                                }
+                                else
+                                {
+
+                                    while (verificar.Count > 0)
+                                    {
+                                        digitoscorte = query.FirstOrDefault().NumCorte.Substring(6, 3);
+                                        numcorte = DateTime.Now.ToString("yyMMdd") + (int.Parse(digitoscorte) + 1).ToString("D3");
+
+                                        verificar = db.CortesCajeros.Where(x => x.NumCorte == numcorte).ToList();
+                                    }
+
+                                    var corte = new CortesCajero
+                                    {
+                                        NumCorte = numcorte,
+                                        DateTApertura = DateTime.Now,
+                                        IdCajero = User.Identity.GetUserId()
+                                    };
+
+                                    db.CortesCajeros.Add(corte);
+                                    await db.SaveChangesAsync();
+                                }
+                            }
+                            else
+                            {
+                                var lastCorteUser = await db.CortesCajeros
+                                                            .Where(x => x.IdCajero == UserId)
+                                                            .OrderByDescending(x => x.DateTApertura).ToListAsync();
+                                if (lastCorteUser.Count > 0)
+                                {
+                                    if (lastCorteUser.FirstOrDefault().DateTCierre == null && lastCorteUser.FirstOrDefault().Comentario == null)
+                                        return RedirectToAction("LogOff", "Account", routeValues: new { id = lastCorteUser.FirstOrDefault().Id });
+                                }
+
+                                var corte = new CortesCajero
+                                {
+                                    NumCorte = date + "001",
+                                    DateTApertura = DateTime.Now,
+                                    IdCajero = User.Identity.GetUserId()
+                                };
+
+                                db.CortesCajeros.Add(corte);
+                                await db.SaveChangesAsync();
+                            }
+                            break;
+                        case "LogOut":
+                            //return RedirectToAction("LogOff", "Account");
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                var cortelast = await db.CortesCajeros
+                                        .Where(x => x.IdCajero == UserId)
+                                        .OrderByDescending(x => x.DateTApertura).ToListAsync();
+                model.NumCorte = cortelast.FirstOrDefault().NumCorte;
+                model.Id = cortelast.FirstOrDefault().Id;
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return View(model);
         }
-
-        //public string GenerateCorte()
-        //{
-        //    int i = 0;
-
-        //    string rpt = "";
-        //    var digitoscorte = string.Empty;
-        //    var numcorte = string.Empty;
-
-        //    var date = DateTime.Now.ToString("yyMMdd");
-
-        //    var query = db.CortesCajeros.Where(x => x.NumCorte.Substring(0, 6) == date).OrderByDescending(x => x.DateTApertura).ToList();
-
-        //    if (query.Count > 0)
-        //    {
-        //        digitoscorte = query.FirstOrDefault().NumCorte.Substring(6, 7);
-        //        numcorte = DateTime.Now.ToString("yyMMdd") + (int.Parse(digitoscorte) + 1).ToString("D3");
-
-        //        var verificar = db.CortesCajeros.Where(x => x.NumCorte == numcorte).ToList();
-
-        //        if (verificar.Count == 0)
-        //        {
-        //            var corte = new CortesCajero
-        //            {
-        //                NumCorte = numcorte,
-        //                DateTApertura = DateTime.Now,
-        //                IdCajero = User.Identity.GetUserId()
-        //            };
-
-        //            db.CortesCajeros.Add(corte);
-        //            db.SaveChanges();
-        //        }
-        //        else
-        //        {
-
-        //            while (verificar.Count > 0)
-        //            {
-        //                digitoscorte = query.FirstOrDefault().NumCorte.Substring(7, 9);
-        //                numcorte = DateTime.Now.ToString("yyMMdd") + (int.Parse(digitoscorte) + 1).ToString("D3");
-
-        //                verificar = db.CortesCajeros.Where(x => x.NumCorte == numcorte).ToList();
-        //            }
-
-        //            var corte = new CortesCajero
-        //            {
-        //                NumCorte = numcorte,
-        //                DateTApertura = DateTime.Now,
-        //                IdCajero = User.Identity.GetUserId()
-        //            };
-
-        //            db.CortesCajeros.Add(corte);
-        //            db.SaveChanges();
-        //        }
-        //    }
-        //    else
-        //    {
-        //        var corte = new CortesCajero
-        //        {
-        //            NumCorte = DateTime.Now.ToString("yyMMdd") + "001",
-        //            DateTApertura = DateTime.Now,
-        //            IdCajero = User.Identity.GetUserId()
-        //        };
-
-        //        db.CortesCajeros.Add(corte);
-        //        db.SaveChanges();
-        //    }
-
-        //    return rpt;
-
-        //}
 
         public ActionResult About()
         {
@@ -134,13 +142,11 @@ namespace PuntoDeVenta.Controllers
 
                 //var result = _roleManager.Create(new IdentityRole("SuperUsuario"));
 
-                var user = _UserManager.AddToRole(idUser, "SuperUsuario");
+                //var user = _UserManager.AddToRole(idUser, "SuperUsuario");
                 //userRole = _UserManager.IsInRole(idUser, "Cajero");
 
-               var userRole = _UserManager.IsInRole(idUser, "SuperUsuario");
+                var userRole = _UserManager.IsInRole(idUser, "SuperUsuario");
             }
-
-            //var string1 = GenerateCorte();
 
             return View();
         }

@@ -21,15 +21,14 @@ namespace PuntoDeVenta.Models
         [Required]
         public string TipoPago { get; set; }
 
+        [StringLength(50)]
         [Required]
-        public double Monto { get; set; }
-    
+        public string Numero { get; set; }
+
+        public double? Monto { get; set; }
+
         [Required]
         public DateTime DateTOperacion { get; set; }
-
-        public virtual long TagId { get; set; }
-
-        public Tags Tags { get; set; }
 
         public virtual long CorteId { get; set; }
 

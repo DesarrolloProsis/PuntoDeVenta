@@ -18,6 +18,7 @@ namespace PuntoDeVenta.Controllers
         private AppDbContext db = new AppDbContext();
         static public long? keyCliente = 0;
 
+        [HttpGet]
         public async Task<ActionResult> GetDataCuentas()
         {
             List<CuentasTelepeaje> model = new List<CuentasTelepeaje>();
@@ -37,44 +38,90 @@ namespace PuntoDeVenta.Controllers
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
         public async Task<ActionResult> RecargarSaldo(CuentasTelepeaje model)
         {
-            db.Configuration.ValidateOnSaveEnabled = false;
-            var FoundCuenta = await db.CuentasTelepeajes.SingleOrDefaultAsync(x => x.NumCuenta == model.NumCuenta);
-
-            if (FoundCuenta != null)
+            try
             {
-                if (FoundCuenta.TypeCuenta == "Colectiva")
+                db.Configuration.ValidateOnSaveEnabled = false;
+
+                var FoundCuenta = await db.CuentasTelepeajes
+                                        .Join(db.Clientes,
+                                        cue => cue.ClienteId,
+                                        cli => cli.Id,
+                                        (cue, cli) => new { cue, cli })
+                                        .SingleOrDefaultAsync(x => x.cue.NumCuenta == model.NumCuenta);
+
+                if (FoundCuenta == null)
                 {
-                    FoundCuenta.SaldoCuenta = FoundCuenta.SaldoCuenta + model.SaldoARecargar;
-                    if (FoundCuenta.StatusCuenta == false)
-                        FoundCuenta.StatusCuenta = true;
+                    return HttpNotFound();
+                }
 
-                    db.CuentasTelepeajes.Attach(FoundCuenta);
-                    db.Entry(FoundCuenta).State = EntityState.Modified;
-
-                    List<Tags> tags = await db.Tags.Where(x => x.CuentaId == FoundCuenta.Id).ToListAsync();
-
-                    foreach (var item in tags)
+                if (FoundCuenta.cli.StatusCliente == true)
+                {
+                    if (FoundCuenta.cue.TypeCuenta == "Colectiva")
                     {
-                        if (item.StatusTag == false)
+                        var UserId = User.Identity.GetUserId();
+
+                        var lastCorteUser = await db.CortesCajeros
+                                                        .Where(x => x.IdCajero == UserId)
+                                                        .OrderByDescending(x => x.DateTApertura).ToListAsync();
+
+                        if (lastCorteUser.Count > 0)
                         {
-                            item.StatusTag = true;
-                            db.Tags.Attach(item);
-                            db.Entry(item).State = EntityState.Modified;
+                            FoundCuenta.cue.SaldoCuenta = FoundCuenta.cue.SaldoCuenta + model.SaldoARecargar;
+                            if (FoundCuenta.cue.StatusCuenta == false)
+                                FoundCuenta.cue.StatusCuenta = true;
+
+                            var detalle = new OperacionesCajero
+                            {
+                                Concepto = "CUENTA RECARGA",
+                                DateTOperacion = DateTime.Now,
+                                Numero = FoundCuenta.cue.NumCuenta,
+                                TipoPago = "CUENTA",
+                                Monto = model.SaldoARecargar,
+                                CorteId = lastCorteUser.FirstOrDefault().Id
+                            };
+
+                            db.OperacionesCajeros.Add(detalle);
+
+                            db.CuentasTelepeajes.Attach(FoundCuenta.cue);
+                            db.Entry(FoundCuenta.cue).State = EntityState.Modified;
+
+                            List<Tags> tags = await db.Tags.Where(x => x.CuentaId == FoundCuenta.cue.Id).ToListAsync();
+
+                            foreach (var item in tags)
+                            {
+                                if (item.StatusTag == false)
+                                {
+                                    item.StatusTag = true;
+                                    db.Tags.Attach(item);
+                                    db.Entry(item).State = EntityState.Modified;
+                                }
+                            }
+
+                            await db.SaveChangesAsync();
+
+                            ViewBag.Success = $"Se guardó correctamente la cuenta: {FoundCuenta.cue.NumCuenta}.";
+                            return View("Index");
                         }
+
+                        ViewBag.Error = $"¡Ups! ocurrio un error inesperado.";
+                        return View("Index");
                     }
 
-                    await db.SaveChangesAsync();
-
-                    ViewBag.Success = $"Se guardó correctamente la cuenta: {FoundCuenta.NumCuenta}.";
+                    ViewBag.Error = "La cuenta: " + model.NumCuenta + " es individual o puede que este dado de baja.";
                     return View("Index");
                 }
-                ViewBag.Error = "La cuenta: " + model.NumCuenta + " es individual o puede que este dado de baja.";
+
+                ViewBag.Error = "No se puede recargar saldo a la cuenta: " + model.NumCuenta + " porque el cliente al que pertenece está dado de baja.";
                 return View("Index");
             }
-            ViewBag.Error = "La cuenta: " + model.NumCuenta + " no existe.";
-            return View("Index");
+            catch (Exception ex)
+            {
+                ViewBag.Error = $"¡Ups! ocurrio un error inesperado, {ex.Message}";
+                return View("Index");
+            }
         }
 
         public ActionResult ListCuentas(int? id)
@@ -127,45 +174,66 @@ namespace PuntoDeVenta.Controllers
             {
                 //ViewBag.ClienteId = new SelectList(db.Clientes, "Id", "NumCliente", cuentasTelepeaje.ClienteId);
                 db.Configuration.ValidateOnSaveEnabled = false;
+
                 Clientes cliente = await db.Clientes.FindAsync(cuentasTelepeaje.ClienteId);
 
                 if (cliente.StatusCliente == true)
                 {
-                    var cuentasTelepeajes = db.CuentasTelepeajes.Include(c => c.Clientes);
+                    var UserId = User.Identity.GetUserId();
 
-                    cuentasTelepeaje.NumCuenta = RandomNumCuenta();
+                    var lastCorteUser = await db.CortesCajeros
+                                                    .Where(x => x.IdCajero == UserId)
+                                                    .OrderByDescending(x => x.DateTApertura).ToListAsync();
 
-                    if (cuentasTelepeaje.TypeCuenta == "Individual")
-                        cuentasTelepeaje.SaldoCuenta = null;
-
-                    cuentasTelepeaje.StatusCuenta = true;
-                    cuentasTelepeaje.StatusResidenteCuenta = false;
-                    cuentasTelepeaje.DateTCuenta = DateTime.Now.Date;
-                    cuentasTelepeaje.IdCajero = User.Identity.GetUserId();
-
-                    ModelState.Remove("NumCuenta");
-                    ModelState.Remove("IdCajero");
-                    ModelState.Remove("SaldoARecargar");
-                    ModelState.Remove("ConfSaldoARecargar");
-                    if (ModelState.IsValid)
+                    if (lastCorteUser.Count > 0)
                     {
-                        var query = db.CuentasTelepeajes.Where(x => x.NumCuenta == cuentasTelepeaje.NumCuenta).ToList();
+                        cuentasTelepeaje.NumCuenta = RandomNumCuenta();
 
-                        if (query.Count <= 0)
+                        if (cuentasTelepeaje.TypeCuenta == "Individual")
+                            cuentasTelepeaje.SaldoCuenta = null;
+
+                        cuentasTelepeaje.StatusCuenta = true;
+                        cuentasTelepeaje.StatusResidenteCuenta = false;
+                        cuentasTelepeaje.DateTCuenta = DateTime.Now.Date;
+                        cuentasTelepeaje.IdCajero = User.Identity.GetUserId();
+
+                        ModelState.Remove("NumCuenta");
+                        ModelState.Remove("IdCajero");
+                        ModelState.Remove("SaldoARecargar");
+                        ModelState.Remove("ConfSaldoARecargar");
+
+                        if (ModelState.IsValid)
                         {
-                            db.CuentasTelepeajes.Add(cuentasTelepeaje);
-                            await db.SaveChangesAsync();
-                            ViewBag.Success = "Se registró correctamente la cuenta: " + cuentasTelepeaje.NumCuenta + ".";
-                            return View("Index");
-                        }
-                        else
-                        {
-                            ViewBag.Error = "La cuenta: " + cuentasTelepeaje.NumCuenta + " ya existe!";
-                            return View("Index");
+                            var query = await db.CuentasTelepeajes.Where(x => x.NumCuenta == cuentasTelepeaje.NumCuenta).ToListAsync();
+
+                            if (query.Count == 0)
+                            {
+                                var detalle = new OperacionesCajero
+                                {
+                                    Concepto = "CUENTA ACTIVADA",
+                                    DateTOperacion = DateTime.Now,
+                                    Numero = cuentasTelepeaje.NumCuenta,
+                                    TipoPago = "CUENTA",
+                                    Monto = cuentasTelepeaje.SaldoARecargar,
+                                    CorteId = lastCorteUser.FirstOrDefault().Id
+                                };
+
+                                db.OperacionesCajeros.Add(detalle);
+
+                                db.CuentasTelepeajes.Add(cuentasTelepeaje);
+                                await db.SaveChangesAsync();
+                                ViewBag.Success = "Se registró correctamente la cuenta: " + cuentasTelepeaje.NumCuenta + ".";
+                                return View("Index");
+                            }
+                            else
+                            {
+                                ViewBag.Error = "La cuenta: " + cuentasTelepeaje.NumCuenta + " ya existe!";
+                                return View("Index");
+                            }
                         }
                     }
 
-                    ViewBag.Error = "¡Ups! ocurrio un error inesperado.";
+                    ViewBag.Error = $"¡Ups! ocurrio un error inesperado.";
                     return View("Index");
                 }
 
@@ -174,7 +242,7 @@ namespace PuntoDeVenta.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.Error = "¡Ups! ocurrio un error inesperado.";
+                ViewBag.Error = $"¡Ups! ocurrio un error inesperado, {ex.Message}";
                 return View("Index");
             }
         }

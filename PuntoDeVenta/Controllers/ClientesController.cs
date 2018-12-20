@@ -253,21 +253,18 @@ namespace PuntoDeVenta.Controllers
                                 a.StatusTag = false;
                             });
                         }
-
-                        await db.SaveChangesAsync();
-
-                        TempData["SDelete"] = $"Se dio de baja correctamente el cliente: {clientes.NumCliente}.";
-                        return RedirectToAction("Index");
                     }
+
+                    await db.SaveChangesAsync();
+
+                    TempData["SDelete"] = $"Se dio de baja correctamente el cliente: {clientes.NumCliente}.";
+                    return RedirectToAction("Index");
                 }
                 else
                 {
                     TempData["EDelete"] = $"El cliente: {clientes.NumCliente} ya esta dado de baja.";
                     return RedirectToAction("Index");
                 }
-
-                TempData["EDelete"] = "¡Ups! ha ocurrido un error inesperado.";
-                return RedirectToAction("Index");
 
                 //Clientes clientes = await db.Clientes.FindAsync(id);
                 //db.Clientes.Remove(clientes);
