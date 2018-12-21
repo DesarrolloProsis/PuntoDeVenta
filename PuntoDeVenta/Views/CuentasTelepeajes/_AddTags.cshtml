@@ -36,7 +36,7 @@
                     <div id="fromTo">
                         <div class="form-group">
                             @Html.LabelFor(model => model.SaldoTag, htmlAttributes: new { @class = "control-label" })
-                            @Html.EditorFor(model => model.SaldoTag, new { htmlAttributes = new { @class = "form-control formulario1", @type = "number" } })
+                            @Html.EditorFor(model => model.SaldoTag, new { htmlAttributes = new { @class = "form-control formulario1" } })
                             @Html.ValidationMessageFor(model => model.SaldoTag, "", new { @class = "text-danger" })
                         </div>
                     </div>

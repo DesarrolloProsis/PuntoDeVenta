@@ -17,15 +17,18 @@ namespace PuntoDeVenta.Models
         [Required]
         public string Concepto { get; set; }
 
-        [StringLength(30)]
+        [StringLength(50)]
         [Required]
-        public string TipoPago { get; set; }
+        public string Tipo { get; set; }
 
         [StringLength(50)]
         [Required]
         public string Numero { get; set; }
 
         public double? Monto { get; set; }
+
+        [StringLength(30)]
+        public string TipoPago { get; set; }
 
         [Required]
         public DateTime DateTOperacion { get; set; }

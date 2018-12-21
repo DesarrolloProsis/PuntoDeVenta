@@ -69,7 +69,15 @@ namespace PuntoDeVenta.Controllers
 
                         if (lastCorteUser.Count > 0)
                         {
-                            FoundCuenta.cue.SaldoCuenta = FoundCuenta.cue.SaldoCuenta + model.SaldoARecargar;
+                            var Saldo = (Convert.ToDouble(FoundCuenta.cue.SaldoCuenta) / 100).ToString("F2");
+
+                            var SaldoNuevo = (Convert.ToDouble(Saldo) + Convert.ToDouble(model.SaldoARecargar));
+
+                            var SaldoSend = SaldoNuevo.ToString("F2");
+
+                            SaldoSend = SaldoSend.Replace(",", string.Empty);
+                            FoundCuenta.cue.SaldoCuenta = SaldoSend.Replace(".", string.Empty);
+
                             if (FoundCuenta.cue.StatusCuenta == false)
                                 FoundCuenta.cue.StatusCuenta = true;
 
@@ -78,8 +86,9 @@ namespace PuntoDeVenta.Controllers
                                 Concepto = "CUENTA RECARGA",
                                 DateTOperacion = DateTime.Now,
                                 Numero = FoundCuenta.cue.NumCuenta,
-                                TipoPago = "CUENTA",
-                                Monto = model.SaldoARecargar,
+                                Tipo = "CUENTA",
+                                TipoPago = "NOR",
+                                Monto = Convert.ToDouble(model.SaldoARecargar),
                                 CorteId = lastCorteUser.FirstOrDefault().Id
                             };
 
@@ -213,10 +222,19 @@ namespace PuntoDeVenta.Controllers
                                     Concepto = "CUENTA ACTIVADA",
                                     DateTOperacion = DateTime.Now,
                                     Numero = cuentasTelepeaje.NumCuenta,
-                                    TipoPago = "CUENTA",
-                                    Monto = cuentasTelepeaje.SaldoARecargar,
+                                    Tipo = "CUENTA",
+                                    Monto = Convert.ToDouble(cuentasTelepeaje.SaldoCuenta),
                                     CorteId = lastCorteUser.FirstOrDefault().Id
                                 };
+
+                                if (cuentasTelepeaje.TypeCuenta == "Colectiva")
+                                {
+                                    detalle.TipoPago = "NOR";
+
+                                    var SaldoSend = cuentasTelepeaje.SaldoCuenta;
+                                    SaldoSend = SaldoSend.Replace(",", string.Empty);
+                                    cuentasTelepeaje.SaldoCuenta = SaldoSend.Replace(".", string.Empty);
+                                }
 
                                 db.OperacionesCajeros.Add(detalle);
 

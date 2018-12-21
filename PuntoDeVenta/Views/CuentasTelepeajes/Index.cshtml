@@ -321,7 +321,7 @@
                         saldoTag = $("#SaldoTag").val();
 
                         var costotag = $("#CobroTag").val();
-                        var total = parseInt(costotag) + parseInt(saldoTag);
+                        var total = parseFloat(costotag) + parseFloat(saldoTag);
 
                         $("#Tagnumcuenta").text($("#numcuenta").val());
                         $("#Tagnum").text($("#NumTag").val());
@@ -340,8 +340,9 @@
             });
 
             $(function () {
-                //$('#SaldoARecargar').mask("#,##0.00", { reverse: true });
-                //$('#ConfSaldoARecargar').mask("#,##0.00", { reverse: true });
+                $('#SaldoARecargar').mask("#,##0.00", { reverse: true });
+                $('#ConfSaldoARecargar').mask("#,##0.00", { reverse: true });
+                $('#SaldoTag').mask("#,##0.00", { reverse: true });
             });
         });
     </script>

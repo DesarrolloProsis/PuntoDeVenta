@@ -20,8 +20,8 @@ namespace PuntoDeVenta.Models
         public string NumTag { get; set; }
 
         [Display(Name = "Saldo de tag")]
-        [Range(100, 5000, ErrorMessage = "Saldo a recargar invalido.")]
-        public double? SaldoTag { get; set; }
+        [StringLength(20)]
+        public string SaldoTag { get; set; }
 
         [Display(Name = "Estatus de tag")]
         [Required]
@@ -52,14 +52,14 @@ namespace PuntoDeVenta.Models
         public double CobroTag { get; set; }
 
         [Display(Name = "Saldo a recargar")]
+        [StringLength(20)]
         [NotMapped]
-        [Range(100, 5000, ErrorMessage = "Saldo no valido.")]
-        public double SaldoARecargar { get; set; }
+        public string SaldoARecargar { get; set; }
 
         [Display(Name = "Confirmar saldo a recargar")]
+        [StringLength(20)]
         [NotMapped]
-        [Range(100, 5000, ErrorMessage = "Saldo no valido")]
         [Compare("SaldoARecargar", ErrorMessage = "Los saldos no coinciden.")]
-        public double ConfSaldoARecargar { get; set; }
+        public string ConfSaldoARecargar { get; set; }
     }
 }

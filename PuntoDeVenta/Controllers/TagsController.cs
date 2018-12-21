@@ -65,7 +65,18 @@ namespace PuntoDeVenta.Controllers
                 {
                     if (FoundTag.cue.StatusCuenta == true)
                     {
-                        FoundTag.tag.SaldoTag = FoundTag.tag.SaldoTag + model.SaldoARecargar;
+                        //var SaldoNuevo = (Convert.ToDouble(FoundTag.tag.SaldoTag) + Convert.ToDouble(model.SaldoARecargar)).ToString();
+                        //SaldoNuevo = SaldoNuevo.Replace(",", string.Empty);
+                        //FoundTag.tag.SaldoTag = SaldoNuevo.Replace(".", string.Empty);
+
+                        var Saldo = (Convert.ToDouble(FoundTag.tag.SaldoTag) / 100).ToString("F2");
+
+                        var SaldoNuevo = (Convert.ToDouble(Saldo) + Convert.ToDouble(model.SaldoARecargar));
+
+                        var SaldoSend = SaldoNuevo.ToString("F2");
+
+                        SaldoSend = SaldoSend.Replace(",", string.Empty);
+                        FoundTag.tag.SaldoTag = SaldoSend.Replace(".", string.Empty);
 
                         if (FoundTag.tag.StatusTag == false)
                             FoundTag.tag.StatusTag = true;
@@ -83,8 +94,9 @@ namespace PuntoDeVenta.Controllers
                                 Concepto = "TAG RECARGA",
                                 DateTOperacion = DateTime.Now,
                                 Numero = FoundTag.tag.NumTag,
-                                TipoPago = "TAG",
-                                Monto = model.SaldoARecargar,
+                                Tipo = "TAG",
+                                TipoPago = "NOR",
+                                Monto = Convert.ToDouble(model.SaldoARecargar),
                                 CorteId = lastCorteUser.FirstOrDefault().Id
                             };
 
@@ -180,15 +192,6 @@ namespace PuntoDeVenta.Controllers
                         tags.DateTTag = DateTime.Now.Date;
                         tags.IdCajero = User.Identity.GetUserId();
 
-                        switch (cuenta.TypeCuenta)
-                        {
-                            case "Colectiva":
-                                tags.SaldoTag = null;
-                                break;
-                            default:
-                                break;
-                        }
-
                         if (ModelState.IsValid)
                         {
                             var UserId = User.Identity.GetUserId();
@@ -204,10 +207,25 @@ namespace PuntoDeVenta.Controllers
                                     Concepto = "TAG ACTIVADO",
                                     DateTOperacion = DateTime.Now,
                                     Numero = tags.NumTag,
-                                    TipoPago = "TAG",
-                                    Monto = tags.SaldoTag,
+                                    Tipo = "TAG",
+                                    TipoPago = "NOR",
+                                    Monto = Convert.ToDouble(tags.SaldoTag),
                                     CorteId = lastCorteUser.FirstOrDefault().Id
                                 };
+
+                                switch (cuenta.TypeCuenta)
+                                {
+                                    case "Colectiva":
+                                        tags.SaldoTag = null;
+                                        break;
+                                    case "Individual":
+                                        var SaldoSend = tags.SaldoTag;
+                                        SaldoSend = SaldoSend.Replace(",", string.Empty);
+                                        tags.SaldoTag = SaldoSend.Replace(".", string.Empty);
+                                        break;
+                                    default:
+                                        break;
+                                }
 
                                 db.Tags.Add(tags);
                                 db.OperacionesCajeros.Add(detalle);

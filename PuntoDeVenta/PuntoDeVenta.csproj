@@ -237,6 +237,18 @@
     <Compile Include="Migrations\201812191822274_changeopecajero.Designer.cs">
       <DependentUpon>201812191822274_changeopecajero.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201812202213047_addtipoopcajero.cs" />
+    <Compile Include="Migrations\201812202213047_addtipoopcajero.Designer.cs">
+      <DependentUpon>201812202213047_addtipoopcajero.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201812202221497_nulltipoopcajero.cs" />
+    <Compile Include="Migrations\201812202221497_nulltipoopcajero.Designer.cs">
+      <DependentUpon>201812202221497_nulltipoopcajero.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201812210044477_chagesaldosvarchar.cs" />
+    <Compile Include="Migrations\201812210044477_chagesaldosvarchar.Designer.cs">
+      <DependentUpon>201812210044477_chagesaldosvarchar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AppDbContext.cs" />
@@ -461,6 +473,104 @@
     <Content Include="Scripts\jQuery-Mask-Plugin-master\test\zepto\event.js" />
     <Content Include="Scripts\jQuery-Mask-Plugin-master\test\zepto\zepto.min.js" />
     <Content Include="Scripts\jquery.mask.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\.gitattributes" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\.gitignore" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\bundle.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\css\inputmask.css" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\inputmask\bindings\inputmask.binding.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\inputmask\dependencyLibs\inputmask.dependencyLib.jqlite.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\inputmask\dependencyLibs\inputmask.dependencyLib.jquery.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\inputmask\dependencyLibs\inputmask.dependencyLib.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\inputmask\global\document.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\inputmask\global\window.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\inputmask\inputmask.date.extensions.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\inputmask\inputmask.extensions.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\inputmask\inputmask.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\inputmask\inputmask.numeric.extensions.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\inputmask\inputmask.phone.extensions.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\inputmask\inputmask.regex.extensions.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\inputmask\jquery.inputmask.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\inputmask\phone-codes\phone-be.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\inputmask\phone-codes\phone-nl.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\inputmask\phone-codes\phone-ru.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\inputmask\phone-codes\phone-uk.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\inputmask\phone-codes\phone.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\jquery.inputmask.bundle.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\min\inputmask\bindings\inputmask.binding.min.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\min\inputmask\dependencyLibs\inputmask.dependencyLib.jqlite.min.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\min\inputmask\dependencyLibs\inputmask.dependencyLib.jquery.min.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\min\inputmask\dependencyLibs\inputmask.dependencyLib.min.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\min\inputmask\global\document.min.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\min\inputmask\global\window.min.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\min\inputmask\inputmask.date.extensions.min.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\min\inputmask\inputmask.extensions.min.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\min\inputmask\inputmask.min.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\min\inputmask\inputmask.numeric.extensions.min.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\min\inputmask\inputmask.phone.extensions.min.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\min\inputmask\inputmask.regex.extensions.min.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\min\inputmask\jquery.inputmask.min.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\min\inputmask\phone-codes\phone-be.min.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\min\inputmask\phone-codes\phone-nl.min.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\min\inputmask\phone-codes\phone-ru.min.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\min\inputmask\phone-codes\phone-uk.min.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\min\inputmask\phone-codes\phone.min.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\dist\min\jquery.inputmask.bundle.min.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\Gruntfile.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\index.html" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\index.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\js\bindings\inputmask.binding.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\js\dependencyLibs\inputmask.dependencyLib.jqlite.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\js\dependencyLibs\inputmask.dependencyLib.jquery.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\js\dependencyLibs\inputmask.dependencyLib.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\js\global\document.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\js\global\window.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\js\inputmask.date.extensions.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\js\inputmask.extensions.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\js\inputmask.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\js\inputmask.numeric.extensions.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\js\inputmask.phone.extensions.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\js\inputmask.regex.extensions.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\js\jquery.inputmask.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\js\phone-codes\phone-be.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\js\phone-codes\phone-nl.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\js\phone-codes\phone-ru.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\js\phone-codes\phone-uk.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\js\phone-codes\phone.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\karma.conf.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\LICENSE.txt" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\nuspecs\Readme.txt" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\index.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\prototypeExtensions.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\qunit.html" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\simulator.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_alternations.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_attributes.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_base.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_date.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_dynamic.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_escape.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_formatvalidate.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_initialvalue.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_inputeventonly.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_ip.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_jitmasking.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_jquery_inputmask.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_keepStatic.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_multi.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_numeric.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_numericinput.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_option.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_optional.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_paste.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_phone.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_phonebe.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_phonenl.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_phoneru.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_phone_world.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_regex.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\tests_setvalue.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\webpack.config.js" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\webpack.config.js" />
     <Content Include="Scripts\utils.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -559,6 +669,22 @@
     <Content Include="Views\Tags\Activate.cshtml" />
     <Content Include="Views\Tags\Deshabilitar.cshtml" />
     <Content Include="Views\Account\_ModalCorte.cshtml" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\.editorconfig" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\.eslintrc" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\bower.json" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\CHANGELOG.md" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\component.json" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\composer.json" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\nuspecs\Inputmask.nuspec" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\nuspecs\jquery.inputmask.nuspec" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\package-lock.json" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\package.json" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\README.md" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\README_android.md" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\README_date.md" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\README_numeric.md" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\README_other.md" />
+    <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\README_phone.md" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -590,6 +716,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201812191822274_changeopecajero.resx">
       <DependentUpon>201812191822274_changeopecajero.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812202213047_addtipoopcajero.resx">
+      <DependentUpon>201812202213047_addtipoopcajero.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812202221497_nulltipoopcajero.resx">
+      <DependentUpon>201812202221497_nulltipoopcajero.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812210044477_chagesaldosvarchar.resx">
+      <DependentUpon>201812210044477_chagesaldosvarchar.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

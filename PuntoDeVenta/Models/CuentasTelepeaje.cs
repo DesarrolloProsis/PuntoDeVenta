@@ -19,8 +19,8 @@ namespace PuntoDeVenta.Models
         public string NumCuenta { get; set; }
 
         [Display(Name = "Saldo de cuenta")]
-        [Range(100, 5000, ErrorMessage = "Saldo no valido")]
-        public double? SaldoCuenta { get; set; }
+        [StringLength(20)]
+        public string SaldoCuenta { get; set; }
 
         [Display(Name = "Tipo de cuenta")]
         [StringLength(20)]
@@ -48,15 +48,15 @@ namespace PuntoDeVenta.Models
 
         public ICollection<Tags> Tags { get; set; }
 
+        [NotMapped]
         [Display(Name = "Saldo a recargar")]
-        [NotMapped]
-        [Range(100, 5000, ErrorMessage = "Saldo no valido.")]
-        public double SaldoARecargar { get; set; }
+        [StringLength(20)]
+        public string SaldoARecargar { get; set; }
 
-        [Display(Name = "Confirmar saldo a recargar")]
         [NotMapped]
-        [Range(100, 5000, ErrorMessage = "Saldo no valido")]
+        [Display(Name = "Confirmar saldo a recargar")]
+        [StringLength(20)]
         [Compare("SaldoARecargar", ErrorMessage = "Los saldos no coinciden.")]
-        public double ConfSaldoARecargar { get; set; }
+        public string ConfSaldoARecargar { get; set; }
     }
 }
