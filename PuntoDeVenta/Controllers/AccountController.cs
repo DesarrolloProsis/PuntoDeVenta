@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Dynamic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -8,8 +9,11 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using PuntoDeVenta.Models;
 
 namespace PuntoDeVenta.Controllers
@@ -95,6 +99,51 @@ namespace PuntoDeVenta.Controllers
                     ModelState.AddModelError("", "Intento de inicio de sesión no válido.");
                     ViewBag.Exist = false;
                     return View(model);
+            }
+        }
+
+        //
+        // POST: /Account/LoginAdmin
+        [HttpPost]
+        [Authorize]
+        //[ValidateAntiForgeryToken]
+        public async Task<JsonResult> LoginAdmin(LoginViewModel model)
+        {
+            object obj = null;
+            ModelState.Remove("RememberMe");
+
+            if (!ModelState.IsValid)
+            {
+                obj = new { Success = "false", Error = "¡Ups! Hubo un error inesperado." };
+                return Json(obj, JsonRequestBehavior.AllowGet);
+            }
+
+            // No cuenta los errores de inicio de sesión para el bloqueo de la cuenta
+            // Para permitir que los errores de contraseña desencadenen el bloqueo de la cuenta, cambie a shouldLockout: true
+            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, true, shouldLockout: false);
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    using (var db = new ApplicationDbContext())
+                    {
+                        var _roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db));
+                        var _userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+
+                        var User = await _userManager.FindByEmailAsync(model.Email);
+                        var idUser = User.Id;
+
+                        bool userRole = _userManager.IsInRole(idUser, "SuperUsuario");
+
+                        if (userRole)
+                            obj = new { Success = "true", Error = string.Empty };
+                        else
+                            obj = new { Success = "false", Error = "El usuario no es un administrador." };
+                    }
+                    return Json(obj, JsonRequestBehavior.AllowGet);
+                case SignInStatus.Failure:
+                default:
+                    obj = new { Success = "false", Error = "Intento de inicio de sesión no válido." };
+                    return Json(obj, JsonRequestBehavior.AllowGet);
             }
         }
 

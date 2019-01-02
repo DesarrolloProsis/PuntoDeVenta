@@ -57,7 +57,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.PhoneCliente, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.PhoneCliente, htmlAttributes: new { @class = "control-label" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.PhoneCliente, new { htmlAttributes = new { @class = "form-control formulario1", type = "tel" } })
                 @Html.ValidationMessageFor(model => model.PhoneCliente, "", new { @class = "text-danger" })
@@ -79,6 +79,8 @@
 <div>
     @Html.ActionLink("Regresar a la lista", "Index", routeValues: null, htmlAttributes: new { @Class = "link1" })
 </div>
+
+@Html.Partial("_LoginAdmin")
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
@@ -150,6 +152,43 @@
 
         input.addEventListener("close:countrydropdown", function () {
             // triggered when the user closes the dropdown
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+
+            $(function () {
+                $("#exampleModalLong").modal("show");
+            });
+
+            $("#comprobar").on("click", function (e) {
+
+                var model = new Object();
+                model.Email = $("#Email").val().trim();
+                model.Password = $("#Password").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("LoginAdmin", "Account")',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify(model),
+                    success: function (result) {
+                        if (result.Success == 'true') {
+                            $("#exampleModalLong").modal("hide");
+                        } else if (result.Success == 'false') {
+                            $('#errors').html("<li>" + result.Error + "</li>");
+                        }
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
         });
     </script>
 

@@ -158,7 +158,6 @@ namespace PuntoDeVenta.Controllers
             });
         }
 
-        [Authorize(Roles = "SuperUsuario")]
         // GET: Clientes/Edit/5
         public async Task<ActionResult> Edit(long? id)
         {
@@ -171,14 +170,16 @@ namespace PuntoDeVenta.Controllers
             {
                 return HttpNotFound();
             }
+
+            ViewBag.Admin = new LoginViewModel();
+            ViewBag.Exist = true;
+
             return View(clientes);
         }
 
         // POST: Clientes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        //[Bind(Include = "Id,NumCliente,Nombre,Apellidos,EmailCliente,AddressCliente,PhoneCliente,StatusCliente")]
-        [Authorize(Roles = "SuperUsuario")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(Clientes clientes)
@@ -202,7 +203,6 @@ namespace PuntoDeVenta.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "SuperUsuario")]
         // GET: Clientes/Delete/5
         public async Task<ActionResult> Delete(long? id)
         {
@@ -219,7 +219,6 @@ namespace PuntoDeVenta.Controllers
         }
 
         // POST: Clientes/Delete/5
-        [Authorize(Roles = "SuperUsuario")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(long id)
@@ -266,14 +265,10 @@ namespace PuntoDeVenta.Controllers
                     return RedirectToAction("Index");
                 }
 
-                //Clientes clientes = await db.Clientes.FindAsync(id);
-                //db.Clientes.Remove(clientes);
-                //await db.SaveChangesAsync();
-                //return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                TempData["EDelete"] = "¡Ups! ha ocurrido un error inesperado.";
+                TempData["EDelete"] = $"¡Ups! ha ocurrido un error inesperado, {ex.Message}";
                 return RedirectToAction("Index");
             }
         }

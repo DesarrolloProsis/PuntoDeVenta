@@ -255,7 +255,7 @@
 
                     $("#numcuenta").val(dataItem.NumCuenta);
                     $("#CuentaId").val(dataItem.Id);
-                    $("#CobroTag").val(100);
+                    $("#CobroTag").val("100.00");
                     $("#tipocuenta").val(dataItem.TypeCuenta);
 
                     if (dataItem.TypeCuenta == "Colectiva") {
@@ -343,6 +343,7 @@
                 $('#SaldoARecargar').mask("#,##0.00", { reverse: true });
                 $('#ConfSaldoARecargar').mask("#,##0.00", { reverse: true });
                 $('#SaldoTag').mask("#,##0.00", { reverse: true });
+                $('#CobroTag').mask("#,##0.00", { reverse: true });
             });
         });
     </script>

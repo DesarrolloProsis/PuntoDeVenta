@@ -1,0 +1,40 @@
+﻿@{
+    var model = (PuntoDeVenta.Models.LoginViewModel)ViewBag.Admin;
+}
+
+@if (ViewBag.Exist != null && ViewBag.Exist == true)
+{
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Iniciar sesión administrador</h5>
+                </div>
+                <div class="modal-body">
+                    @using (Html.BeginForm("LoginAdmin", "Account", FormMethod.Post, htmlAttributes: new { @class = "form-horizontal", role = "form" }))
+                    {
+                        <ul id="errors" class="text-danger"></ul>
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            <label for="Email">Correo eléctronico</label>
+                            @Html.TextBoxFor(m => model.Email, new { @class = "form-control formulario1", placeholder = "Correo eléctronico", @id = "Email" })
+                            @Html.ValidationMessageFor(m => model.Email, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            <label for="Password">Contraseña</label>
+                            @Html.PasswordFor(m => model.Password, new { @class = "form-control formulario1", placeholder = "Contraseña", @id = "Password", @aria_describedby = "passwordHelp" })
+                            <small id="passwordHelp" class="form-text text-muted">Nunca compartas tu contraseña con nadie más.</small>
+                            @Html.ValidationMessageFor(m => model.Password, "", new { @class = "text-danger" })
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <a href="@Url.Action("Index", "Clientes")" type="button" class="btn botonstyle3">Cancelar</a>
+                    <button id="comprobar" type="button" class="btn botonstyle2">Comprobar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
