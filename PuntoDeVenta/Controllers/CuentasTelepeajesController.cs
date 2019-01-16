@@ -89,7 +89,7 @@ namespace PuntoDeVenta.Controllers
                                 Tipo = "CUENTA",
                                 TipoPago = "NOR",
                                 Monto = Convert.ToDouble(model.SaldoARecargar),
-                                CorteId = lastCorteUser.FirstOrDefault().Id
+                                CorteId = lastCorteUser.FirstOrDefault().Id,
                             };
 
                             db.OperacionesCajeros.Add(detalle);
@@ -224,7 +224,7 @@ namespace PuntoDeVenta.Controllers
                                     Numero = cuentasTelepeaje.NumCuenta,
                                     Tipo = "CUENTA",
                                     Monto = Convert.ToDouble(cuentasTelepeaje.SaldoCuenta),
-                                    CorteId = lastCorteUser.FirstOrDefault().Id
+                                    CorteId = lastCorteUser.FirstOrDefault().Id,
                                 };
 
                                 if (cuentasTelepeaje.TypeCuenta == "Colectiva")

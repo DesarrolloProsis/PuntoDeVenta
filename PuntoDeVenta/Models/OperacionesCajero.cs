@@ -30,6 +30,8 @@ namespace PuntoDeVenta.Models
         [StringLength(30)]
         public string TipoPago { get; set; }
 
+        public double? CobroTag { get; set; }
+
         [Required]
         public DateTime DateTOperacion { get; set; }
 

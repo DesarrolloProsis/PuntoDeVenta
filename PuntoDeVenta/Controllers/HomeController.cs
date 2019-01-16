@@ -145,7 +145,7 @@ namespace PuntoDeVenta.Controllers
                 //var user = _UserManager.AddToRole(idUser, "SuperUsuario");
                 //userRole = _UserManager.IsInRole(idUser, "Cajero");
 
-                var userRole = _UserManager.IsInRole(idUser, "SuperUsuario");
+                //var userRole = _UserManager.IsInRole(idUser, "SuperUsuario");
             }
 
             return View();
@@ -159,88 +159,3 @@ namespace PuntoDeVenta.Controllers
         }
     }
 }
-
-/*
- * switch (verfiAction)
-                {
-                    case "NewLogin":
-                        var userId = User.Identity.GetUserId();
-                        bool ExistComment = true;
-                        string numRandom = string.Empty;
-                        string LastDigNumCorte = string.Empty;
-                        int i = 0;
-
-                        var listAllCortes = db.CortesCajeros.OrderByDescending(x => x.NumCorte).ToList();
-                        var listCortesCajero = db.CortesCajero.Where(x => x.IdCajero == userId).OrderByDescending(x => x.DateCorte).ToList();
-
-                        if (listAllCortes.Any())
-                        {
-                            ExistComment = listCortesCajero.Count == 0 ? false : true;
-                            if (ExistComment)
-                            {
-                                ExistComment = listCortesCajero.FirstOrDefault().Comentario == null ? false : true;
-
-                                if (ExistComment)
-                                {
-                                    LastDigNumCorte = listAllCortes.FirstOrDefault().NumCorte.Substring(6, 4);
-                                    numRandom = DateTime.Now.ToString("yyMMdd") + (int.Parse(LastDigNumCorte) + 1).ToString("D4");
-
-                                    while (listAllCortes.Any())
-                                    {
-                                        if (listAllCortes[i].NumCorte == numRandom)
-                                            numRandom = DateTime.Now.ToString("yyMMdd") + (int.Parse(LastDigNumCorte) + 1).ToString("D4");
-                                        else
-                                        {
-                                            var corte = new CortesCajero { NumCorte = numRandom, DateCorte = DateTime.Now, IdCajero = userId, HoraApertura = TimeSpan.Parse(string.Format("{0:hh\\:mm\\:ss}", DateTime.Now.TimeOfDay)) };
-                                            db.CortesCajero.Add(corte);
-                                            db.SaveChanges();
-                                            break;
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    return RedirectToAction("LogOff", "Account");
-                                }
-                            }
-                            else
-                            {
-                                LastDigNumCorte = listAllCortes.FirstOrDefault().NumCorte.Substring(6, 4);
-                                numRandom = DateTime.Now.ToString("yyMMdd") + (int.Parse(LastDigNumCorte) + 1).ToString("D4");
-
-                                while (listAllCortes.Any())
-                                {
-                                    if (listAllCortes[i].NumCorte == numRandom)
-                                        numRandom = DateTime.Now.ToString("yyMMdd") + (int.Parse(LastDigNumCorte) + 1).ToString("D4");
-                                    else
-                                    {
-                                        var corte = new CortesCajero { NumCorte = numRandom, DateCorte = DateTime.Now, IdCajero = userId, HoraApertura = TimeSpan.Parse(string.Format("{0:hh\\:mm\\:ss}", DateTime.Now.TimeOfDay)) };
-                                        db.CortesCajero.Add(corte);
-                                        db.SaveChanges();
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            numRandom = DateTime.Now.ToString("yyMMdd") + "0001";
-                            var corte = new CortesCajero { NumCorte = numRandom, DateCorte = DateTime.Now, IdCajero = userId, HoraApertura = TimeSpan.Parse(string.Format("{0:hh\\:mm\\:ss}", DateTime.Now.TimeOfDay)) };
-                            db.CortesCajero.Add(corte);
-                            db.SaveChanges();
-                        }
-                        break;
-                    case "LogOut":
-                        userId = User.Identity.GetUserId();
-                        listCortesCajero = db.CortesCajero.Where(x => x.IdCajero == userId).OrderByDescending(x => x.DateCorte).ToList();
-                        model.Id = listCortesCajero.FirstOrDefault().Id;
-                        model.IdCajero = userId;
-                        model.NumCorte = listCortesCajero.FirstOrDefault().NumCorte;
-                        model.DateCorte = listCortesCajero.FirstOrDefault().DateCorte;
-                        model.HoraApertura = listCortesCajero.FirstOrDefault().HoraApertura;
-                        model.HoraCierre = listCortesCajero.FirstOrDefault().HoraCierre;
-                        break;
-                    default:
-                        break;
-                }
- */
