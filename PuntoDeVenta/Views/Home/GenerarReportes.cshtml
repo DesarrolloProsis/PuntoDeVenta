@@ -1,0 +1,43 @@
+﻿@model PuntoDeVenta.Models.GenerarReportesViewModel
+
+@{
+    ViewBag.Title = "Cortes cajero";
+}
+
+<div class="container">
+    <h2>Buscar cortes de cajero</h2>
+    @using (Ajax.BeginForm("GenerarReportes", "Home", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divResultado" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-row align-items-center">
+            <div class="col-auto">
+                @Html.LabelFor(model => model.Date, htmlAttributes: new { @class = "sr-only", @for = "Date" })
+                @Html.EditorFor(model => model.Date)
+                @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary mb-2">Buscar</button>
+            </div>
+        </div>
+    }
+
+    <hr />
+
+    <div id="divResultado">
+        @Html.Partial("_ListaCortes", Model)
+    </div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            $(".clickme").on("click", function () {
+                alert("hola miky");
+            });
+        });
+    </script>
+}

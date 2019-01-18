@@ -151,6 +151,56 @@ namespace PuntoDeVenta.Controllers
             return View();
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult GenerarReportes()
+        {
+            var model = new GenerarReportesViewModel();
+            model.PropertiesList = new List<Properties>();
+            return View(model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<ActionResult> GenerarReportes(GenerarReportesViewModel model)
+        {
+            try
+            {
+                var date = model.Date;
+                var prop = new List<Properties>();
+                var result = db.CortesCajeros.Where(x => DbFunctions.TruncateTime(x.DateTApertura) == date && x.DateTCierre != null).ToList();
+
+                if (result.Any())
+                {
+                    foreach (var item in result)
+                    {
+                        using (ApplicationDbContext app = new ApplicationDbContext())
+                        {
+                            // Cuando agreguemos el username cambiamos en el obj nomcajero a UserName del UserManager
+                            var _UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
+                            var user = await _UserManager.FindByIdAsync(item.IdCajero);
+                            prop.Add(new Properties
+                            {
+                                Id = item.Id,
+                                NumCorte = item.NumCorte,
+                                NomCajero = user.Email,
+                                DateInicio = item.DateTApertura,
+                                DateFin = item.DateTCierre.Value
+                            });
+                        }
+                    }
+
+                    model.PropertiesList = prop;
+                }
+
+                return PartialView("_ListaCortes", model);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
