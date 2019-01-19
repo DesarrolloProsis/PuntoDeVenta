@@ -22,4 +22,15 @@ namespace PuntoDeVenta.Models
         public DateTime DateInicio { get; set; }
         public DateTime DateFin { get; set; }
     }
+
+    [NotMapped]
+    public class EncabezadoReporteCajero
+    {
+        public string Cajero { get; set; }
+        public string NumCorte { get; set; }
+        public string Fecha { get; set; }
+        public string HoraI { get; set; }
+        public string HoraF { get; set; }
+        public string TotalMonto { get; set; }
+    }
 }

@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Newtonsoft.Json;
 using PuntoDeVenta.Models;
 using System;
 using System.Collections.Generic;
@@ -15,6 +17,7 @@ namespace PuntoDeVenta.Controllers
     public class ReportesController : Controller
     {
         private AppDbContext db = new AppDbContext();
+        private ApplicationDbContext app = new ApplicationDbContext();
 
         // POST: Reportes
         public async Task<ActionResult> Index(long? id)
@@ -24,16 +27,32 @@ namespace PuntoDeVenta.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var result = db.OperacionesCajeros.Where(x => x.CorteId == 64).ToList();
+            var result = db.CortesCajeros.FirstOrDefault(x => x.Id == id);
 
             if (result == null)
             {
                 return HttpNotFound();
             }
 
+            // Cuando agreguemos el username cambiamos en el obj nomcajero a UserName del UserManager
+            var _UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
+            var user = await _UserManager.FindByIdAsync(result.IdCajero);
+
+            var encabezado = new EncabezadoReporteCajero
+            {
+                Cajero = user.Email,
+                NumCorte = result.NumCorte,
+                Fecha = result.DateTApertura.ToString("dd/MM/yyyy"),
+                HoraI = result.DateTApertura.ToString("HH:mm:ss"),
+                HoraF = result.DateTCierre.Value.ToString("HH:mm:ss"),
+                TotalMonto = result.MontoTotal.Value.ToString()
+            };
+
+            var movimientos = db.OperacionesCajeros.Where(x => x.CorteId == result.Id).ToList();
+
             var model = new List<object>();
 
-            foreach (var item in result)
+            foreach (var item in movimientos)
             {
                 model.Add(new
                 {
@@ -47,6 +66,7 @@ namespace PuntoDeVenta.Controllers
                 });
             }
 
+
             using (var client = new HttpClient())
             {
                 string json = JsonConvert.SerializeObject(model);
@@ -55,7 +75,7 @@ namespace PuntoDeVenta.Controllers
                 var message = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
             }
 
-            return View("ReportViewerCajero");
+            return View("ReportViewerCajero", encabezado);
         }
     }
 }

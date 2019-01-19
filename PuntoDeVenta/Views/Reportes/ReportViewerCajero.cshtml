@@ -1,3 +1,4 @@
+@model PuntoDeVenta.Models.EncabezadoReporteCajero
 @using PuntoDeVenta
 @using Telerik.Reporting
 @using Telerik.ReportViewer.Mvc
@@ -34,22 +35,24 @@
 
 @{
     var typeReportSource = new TypeReportSource() { TypeName = typeof(RestServiceTelerik.Reports.ReportCajero).AssemblyQualifiedName };
-    typeReportSource.Parameters.Add("Cajero", "sorec@live.com");
-    typeReportSource.Parameters.Add("NumCorte", "190107001");
-    typeReportSource.Parameters.Add("Fecha", DateTime.Now.ToString("dd/MM/yyyy"));
-    typeReportSource.Parameters.Add("HoraI", DateTime.Now.ToString("HH:mm:ss"));
-    typeReportSource.Parameters.Add("HoraF", DateTime.Now.ToString("HH:mm:ss"));
-    typeReportSource.Parameters.Add("TotalMonto", "$1,000,000.00");
+    typeReportSource.Parameters.Add("Cajero", Model.Cajero);
+    typeReportSource.Parameters.Add("NumCorte", Model.NumCorte);
+    typeReportSource.Parameters.Add("Fecha", Model.Fecha);
+    typeReportSource.Parameters.Add("HoraI", Model.HoraI);
+    typeReportSource.Parameters.Add("HoraF", Model.HoraF);
+    typeReportSource.Parameters.Add("TotalMonto", Model.TotalMonto);
 }
 
-@(Html.TelerikReporting().ReportViewer()
-            .Id("reportViewer1")
-            .ServiceUrl(Url.Content("http://localhost:56342/api/reports"))
-            .ReportSource(typeReportSource)
-            .ViewMode(ViewMode.Interactive)
-            .ScaleMode(ScaleMode.Specific)
-            .Scale(1.0)
-            .PersistSession(false)
-            .PrintMode(PrintMode.AutoSelect)
-            .EnableAccessibility(false)
-)
+    <div class="container">
+        @(Html.TelerikReporting().ReportViewer()
+                        .Id("reportViewer1")
+                        .ServiceUrl(Url.Content("http://localhost:56342/api/reports"))
+                        .ReportSource(typeReportSource)
+                        .ViewMode(ViewMode.Interactive)
+                        .ScaleMode(ScaleMode.Specific)
+                        .Scale(1.0)
+                        .PersistSession(false)
+                        .PrintMode(PrintMode.AutoSelect)
+                        .EnableAccessibility(false)
+        )
+    </div>

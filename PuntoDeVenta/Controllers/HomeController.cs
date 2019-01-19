@@ -152,7 +152,7 @@ namespace PuntoDeVenta.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
+        [Authorize(Roles = "SuperUsuario")]
         public ActionResult GenerarReportes()
         {
             var model = new GenerarReportesViewModel();
@@ -161,7 +161,7 @@ namespace PuntoDeVenta.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize(Roles = "SuperUsuario")]
         public async Task<ActionResult> GenerarReportes(GenerarReportesViewModel model)
         {
             try

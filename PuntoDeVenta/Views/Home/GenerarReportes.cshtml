@@ -21,23 +21,13 @@
             </div>
         </div>
     }
-
     <hr />
-
     <div id="divResultado">
         @Html.Partial("_ListaCortes", Model)
     </div>
 </div>
 
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 
-    <script>
-        $(document).ready(function () {
-            $(".clickme").on("click", function () {
-                alert("hola miky");
-            });
-        });
-    </script>
 }
