@@ -4,15 +4,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <title>@ViewBag.Title - Punto de venta</title>
     @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
     <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2018.2.516/styles/kendo.default.min.css" />
     <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2018.2.516/styles/kendo.default.mobile.min.css" />
     <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2018.2.516/styles/kendo.common-bootstrap.min.css" />
-    @Scripts.Render("~/bundles/modernizr")
     @RenderSection("styles", required: false)
 </head>
 <body>
@@ -49,6 +49,9 @@
                                     <li class="nav-item @(ViewContext.RouteData.Values["Action"].ToString() == "Register" ? "active" : "")">
                                         @Html.ActionLink("Registrarse", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", @class = "nav-link" })
                                     </li>
+                                    <li class="nav-item @(ViewContext.RouteData.Values["Action"].ToString() == "Home" ? "active" : "")">
+                                        @Html.ActionLink("Generar reportes", "GenerarReportes", "Home", routeValues: null, htmlAttributes: new { id = "registerLink", @class = "nav-link" })
+                                    </li>
                                 }
                             }
                         }
@@ -65,6 +68,7 @@
         </footer>
     </div>
 
+    @Scripts.Render("~/bundles/vue")
     <!-- Use as a Vanilla JS plugin -->
     @Scripts.Render("~/bundles/intlTelInput")
     @Scripts.Render("~/bundles/jquery")
@@ -74,6 +78,7 @@
     <script src="http://kendo.cdn.telerik.com/2018.2.516/js/messages/kendo.messages.es-ES.min.js"></script>
     @Scripts.Render("~/bundles/popper")
     @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
     @Scripts.Render("~/bundles/intlTelInputjquery")
     @Scripts.Render("~/bundles/jquerymaskMoney")
     @RenderSection("scripts", required: false)

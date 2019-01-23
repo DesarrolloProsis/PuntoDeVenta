@@ -249,6 +249,14 @@
                 function onClick(e) {
 
                     e.preventDefault();
+
+                    $("#numcuenta").val("");
+                    $("#CuentaId").val("");
+                    $("#CobroTag").val("");
+                    $("#tipocuenta").val("");
+                    $("#SaldoTag").val("");
+                    $("#NumTag").val("");
+
                     var grid = $("#grid").data("kendoGrid");
                     var row = $(e.target).closest("tr");
                     var dataItem = grid.dataItem(row);
@@ -302,7 +310,7 @@
                         saldoTag = 0;
 
                         var costotag = $("#CobroTag").val();
-                        var total = parseInt(costotag) + parseInt(saldoTag);
+                        var total = parseFloat(costotag) + parseFloat(saldoTag);
 
                         $("#Tagnumcuenta").text($("#numcuenta").val());
                         $("#Tagnum").text($("#NumTag").val());

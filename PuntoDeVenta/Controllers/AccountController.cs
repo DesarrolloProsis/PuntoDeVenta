@@ -499,8 +499,11 @@ namespace PuntoDeVenta.Controllers
                 {
                     foreach (var item in detalles)
                     {
-                        if (item.Monto != null)
+                        if (item.Monto != null && item.CobroTag != null)
+                        {
                             monto += Convert.ToDouble(item.Monto);
+                            monto += Convert.ToDouble(item.CobroTag);
+                        }
                     }
                 }
 

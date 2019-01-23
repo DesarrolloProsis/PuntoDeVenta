@@ -252,6 +252,11 @@
                                 click: function (e) {
                                     e.preventDefault();
 
+                                    $("#numcliente").val("");
+                                    $("#nomcliente").val("");
+                                    $("#ClienteId").val("");
+                                    $("#SaldoCuenta").val("");
+
                                     var grid = $("#grid").data("kendoGrid");
                                     var row = $(e.target).closest("tr");
                                     var dataItem = grid.dataItem(row);

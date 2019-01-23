@@ -1,10 +1,14 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Newtonsoft.Json;
 using PuntoDeVenta.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -15,6 +19,7 @@ namespace PuntoDeVenta.Controllers
     public class HomeController : Controller
     {
         private AppDbContext db = new AppDbContext();
+        private ApplicationDbContext app = new ApplicationDbContext();
 
         public async Task<ActionResult> Index(string verfiAction)
         {
@@ -145,10 +150,120 @@ namespace PuntoDeVenta.Controllers
                 //var user = _UserManager.AddToRole(idUser, "SuperUsuario");
                 //userRole = _UserManager.IsInRole(idUser, "Cajero");
 
-                var userRole = _UserManager.IsInRole(idUser, "SuperUsuario");
+                //var userRole = _UserManager.IsInRole(idUser, "SuperUsuario");
             }
 
             return View();
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "SuperUsuario")]
+        public ActionResult GenerarReportes()
+        {
+            var model = new GenerarReportesViewModel();
+            model.PropertiesList = new List<Properties>();
+            model.EncabezadoReporteCajero = new EncabezadoReporteCajero();
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "SuperUsuario")]
+        public async Task<ActionResult> GenerarReportes(GenerarReportesViewModel model)
+        {
+            try
+            {
+                var date = model.Date;
+                var prop = new List<Properties>();
+                var result = db.CortesCajeros.Where(x => DbFunctions.TruncateTime(x.DateTApertura) == date && x.DateTCierre != null).ToList();
+
+                if (result.Any())
+                {
+                    foreach (var item in result)
+                    {
+                        using (ApplicationDbContext app = new ApplicationDbContext())
+                        {
+                            // Cuando agreguemos el username cambiamos en el obj nomcajero a UserName del UserManager
+                            var _UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
+                            var user = await _UserManager.FindByIdAsync(item.IdCajero);
+                            prop.Add(new Properties
+                            {
+                                Id = item.Id,
+                                NumCorte = item.NumCorte,
+                                NomCajero = user.Email,
+                                DateInicio = item.DateTApertura,
+                                DateFin = item.DateTCierre.Value
+                            });
+                        }
+                    }
+
+                    model.PropertiesList = prop;
+                }
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        // POST: ReporteCajero
+        public async Task<ActionResult> ReporteCajero(long? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var result = db.CortesCajeros.FirstOrDefault(x => x.Id == id);
+
+            if (result == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Cuando agreguemos el username cambiamos en el obj nomcajero a UserName del UserManager
+            var _UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
+            var user = await _UserManager.FindByIdAsync(result.IdCajero);
+
+            var encabezado = new EncabezadoReporteCajero
+            {
+                Cajero = user.Email,
+                NumCorte = result.NumCorte,
+                Fecha = result.DateTApertura.ToString("dd/MM/yyyy"),
+                HoraI = result.DateTApertura.ToString("HH:mm:ss"),
+                HoraF = result.DateTCierre.Value.ToString("HH:mm:ss"),
+                TotalMonto = result.MontoTotal.Value.ToString()
+            };
+
+            var movimientos = db.OperacionesCajeros.Where(x => x.CorteId == result.Id).ToList();
+
+            var model = new List<object>();
+
+            foreach (var item in movimientos)
+            {
+                model.Add(new
+                {
+                    Concepto = item.Concepto,
+                    TipoPago = item.TipoPago,
+                    Monto = item.Monto,
+                    DataTOperacion = item.DateTOperacion,
+                    Numero = item.Numero,
+                    Tipo = item.Tipo,
+                    CobroTag = item.CobroTag
+                });
+            }
+
+
+            using (var client = new HttpClient())
+            {
+                string json = JsonConvert.SerializeObject(model);
+                HttpContent postContent = new StringContent(json, Encoding.UTF8, "application/json");
+                var response = await client.PostAsync(new Uri("http://localhost:56342/api/cajero?authenticationToken=abcxyz"), postContent);
+                var message = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
+            }
+
+            return View("ReportViewerCajero", encabezado);
         }
 
         public ActionResult Contact()
@@ -159,88 +274,3 @@ namespace PuntoDeVenta.Controllers
         }
     }
 }
-
-/*
- * switch (verfiAction)
-                {
-                    case "NewLogin":
-                        var userId = User.Identity.GetUserId();
-                        bool ExistComment = true;
-                        string numRandom = string.Empty;
-                        string LastDigNumCorte = string.Empty;
-                        int i = 0;
-
-                        var listAllCortes = db.CortesCajeros.OrderByDescending(x => x.NumCorte).ToList();
-                        var listCortesCajero = db.CortesCajero.Where(x => x.IdCajero == userId).OrderByDescending(x => x.DateCorte).ToList();
-
-                        if (listAllCortes.Any())
-                        {
-                            ExistComment = listCortesCajero.Count == 0 ? false : true;
-                            if (ExistComment)
-                            {
-                                ExistComment = listCortesCajero.FirstOrDefault().Comentario == null ? false : true;
-
-                                if (ExistComment)
-                                {
-                                    LastDigNumCorte = listAllCortes.FirstOrDefault().NumCorte.Substring(6, 4);
-                                    numRandom = DateTime.Now.ToString("yyMMdd") + (int.Parse(LastDigNumCorte) + 1).ToString("D4");
-
-                                    while (listAllCortes.Any())
-                                    {
-                                        if (listAllCortes[i].NumCorte == numRandom)
-                                            numRandom = DateTime.Now.ToString("yyMMdd") + (int.Parse(LastDigNumCorte) + 1).ToString("D4");
-                                        else
-                                        {
-                                            var corte = new CortesCajero { NumCorte = numRandom, DateCorte = DateTime.Now, IdCajero = userId, HoraApertura = TimeSpan.Parse(string.Format("{0:hh\\:mm\\:ss}", DateTime.Now.TimeOfDay)) };
-                                            db.CortesCajero.Add(corte);
-                                            db.SaveChanges();
-                                            break;
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    return RedirectToAction("LogOff", "Account");
-                                }
-                            }
-                            else
-                            {
-                                LastDigNumCorte = listAllCortes.FirstOrDefault().NumCorte.Substring(6, 4);
-                                numRandom = DateTime.Now.ToString("yyMMdd") + (int.Parse(LastDigNumCorte) + 1).ToString("D4");
-
-                                while (listAllCortes.Any())
-                                {
-                                    if (listAllCortes[i].NumCorte == numRandom)
-                                        numRandom = DateTime.Now.ToString("yyMMdd") + (int.Parse(LastDigNumCorte) + 1).ToString("D4");
-                                    else
-                                    {
-                                        var corte = new CortesCajero { NumCorte = numRandom, DateCorte = DateTime.Now, IdCajero = userId, HoraApertura = TimeSpan.Parse(string.Format("{0:hh\\:mm\\:ss}", DateTime.Now.TimeOfDay)) };
-                                        db.CortesCajero.Add(corte);
-                                        db.SaveChanges();
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            numRandom = DateTime.Now.ToString("yyMMdd") + "0001";
-                            var corte = new CortesCajero { NumCorte = numRandom, DateCorte = DateTime.Now, IdCajero = userId, HoraApertura = TimeSpan.Parse(string.Format("{0:hh\\:mm\\:ss}", DateTime.Now.TimeOfDay)) };
-                            db.CortesCajero.Add(corte);
-                            db.SaveChanges();
-                        }
-                        break;
-                    case "LogOut":
-                        userId = User.Identity.GetUserId();
-                        listCortesCajero = db.CortesCajero.Where(x => x.IdCajero == userId).OrderByDescending(x => x.DateCorte).ToList();
-                        model.Id = listCortesCajero.FirstOrDefault().Id;
-                        model.IdCajero = userId;
-                        model.NumCorte = listCortesCajero.FirstOrDefault().NumCorte;
-                        model.DateCorte = listCortesCajero.FirstOrDefault().DateCorte;
-                        model.HoraApertura = listCortesCajero.FirstOrDefault().HoraApertura;
-                        model.HoraCierre = listCortesCajero.FirstOrDefault().HoraCierre;
-                        break;
-                    default:
-                        break;
-                }
- */

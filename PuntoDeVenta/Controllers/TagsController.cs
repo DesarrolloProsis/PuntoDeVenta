@@ -210,7 +210,8 @@ namespace PuntoDeVenta.Controllers
                                     Tipo = "TAG",
                                     TipoPago = "NOR",
                                     Monto = Convert.ToDouble(tags.SaldoTag),
-                                    CorteId = lastCorteUser.FirstOrDefault().Id
+                                    CorteId = lastCorteUser.FirstOrDefault().Id,
+                                    CobroTag = Convert.ToDouble(tags.CobroTag),
                                 };
 
                                 switch (cuenta.TypeCuenta)
