@@ -11,6 +11,7 @@ namespace PuntoDeVenta.Models
     {
         public DateTime Date { get; set; }
         public List<Properties> PropertiesList { get; set; }
+        public EncabezadoReporteCajero EncabezadoReporteCajero { get; set; }
     }
 
     [NotMapped]

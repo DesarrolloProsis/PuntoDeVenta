@@ -226,7 +226,6 @@
     <Compile Include="Controllers\CuentasTelepeajesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\ReportesController.cs" />
     <Compile Include="Controllers\TagsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -629,6 +628,8 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
+    <Content Include="Scripts\vue.js" />
+    <Content Include="Scripts\vue.min.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -709,9 +710,7 @@
     <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\README_other.md" />
     <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\README_phone.md" />
     <Content Include="Views\Shared\_LoginAdmin.cshtml" />
-    <Content Include="Views\Reportes\ReportViewerCajero.cshtml" />
-    <Content Include="Views\Home\_ListaCortes.cshtml" />
-    <Content Include="Views\Home\_ReporteCajero.cshtml" />
+    <Content Include="Views\Home\ReportViewerCajero.cshtml" />
     <Content Include="Views\Home\GenerarReportes.cshtml" />
   </ItemGroup>
   <ItemGroup>

@@ -6,7 +6,7 @@
 
 <div class="container">
     <h2>Buscar cortes de cajero</h2>
-    @using (Ajax.BeginForm("GenerarReportes", "Home", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divResultado" }))
+    @using (Html.BeginForm("GenerarReportes", "Home", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
 
@@ -22,12 +22,101 @@
         </div>
     }
     <hr />
-    <div id="divResultado">
-        @Html.Partial("_ListaCortes", Model)
-    </div>
+    @if (Model.PropertiesList != null && Model.PropertiesList.Any())
+    {
+        using (Html.BeginForm("ReporteCajero", "Home", FormMethod.Post, htmlAttributes: new { @id = "form12" }))
+        {
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Num Corte</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Fecha Inicio</th>
+                            <th scope="col">Fecha Fin</th>
+                            <th scope="col">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int i = 0;
+                            foreach (var item in Model.PropertiesList)
+                            {
+                                <tr>
+                                    <th scope="row">@(++i)</th>
+                                    <td class="td_1">@item.Id</td>
+                                    <td>@item.NumCorte</td>
+                                    <td>@item.NomCajero</td>
+                                    <td>@item.DateInicio</td>
+                                    <td>@item.DateFin</td>
+                                    <td><button type="button" class="clickme btn btn-info">Generar</button></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    }
+    else
+    {
+        <div id="aboutPage" class="col-lg-12">
+            <p class="text-center lead">{{ message }}</p>
+        </div>
+    }
+
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 
+    <script>
+        $(document).ready(function () {
+            $(".td_1").hide();
+            // Set form variable
+
+            $(".clickme").on("click", function () {
+                var $row = $(this).closest("tr");       //, Finds the closest row <tr>
+                //$tds = $row.find("td");             // Finds all children <td> elements
+                //$("#form12").submit(function () {
+                //    alert('Form is submitting....');
+                //    // Or Do Something...
+                //    return true;
+                //});
+                alert($row.find(".td_1").html());
+                $('#form12').append('<input type="hidden" name="id" value="' + $row.find(".td_1").html() + '" />');
+                $("#form12").submit();
+            });
+        });
+    </script>
+
+    <script>
+        var aboutPage = new Vue({
+            el: '#aboutPage',
+            data: {
+                message: 'NO HAY CORTES.'
+            }
+        });
+
+        var example2 = new Vue({
+            el: '#example-2',
+            data: {
+                name: 'Vue.js'
+            },
+            // define métodos dentro del objeto `methods`
+            methods: {
+                greet: function (event) {
+                    // `this` dentro de los métodos apunta a la instancia de Vue
+                    alert('Hello ' + this.name + '!')
+                    // `event` es el evento nativo del DOM
+                    if (event) {
+                        alert(event.target.tagName)
+                    }
+                }
+            }
+        });
+        // puedes invocar métodos en JavaScript tamibién
+        //example2.greet() // -> 'Hello Vue.js!'
+    </script>
 }
