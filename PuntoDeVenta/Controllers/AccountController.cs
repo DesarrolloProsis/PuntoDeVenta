@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Dynamic;
 using System.Globalization;
@@ -196,6 +197,13 @@ namespace PuntoDeVenta.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+            var items = new List<SelectListItem> {
+                new SelectListItem { Text = "Administrador", Value = "SuperUsuario" },
+                new SelectListItem { Text = "Cajero", Value = "Cajero"}
+            };
+
+            ViewBag.Roles = items;
+
             return View();
         }
 
@@ -212,6 +220,19 @@ namespace PuntoDeVenta.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    using (ApplicationDbContext app = new ApplicationDbContext())
+                    {
+                        var _roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(app));
+                        var _UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
+
+                        var userfound = await _UserManager.FindByEmailAsync(model.Email);
+
+                        var rpt = await _UserManager.AddToRoleAsync(userfound.Id, model.Rol);
+
+                        if (rpt.Errors.Any())
+                            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    }
+
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                     // Para obtener más información sobre cómo habilitar la confirmación de cuentas y el restablecimiento de contraseña, visite https://go.microsoft.com/fwlink/?LinkID=320771
@@ -226,6 +247,13 @@ namespace PuntoDeVenta.Controllers
             }
 
             // Si llegamos a este punto, es que se ha producido un error y volvemos a mostrar el formulario
+            var items = new List<SelectListItem> {
+                new SelectListItem { Text = "Administrador", Value = "SuperUsuario" },
+                new SelectListItem { Text = "Cajero", Value = "Cajero"}
+            };
+
+            ViewBag.Roles = items;
+
             return View(model);
         }
 
