@@ -60,5 +60,22 @@ namespace PuntoDeVenta.Models
         [NotMapped]
         [Compare("SaldoARecargar", ErrorMessage = "Los saldos no coinciden.")]
         public string ConfSaldoARecargar { get; set; }
+
+        [NotMapped]
+        public string TipoTag { get; set; }
+
+        [NotMapped]
+        public string Observacion { get; set; }
+    }
+
+    [NotMapped]
+    public class TagsViewModel
+    {
+        public long? IdOldTag { get; set; }
+        public string NumNewTag { get; set; }
+        public string Observacion { get; set; }
+        public string CobroTag { get; set; }
+        public string SaldoTag { get; set; }
+        public bool Checked { get; set; }
     }
 }

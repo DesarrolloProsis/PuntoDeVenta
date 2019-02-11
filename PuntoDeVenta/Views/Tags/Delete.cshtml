@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Eliminar";
+    var modelTag = (PuntoDeVenta.Models.TagsViewModel)ViewBag.TagsViewModel;
 }
 
 <h2 class="titulo1">Eliminar</h2>
@@ -35,8 +36,6 @@
             @Html.DisplayFor(model => model.SaldoTag)
         </dd>
 
-     
-
         <dt>
             @Html.DisplayNameFor(model => model.DateTTag)
         </dt>
@@ -46,14 +45,105 @@
         </dd>
 
     </dl>
-
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Eliminar" class="btn botonstyle2" /> |
-            @Html.ActionLink("Regresar a la lista", "Index", routeValues: null, htmlAttributes: new { @Class = "link1" })
-        </div>
-    }
+    <div class="form-actions no-color">
+        <input id="submit" type="button" value="Eliminar" class="btn botonstyle2" /> |
+        @Html.ActionLink("Regresar a la lista", "Index", routeValues: null, htmlAttributes: new { @Class = "link1" })
+    </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¡Advertencia!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="datos">
+                @using (Html.BeginForm("DeleteTraspaso", "Tags", FormMethod.Post, htmlAttributes: new { @id = "Form0" }))
+                {
+                    <div class="modal-body">
+
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            <p>¿Seguro de eliminar el tag ?</p>
+                        </div>
+                        <template v-if="mostrar">
+                            <div class="form-group">
+                                <p>Saldo actual: {{ data_source }}</p>
+                            </div>
+                        </template>
+                        @Html.Hidden("IdOldTag", Model.Id)
+                        <div v-show="checked">
+                            <div class="form-group">
+                                <label for="modelTag_NumNewTag" class="col-form-label">Nuevo número de tag:</label>
+                                @Html.Editor("NumNewTag", new { htmlAttributes = new { @class = "form-control formulario1" } })
+                                @Html.ValidationMessage("NumNewTag", "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                <label for="modelTag_SaldoTag" class="col-form-label">Saldo traspaso a nuevo tag:</label>
+                                @{
+                                    IDictionary<string, object> dicSaldo = new Dictionary<string, object>() { { @"v-bind:value", "data_source" }, { @"class", "form-control formulario1" }, { @"readonly", "readonly" } };
+                                }
+                                @Html.Editor("SaldoTag", new { htmlAttributes = dicSaldo })
+                                @Html.ValidationMessage("SaldoTag", "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                <label for="modelTag_CobroTag" class="col-form-label">Cobro de tag:</label>
+                                @Html.Editor("CobroTag", new { htmlAttributes = new { @class = "form-control formulario1" } })
+                                @Html.ValidationMessage("CobroTag", "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="modelTag_Observacion" class="col-form-label">Observación:</label>
+                            @Html.TextArea("Observacion", htmlAttributes: new { @class = "form-control formulario1" })
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <template v-if="mostrar">
+                            <div class="custom-control custom-checkbox mr-sm-auto" id="checkboxme">
+                                @{
+                                    IDictionary<string, object> dicChecked = new Dictionary<string, object>() { { @"v-model", "checked" }, { @"type", "checkbox" }, { @"class", "custom-control-input" }, { @"id", "customControlInline" } };
+                                }
+                                @Html.CheckBox("Checked", htmlAttributes: dicChecked)
+                                <label class="custom-control-label" for="customControlInline">Traspaso</label>
+                            </div>
+                        </template>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="botonclick btn btn-primary" id="clickme" @*v-on:click="question"*@>Eliminar</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        let datos = new Vue({
+            el: '#datos',
+            data: {
+                mostrar: "@Model.TipoTag" == "Colectiva" ? false : true,
+                checked: false,
+                data_source: "@Model.SaldoTag",
+            },
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#submit").on("click", function (e) {
+                $("#exampleModal").modal("show");
+                e.preventDefault();
+            });
+
+            $(function () {
+                $('#CobroTag').val("10000");
+                $('#CobroTag').mask("#,##0.00", { reverse: true });
+            });
+        });
+    </script>
+}

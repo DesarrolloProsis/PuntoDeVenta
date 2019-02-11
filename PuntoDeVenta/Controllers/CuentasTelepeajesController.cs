@@ -102,11 +102,11 @@ namespace PuntoDeVenta.Controllers
                             foreach (var item in tags)
                             {
                                 if (item.StatusTag == false)
-                                {
                                     item.StatusTag = true;
-                                    db.Tags.Attach(item);
-                                    db.Entry(item).State = EntityState.Modified;
-                                }
+
+                                item.SaldoTag = FoundCuenta.cue.SaldoCuenta;
+                                db.Tags.Attach(item);
+                                db.Entry(item).State = EntityState.Modified;
                             }
 
                             await db.SaveChangesAsync();

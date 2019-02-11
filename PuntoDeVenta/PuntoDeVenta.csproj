@@ -266,6 +266,10 @@
     <Compile Include="Migrations\201901161643377_addcobrotag.Designer.cs">
       <DependentUpon>201901161643377_addcobrotag.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201902061734182_addtipotaglistnegra.cs" />
+    <Compile Include="Migrations\201902061734182_addtipotaglistnegra.Designer.cs">
+      <DependentUpon>201902061734182_addtipotaglistnegra.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AppDbContext.cs" />
@@ -754,6 +758,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201901161643377_addcobrotag.resx">
       <DependentUpon>201901161643377_addcobrotag.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902061734182_addtipotaglistnegra.resx">
+      <DependentUpon>201902061734182_addtipotaglistnegra.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,5 @@
 ﻿@{
-    var model = (PuntoDeVenta.Models.LoginViewModel)ViewBag.Admin;
+    var model = (PuntoDeVenta.Models.LoginAdminViewModel)ViewBag.Admin;
 }
 
 @if (ViewBag.Exist != null && ViewBag.Exist == true)
@@ -9,7 +9,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Iniciar sesión administrador</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Confirmar inicio de sesión</h5>
                 </div>
                 <div class="modal-body">
                     @using (Html.BeginForm("LoginAdmin", "Account", FormMethod.Post, htmlAttributes: new { @class = "form-horizontal", role = "form" }))
@@ -17,11 +17,6 @@
                         <ul id="errors" class="text-danger"></ul>
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                        <div class="form-group">
-                            <label for="Email">Correo eléctronico</label>
-                            @Html.TextBoxFor(m => model.Email, new { @class = "form-control formulario1", placeholder = "Correo eléctronico", @id = "Email" })
-                            @Html.ValidationMessageFor(m => model.Email, "", new { @class = "text-danger" })
-                        </div>
                         <div class="form-group">
                             <label for="Password">Contraseña</label>
                             @Html.PasswordFor(m => model.Password, new { @class = "form-control formulario1", placeholder = "Contraseña", @id = "Password", @aria_describedby = "passwordHelp" })

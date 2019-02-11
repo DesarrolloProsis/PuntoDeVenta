@@ -108,10 +108,18 @@ namespace PuntoDeVenta.Controllers
         [HttpPost]
         [Authorize]
         //[ValidateAntiForgeryToken]
-        public async Task<JsonResult> LoginAdmin(LoginViewModel model)
+        public async Task<JsonResult> LoginAdmin(LoginAdminViewModel model)
         {
+            ApplicationDbContext app = new ApplicationDbContext();
             object obj = null;
+
             ModelState.Remove("RememberMe");
+            ModelState.Remove("Email");
+
+            var usermanager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
+            var user = await usermanager.FindByIdAsync(User.Identity.GetUserId());
+
+            model.Email = user.Email;
 
             if (!ModelState.IsValid)
             {
@@ -125,21 +133,7 @@ namespace PuntoDeVenta.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    using (var db = new ApplicationDbContext())
-                    {
-                        var _roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db));
-                        var _userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
-
-                        var User = await _userManager.FindByEmailAsync(model.Email);
-                        var idUser = User.Id;
-
-                        bool userRole = _userManager.IsInRole(idUser, "SuperUsuario");
-
-                        if (userRole)
-                            obj = new { Success = "true", Error = string.Empty };
-                        else
-                            obj = new { Success = "false", Error = "El usuario no es un administrador." };
-                    }
+                    obj = new { Success = "true", Error = string.Empty };
                     return Json(obj, JsonRequestBehavior.AllowGet);
                 case SignInStatus.Failure:
                 default:
@@ -527,17 +521,18 @@ namespace PuntoDeVenta.Controllers
                 {
                     foreach (var item in detalles)
                     {
-                        if (item.Monto != null && item.CobroTag != null)
-                        {
+                        if (item.Monto != null)
                             monto += Convert.ToDouble(item.Monto);
+
+                        if (item.CobroTag != null)
                             monto += Convert.ToDouble(item.CobroTag);
-                        }
+
                     }
                 }
 
                 corte.Comentario = model.Comentario;
                 corte.DateTCierre = DateTime.Now;
-                corte.MontoTotal = monto;
+                corte.MontoTotal = Math.Round(monto.Value, 2);
 
                 if (ModelState.IsValid)
                 {

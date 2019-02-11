@@ -18,6 +18,9 @@ namespace PuntoDeVenta.Models
         [Required]
         public string Tipo { get; set; }
 
+        [StringLength(30)]
+        public string Clase { get; set; }
+
         [StringLength(50)]
         [Required]
         public string Numero { get; set; }
