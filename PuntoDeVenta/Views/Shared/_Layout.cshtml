@@ -36,6 +36,9 @@
                     <li class="nav-item" @(ViewContext.RouteData.Values["Controller"].ToString() == "Tags" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")>
                         @Html.ActionLink("Tags", "Index", "Tags", routeValues: null, htmlAttributes: new { @class = "nav-link" })
                     </li>
+                    <li class="nav-item" @(ViewContext.RouteData.Values["Controller"].ToString() == "Historico" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")>
+                        @Html.ActionLink("Historico", "Index", "Historico", routeValues: null, htmlAttributes: new { @class = "nav-link" })
+                    </li>
                     @{
                         if (User.Identity.IsAuthenticated)
                         {

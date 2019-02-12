@@ -18,4 +18,11 @@ namespace PuntoDeVenta.Models
         public DateTime Fecha { get; set; }
         public float SaldoTag { get; set; }
     }
+
+    public class TableHistorico
+    {
+        public DateTime Fecha_Inicio { get; set; }
+        public DateTime Fecha_Fin { get; set; }
+
+    }
 }

@@ -224,6 +224,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
     <Compile Include="Controllers\CuentasTelepeajesController.cs" />
+    <Compile Include="Controllers\HistoricoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\TagsController.cs" />
@@ -712,6 +713,7 @@
     <Content Include="Views\Shared\_LoginAdmin.cshtml" />
     <Content Include="Views\Home\ReportViewerCajero.cshtml" />
     <Content Include="Views\Home\GenerarReportes.cshtml" />
+    <Content Include="Views\Historico\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
