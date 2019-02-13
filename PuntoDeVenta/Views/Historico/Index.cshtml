@@ -1,12 +1,9 @@
 ﻿@model PuntoDeVenta.Models.TableHistorico
-<<<<<<< HEAD
-    @{
-=======
 @{
     ViewBag.Title = "TablaHistorico";
 }
 <div class="col-md-12 text-align-center">
-   
+
     <h4 class="titulo1">Tabla Historico</h4>
     <p class="lead">
         Consulte el registro historico de cruces.
@@ -35,38 +32,12 @@
             </div>
         }
 
->>>>>>> origin/Diseño
 
         ViewBag.Title = "TablaHistorico";
     }
 
 
-<<<<<<< HEAD
-
-    <div class="container">
-        <h2>Buscar Historial</h2>
-        @using (Html.BeginForm("Generar", "Historico", FormMethod.Post))
-        {
-            @Html.AntiForgeryToken()
-
-            <div class="form-row align-items-center">
-                <div class="col-auto">
-                    @Html.LabelFor(model => model.Fecha_Inicio, htmlAttributes: new { @class = "sr-only", @for = "Date" })
-                    @Html.EditorFor(model => model.Fecha_Inicio)
-                    @Html.ValidationMessageFor(model => model.Fecha_Inicio, "", new { @class = "text-danger" })
-                </div>
-                <div class="col-auto">
-                    @Html.LabelFor(model => model.Fecha_Fin, htmlAttributes: new { @class = "sr-only", @for = "Date" })
-                    @Html.EditorFor(model => model.Fecha_Fin)
-                    @Html.ValidationMessageFor(model => model.Fecha_Fin, "", new { @class = "text-danger" })
-                </div>
-                <div class="col-auto">
-                    <button type="submit" class="btn btn-primary mb-2">Buscar</button>
-                </div>
-            </div>
-=======
         </div>
->>>>>>> origin/Diseño
 
          }
 
@@ -161,19 +132,6 @@
                 data: {
                     name: 'Vue.js'
                 },
-<<<<<<< HEAD
-                // define métodos dentro del objeto `methods`
-                methods: {
-                    greet: function (event) {
-                        // `this` dentro de los métodos apunta a la instancia de Vue
-                        alert('Hello ' + this.name + '!')
-                        // `event` es el evento nativo del DOM
-                        if (event) {
-                            alert(event.target.tagName)
-                        }
-                    }
-                }
-=======
                 height: 550,
                 groupable: true,
                 sortable: true,
@@ -197,7 +155,6 @@
                     field: "Country",
                     width: 150
                 }]
->>>>>>> origin/Diseño
             });
                             // puedes invocar métodos en JavaScript tamibién
                             //example2.greet() // -> 'Hello Vue.js!'

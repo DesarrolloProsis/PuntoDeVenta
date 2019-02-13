@@ -718,11 +718,7 @@
     <Content Include="Views\Home\ReportViewerCajero.cshtml" />
     <Content Include="Views\Home\GenerarReportes.cshtml" />
     <Content Include="Views\Historico\Index.cshtml" />
-<<<<<<< HEAD
     <Content Include="Views\Historico\Tabla_Historico.cshtml" />
-=======
-    <Content Include="Views\Historico\EditorTemplates\DateTime.cshtml" />
->>>>>>> origin/Diseño
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
