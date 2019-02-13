@@ -10,15 +10,17 @@
     <title>@ViewBag.Title - Punto de venta</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2018.2.516/styles/kendo.default.min.css" />
-    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2018.2.516/styles/kendo.default.mobile.min.css" />
-    <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2018.2.516/styles/kendo.common-bootstrap.min.css" />
+
+    <link href="~/Content/css-yisus/all.css" rel="stylesheet" />
+    <!--<link rel="stylesheet" href="http://kendo.cdn.telerik.com/2018.2.516/styles/kendo.default.min.css" />-->
+    <!--<link rel="stylesheet" href="http://kendo.cdn.telerik.com/2018.2.516/styles/kendo.default.mobile.min.css" /> -->
+    <!--<link rel="stylesheet" href="http://kendo.cdn.telerik.com/2018.2.516/styles/kendo.common-bootstrap.min.css" />-->
     @RenderSection("styles", required: false)
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark navstyle fixed-top">
         <div class="container-fluid">
-            @Html.ActionLink("Autopista Palín-Escuintla", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            @Html.ActionLink("Delegación IV", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -27,7 +29,7 @@
                     <li class="nav-item @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">
                         @Html.ActionLink("Inicio", "Index", "Home", routeValues: null, htmlAttributes: new { @class = "nav-link" })
                     </li>
-                    <li class="nav-item" @(ViewContext.RouteData.Values["Controller"].ToString() == "Clientes" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")>
+                    @*<li class="nav-item" @(ViewContext.RouteData.Values["Controller"].ToString() == "Clientes" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")>
                         @Html.ActionLink("Clientes", "Index", "Clientes", routeValues: null, htmlAttributes: new { @class = "nav-link" })
                     </li>
                     <li class="nav-item" @(ViewContext.RouteData.Values["Controller"].ToString() == "CuentasTelepeajes" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")>
@@ -38,7 +40,7 @@
                     </li>
                     <li class="nav-item" @(ViewContext.RouteData.Values["Controller"].ToString() == "Historico" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")>
                         @Html.ActionLink("Historico", "Index", "Historico", routeValues: null, htmlAttributes: new { @class = "nav-link" })
-                    </li>
+                    </li>*@
                     @{
                         if (User.Identity.IsAuthenticated)
                         {
@@ -49,12 +51,12 @@
 
                                 if (userManager.IsInRole(IdUser, "SuperUsuario"))
                                 {
-                                    <li class="nav-item @(ViewContext.RouteData.Values["Action"].ToString() == "Register" ? "active" : "")">
+                                    @*<li class="nav-item @(ViewContext.RouteData.Values["Action"].ToString() == "Register" ? "active" : "")">
                                         @Html.ActionLink("Registrarse", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", @class = "nav-link" })
                                     </li>
                                     <li class="nav-item @(ViewContext.RouteData.Values["Action"].ToString() == "Home" ? "active" : "")">
                                         @Html.ActionLink("Generar reportes", "GenerarReportes", "Home", routeValues: null, htmlAttributes: new { id = "registerLink", @class = "nav-link" })
-                                    </li>
+                                    </li>*@
                                 }
                             }
                         }
@@ -85,5 +87,20 @@
     @Scripts.Render("~/bundles/intlTelInputjquery")
     @Scripts.Render("~/bundles/jquerymaskMoney")
     @RenderSection("scripts", required: false)
+    <script>
+        $(function () {
+
+            // elementos de la lista
+            var menues = $(".nav-item");
+
+            // manejador de click sobre todos los elementos
+            menues.click(function () {
+                // eliminamos active de todos los elementos
+                menues.removeClass("active");
+                // activamos el elemento clicado.
+                $(this).addClass("active");
+            });
+
+        });</script>
 </body>
 </html>

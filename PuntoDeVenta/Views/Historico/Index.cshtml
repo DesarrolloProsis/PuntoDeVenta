@@ -1,10 +1,47 @@
 ﻿@model PuntoDeVenta.Models.TableHistorico
+<<<<<<< HEAD
     @{
+=======
+@{
+    ViewBag.Title = "TablaHistorico";
+}
+<div class="col-md-12 text-align-center">
+   
+    <h4 class="titulo1">Tabla Historico</h4>
+    <p class="lead">
+        Consulte el registro historico de cruces.
+    </p>
+</div>
+<hr />
+    <div class="container-fluid">
+        @using (Html.BeginForm("Generar", "Historico", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-row align-items-center">
+                <div class="col-auto">
+                    @Html.LabelFor(model => model.Fecha_Inicio, htmlAttributes: new { @class = "sr-only", @for = "Date" })
+                    @Html.EditorFor(model => model.Fecha_Inicio)
+                    @Html.ValidationMessageFor(model => model.Fecha_Inicio, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-auto">
+                    @Html.LabelFor(model => model.Fecha_Fin, htmlAttributes: new { @class = "sr-only", @for = "Date" })
+                    @Html.EditorFor(model => model.Fecha_Fin)
+                    @Html.ValidationMessageFor(model => model.Fecha_Fin, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary mb-2">Buscar</button>
+                </div>
+            </div>
+        }
+
+>>>>>>> origin/Diseño
 
         ViewBag.Title = "TablaHistorico";
     }
 
 
+<<<<<<< HEAD
 
     <div class="container">
         <h2>Buscar Historial</h2>
@@ -27,6 +64,9 @@
                     <button type="submit" class="btn btn-primary mb-2">Buscar</button>
                 </div>
             </div>
+=======
+        </div>
+>>>>>>> origin/Diseño
 
          }
 
@@ -121,6 +161,7 @@
                 data: {
                     name: 'Vue.js'
                 },
+<<<<<<< HEAD
                 // define métodos dentro del objeto `methods`
                 methods: {
                     greet: function (event) {
@@ -132,6 +173,31 @@
                         }
                     }
                 }
+=======
+                height: 550,
+                groupable: true,
+                sortable: true,
+                pageable: {
+                    refresh: true,
+                    pageSizes: true,
+                    buttonCount: 5
+                },
+                columns: [{
+
+                    field: "ContactName",
+                    title: "Contact Name",
+                    width: 240
+                }, {
+                    field: "ContactTitle",
+                    title: "Contact Title"
+                }, {
+                    field: "CompanyName",
+                    title: "Company Name"
+                }, {
+                    field: "Country",
+                    width: 150
+                }]
+>>>>>>> origin/Diseño
             });
                             // puedes invocar métodos en JavaScript tamibién
                             //example2.greet() // -> 'Hello Vue.js!'

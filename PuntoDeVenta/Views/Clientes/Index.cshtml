@@ -4,128 +4,133 @@
 @{
     ViewBag.Title = "Clientes";
 }
-
-<h2 class="titulo1">Clientes</h2>
-<p>
-    @Html.ActionLink("Crear nuevo cliente", "Create", routeValues: null, htmlAttributes: new { @class = "btn botonstyle2" })
-</p>
-
-@if (ViewData["Success"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @ViewData["Success"]
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-}
-
-@if (ViewData["Error"] != null)
-{
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        @ViewData["Error"]
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-}
-
-<div id="example">
-    <div id="grid"></div>
+<div class="col-md-12 text-align-center">
+    <h4 class="titulo1">Busqueda de Clientes</h4>
+    <p class="lead">
+        Realice una busqueda por un cliente específico.
+    </p>
 </div>
+<hr />
+    <p>
+        @Html.ActionLink("Crear nuevo cliente", "Create", routeValues: null, htmlAttributes: new { @class = "btn botonstyle2" })
+    </p>
+    
+    @if (ViewData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @ViewData["Success"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Crear cuenta</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            @using (Html.BeginForm("Create", "CuentasTelepeajes", FormMethod.Post, htmlAttributes: new { @id = "Form0" }))
-            {
-                @Html.AntiForgeryToken()
-                <div class="modal-body">
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="form-group">
-                        <label for="numcliente">Número de cliente</label>
-                        <input id="numcliente" class="form-control formulario1" type="text" placeholder="Readonly input here…" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="nomcliente">Nombre</label>
-                        <input id="nomcliente" class="form-control formulario1" type="text" placeholder="Readonly input here…" readonly>
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.TypeCuenta, htmlAttributes: new { @for = "TypeCuenta" })
-                        @Html.DropDownListFor(model => model.TypeCuenta, (SelectList)ViewBag.TipoCuentas, htmlAttributes: new { @class = "form-control formulario2" })
-                        @Html.ValidationMessageFor(model => model.TypeCuenta, "", new { @class = "text-danger" })
-                    </div>
+    @if (ViewData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @ViewData["Error"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
 
-                    <div id="fromTo">
+    <div id="example">
+        <div id="grid"></div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Crear cuenta</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @using (Html.BeginForm("Create", "CuentasTelepeajes", FormMethod.Post, htmlAttributes: new { @id = "Form0" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="modal-body">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                         <div class="form-group">
-                            @Html.LabelFor(model => model.SaldoCuenta, htmlAttributes: new { @class = "control-label" })
-                            @Html.EditorFor(model => model.SaldoCuenta, new { htmlAttributes = new { @class = "form-control formulario1" } })
-                            @Html.ValidationMessageFor(model => model.SaldoCuenta, "", new { @class = "text-danger" })
-
+                            <label for="numcliente">Número de cliente</label>
+                            <input id="numcliente" class="form-control formulario1" type="text" placeholder="Readonly input here…" readonly>
                         </div>
+                        <div class="form-group">
+                            <label for="nomcliente">Nombre</label>
+                            <input id="nomcliente" class="form-control formulario1" type="text" placeholder="Readonly input here…" readonly>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.TypeCuenta, htmlAttributes: new { @for = "TypeCuenta" })
+                            @Html.DropDownListFor(model => model.TypeCuenta, (SelectList)ViewBag.TipoCuentas, htmlAttributes: new { @class = "form-control formulario2" })
+                            @Html.ValidationMessageFor(model => model.TypeCuenta, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div id="fromTo">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.SaldoCuenta, htmlAttributes: new { @class = "control-label" })
+                                @Html.EditorFor(model => model.SaldoCuenta, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                                @Html.ValidationMessageFor(model => model.SaldoCuenta, "", new { @class = "text-danger" })
+
+                            </div>
+                        </div>
+                        @Html.Hidden("ClienteId")
                     </div>
-                    @Html.Hidden("ClienteId")
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary botonstyle3" data-dismiss="modal">Cancelar</button>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn botonstyle2" id="crear">Crear</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!--------------------------------------------------------------------------------------------->
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle1">¡Advertencia!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            Número de cliente: <label id="numclienteVal"></label>
+                        </div>
+                        <div class="form-group">
+                            Nombre: <label id="nomclienteVal"></label>
+                        </div>
+                        <div id="saldovalID">
+                            <div class="form-group">
+                                Saldo inicial: <label id="saldoVal"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            ¿Seguro de crear la cuenta?
+                        </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn botonstyle3" data-dismiss="modal">Cancelar</button>
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn botonstyle2" id="crear">Crear</button>
+                    <button type="button" class="btn botonstyle2" id="submitForm">Guardar</button>
                 </div>
-            }
-        </div>
-    </div>
-</div>
-
-<!--------------------------------------------------------------------------------------------->
-<!-- Modal -->
-<div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle1">¡Advertencia!</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        Número de cliente: <label id="numclienteVal"></label>
-                    </div>
-                    <div class="form-group">
-                        Nombre: <label id="nomclienteVal"></label>
-                    </div>
-                    <div id="saldovalID">
-                        <div class="form-group">
-                            Saldo inicial: <label id="saldoVal"></label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        ¿Seguro de crear la cuenta?
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn botonstyle3" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn botonstyle2" id="submitForm">Guardar</button>
             </div>
         </div>
     </div>
-</div>
 
 
-@section Scripts
+    @section Scripts
 {
-    @Scripts.Render("~/bundles/jqueryval")
+        @Scripts.Render("~/bundles/jqueryval")
 
-    <script>
+        <script>
         $(document).ready(function () {
 
             $(function () {
@@ -238,7 +243,7 @@
                         {
                             field: "DateTCliente",
                             title: "Fecha de registro",
-                            width: 250,
+                            width: 265,
                             template: "#= kendo.toString(kendo.parseDate(DateTCliente, 'yyyy-MM-dd'), 'MM/dd/yyyy') #",
                             filterable: {
                                 ui: "datetimepicker" // use Kendo UI DateTimePicker
@@ -270,7 +275,7 @@
                                     //console.log(dataItem);
                                 },
                             },
-                            width: 100
+                            width: 155
                         },
                         {
                             command: [{
@@ -298,7 +303,7 @@
                                     var data = this.dataItem(tr);
                                     window.location.href = '@(Url.Action("Delete", "Clientes").ToString())?id=' + data.Id;
                                 },
-                            }], width:100
+                            }], width:110
                         },
                         {
                             command: [{
@@ -312,7 +317,7 @@
                                     var data = this.dataItem(tr);
                                     window.location.href = '@(Url.Action("ListCuentas", "CuentasTelepeajes").ToString())?id=' + data.Id;
                                 },
-                            }], width:120
+                            }], width:135
                         }],
                 });
             }
@@ -365,6 +370,6 @@
                 $('#SaldoCuenta').mask("#,##0.00", { reverse: true });
             });
         });
-    </script>
+        </script>
 
-}
+    }

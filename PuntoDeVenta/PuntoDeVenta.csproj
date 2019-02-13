@@ -294,7 +294,9 @@
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\css-yisus\all.css" />
     <Content Include="Content\css-yisus\estilos.css" />
+    <Content Include="Content\css-yisus\img\capufe.png" />
     <Content Include="Content\css-yisus\img\Logo.png" />
     <Content Include="Content\css-yisus\img\Marhnoswithred.png" />
     <Content Include="Content\css-yisus\intl-tel-input-master\.gitignore" />
@@ -462,6 +464,7 @@
     <Content Include="Content\bootstrap-reboot.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
+    <Content Include="Content\css-yisus\variables.scss" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <Content Include="Scripts\bootstrap.min.js.map" />
     <Content Include="Scripts\bootstrap.js.map" />
@@ -715,7 +718,11 @@
     <Content Include="Views\Home\ReportViewerCajero.cshtml" />
     <Content Include="Views\Home\GenerarReportes.cshtml" />
     <Content Include="Views\Historico\Index.cshtml" />
+<<<<<<< HEAD
     <Content Include="Views\Historico\Tabla_Historico.cshtml" />
+=======
+    <Content Include="Views\Historico\EditorTemplates\DateTime.cshtml" />
+>>>>>>> origin/Diseño
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
