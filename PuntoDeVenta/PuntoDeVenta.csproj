@@ -282,6 +282,7 @@
     <Compile Include="Models\OperacionesCajero.cs" />
     <Compile Include="Models\OperacionesSerBIpagos.cs" />
     <Compile Include="Models\Parametrizable.cs" />
+    <Compile Include="Models\TableHistorico.cs" />
     <Compile Include="Models\Tags.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -714,6 +715,7 @@
     <Content Include="Views\Home\ReportViewerCajero.cshtml" />
     <Content Include="Views\Home\GenerarReportes.cshtml" />
     <Content Include="Views\Historico\Index.cshtml" />
+    <Content Include="Views\Historico\Tabla_Historico.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

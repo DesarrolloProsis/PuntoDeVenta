@@ -1,95 +1,139 @@
 ﻿@model PuntoDeVenta.Models.TableHistorico
-@{
-    ViewBag.Title = "TablaHistorico";
-}
+    @{
 
-<h2>TablaHistorico</h2>
-
-<div class="container">
-    @using (Html.BeginForm("Generar", "Historico", FormMethod.Post))
-    {
-        @Html.AntiForgeryToken()
-
-        <div class="form-row align-items-center">
-            <div class="col-auto">
-                @Html.LabelFor(model => model.Fecha_Inicio, htmlAttributes: new { @class = "sr-only", @for = "Date" })
-                @Html.EditorFor(model => model.Fecha_Inicio)
-                @Html.ValidationMessageFor(model => model.Fecha_Inicio, "", new { @class = "text-danger" })
-            </div>
-            <div class="col-auto">
-                @Html.LabelFor(model => model.Fecha_Fin, htmlAttributes: new { @class = "sr-only", @for = "Date" })
-                @Html.EditorFor(model => model.Fecha_Fin)
-                @Html.ValidationMessageFor(model => model.Fecha_Fin, "", new { @class = "text-danger" })
-            </div>
-            <div class="col-auto">
-                <button type="submit" class="btn btn-primary mb-2">Buscar</button>
-            </div>
-        </div>
+        ViewBag.Title = "TablaHistorico";
     }
 
 
-        <div id="example">
-            <div id="grid"></div>
 
-        </div>
+    <div class="container">
+        <h2>Buscar Historial</h2>
+        @using (Html.BeginForm("Generar", "Historico", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
 
+            <div class="form-row align-items-center">
+                <div class="col-auto">
+                    @Html.LabelFor(model => model.Fecha_Inicio, htmlAttributes: new { @class = "sr-only", @for = "Date" })
+                    @Html.EditorFor(model => model.Fecha_Inicio)
+                    @Html.ValidationMessageFor(model => model.Fecha_Inicio, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-auto">
+                    @Html.LabelFor(model => model.Fecha_Fin, htmlAttributes: new { @class = "sr-only", @for = "Date" })
+                    @Html.EditorFor(model => model.Fecha_Fin)
+                    @Html.ValidationMessageFor(model => model.Fecha_Fin, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary mb-2">Buscar</button>
+                </div>
+            </div>
 
+         }
+
+        @*<hr />
+
+        @if (Model.ListaHistorico != null && Model.ListaHistorico.Any())
+        {
+
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Num Tag</th>
+                                <th scope="col">Plaza</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Cuerpo</th>
+                                <th scope="col">Carril</th>
+                                <th scope="col">Clase</th>
+                                <th scope="col">Saldo</th>
+                                <th scope="col">Operadores</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int i = 0;
+                                foreach (var item in Model.ListaHistorico)
+                                {
+                                    <tr>
+
+                                        <th scope="row">@(++i)</th>
+                                        <td class="td_1">@item.Id</td>
+                                        <td>@item.Tag</td>
+                                        <td>@item.Plaza</td>
+                                        <td>@item.Fecha</td>
+                                        <td>@item.Cuerpo</td>
+                                        <td>@item.Carril</td>
+                                        <td>@item.Clase</td>
+                                        <td>@item.Saldo</td>
+                                        <td>@item.Operador</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+        }
+        else
+        {
+            <div id="aboutPage" class="col-lg-12">
+                <p class="text-center lead">{{ message }}</p>
+            </div>
+        }*@
+
+    </div>
+
+        @section Scripts {
+
+        @Scripts.Render("~/bundles/jqueryval")
 
         <script>
-        $(document).ready(function () {
+            $(document).ready(function () {
+                $(".td_1").hide();
+                // Set form variable
 
-            $(function () {
-
-                var serviceURL = "@Url.Action("Generar", "Historico")";
-
-                $.ajax({
-                    url: serviceURL,
-                    dataType: "json",
-                    contentType: "application/json; charset=utf-8",
-                    success: function (data) {
-
-                    },
-                    error: function (ex) {
-                        alert(ex);
-                    }
+                $(".clickme").on("click", function () {
+                    var $row = $(this).closest("tr");       //, Finds the closest row <tr>
+                    //$tds = $row.find("td");             // Finds all children <td> elements
+                    //$("#form12").submit(function () {
+                    //    alert('Form is submitting....');
+                    //    // Or Do Something...
+                    //    return true;
+                    //});
+                    alert($row.find(".td_1").html());
+                    $('#form12').append('<input type="hidden" name="id" value="' + $row.find(".td_1").html() + '" />');
+                    $("#form12").submit();
                 });
             });
+        </script>
 
-
-            $("#grid").kendoGrid({
-                dataSource: {
-                    type: "odata",
-                    transport: {
-                        read: "https://demos.telerik.com/kendo-ui/service/Northwind.svc/Customers"
-                    },
-                    pageSize: 20
-                },
-                height: 550,
-                groupable: true,
-                sortable: true,
-                pageable: {
-                    refresh: true,
-                    pageSizes: true,
-                    buttonCount: 5
-                },
-                columns: [{
-   
-                    field: "ContactName",
-                    title: "Contact Name",
-                    width: 240
-                }, {
-                    field: "ContactTitle",
-                    title: "Contact Title"
-                }, {
-                    field: "CompanyName",
-                    title: "Company Name"
-                }, {
-                    field: "Country",
-                    width: 150
-                }]
+        <script>
+            var aboutPage = new Vue({
+                el: '#aboutPage',
+                data: {
+                    message: 'NO HAY HISTORICO.'
+                }
             });
 
-
-
-
+            var example2 = new Vue({
+                el: '#example-2',
+                data: {
+                    name: 'Vue.js'
+                },
+                // define métodos dentro del objeto `methods`
+                methods: {
+                    greet: function (event) {
+                        // `this` dentro de los métodos apunta a la instancia de Vue
+                        alert('Hello ' + this.name + '!')
+                        // `event` es el evento nativo del DOM
+                        if (event) {
+                            alert(event.target.tagName)
+                        }
+                    }
+                }
+            });
+                            // puedes invocar métodos en JavaScript tamibién
+                            //example2.greet() // -> 'Hello Vue.js!'
         </script>
+    }

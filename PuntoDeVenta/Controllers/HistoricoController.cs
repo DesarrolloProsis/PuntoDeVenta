@@ -19,6 +19,12 @@ namespace PuntoDeVenta.Controllers
             return View();
         }
 
+        public ActionResult Regresar()
+        {
+            return View("Index");
+        }
+
+
         public ActionResult Generar(TableHistorico model)
         {
             string Fecha_Inicio = model.Fecha_Inicio.ToString("dd/MM/yyyy");
@@ -30,14 +36,45 @@ namespace PuntoDeVenta.Controllers
                 {
                     dt = Llenar_Tabla(model.Fecha_Inicio);
                 }
+                else if (Fecha_Inicio == "01/01/0001")
+                    return View("Index");
             }
             else if (model.Fecha_Fin > model.Fecha_Inicio)
             {
                 dt = Llenar_Tabla(model.Fecha_Inicio, model.Fecha_Fin);
             }
+            else if (Fecha_Fin == "01/01/0001")
+            {
+                if (Fecha_Inicio == "01/01/0001")
+                    return View("Index");
+            }
+            else
+            {
+                return View("Index");
+            }
+            List<Historicos> Lista = new List<Historicos>();
+            int id = 0;
+            foreach(DataRow item in dt.Rows)
+            {
+                Historicos newrow = new Historicos();
+                newrow.Id = id++;
+                newrow.Tag = item["NumTag"].ToString();
+                newrow.Delegacion = item["Delegacion"].ToString();
+                newrow.Plaza = item["Plaza"].ToString();
+                newrow.Cuerpo = item["Cuerpo"].ToString();
+                newrow.Carril = item["Carril"].ToString();
+                newrow.Fecha = item["Fecha"].ToString();
+                newrow.Clase = item["Clase"].ToString();
+                newrow.Saldo = item["SaldoTag"].ToString();
+                newrow.Operador = item["Operador"].ToString();
+                Lista.Add(newrow);
+            }
 
 
-            return View();
+          
+            model.ListaHistorico = Lista;
+
+            return View("Tabla_Historico", model);
         }
 
         public DataTable Llenar_Tabla(DateTime Fecha_Inicio, DateTime Fecha_Fin)
@@ -51,8 +88,8 @@ namespace PuntoDeVenta.Controllers
             {
                 sqlConnection.Open();
                 string _Fecha = Fecha_Inicio.ToString("yyyyMMdd");
-                string Fecha_ = Fecha_Fin.ToString("yyyyMMdd");
-                cmd.CommandText = "Select * From Historico Where Fecha >= '" + _Fecha + "' and Fecha <= '" + Fecha_ + "'";
+                string Fecha_ = Fecha_Fin.AddDays(1).ToString("yyyyMMdd");
+                cmd.CommandText = "Select * From Historico Where Fecha >= '" + _Fecha + "' and Fecha <= '" + Fecha_ + "' order by Fecha desc";
                 cmd.ExecuteNonQuery();
                 SqlDataAdapter sqlData = new SqlDataAdapter(cmd);
                 sqlData.Fill(dt);
@@ -75,7 +112,7 @@ namespace PuntoDeVenta.Controllers
                 sqlConnection.Open();
                 string _Fecha = Fecha_Inicio.ToString("yyyyMMdd");
                 string Fecha_ = Fecha_Inicio.AddDays(1).ToString("yyyyMMdd");
-                cmd.CommandText = "Select * From Historico Where Fecha = '" + _Fecha + "'";
+                cmd.CommandText = "Select * From Historico Where Fecha >= '" + _Fecha + "' and Fecha <= '"+ Fecha_ + "' order by Fecha desc";
                 cmd.ExecuteNonQuery();
                 SqlDataAdapter sqlData = new SqlDataAdapter(cmd);
                 sqlData.Fill(dt);
