@@ -3,7 +3,33 @@
     ViewBag.Title = "Inicio";
 }
 
-
+<div class="row">
+    <div class="container-fluid">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-4">
+                    <!--onclick="location.href='/Clientes'"-->
+                    <button class="btn boton-inicio" onclick="location.href='/Clientes/Index'">Crear nuevo cliente</button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn boton-inicio" onclick="location.href='/CuentasTelepeajes/Index'">Recargar saldo cuenta</button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn boton-inicio" onclick="location.href='/Tags/Index'">Recargar saldo tag</button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn boton-inicio" onclick="location.href='/Historico/Index'">Historial de cruces</button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn boton-inicio" onclick="location.href='/Account/Register'">Registrar nuevo cajero</button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn boton-inicio" onclick="location.href='/Home/GenerarReportes'">Generar Reportes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <h1 align="center"><a class="shine">BIENVENIDO</a></h1>
 <h1 align="center"><a class="sirotext">@User.Identity.Name</a></h1>
 
