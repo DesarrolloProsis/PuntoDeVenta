@@ -31,7 +31,8 @@
                     }
                 </div>
                 <div class="modal-footer">
-                    <a href="@Url.Action("Index", "Clientes")" type="button" class="btn botonstyle3">Cancelar</a>
+                    <button type="button" class="btn botonstyle3"  onclick="location.href='@Url.Action("Index", "Clientes")'">Cancelar</button>
+                    <!--<input onclick="@Url.Action("Index", "Clientes")" value="Cancelar" type="button" class="btn botonstyle3"/>-->
                     <button id="comprobar" type="button" class="btn botonstyle2">Comprobar</button>
                 </div>
             </div>

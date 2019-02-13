@@ -4,55 +4,62 @@
     ViewBag.Title = "Deshabilitar";
 }
 
-<h2 class="titulo1">Deshabilitar</h2>
-
-<h3 class="titulo2">¿Seguro que quieres Deshabilitar este tag?</h3>
+<h4 class="titulo1">Deshabilitar Tag</h4>
+<p class="lead">
+   Deshabilita el Tag para evitar su funcionamiento.
+</p>
 <div>
-    <h4 class="titulo2">Tags</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.CuentasTelepeaje.NumCuenta)
-        </dt>
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.CuentasTelepeaje.NumCuenta)
+                    </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.CuentasTelepeaje.NumCuenta)
-        </dd>
+                    <dd>
+                        @Html.DisplayFor(model => model.CuentasTelepeaje.NumCuenta)
+                    </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.NumTag)
-        </dt>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.NumTag)
+                    </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.NumTag)
-        </dd>
+                    <dd>
+                        @Html.DisplayFor(model => model.NumTag)
+                    </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.SaldoTag)
-        </dt>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.SaldoTag)
+                    </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.SaldoTag)
-        </dd>
+                    <dd>
+                        @Html.DisplayFor(model => model.SaldoTag)
+                    </dd>
 
-       
-        <dt>
-            @Html.DisplayNameFor(model => model.DateTTag)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.DateTTag)
-        </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.DateTTag)
+                    </dt>
 
-    </dl>
+                    <dd>
+                        @Html.DisplayFor(model => model.DateTTag)
+                    </dd>
 
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
+                </dl>
 
-        <div class="form-actions no-color">
-            <input type="submit" value="Deshabilitar" class="btn botonstyle2" /> |
-            @Html.ActionLink("Regresar a la lista", "Index", routeValues: null, htmlAttributes: new { @Class = "link1" })
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-actions no-color">
+                        <input type="submit" value="Deshabilitar" class="btn botonstyle2" /> |
+                        @Html.ActionLink("Regresar a la lista", "Index", routeValues: null, htmlAttributes: new { @Class = "link1" })
+                    </div>
+                }
+            </div>
         </div>
-    }
+    </div>
 </div>
+

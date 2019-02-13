@@ -74,7 +74,7 @@
                     @Html.Hidden("ClienteId")
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn botonstyle3" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary botonstyle3" data-dismiss="modal">Cancelar</button>
                     <!-- Button trigger modal -->
                     <button type="button" class="btn botonstyle2" id="crear">Crear</button>
                 </div>
@@ -298,7 +298,7 @@
                                     var data = this.dataItem(tr);
                                     window.location.href = '@(Url.Action("Delete", "Clientes").ToString())?id=' + data.Id;
                                 },
-                            }], width:100
+                            }], width:110
                         },
                         {
                             command: [{

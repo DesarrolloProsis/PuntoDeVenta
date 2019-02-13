@@ -18,11 +18,13 @@
     display: block;
     padding-bottom: 30px !important;
     padding-top: 10% !important;
+    width: 300px !important;
+    height: auto !important;
 }
 
 /* NAV BAR */
 .navstyle {
-    background-color: #eb1c2c !important;
+    background-color: #2980B9 !important;
     color: white !important;
     font-family: fjalla;
     letter-spacing: 1px;
@@ -55,11 +57,11 @@ footer {
 
 /* BOTONES */
 .botonstyle {
-    background-color: #eb1c2c;
+    background-color: #2980B9;
     border-radius: 20px;
     color: white;
     border: 0;
-    box-shadow: 0px 5px 0px 0px #bc1320;
+    box-shadow: 0px 5px 0px 0px #1F618D;
     padding-top: 12px;
     padding-bottom: 12px;
     font-family: fjalla;
@@ -68,11 +70,11 @@ footer {
 }
 
     .botonstyle:hover {
-        background-color: #eb1c2c;
+        background-color: #2980B9;
         border-radius: 20px;
         color: white;
         border: 0;
-        box-shadow: 0px 5px 0px 0px #bc1320;
+        box-shadow: 0px 5px 0px 0px #1F618D;
         padding-top: 12px;
         padding-bottom: 12px;
         font-family: fjalla;
@@ -81,17 +83,17 @@ footer {
     }
 
     .botonstyle:active {
-        box-shadow: 0px 2px 0px 0px #bc1320;
+        box-shadow: 0px 2px 0px 0px #1F618D;
         transform: translateY(2px);
     }
 
 .botonstyle2 {
     margin-top: 7px;
-    background-color: #eb1c2c;
+    background-color: #2980B9;
     border-radius: 20px;
     color: white;
     border: 0;
-    box-shadow: 0px 5px 0px 0px #bc1320;
+    box-shadow: 0px 5px 0px 0px #1F618D;
     padding-top: 8px;
     padding-bottom: 8px;
     font-family: fjalla;
@@ -101,11 +103,11 @@ footer {
 
     .botonstyle2:hover {
         margin-top: 7px;
-        background-color: #eb1c2c;
+        background-color: #2980B9;
         border-radius: 20px;
         color: white;
         border: 0;
-        box-shadow: 0px 5px 0px 0px #bc1320;
+        box-shadow: 0px 5px 0px 0px #1F618D;
         padding-top: 8px;
         padding-bottom: 8px;
         font-family: fjalla;
@@ -114,7 +116,7 @@ footer {
     }
 
     .botonstyle2:active {
-        box-shadow: 0px 2px 0px 0px #bc1320;
+        box-shadow: 0px 2px 0px 0px #1F618D;
         transform: translateY(2px);
     }
 
@@ -196,20 +198,20 @@ footer {
 
 /* FORMULARIOS */
 .formulario1 {
-    border: 2px solid #eb1c2c !important;
+    border: 1.3px solid #2980B9 !important;
 }
 
 .formulario2 {
-    border: 2px solid #eb1c2c !important;
+    border: 1.3px solid #2980B9 !important;
 }
 
 .formulario3 {
-    border: 2px solid #eb1c2c !important;
+    border: 1.3px solid #2980B9 !important;
 }
 
 /* INPUT */
 .input1 {
-    border: 2px solid #eb1c2c !important;
+    border: 1.3px solid #2980B9 !important;
     border-radius: 5px;
 }
 
