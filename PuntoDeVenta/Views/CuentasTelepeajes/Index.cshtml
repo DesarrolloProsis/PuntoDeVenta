@@ -10,113 +10,113 @@
     </p>
 </div>
 <hr />
-    <!-- Button trigger modal -->
-    <p>
-        <button type="button" class="btn botonstyle2" data-toggle="modal" data-target="#exampleModalCenter">
-            Recargar saldo cuenta
+<!-- Button trigger modal -->
+<p>
+    <button type="button" class="btn botonstyle2" data-toggle="modal" data-target="#exampleModalCenter">
+        Recargar saldo cuenta
+    </button>
+</p>
+
+@if (ViewData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @ViewData["Success"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
         </button>
-    </p>
-
-    @if (ViewData["Success"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            @ViewData["Success"]
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    }
-
-    @if (ViewData["Error"] != null)
-    {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            @ViewData["Error"]
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    }
-
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenterTitle">Recargar cuenta</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                @using (Html.BeginForm("RecargarSaldo", "CuentasTelepeajes", FormMethod.Post, htmlAttributes: new { @id = "Form0" }))
-                {
-                    @Html.AntiForgeryToken()
-                    <div class="modal-body">
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.NumCuenta, htmlAttributes: new { @class = "control-label" })
-                            @Html.EditorFor(model => model.NumCuenta, new { htmlAttributes = new { @class = "form-control formulario1", @type = "number" } })
-                            @Html.ValidationMessageFor(model => model.NumCuenta, "", new { @class = "text-danger" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.SaldoARecargar, htmlAttributes: new { @class = "control-label" })
-                            @Html.TextBoxFor(model => model.SaldoARecargar, new { @class = "form-control formulario1" })
-                            @Html.ValidationMessageFor(model => model.SaldoARecargar, "", new { @class = "text-danger" })
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.ConfSaldoARecargar, htmlAttributes: new { @class = "control-label" })
-                            @Html.TextBoxFor(model => model.ConfSaldoARecargar, new { @class = "form-control formulario1" })
-                            @Html.ValidationMessageFor(model => model.ConfSaldoARecargar, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn botonstyle3" data-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn botonstyle2" id="saldoCuenta">Recargar</button>
-                    </div>
-                }
-            </div>
-        </div>
     </div>
+}
 
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenterTitle1">¡Advertencia!</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+@if (ViewData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @ViewData["Error"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+@*@Html.EditorFor(model => model.NumCuenta, new { htmlAttributes = new { @class = "form-control formulario1", @type = "number" } })*@
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Recargar cuenta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("RecargarSaldo", "CuentasTelepeajes", FormMethod.Post, htmlAttributes: new { @id = "Form0" }))
+            {
+                @Html.AntiForgeryToken()
                 <div class="modal-body">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     <div class="form-group">
-                        Número de cuenta: <label id="numcuentaVal"></label>
+                        @Html.LabelFor(model => model.NumCuenta, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.NumCuenta, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                        @Html.ValidationMessageFor(model => model.NumCuenta, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group">
-                        Saldo a recargar: <label id="saldoarecargarVal"></label>
+                        @Html.LabelFor(model => model.SaldoARecargar, htmlAttributes: new { @class = "control-label" })
+                        @Html.TextBoxFor(model => model.SaldoARecargar, new { @class = "form-control formulario1" })
+                        @Html.ValidationMessageFor(model => model.SaldoARecargar, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group">
-                        ¿Seguro de recargar?
+                        @Html.LabelFor(model => model.ConfSaldoARecargar, htmlAttributes: new { @class = "control-label" })
+                        @Html.TextBoxFor(model => model.ConfSaldoARecargar, new { @class = "form-control formulario1" })
+                        @Html.ValidationMessageFor(model => model.ConfSaldoARecargar, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn botonstyle3" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn botonstyle2" id="submitForm">Guardar</button>
+                    <button type="button" class="btn botonstyle2" id="saldoCuenta">Recargar</button>
                 </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle1">¡Advertencia!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    Número de cuenta: <label id="numcuentaVal"></label>
+                </div>
+                <div class="form-group">
+                    Saldo a recargar: <label id="saldoarecargarVal"></label>
+                </div>
+                <div class="form-group">
+                    ¿Seguro de recargar?
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn botonstyle3" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn botonstyle2" id="submitForm">Guardar</button>
             </div>
         </div>
     </div>
+</div>
 
-    @Html.Partial("_AddTags")
+@Html.Partial("_AddTags")
 
-    <div id="example">
-        <div id="grid"></div>
-    </div>
+<div id="example">
+    <div id="grid"></div>
+</div>
 
-    @section Scripts
+@section Scripts
 {
-        @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryval")
 
-        <script>
+    <script>
         $(document).ready(function () {
 
             $(function () {
@@ -200,8 +200,9 @@
                         {
                             field: "StatusCuenta",
                             title: "Estatus",
-                            width: 110,
-                            template: "#= StatusCuenta ? 'Sí' : 'No' #",
+                            width: 150,
+                            template: "#= StatusCuenta ? 'Válido' : 'Inválido' #",
+                            filterable: { messages: { isTrue: "Válido", isFalse: "Invalido" } }
                         },
                         {
                             field: "DateTCuenta",
@@ -361,6 +362,6 @@
                 $('#CobroTag').mask("#,##0.00", { reverse: true });
             });
         });
-        </script>
+    </script>
 
-    }
+}

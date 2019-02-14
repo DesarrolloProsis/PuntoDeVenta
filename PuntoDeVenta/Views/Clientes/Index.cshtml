@@ -237,8 +237,9 @@
                         {
                             field: "StatusCliente",
                             title: "Estatus",
-                            width: 100,
-                            template: "#= StatusCliente ? 'Sí' : 'No' #"
+                            width: 185,
+                            template: "#= StatusCliente ? 'Válido' : 'Inválido' #",
+                            filterable: { messages: { isTrue: "Válido", isFalse: "Invalido" } }
                         },
                         {
                             field: "DateTCliente",

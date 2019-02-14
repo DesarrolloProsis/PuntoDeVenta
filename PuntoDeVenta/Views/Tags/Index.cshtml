@@ -184,8 +184,9 @@
                         {
                             field: "StatusTag",
                             title: "Estatus",
-                            width: 100,
-                            template: "#= StatusTag ? 'Sí' : 'No' #",
+                            width: 110,
+                            template: "#= StatusTag ? 'Válido' : 'Invalido' #",
+                            filterable: { messages: { isTrue: "Válido", isFalse: "Invalido" } }
                         },
                         {
                             field: "DateTTag",

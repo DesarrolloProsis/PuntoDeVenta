@@ -2,42 +2,72 @@
 @{
     ViewBag.Title = "Inicio";
 }
-
+<h1 align="center"><a class="shine">BIENVENIDO</a></h1>
+<h1 align="center"><a class="sirotext">@User.Identity.Name</a></h1>
 <div class="row">
     <div class="container-fluid">
-        <div class="col-md-12">
+        <div class="col-md-12" style="margin-top: 10px !important;">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-4" style="margin-top: 2% !important;">
                     <!--onclick="location.href='/Clientes'"-->
-                    <button class="btn boton-inicio" onclick="location.href='/Clientes/Index'">Crear nuevo cliente</button>
+                    <button class="btn boton-inicio" onclick="location.href='/Clientes/Index'">
+                        <div class="row">
+                            <div class="col-md-12"><i class="fas fa-address-card tamano"></i></div>              
+                        </div>
+                     Crear nuevo cliente
+                    </button>
                 </div>
-                <div class="col-md-4">
-                    <button class="btn boton-inicio" onclick="location.href='/CuentasTelepeajes/Index'">Recargar saldo cuenta</button>
+                <div class="col-md-4" style="margin-top: 2% !important;">
+                    <button class="btn boton-inicio" onclick="location.href='/CuentasTelepeajes/Index'">
+                        <div class="row">
+                            <div class="col-md-12"><i class="fas fa-money-check-alt tamano"></i></div>
+                        </div>
+                         Recargar saldo cuenta
+                    </button>
                 </div>
-                <div class="col-md-4">
-                    <button class="btn boton-inicio" onclick="location.href='/Tags/Index'">Recargar saldo tag</button>
+                <div class="col-md-4" style="margin-top: 2% !important;">
+                    <button class="btn boton-inicio" onclick="location.href='/Tags/Index'">
+                        <div class="row">
+                            <div class="col-md-12"><i class="far fa-credit-card tamano"></i></div>
+                        </div>
+                         Recargar saldo tag
+                    </button>
                 </div>
-                <div class="col-md-4">
-                    <button class="btn boton-inicio" onclick="location.href='/Historico/Index'">Historial de cruces</button>
+                <div class="col-md-4" style="margin-top: 2% !important;">
+                    <button class="btn boton-inicio" onclick="location.href='/Historico/Index'">
+                        <div class="row">
+                            <div class="col-md-12"><i class="fas fa-clipboard-list tamano"></i></div>
+                        </div>
+                         Historial de cruces
+                    </button>
                 </div>
-                <div class="col-md-4">
-                    <button class="btn boton-inicio" onclick="location.href='/Account/Register'">Registrar nuevo cajero</button>
+                <div class="col-md-4" style="margin-top: 2% !important;">
+                    <button class="btn boton-inicio" onclick="location.href='/Account/Register'">
+                        <div class="row">
+                            <div class="col-md-12"><i class="fas fa-address-book tamano"></i></div>
+                        </div>
+                         Registrar nuevo cajero
+                    </button>
                 </div>
-                <div class="col-md-4">
-                    <button class="btn boton-inicio" onclick="location.href='/Home/GenerarReportes'">Generar Reportes</button>
+                <div class="col-md-4" style="margin-top: 2% !important;">
+                    <button class="btn boton-inicio" onclick="location.href='/Home/GenerarReportes'">
+                        <div class="row">
+                            <div class="col-md-12"><i class="fas fa-list tamano"></i></div>
+                        </div>
+                         Generar Reportes
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<h1 align="center"><a class="shine">BIENVENIDO</a></h1>
-<h1 align="center"><a class="sirotext">@User.Identity.Name</a></h1>
 
-<div class="container">
+
+<div class="container" style="margin-top: 40px;">
     <div class="row">
         <div class="col-12 text-center">
             <!-- Button trigger modal -->
-            <button type="button" class="btn botonstyle2 btn-lg btn-block" data-toggle="modal" data-target="#exampleModalCenter">
+            <button type="button" class="btn btn-danger boton-cerrar btn-lg btn-block" data-toggle="modal" data-target="#exampleModalCenter">
                 Cerrar sesión
             </button>
         </div>
