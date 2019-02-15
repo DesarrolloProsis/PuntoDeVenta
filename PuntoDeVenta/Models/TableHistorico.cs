@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace PuntoDeVenta.Models
 {
@@ -10,8 +11,10 @@ namespace PuntoDeVenta.Models
 
         public DateTime Fecha_Inicio { get; set; }
         public DateTime Fecha_Fin { get; set; }
+        public string Tag { get; set; }
+        public string Operador { get; set; }
         public List<Historicos> ListaHistorico { get; set; }
-        public Historicos Historicos { get; set; }
+        
     }
 
     public class Historicos

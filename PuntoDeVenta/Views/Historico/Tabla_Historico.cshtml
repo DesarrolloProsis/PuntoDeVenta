@@ -9,6 +9,8 @@
 <div class="container">
     <h2>Tabla de Historico</h2>  <div>@Html.ActionLink("Regresar", "Regresar", "Historico", new { }, new { @class = "btn btn-info" })</div>
 
+    <div>@Html.ActionLink("PDF", "Pdf", "Historico", new { }, new { @class = "btn btn-info" })</div>
+
     <hr />
     @if (Model.ListaHistorico != null && Model.ListaHistorico.Any())
     {
