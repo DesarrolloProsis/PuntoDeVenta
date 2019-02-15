@@ -217,7 +217,7 @@ namespace PuntoDeVenta.Controllers
                                 switch (cuenta.TypeCuenta)
                                 {
                                     case "Colectiva":
-                                        tags.SaldoTag = null;
+                                        tags.SaldoTag = cuenta.SaldoCuenta;
                                         break;
                                     case "Individual":
                                         var SaldoSend = tags.SaldoTag;
@@ -302,14 +302,19 @@ namespace PuntoDeVenta.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Tags tags = await db.Tags.FindAsync(id);
+            var cuenta = await db.CuentasTelepeajes.FindAsync(tags.CuentaId);
+            tags.TipoTag = cuenta.TypeCuenta;
+            tags.SaldoTag = (Convert.ToInt64(tags.SaldoTag) / 100).ToString("F2");
+            ViewBag.TagsModelTras = new Tags();
+
             if (tags == null)
             {
                 return HttpNotFound();
             }
             return View(tags);
         }
-        [Authorize(Roles = "SuperUsuario")]
 
+        [Authorize(Roles = "SuperUsuario")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(long id)
@@ -368,10 +373,6 @@ namespace PuntoDeVenta.Controllers
 
             ViewBag.Error = "El tag ya esta dada de baja.";
             return View("Index");
-            //Tags tags = await db.Tags.FindAsync(id);
-            //db.Tags.Remove(tags);
-            //await db.SaveChangesAsync();
-            //return RedirectToAction("Index");
         }
 
 
@@ -414,10 +415,108 @@ namespace PuntoDeVenta.Controllers
 
             ViewBag.Error = "El tag ya esta dada de Alta.";
             return View("Index");
-            //Tags tags = await db.Tags.FindAsync(id);
-            //db.Tags.Remove(tags);
-            //await db.SaveChangesAsync();
-            //return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteTraspaso(TagsViewModel model)
+        {
+            db.Configuration.ValidateOnSaveEnabled = false;
+
+            if (model.IdOldTag == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Tags tagOld = await db.Tags.FindAsync(model.IdOldTag);
+
+            if (tagOld == null)
+            {
+                return HttpNotFound();
+            }
+
+            CuentasTelepeaje cuenta = await db.CuentasTelepeajes.FindAsync(tagOld.CuentaId);
+
+            if (cuenta == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (model.Checked == true)
+            {
+                var tagNew = new Tags
+                {
+                    StatusResidente = false,
+                    StatusTag = true,
+                    DateTTag = DateTime.Now.Date,
+                    IdCajero = User.Identity.GetUserId(),
+                    NumTag = model.NumNewTag,
+                    CobroTag = model.CobroTag,
+                    CuentaId = cuenta.Id,
+                };
+
+                var UserId = User.Identity.GetUserId();
+
+                var lastCorteUser = await db.CortesCajeros
+                                                .Where(x => x.IdCajero == UserId)
+                                                .OrderByDescending(x => x.DateTApertura).ToListAsync();
+                if (lastCorteUser.Count > 0)
+                {
+                    var detalle = new OperacionesCajero
+                    {
+                        Concepto = "TAG TRASPASO",
+                        DateTOperacion = DateTime.Now,
+                        Numero = tagNew.NumTag,
+                        Tipo = "TAG",
+                        TipoPago = "TRA",
+                        CorteId = lastCorteUser.FirstOrDefault().Id,
+                        CobroTag = Convert.ToDouble(tagNew.CobroTag),
+                    };
+
+                    switch (cuenta.TypeCuenta)
+                    {
+                        case "Colectiva":
+                            tagNew.SaldoTag = cuenta.SaldoCuenta;
+                            detalle.Monto = Convert.ToDouble(tagNew.SaldoTag);
+                            break;
+                        case "Individual":
+                            var SaldoSend = model.SaldoTag;
+                            SaldoSend = SaldoSend.Replace(",", string.Empty);
+                            tagNew.SaldoTag = SaldoSend.Replace(".", string.Empty);
+                            detalle.Monto = Convert.ToDouble(model.SaldoTag);
+                            break;
+                        default:
+                            break;
+                    }
+
+                    db.Tags.Add(tagNew);
+                    db.OperacionesCajeros.Add(detalle);
+                }
+            }
+
+            var listNegra = new ListaNegra
+            {
+                Tipo = "TAG",
+                Numero = tagOld.NumTag,
+                Observacion = model.Observacion,
+                Date = DateTime.Now,
+                IdCajero = User.Identity.GetUserId(),
+                Clase = cuenta.TypeCuenta,
+            };
+
+            switch (cuenta.TypeCuenta)
+            {
+                case "Individual":
+                    listNegra.SaldoAnterior = Convert.ToDouble(model.SaldoTag);
+                    break;
+                default:
+                    break;
+            }
+
+            db.ListaNegras.Add(listNegra);
+            db.Tags.Remove(tagOld);
+            await db.SaveChangesAsync();
+
+            return View("Index");
         }
 
         protected override void Dispose(bool disposing)

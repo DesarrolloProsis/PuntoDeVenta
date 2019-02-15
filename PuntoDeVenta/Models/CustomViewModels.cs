@@ -33,5 +33,6 @@ namespace PuntoDeVenta.Models
         public string HoraI { get; set; }
         public string HoraF { get; set; }
         public string TotalMonto { get; set; }
+        public string Comentario { get; set; }
     }
 }

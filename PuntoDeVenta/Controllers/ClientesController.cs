@@ -171,7 +171,7 @@ namespace PuntoDeVenta.Controllers
                 return HttpNotFound();
             }
 
-            ViewBag.Admin = new LoginViewModel();
+            ViewBag.Admin = new LoginAdminViewModel();
             ViewBag.Exist = true;
 
             return View(clientes);

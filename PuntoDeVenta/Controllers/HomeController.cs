@@ -145,12 +145,12 @@ namespace PuntoDeVenta.Controllers
                 var _roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(app));
                 var _UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
 
-                //var result = _roleManager.Create(new IdentityRole("SuperUsuario"));
+                //var result = _roleManager.Create(new IdentityRole("Cajero"));
 
                 //var user = _UserManager.AddToRole(idUser, "SuperUsuario");
-                //userRole = _UserManager.IsInRole(idUser, "Cajero");
+                var userRole = _UserManager.IsInRole(idUser, "Cajero");
 
-                //var userRole = _UserManager.IsInRole(idUser, "SuperUsuario");
+                userRole = _UserManager.IsInRole(idUser, "SuperUsuario");
             }
 
             return View();
@@ -233,7 +233,8 @@ namespace PuntoDeVenta.Controllers
                 Fecha = result.DateTApertura.ToString("dd/MM/yyyy"),
                 HoraI = result.DateTApertura.ToString("HH:mm:ss"),
                 HoraF = result.DateTCierre.Value.ToString("HH:mm:ss"),
-                TotalMonto = result.MontoTotal.Value.ToString()
+                TotalMonto = result.MontoTotal.Value.ToString(),
+                Comentario = result.Comentario
             };
 
             var movimientos = db.OperacionesCajeros.Where(x => x.CorteId == result.Id).ToList();
