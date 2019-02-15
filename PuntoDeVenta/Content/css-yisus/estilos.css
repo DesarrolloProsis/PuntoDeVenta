@@ -2,41 +2,85 @@
     font-family: fjalla;
     src: url(../../Content/css-yisus/FjallaOne-Regular.ttf);
 }
-.boton-inicio {
-    width:100% !important;
-    height: 180px !important;
-    background-color: #2980B9;
-    border-radius: 20px;
-    color: white;
-    border: 0;
-    box-shadow: 0px 5px 0px 0px #1F618D;
-    padding-top: 40px;
-    padding-bottom: 12px;
-    font-family: fjalla;
-   font-size: 2rem;
-    margin-top: 7px;
-    vertical-align:middle !important;
+.tamano{
+    width:50px !important;
+    height: auto;
 }
-.boton-inicio:hover {
+.botoncancelar {
+    width: 100% !important;
+    border-radius: 20px !important;
+    border: 0;
+    box-shadow: 0px 5px 0px 0px #97170C !important;
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+    font-family: fjalla !important;
+    margin-top: 7px !important;
+}
+    .botoncancelar:active {
+        box-shadow: 0px 4px 0px 0px #97170C;
+        transform: translateY(5px);
+    }
+.botonaceptar {
+    width: 100% !important;
+    border-radius: 20px !important;
+    border: 0;
+    box-shadow: 0px 5px 0px 0px #196F3D !important;
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+    font-family: fjalla !important;
+    margin-top: 7px !important;
+}
+.botonaceptar:active {
+    box-shadow: 0px 4px 0px 0px #196F3D;
+    transform: translateY(5px);
+}
+.boton-cerrar {
+    width: 100% !important;
+    border-radius: 20px !important;
+    border: 0;
+    box-shadow: 0px 5px 0px 0px #A91111 !important;
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+    font-family: fjalla !important;
+    margin-top: 7px !important;
+}
+.boton-inicio {
+    overflow: hidden;
     width: 100% !important;
     height: 180px !important;
     background-color: #2980B9;
     border-radius: 20px;
     color: white;
     border: 0;
-    box-shadow: 0px 5px 0px 0px #1F618D;
+    box-shadow: 0px 10px 0px 0px #1F618D;
     padding-top: 40px;
     padding-bottom: 12px;
     font-family: fjalla;
-    font-size: 2rem;
+    font-size: 1.3rem !important;
     margin-top: 7px;
     vertical-align: middle !important;
+
+
+}
+.boton-inicio:hover {
+    color: white;
 }
 
+
+
+
     .boton-inicio:active {
-        box-shadow: 0px 2px 0px 0px #1F618D;
-        transform: translateY(2px);
+        box-shadow: 0px 4px 0px 0px #1F618D;
+        transform: translateY(5px);
     }
+
+
+
+
+
+
+
+
 /* LOGIN */
 .textboxstyle {
     height: 100px !important;
@@ -193,11 +237,10 @@ footer {
 
 .botonstyle3 {
     margin-top: 7px;
-    background-color: darkgray;
     border-radius: 20px;
     color: white;
     border: 0;
-    box-shadow: 0px 5px 0px 0px dimgray;
+    box-shadow: 0px 5px 0px 0px #A91111;
     padding-top: 8px;
     padding-bottom: 8px;
     font-family: fjalla;
@@ -207,11 +250,10 @@ footer {
 
     .botonstyle3:hover {
         margin-top: 7px;
-        background-color: darkgray;
         border-radius: 20px;
         color: white;
         border: 0;
-        box-shadow: 0px 5px 0px 0px dimgray;
+        box-shadow: 0px 5px 0px 0px #A91111;
         padding-top: 8px;
         padding-bottom: 8px;
         font-family: fjalla;
@@ -220,7 +262,7 @@ footer {
     }
 
     .botonstyle3:active {
-        box-shadow: 0px 2px 0px 0px dimgray;
+        box-shadow: 0px 2px 0px 0px #A91111;
         transform: translateY(2px);
     }
 
@@ -373,7 +415,7 @@ body {
 
 /*LINKS*/
 .link1 {
-    color: dimgray !important;
+    color: red !important;
 }
 /*LOGIN*/
 .col-center {
@@ -410,7 +452,7 @@ body {
     font-size: 5rem;
 }
 .shine {
-    margin-top: 10%;
+   margin-top:20px !important;
     color: white;
     font-size: 1.5em;
     text-decoration: none;

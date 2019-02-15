@@ -45,7 +45,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalCenterTitle">Crear cuenta</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" aria-label="Close" data-dismiss="modal">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -79,9 +79,9 @@
                         @Html.Hidden("ClienteId")
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary botonstyle3" data-dismiss="modal">Cancelar</button>
+
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn botonstyle2" id="crear">Crear</button>
+                        <button type="button" class="btn btn-success botonaceptar" id="crear">Crear</button>
                     </div>
                 }
             </div>
@@ -117,9 +117,8 @@
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn botonstyle3" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn botonstyle2" id="submitForm">Guardar</button>
+                <div class="modal-footer">     
+                    <button type="button" class="btn btn-success botonaceptar" id="submitForm">Guardar</button>
                 </div>
             </div>
         </div>
@@ -237,8 +236,9 @@
                         {
                             field: "StatusCliente",
                             title: "Estatus",
-                            width: 100,
-                            template: "#= StatusCliente ? 'Sí' : 'No' #"
+                            width: 185,
+                            template: "#= StatusCliente ? 'Válido' : 'Inválido' #",
+                            filterable: { messages: { isTrue: "Válido", isFalse: "Invalido" } }
                         },
                         {
                             field: "DateTCliente",

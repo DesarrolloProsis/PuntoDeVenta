@@ -299,10 +299,16 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\css-yisus\all.css" />
     <Content Include="Content\css-yisus\estilos.css" />
+    <Content Include="Content\css-yisus\img\address-book-solid.svg" />
+    <Content Include="Content\css-yisus\img\address-card-solid.svg" />
     <Content Include="Content\css-yisus\img\capufe.png" />
+    <Content Include="Content\css-yisus\img\clipboard-list-solid.svg" />
+    <Content Include="Content\css-yisus\img\credit-card-solid.svg" />
+    <Content Include="Content\css-yisus\img\list-ul-solid.svg" />
     <Content Include="Content\css-yisus\img\Logo.png" />
     <Content Include="Content\css-yisus\img\Logo2.png" />
     <Content Include="Content\css-yisus\img\Marhnoswithred.png" />
+    <Content Include="Content\css-yisus\img\money-check-alt-solid.svg" />
     <Content Include="Content\css-yisus\intl-tel-input-master\.gitignore" />
     <Content Include="Content\css-yisus\intl-tel-input-master\.grenrc.js" />
     <Content Include="Content\css-yisus\intl-tel-input-master\build\css\demo.css" />

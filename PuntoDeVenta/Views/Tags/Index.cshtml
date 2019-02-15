@@ -70,8 +70,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn botonstyle3" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn botonstyle2" id="saldoTag">Recargar</button>
+                    
+                    <button type="button" class="btn btn-success botonaceptar" id="saldoTag">Recargar</button>
                 </div>
             }
         </div>
@@ -184,8 +184,9 @@
                         {
                             field: "StatusTag",
                             title: "Estatus",
-                            width: 100,
-                            template: "#= StatusTag ? 'Sí' : 'No' #",
+                            width: 110,
+                            template: "#= StatusTag ? 'Válido' : 'Invalido' #",
+                            filterable: { messages: { isTrue: "Válido", isFalse: "Invalido" } }
                         },
                         {
                             field: "DateTTag",
