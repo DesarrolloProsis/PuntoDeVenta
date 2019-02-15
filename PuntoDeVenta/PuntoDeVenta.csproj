@@ -224,6 +224,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
     <Compile Include="Controllers\CuentasTelepeajesController.cs" />
+    <Compile Include="Controllers\HistoricoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\TagsController.cs" />
@@ -285,6 +286,7 @@
     <Compile Include="Models\OperacionesCajero.cs" />
     <Compile Include="Models\OperacionesSerBIpagos.cs" />
     <Compile Include="Models\Parametrizable.cs" />
+    <Compile Include="Models\TableHistorico.cs" />
     <Compile Include="Models\Tags.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -296,9 +298,18 @@
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\css-yisus\all.css" />
     <Content Include="Content\css-yisus\estilos.css" />
+    <Content Include="Content\css-yisus\img\address-book-solid.svg" />
+    <Content Include="Content\css-yisus\img\address-card-solid.svg" />
+    <Content Include="Content\css-yisus\img\capufe.png" />
+    <Content Include="Content\css-yisus\img\clipboard-list-solid.svg" />
+    <Content Include="Content\css-yisus\img\credit-card-solid.svg" />
+    <Content Include="Content\css-yisus\img\list-ul-solid.svg" />
     <Content Include="Content\css-yisus\img\Logo.png" />
+    <Content Include="Content\css-yisus\img\Logo2.png" />
     <Content Include="Content\css-yisus\img\Marhnoswithred.png" />
+    <Content Include="Content\css-yisus\img\money-check-alt-solid.svg" />
     <Content Include="Content\css-yisus\intl-tel-input-master\.gitignore" />
     <Content Include="Content\css-yisus\intl-tel-input-master\.grenrc.js" />
     <Content Include="Content\css-yisus\intl-tel-input-master\build\css\demo.css" />

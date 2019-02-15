@@ -1,0 +1,125 @@
+﻿@model PuntoDeVenta.Models.TableHistorico
+@{
+    ViewBag.Title = "Tabla_Historico";
+}
+
+
+
+
+<div class="container">
+    <h2>Tabla de Historico</h2>  <div>@Html.ActionLink("Regresar", "Regresar", "Historico", new { }, new { @class = "btn btn-info" })</div>
+
+    <div>@Html.ActionLink("PDF", "Pdf", "Historico", new { }, new { @class = "btn btn-info" })</div>
+
+    <hr />
+    @if (Model.ListaHistorico != null && Model.ListaHistorico.Any())
+    {
+
+        <div class="table-responsivev">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Tag</th>
+                        <th scope="col">Delegacion</th>
+                        <th scope="col">Plaza</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Cuerpo</th>
+                        <th scope="col">Carril</th>
+                        <th scope="col">Clase</th>
+                        <th scope="col">Saldo</th>
+                        <th scope="col">Operador</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int i = 0;
+                        foreach (var item in Model.ListaHistorico)
+                        {
+                            <tr>
+
+                                <td>@item.Id</td>
+                                <td>@item.Tag</td>
+                                <td>@item.Delegacion</td>
+                                <td>@item.Plaza</td>
+                                <td>@item.Fecha</td>
+                                <td>@item.Cuerpo</td>
+                                <td>@item.Carril</td>
+                                <td>@item.Clase</td>
+                                <td>@item.Saldo</td>
+                                <td>@item.Operador</td>
+
+
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    }
+    else
+    {
+        <div id="aboutPage" class="col-lg-12">
+            <p class="text-center lead">{{ message }}</p>
+        </div>
+    }
+
+</div>
+
+
+
+@section Scripts {
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            $(".td_1").hide();
+            // Set form variable
+
+            $(".clickme").on("click", function () {
+                var $row = $(this).closest("tr");       //, Finds the closest row <tr>
+                //$tds = $row.find("td");             // Finds all children <td> elements
+                //$("#form12").submit(function () {
+                //    alert('Form is submitting....');
+                //    // Or Do Something...
+                //    return true;
+                //});
+                alert($row.find(".td_1").html());
+                $('#form12').append('<input type="hidden" name="id" value="' + $row.find(".td_1").html() + '" />');
+                $("#form12").submit();
+            });
+        });
+    </script>
+
+    <script>
+        var aboutPage = new Vue({
+            el: '#aboutPage',
+            data: {
+                message: 'NO HAY HISTORICO.'
+            }
+        });
+
+        var example2 = new Vue({
+            el: '#example-2',
+            data: {
+                name: 'Vue.js'
+            },
+            // define métodos dentro del objeto `methods`
+            methods: {
+                greet: function (event) {
+                    // `this` dentro de los métodos apunta a la instancia de Vue
+                    alert('Hello ' + this.name + '!')
+                    // `event` es el evento nativo del DOM
+                    if (event) {
+                        alert(event.target.tagName)
+                    }
+                }
+            }
+        });
+                                // puedes invocar métodos en JavaScript tamibién
+                                //example2.greet() // -> 'Hello Vue.js!'
+    </script>
+}
+

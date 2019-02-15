@@ -167,9 +167,9 @@ namespace PuntoDeVenta.Controllers
                 return View(model);
             }
 
-            // El código siguiente protege de los ataques por fuerza bruta a los códigos de dos factores. 
-            // Si un usuario introduce códigos incorrectos durante un intervalo especificado de tiempo, la cuenta del usuario 
-            // se bloqueará durante un período de tiempo especificado. 
+            // El código siguiente protege de los ataques por fuerza bruta a los códigos de dos factores.
+            // Si un usuario introduce códigos incorrectos durante un intervalo especificado de tiempo, la cuenta del usuario
+            // se bloqueará durante un período de tiempo especificado.
             // Puede configurar el bloqueo de la cuenta en IdentityConfig
             var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
@@ -291,7 +291,7 @@ namespace PuntoDeVenta.Controllers
                 // Para obtener más información sobre cómo habilitar la confirmación de cuentas y el restablecimiento de contraseña, visite https://go.microsoft.com/fwlink/?LinkID=320771
                 // Enviar correo electrónico con este vínculo
                 // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
+                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                 // await UserManager.SendEmailAsync(user.Id, "Restablecer contraseña", "Para restablecer la contraseña, haga clic <a href=\"" + callbackUrl + "\">aquí</a>");
                 // return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
@@ -521,7 +521,8 @@ namespace PuntoDeVenta.Controllers
                 {
                     foreach (var item in detalles)
                     {
-                        if (item.Monto != null)
+                        if (item.Monto != null && item.CobroTag != null)
+                        {
                             monto += Convert.ToDouble(item.Monto);
 
                         if (item.CobroTag != null)

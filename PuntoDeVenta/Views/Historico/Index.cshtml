@@ -1,0 +1,141 @@
+﻿@model PuntoDeVenta.Models.TableHistorico
+@{
+    ViewBag.Title = "TablaHistorico";
+}
+<div class="col-md-12 text-align-center">
+
+    <h4 class="titulo1">Tabla Historico</h4>
+    <p class="lead">
+        Consulte el registro historico de cruces.
+    </p>
+</div>
+<hr />
+<div class="container-fluid">
+    @using (Html.BeginForm("Generar", "Historico", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+    <div class="form-row align-items-center">
+        <div class="col-auto">
+            @Html.LabelFor(model => model.Fecha_Inicio, htmlAttributes: new { @class = "sr-only", @for = "Date" })
+            @Html.EditorFor(model => model.Fecha_Inicio)
+            @Html.ValidationMessageFor(model => model.Fecha_Inicio, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-auto">
+            @Html.LabelFor(model => model.Fecha_Fin, htmlAttributes: new { @class = "sr-only", @for = "Date" })
+            @Html.EditorFor(model => model.Fecha_Fin)
+        </div>
+
+        <div>
+            @Html.EditorFor(x => x.Tag,"", new { htmlAttributes = new { @class = "form-control" } })
+
+        </div>
+
+        <div>
+            @Html.DropDownListFor(x => x.Operador, new SelectList(string.Empty, "Value", "Text"), "Seleccione Marca", htmlAttributes: new { @class = "form-control" })
+
+        </div>
+
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary mb-2">Buscar</button>
+        </div>
+    </div>
+    }
+
+
+</div>
+
+
+    </div>
+
+@section Scripts {
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            $(".td_1").hide();
+            // Set form variable
+            LoadDelegaciones();
+            $(".clickme").on("click", function () {
+                var $row = $(this).closest("tr");       //, Finds the closest row <tr>
+                //$tds = $row.find("td");             // Finds all children <td> elements
+                //$("#form12").submit(function () {
+                //    alert('Form is submitting....');
+                //    // Or Do Something...
+                //    return true;
+                //});
+                alert($row.find(".td_1").html());
+                $('#form12').append('<input type="hidden" name="id" value="' + $row.find(".td_1").html() + '" />');
+                $("#form12").submit();
+            });
+
+
+        });
+    </script>
+
+    <script>
+        
+        function LoadDelegaciones() {
+            $.ajax({
+                url: '@Url.Action("GetOperadores", "Historico")',
+                type: "GET",
+                data: "{}",
+                cache: false,
+                success: function (data) {
+                    $.each(data, function (i, row) {
+                        var $option = $('<option>');
+                        $option.val(row.Value);
+                        $option.html(row.Text);
+                        $('#Operador').append($option);
+                    });
+                },
+                error: function (ex) {
+                    alert("Error!!!" + ex);
+                },
+            });
+        }
+
+    </script>
+
+    <script>
+        var aboutPage = new Vue({
+            el: '#aboutPage',
+            data: {
+                message: 'NO HAY HISTORICO.'
+            }
+        });
+
+        var example2 = new Vue({
+            el: '#example-2',
+            data: {
+                name: 'Vue.js'
+            },
+            height: 550,
+            groupable: true,
+            sortable: true,
+            pageable: {
+                refresh: true,
+                pageSizes: true,
+                buttonCount: 5
+            },
+            columns: [{
+
+                field: "ContactName",
+                title: "Contact Name",
+                width: 240
+            }, {
+                field: "ContactTitle",
+                title: "Contact Title"
+            }, {
+                field: "CompanyName",
+                title: "Company Name"
+            }, {
+                field: "Country",
+                width: 150
+            }]
+        });
+                                            // puedes invocar métodos en JavaScript tamibién
+                                            //example2.greet() // -> 'Hello Vue.js!'
+    </script>
+}

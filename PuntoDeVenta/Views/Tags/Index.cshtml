@@ -3,12 +3,18 @@
 @{
     ViewBag.Title = "Tags";
 }
-
-<h2 class="titulo1">Tags</h2>
+<div class="col-md-12 text-align-center">
+    <h2 class="titulo1">Busqueda de Tags</h2>
+    <p class="lead">
+        Realice una busqueda por un tag específico.
+    </p>
+</div>
+<hr />
 <!-- Button trigger modal -->
 <button type="button" class="btn botonstyle2" data-toggle="modal" data-target="#exampleModalCenter">
     Recargar saldo tag
 </button>
+
 <br />
 <br />
 
@@ -64,8 +70,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn botonstyle3" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn botonstyle2" id="saldoTag">Recargar</button>
+                    
+                    <button type="button" class="btn btn-success botonaceptar" id="saldoTag">Recargar</button>
                 </div>
             }
         </div>
@@ -178,13 +184,14 @@
                         {
                             field: "StatusTag",
                             title: "Estatus",
-                            width: 100,
-                            template: "#= StatusTag ? 'Sí' : 'No' #",
+                            width: 110,
+                            template: "#= StatusTag ? 'Válido' : 'Invalido' #",
+                            filterable: { messages: { isTrue: "Válido", isFalse: "Invalido" } }
                         },
                         {
                             field: "DateTTag",
                             title: "Fecha registro",
-                            width:200,
+                            width:250,
                             template: "#= kendo.toString(kendo.parseDate(DateTTag, 'yyyy-MM-dd'), 'MM/dd/yyyy') #",
                             filterable: {
                                 ui: "datetimepicker" // use Kendo UI DateTimePicker
@@ -203,7 +210,7 @@
                                     var data = this.dataItem(tr);
                                     window.location.href = '@(Url.Action("Activate", "Tags").ToString())?id=' + data.Id;
                                 },
-                            }], width: 100
+                            }], width: 60
                         },
                         {
                             command: [{
@@ -217,7 +224,7 @@
                                     var data = this.dataItem(tr);
                                     window.location.href = '@(Url.Action("Delete", "Tags").ToString())?id=' + data.Id;
                                 },
-                            }], width: 100
+                            }], width: 60
                         },
                         {
                             command: [{
@@ -231,7 +238,7 @@
                                     var data = this.dataItem(tr);
                                     window.location.href = '@(Url.Action("Deshabilitar", "Tags").ToString())?id=' + data.Id;
                                 },
-                            }], width: 100
+                            }], width: 80
                         }],
                 });
             }

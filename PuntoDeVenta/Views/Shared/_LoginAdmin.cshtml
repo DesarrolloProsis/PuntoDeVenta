@@ -9,7 +9,10 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Confirmar inicio de sesión</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Iniciar sesión administrador</h5>
+                    <button type="button" class="close" aria-label="Close" onclick="location.href='@Url.Action("Index", "Clientes")'">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     @using (Html.BeginForm("LoginAdmin", "Account", FormMethod.Post, htmlAttributes: new { @class = "form-horizontal", role = "form" }))
@@ -26,8 +29,10 @@
                     }
                 </div>
                 <div class="modal-footer">
-                    <a href="@Url.Action("Index", "Clientes")" type="button" class="btn botonstyle3">Cancelar</a>
-                    <button id="comprobar" type="button" class="btn botonstyle2">Comprobar</button>
+
+
+                    <!--<input onclick="@Url.Action("Index", "Clientes")" value="Cancelar" type="button" class="btn botonstyle3"/>-->
+                    <button id="comprobar" type="button" class="btn btn-success botonaceptar">Comprobar</button>
                 </div>
             </div>
         </div>
