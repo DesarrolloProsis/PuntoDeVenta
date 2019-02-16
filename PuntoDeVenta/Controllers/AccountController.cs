@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Dynamic;
 using System.Globalization;
@@ -107,10 +108,18 @@ namespace PuntoDeVenta.Controllers
         [HttpPost]
         [Authorize]
         //[ValidateAntiForgeryToken]
-        public async Task<JsonResult> LoginAdmin(LoginViewModel model)
+        public async Task<JsonResult> LoginAdmin(LoginAdminViewModel model)
         {
+            ApplicationDbContext app = new ApplicationDbContext();
             object obj = null;
+
             ModelState.Remove("RememberMe");
+            ModelState.Remove("Email");
+
+            var usermanager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
+            var user = await usermanager.FindByIdAsync(User.Identity.GetUserId());
+
+            model.Email = user.Email;
 
             if (!ModelState.IsValid)
             {
@@ -124,21 +133,7 @@ namespace PuntoDeVenta.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    using (var db = new ApplicationDbContext())
-                    {
-                        var _roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db));
-                        var _userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
-
-                        var User = await _userManager.FindByEmailAsync(model.Email);
-                        var idUser = User.Id;
-
-                        bool userRole = _userManager.IsInRole(idUser, "SuperUsuario");
-
-                        if (userRole)
-                            obj = new { Success = "true", Error = string.Empty };
-                        else
-                            obj = new { Success = "false", Error = "El usuario no es un administrador." };
-                    }
+                    obj = new { Success = "true", Error = string.Empty };
                     return Json(obj, JsonRequestBehavior.AllowGet);
                 case SignInStatus.Failure:
                 default:
@@ -172,9 +167,9 @@ namespace PuntoDeVenta.Controllers
                 return View(model);
             }
 
-            // El código siguiente protege de los ataques por fuerza bruta a los códigos de dos factores. 
-            // Si un usuario introduce códigos incorrectos durante un intervalo especificado de tiempo, la cuenta del usuario 
-            // se bloqueará durante un período de tiempo especificado. 
+            // El código siguiente protege de los ataques por fuerza bruta a los códigos de dos factores.
+            // Si un usuario introduce códigos incorrectos durante un intervalo especificado de tiempo, la cuenta del usuario
+            // se bloqueará durante un período de tiempo especificado.
             // Puede configurar el bloqueo de la cuenta en IdentityConfig
             var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
@@ -196,6 +191,13 @@ namespace PuntoDeVenta.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+            var items = new List<SelectListItem> {
+                new SelectListItem { Text = "Administrador", Value = "SuperUsuario" },
+                new SelectListItem { Text = "Cajero", Value = "Cajero"}
+            };
+
+            ViewBag.Roles = items;
+
             return View();
         }
 
@@ -212,6 +214,19 @@ namespace PuntoDeVenta.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    using (ApplicationDbContext app = new ApplicationDbContext())
+                    {
+                        var _roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(app));
+                        var _UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
+
+                        var userfound = await _UserManager.FindByEmailAsync(model.Email);
+
+                        var rpt = await _UserManager.AddToRoleAsync(userfound.Id, model.Rol);
+
+                        if (rpt.Errors.Any())
+                            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    }
+
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                     // Para obtener más información sobre cómo habilitar la confirmación de cuentas y el restablecimiento de contraseña, visite https://go.microsoft.com/fwlink/?LinkID=320771
@@ -226,6 +241,13 @@ namespace PuntoDeVenta.Controllers
             }
 
             // Si llegamos a este punto, es que se ha producido un error y volvemos a mostrar el formulario
+            var items = new List<SelectListItem> {
+                new SelectListItem { Text = "Administrador", Value = "SuperUsuario" },
+                new SelectListItem { Text = "Cajero", Value = "Cajero"}
+            };
+
+            ViewBag.Roles = items;
+
             return View(model);
         }
 
@@ -269,7 +291,7 @@ namespace PuntoDeVenta.Controllers
                 // Para obtener más información sobre cómo habilitar la confirmación de cuentas y el restablecimiento de contraseña, visite https://go.microsoft.com/fwlink/?LinkID=320771
                 // Enviar correo electrónico con este vínculo
                 // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
+                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                 // await UserManager.SendEmailAsync(user.Id, "Restablecer contraseña", "Para restablecer la contraseña, haga clic <a href=\"" + callbackUrl + "\">aquí</a>");
                 // return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
@@ -502,26 +524,29 @@ namespace PuntoDeVenta.Controllers
                         if (item.Monto != null && item.CobroTag != null)
                         {
                             monto += Convert.ToDouble(item.Monto);
-                            monto += Convert.ToDouble(item.CobroTag);
+
+                            if (item.CobroTag != null)
+                                monto += Convert.ToDouble(item.CobroTag);
+
                         }
+                    }
+
+                    corte.Comentario = model.Comentario;
+                    corte.DateTCierre = DateTime.Now;
+                    corte.MontoTotal = Math.Round(monto.Value, 2);
+
+                    if (ModelState.IsValid)
+                    {
+                        db.Entry(corte).State = EntityState.Modified;
+                        await db.SaveChangesAsync();
+
+                        AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                        return RedirectToAction("Index", "Home");
                     }
                 }
 
-                corte.Comentario = model.Comentario;
-                corte.DateTCierre = DateTime.Now;
-                corte.MontoTotal = monto;
-
-                if (ModelState.IsValid)
-                {
-                    db.Entry(corte).State = EntityState.Modified;
-                    await db.SaveChangesAsync();
-
-                    AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-                    return RedirectToAction("Index", "Home");
-                }
+                return RedirectToAction("Index", "Home");
             }
-
-            return RedirectToAction("Index", "Home");
         }
 
         //

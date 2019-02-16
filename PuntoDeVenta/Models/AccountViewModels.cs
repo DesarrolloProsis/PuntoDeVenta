@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PuntoDeVenta.Models
 {
@@ -62,6 +63,21 @@ namespace PuntoDeVenta.Models
         public bool RememberMe { get; set; }
     }
 
+    public class LoginAdminViewModel
+    {
+        [Display(Name = "Correo electrónico")]
+        [EmailAddress]
+        public string Email { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Contraseña")]
+        public string Password { get; set; }
+
+        [Display(Name = "¿Recordar cuenta?")]
+        public bool RememberMe { get; set; }
+    }
+
     public class RegisterViewModel
     {
         [Required]
@@ -79,6 +95,10 @@ namespace PuntoDeVenta.Models
         [Display(Name = "Confirmar contraseña")]
         [Compare("Password", ErrorMessage = "La contraseña y la contraseña de confirmación no coinciden.")]
         public string ConfirmPassword { get; set; }
+
+        [NotMapped]
+        [Required]
+        public string Rol { get; set; }
     }
 
     public class ResetPasswordViewModel
