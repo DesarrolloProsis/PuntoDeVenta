@@ -525,27 +525,28 @@ namespace PuntoDeVenta.Controllers
                         {
                             monto += Convert.ToDouble(item.Monto);
 
-                        if (item.CobroTag != null)
-                            monto += Convert.ToDouble(item.CobroTag);
+                            if (item.CobroTag != null)
+                                monto += Convert.ToDouble(item.CobroTag);
 
+                        }
+                    }
+
+                    corte.Comentario = model.Comentario;
+                    corte.DateTCierre = DateTime.Now;
+                    corte.MontoTotal = Math.Round(monto.Value, 2);
+
+                    if (ModelState.IsValid)
+                    {
+                        db.Entry(corte).State = EntityState.Modified;
+                        await db.SaveChangesAsync();
+
+                        AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                        return RedirectToAction("Index", "Home");
                     }
                 }
 
-                corte.Comentario = model.Comentario;
-                corte.DateTCierre = DateTime.Now;
-                corte.MontoTotal = Math.Round(monto.Value, 2);
-
-                if (ModelState.IsValid)
-                {
-                    db.Entry(corte).State = EntityState.Modified;
-                    await db.SaveChangesAsync();
-
-                    AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-                    return RedirectToAction("Index", "Home");
-                }
+                return RedirectToAction("Index", "Home");
             }
-
-            return RedirectToAction("Index", "Home");
         }
 
         //

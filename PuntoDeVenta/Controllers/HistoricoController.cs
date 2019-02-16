@@ -128,14 +128,16 @@ namespace PuntoDeVenta.Controllers
             {
                 Historicos newrow = new Historicos();
                 newrow.Id = id++;
-                newrow.Tag = item["NumTag"].ToString();
+                //newrow.Tag = item["NumTag"].ToString();
+                newrow.Tag = item["Tag"].ToString();
                 newrow.Delegacion = item["Delegacion"].ToString();
                 newrow.Plaza = item["Plaza"].ToString();
                 newrow.Cuerpo = item["Cuerpo"].ToString();
                 newrow.Carril = item["Carril"].ToString();
                 newrow.Fecha = item["Fecha"].ToString();
                 newrow.Clase = item["Clase"].ToString();
-                newrow.Saldo = item["SaldoTag"].ToString();
+                //newrow.Saldo = item["SaldoTag"].ToString();
+                newrow.Saldo = item["Saldo"].ToString();
                 newrow.Operador = item["Operador"].ToString();
                 Lista.Add(newrow);
             }
@@ -205,7 +207,8 @@ namespace PuntoDeVenta.Controllers
                     sqlConnection.Open();
                     string _Fecha = Fecha_Inicio.ToString("yyyyMMdd");
                     string Fecha_ = Fecha_Inicio.AddDays(1).ToString("yyyyMMdd");
-                    cmd.CommandText = "Select * From Historico Where Fecha >= '" + _Fecha + "' and Fecha <= '" + Fecha_ + "' and NumTag Like '%" + Tag + "%' order by Fecha desc";
+                    //cmd.CommandText = "Select * From Historico Where Fecha >= '" + _Fecha + "' and Fecha <= '" + Fecha_ + "' and NumTag Like '%" + Tag + "%' order by Fecha desc";
+                    cmd.CommandText = "Select * From Historico Where Fecha >= '" + _Fecha + "' and Fecha <= '" + Fecha_ + "' and Tag Like '%" + Tag + "%' order by Fecha desc";
                     cmd.ExecuteNonQuery();
                     SqlDataAdapter sqlData = new SqlDataAdapter(cmd);
                     sqlData.Fill(dt);
@@ -302,7 +305,8 @@ namespace PuntoDeVenta.Controllers
 
 
                 //table.AddCell(new Paragraph(item["NumTag"].ToString()));
-                _cell = new PdfPCell(new Paragraph(item["NumTag"].ToString()));
+                //_cell = new PdfPCell(new Paragraph(item["NumTag"].ToString()));
+                _cell = new PdfPCell(new Paragraph(item["Tag"].ToString()));
                 _cell.HorizontalAlignment = Element.ALIGN_CENTER;
                 _cell.FixedHeight = 10f;
                 table.AddCell(_cell);
@@ -344,7 +348,8 @@ namespace PuntoDeVenta.Controllers
                 table.AddCell(_cell);
 
                 //table.AddCell(new Paragraph(item["SaldoTag"].ToString()));
-                _cell = new PdfPCell(new Paragraph(item["SaldoTag"].ToString()));
+                //_cell = new PdfPCell(new Paragraph(item["SaldoTag"].ToString()));
+                _cell = new PdfPCell(new Paragraph(item["Saldo"].ToString()));
                 _cell.HorizontalAlignment = Element.ALIGN_CENTER;
                 _cell.FixedHeight = 10f;
                 table.AddCell(_cell);
