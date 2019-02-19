@@ -98,7 +98,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-              
+
                 <button type="button" class="btn btn-success botonaceptar" id="submitForm">Guardar</button>
             </div>
         </div>
@@ -147,6 +147,8 @@
                             model: {
                                 fields: {
                                     Id: { type: "number" },
+                                    NombreCliente: { type: "string" },
+                                    NumCliente: { type: "number" },
                                     NumCuenta: { type: "number" },
                                     SaldoCuenta: { type: "number" },
                                     TypeCuenta: { type: "string" },
@@ -166,6 +168,26 @@
                     pageable: true,
                     columns:
                         [{
+                            field: "NumCliente",
+                            title: "Número de cliente",
+                            width: 250,
+                            filterable: {
+                                cell: {
+                                    showOperators: false
+                                }
+                            }
+                        },
+                        {
+                            field: "NombreCliente",
+                            title: "Nombre del cliente",
+                            width: 250,
+                            filterable: {
+                                cell: {
+                                    showOperators: false
+                                }
+                            }
+                        },
+                        {
                             field: "NumCuenta",
                             title: "Número de cuenta",
                             width: 250,
@@ -219,7 +241,7 @@
                                 className: "ntag",
                                 click: onClick,
 
-                            }, width: 100,
+                            }, width: 130,
                         },
                         {
                             command: [{
@@ -234,7 +256,7 @@
                                     window.location.href = '@(Url.Action("Delete", "CuentasTelepeajes").ToString())?id=' + data.Id;
                                 },
                             }],
-                            width:90
+                            width: 110,
                         },
                         {
                             command: [{
@@ -249,7 +271,7 @@
                                     window.location.href = '@(Url.Action("ListTags", "Tags").ToString())?id=' + data.Id;
                                 },
                             }],
-                            width: 90
+                            width: 110
                         }],
                 });
 
@@ -270,7 +292,7 @@
 
                     $("#numcuenta").val(dataItem.NumCuenta);
                     $("#CuentaId").val(dataItem.Id);
-                    $("#CobroTag").val("10000");
+                    $("#CobroTag").val("100.00");
                     $("#tipocuenta").val(dataItem.TypeCuenta);
 
                     if (dataItem.TypeCuenta == "Colectiva") {
@@ -358,7 +380,7 @@
                 $('#SaldoARecargar').mask("#,##0.00", { reverse: true });
                 $('#ConfSaldoARecargar').mask("#,##0.00", { reverse: true });
                 $('#SaldoTag').mask("#,##0.00", { reverse: true });
-                $('#CobroTag').mask("#,##0.00", { reverse: true });
+                $("#CobroTag").mask("#,##0.00", { reverse: true });
             });
         });
     </script>

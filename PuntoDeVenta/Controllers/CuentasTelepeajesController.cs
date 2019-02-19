@@ -25,14 +25,59 @@ namespace PuntoDeVenta.Controllers
 
             if (keyCliente != 0)
             {
-                var lista = await db.CuentasTelepeajes.Where(x => x.ClienteId == keyCliente).ToListAsync();
+                var lista = await db.CuentasTelepeajes.Join(
+                    db.Clientes,
+                    cue => cue.ClienteId,
+                    cli => cli.Id,
+                    (cue, cli) => new { cue, cli })
+                    .Where(x => x.cli.Id == keyCliente)
+                    .ToListAsync();
 
-                model = lista;
-
-                keyCliente = 0;
+                lista.ForEach(x =>
+                {
+                    model.Add(new CuentasTelepeaje
+                    {
+                        Id = x.cue.Id,
+                        NombreCliente = $"{x.cli.Nombre} {x.cli.Apellidos}",
+                        NumCliente = x.cli.NumCliente,
+                        ClienteId = x.cli.Id,
+                        DateTCuenta = x.cue.DateTCuenta,
+                        SaldoCuenta = x.cue.SaldoCuenta,
+                        NumCuenta = x.cue.NumCuenta,
+                        IdCajero = x.cue.IdCajero,
+                        TypeCuenta = x.cue.TypeCuenta,
+                        StatusCuenta = x.cue.StatusCuenta,
+                        StatusResidenteCuenta = x.cue.StatusResidenteCuenta,
+                    });
+                });
             }
             else
-                model = await db.CuentasTelepeajes.ToListAsync();
+            {
+                var lista = await db.CuentasTelepeajes.Join(
+                    db.Clientes,
+                    cue => cue.ClienteId,
+                    cli => cli.Id,
+                    (cue, cli) => new { cue, cli })
+                    .ToListAsync();
+
+                lista.ForEach(x =>
+                {
+                    model.Add(new CuentasTelepeaje
+                    {
+                        Id = x.cue.Id,
+                        NombreCliente = $"{x.cli.Nombre} {x.cli.Apellidos}",
+                        NumCliente = x.cli.NumCliente,
+                        ClienteId = x.cli.Id,
+                        DateTCuenta = x.cue.DateTCuenta,
+                        SaldoCuenta = x.cue.SaldoCuenta,
+                        NumCuenta = x.cue.NumCuenta,
+                        IdCajero = x.cue.IdCajero,
+                        TypeCuenta = x.cue.TypeCuenta,
+                        StatusCuenta = x.cue.StatusCuenta,
+                        StatusResidenteCuenta = x.cue.StatusResidenteCuenta,
+                    });
+                });
+            }
 
             keyCliente = 0;
             return Json(model, JsonRequestBehavior.AllowGet);

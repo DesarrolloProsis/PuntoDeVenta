@@ -58,5 +58,10 @@ namespace PuntoDeVenta.Models
         [StringLength(20)]
         [Compare("SaldoARecargar", ErrorMessage = "Los saldos no coinciden.")]
         public string ConfSaldoARecargar { get; set; }
+
+        [NotMapped]
+        public string NombreCliente { get; set; }
+        [NotMapped]
+        public string NumCliente { get; set; }
     }
 }

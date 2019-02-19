@@ -25,12 +25,69 @@ namespace PuntoDeVenta.Controllers
 
             if (keyCuenta != 0)
             {
-                var lista = await db.Tags.Where(x => x.CuentaId == keyCuenta).ToListAsync();
-                model = lista;
-                keyCuenta = 0;
+                var lista = await db.Tags.Join(
+                                db.CuentasTelepeajes,
+                                tag => tag.CuentaId,
+                                cue => cue.Id,
+                                (tag, cue) => new { tag, cue })
+                                .Join(
+                                db.Clientes,
+                                cuex => cuex.cue.ClienteId,
+                                clie => clie.Id,
+                                (cuex, clie) => new { cuex, clie })
+                                .Where(x => x.cuex.cue.Id == keyCuenta)
+                                .ToListAsync();
+
+                lista.ForEach(x =>
+                {
+                    model.Add(new Tags
+                    {
+                        Id = x.cuex.tag.Id,
+                        NombreCliente = $"{x.clie.Nombre} {x.clie.Apellidos}",
+                        NumCuenta = x.cuex.cue.NumCuenta,
+                        CuentaId = x.cuex.cue.Id,
+                        DateTTag = x.cuex.tag.DateTTag,
+                        NumTag = x.cuex.tag.NumTag,
+                        IdCajero = x.cuex.tag.IdCajero,
+                        SaldoTag = x.cuex.tag.SaldoTag,
+                        StatusTag = x.cuex.tag.StatusTag,
+                        TypeCuenta = x.cuex.cue.TypeCuenta,
+                        StatusResidente = x.cuex.tag.StatusResidente,
+                    });
+                });
             }
             else
-                model = await db.Tags.ToListAsync();
+            {
+                var lista = await db.Tags.Join(
+                                db.CuentasTelepeajes,
+                                tag => tag.CuentaId,
+                                cue => cue.Id,
+                                (tag, cue) => new { tag, cue })
+                                .Join(
+                                db.Clientes,
+                                cuex => cuex.cue.ClienteId,
+                                clie => clie.Id,
+                                (cuex, clie) => new { cuex, clie })
+                                .ToListAsync();
+
+                lista.ForEach(x =>
+                {
+                    model.Add(new Tags
+                    {
+                        Id = x.cuex.tag.Id,
+                        NombreCliente = $"{x.clie.Nombre} {x.clie.Apellidos}",
+                        NumCuenta = x.cuex.cue.NumCuenta,
+                        CuentaId = x.cuex.cue.Id,
+                        DateTTag = x.cuex.tag.DateTTag,
+                        NumTag = x.cuex.tag.NumTag,
+                        IdCajero = x.cuex.tag.IdCajero,
+                        SaldoTag = x.cuex.tag.SaldoTag,
+                        StatusTag = x.cuex.tag.StatusTag,
+                        TypeCuenta = x.cuex.cue.TypeCuenta,
+                        StatusResidente = x.cuex.tag.StatusResidente,
+                    });
+                });
+            }
 
             keyCuenta = 0;
             return Json(model, JsonRequestBehavior.AllowGet);

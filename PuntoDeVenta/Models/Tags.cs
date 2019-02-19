@@ -66,6 +66,15 @@ namespace PuntoDeVenta.Models
 
         [NotMapped]
         public string Observacion { get; set; }
+
+        [NotMapped]
+        public string NombreCliente { get; set; }
+
+        [NotMapped]
+        public string TypeCuenta { get; set; }
+
+        [NotMapped]
+        public string NumCuenta { get; set; }
     }
 
     [NotMapped]

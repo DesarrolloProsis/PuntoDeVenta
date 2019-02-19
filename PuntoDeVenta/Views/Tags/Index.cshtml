@@ -70,7 +70,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    
+
                     <button type="button" class="btn btn-success botonaceptar" id="saldoTag">Recargar</button>
                 </div>
             }
@@ -144,7 +144,10 @@
                             model: {
                                 fields: {
                                     Id: { type: "number" },
-                                    NumTag: { type: "string" },
+                                    NombreCliente: {type: "string"},
+                                    TypeCuenta: {type: "string"},
+                                    NumCuenta: { type: "number" },
+                                    NumTag: { type: "number" },
                                     SaldoTag: { type: "string" },
                                     StatusTag: { type: "boolean" },
                                     DateTTag: { type: "date" },
@@ -162,9 +165,39 @@
                     pageable: true,
                     columns:
                         [{
+                            field: "NombreCliente",
+                            title: "Nombre del cliente",
+                            width: 250,
+                            filterable: {
+                                cell: {
+                                    showOperators: false
+                                }
+                            }
+                        },
+                        {
+                            field: "NumCuenta",
+                            title: "Número de cuenta",
+                            width: 250,
+                            filterable: {
+                                cell: {
+                                    showOperators: false
+                                }
+                            }
+                        },
+                        {
                             field: "NumTag",
                             title: "Número de tag",
                             width:250,
+                            filterable: {
+                                cell: {
+                                    showOperators: false
+                                }
+                            }
+                        },
+                        {
+                            field: "TypeCuenta",
+                            title: "Tipo Tag",
+                            width: 270,
                             filterable: {
                                 cell: {
                                     showOperators: false
@@ -184,14 +217,14 @@
                         {
                             field: "StatusTag",
                             title: "Estatus",
-                            width: 110,
+                            width: 150,
                             template: "#= StatusTag ? 'Válido' : 'Invalido' #",
                             filterable: { messages: { isTrue: "Válido", isFalse: "Invalido" } }
                         },
                         {
                             field: "DateTTag",
                             title: "Fecha registro",
-                            width:250,
+                            width:270,
                             template: "#= kendo.toString(kendo.parseDate(DateTTag, 'yyyy-MM-dd'), 'MM/dd/yyyy') #",
                             filterable: {
                                 ui: "datetimepicker" // use Kendo UI DateTimePicker
@@ -210,7 +243,7 @@
                                     var data = this.dataItem(tr);
                                     window.location.href = '@(Url.Action("Activate", "Tags").ToString())?id=' + data.Id;
                                 },
-                            }], width: 60
+                            }], width: 110
                         },
                         {
                             command: [{
@@ -224,7 +257,7 @@
                                     var data = this.dataItem(tr);
                                     window.location.href = '@(Url.Action("Delete", "Tags").ToString())?id=' + data.Id;
                                 },
-                            }], width: 60
+                            }], width: 110
                         },
                         {
                             command: [{
@@ -238,7 +271,7 @@
                                     var data = this.dataItem(tr);
                                     window.location.href = '@(Url.Action("Deshabilitar", "Tags").ToString())?id=' + data.Id;
                                 },
-                            }], width: 80
+                            }], width: 140
                         }],
                 });
             }

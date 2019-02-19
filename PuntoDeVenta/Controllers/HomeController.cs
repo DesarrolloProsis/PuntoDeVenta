@@ -135,6 +135,7 @@ namespace PuntoDeVenta.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
@@ -145,12 +146,12 @@ namespace PuntoDeVenta.Controllers
                 var _roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(app));
                 var _UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
 
-                //var result = _roleManager.Create(new IdentityRole("Cajero"));
+                //var result = _roleManager.Create(new IdentityRole("SuperUsuario"));
 
                 //var user = _UserManager.AddToRole(idUser, "SuperUsuario");
-                var userRole = _UserManager.IsInRole(idUser, "Cajero");
+                //var userRole = _UserManager.IsInRole(idUser, "Cajero");
 
-                userRole = _UserManager.IsInRole(idUser, "SuperUsuario");
+                //userRole = _UserManager.IsInRole(idUser, "SuperUsuario");
             }
 
             return View();
