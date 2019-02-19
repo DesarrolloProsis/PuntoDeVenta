@@ -147,6 +147,10 @@ namespace PuntoDeVenta.Controllers
                 var _UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
 
                 //var result = _roleManager.Create(new IdentityRole("SuperUsuario"));
+<<<<<<< HEAD
+=======
+                //result = _roleManager.Create(new IdentityRole("Cajero"));
+>>>>>>> Diseño-V1.2
 
                 //var user = _UserManager.AddToRole(idUser, "SuperUsuario");
                 //var userRole = _UserManager.IsInRole(idUser, "Cajero");
@@ -164,6 +168,7 @@ namespace PuntoDeVenta.Controllers
             var model = new GenerarReportesViewModel();
             model.PropertiesList = new List<Properties>();
             model.EncabezadoReporteCajero = new EncabezadoReporteCajero();
+            model.Date = DateTime.Now;
             return View(model);
         }
 

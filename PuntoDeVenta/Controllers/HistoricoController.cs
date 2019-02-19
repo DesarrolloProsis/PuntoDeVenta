@@ -208,7 +208,7 @@ namespace PuntoDeVenta.Controllers
                     string _Fecha = Fecha_Inicio.ToString("yyyyMMdd");
                     string Fecha_ = Fecha_Inicio.AddDays(1).ToString("yyyyMMdd");
                     //cmd.CommandText = "Select * From Historico Where Fecha >= '" + _Fecha + "' and Fecha <= '" + Fecha_ + "' and NumTag Like '%" + Tag + "%' order by Fecha desc";
-                    cmd.CommandText = "Select * From Historico Where Fecha >= '" + _Fecha + "' and Fecha <= '" + Fecha_ + "' and Tag Like '%" + Tag + "%' order by Fecha desc";
+                    cmd.CommandText = "Select * From Historico Where Fecha >= '" + _Fecha + "' and Fecha <= '" + Fecha_ + "' and NumTag Like '%" + Tag + "%' order by Fecha desc";
                     cmd.ExecuteNonQuery();
                     SqlDataAdapter sqlData = new SqlDataAdapter(cmd);
                     sqlData.Fill(dt);
