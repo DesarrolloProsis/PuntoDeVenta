@@ -2,36 +2,70 @@
     font-family: fjalla;
     src: url(../../Content/css-yisus/FjallaOne-Regular.ttf);
 }
-.tamano{
-    width:50px !important;
+.search
+{
+    width: 20px !important;
+    height: auto;
+    padding-left: 5px !important;
+
+}
+.espacio{
+  
+    margin-bottom: 20px !important;
+}
+.img-modal{
+    width:25px !important;
+    height: auto !important;
+}
+.img-modal2 {
+    width: 20px !important;
+    height: auto !important;
+}
+.tamano {
+    width: 50px !important;
     height: auto;
 }
+.botonbuscar {
+    width: 100% !important;
+    border-radius: 20px !important;
+    border: 0;
+    box-shadow: 0px 5px 0px 0px #21618C;
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+    font-family: fjalla !important;
+    margin-top: 7px !important;
+}
+
+    .botonbuscar:active {
+        box-shadow: 0px 2px 0px 0px #21618C !important;
+        transform: translateY(5px);
+    }
 .botoncancelar {
     width: 100% !important;
     border-radius: 20px !important;
     border: 0;
-    box-shadow: 0px 5px 0px 0px #97170C !important;
+    box-shadow: 0px 5px 0px 0px #97170C ;
     padding-top: 12px !important;
     padding-bottom: 12px !important;
     font-family: fjalla !important;
     margin-top: 7px !important;
 }
     .botoncancelar:active {
-        box-shadow: 0px 4px 0px 0px #97170C;
+        box-shadow: 0px 2px 0px 0px #97170C !important;
         transform: translateY(5px);
     }
 .botonaceptar {
     width: 100% !important;
     border-radius: 20px !important;
     border: 0;
-    box-shadow: 0px 5px 0px 0px #196F3D !important;
+    box-shadow: 0px 5px 0px 0px #196F3D ;
     padding-top: 12px !important;
     padding-bottom: 12px !important;
     font-family: fjalla !important;
     margin-top: 7px !important;
 }
 .botonaceptar:active {
-    box-shadow: 0px 4px 0px 0px #196F3D;
+    box-shadow: 0px 2px 0px 0px #196F3D !important;
     transform: translateY(5px);
 }
 .boton-cerrar {
@@ -66,19 +100,10 @@
     color: white;
 }
 
-
-
-
     .boton-inicio:active {
         box-shadow: 0px 4px 0px 0px #1F618D;
         transform: translateY(5px);
     }
-
-
-
-
-
-
 
 
 /* LOGIN */
@@ -152,7 +177,7 @@ footer {
     left: 0;
     width: 100%;
     height: 60px;
-    z-index: 0 !important;
+    z-index: 9999 !important;
 }
 
 #footerstyle {
@@ -375,8 +400,6 @@ footer {
     margin-bottom: 30px;
 }
 
-
-
 .botoninput2 {
     margin-top: 30px;
     margin-bottom: 30px;
@@ -386,8 +409,6 @@ footer {
     border-color: #eb1c2c !important;
     border-radius: 40px;
 }
-
-
 
 /* EXTRA*/
 .hiddenstyle {

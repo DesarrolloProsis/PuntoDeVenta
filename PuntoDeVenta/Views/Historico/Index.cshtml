@@ -15,38 +15,42 @@
     {
         @Html.AntiForgeryToken()
 
-    <div class="form-row align-items-center">
-        <div class="col-auto">
-            @Html.LabelFor(model => model.Fecha_Inicio, htmlAttributes: new { @class = "sr-only", @for = "Date" })
-            @Html.EditorFor(model => model.Fecha_Inicio)
-            @Html.ValidationMessageFor(model => model.Fecha_Inicio, "", new { @class = "text-danger" })
-        </div>
-        <div class="col-auto">
-            @Html.LabelFor(model => model.Fecha_Fin, htmlAttributes: new { @class = "sr-only", @for = "Date" })
-            @Html.EditorFor(model => model.Fecha_Fin)
-        </div>
+        <div class="container">
+            <div class="row justify-content-md-center">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="col-md-12">
+                                @Html.LabelFor(model => model.Fecha_Inicio, htmlAttributes: new { @class = "sr-only", @for = "Date" })
+                                @Html.EditorFor(model => model.Fecha_Inicio)
+                                @Html.ValidationMessageFor(model => model.Fecha_Inicio, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-12">
+                                @Html.LabelFor(model => model.Fecha_Fin, htmlAttributes: new { @class = "sr-only", @for = "Date" })
+                                @Html.EditorFor(model => model.Fecha_Fin)
+                            </div>
 
-        <div>
-            @Html.EditorFor(x => x.Tag,"", new { htmlAttributes = new { @class = "form-control" } })
+                            <div class="col-md-12">
+                                @Html.EditorFor(x => x.Tag, "", new { htmlAttributes = new { @class = "form-control espacio" } })
+                            </div>
+                            <div class="col-md-12">
+                                @Html.DropDownListFor(x => x.Operador, new SelectList(string.Empty, "Value", "Text"), "Seleccione Marca", htmlAttributes: new { @class = "form-control espacio" })
+                            </div>
 
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary botonbuscar"><img class="search"src="~/Content/css-yisus/img/search-solid.svg" /> Buscar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
         </div>
-
-        <div>
-            @Html.DropDownListFor(x => x.Operador, new SelectList(string.Empty, "Value", "Text"), "Seleccione Marca", htmlAttributes: new { @class = "form-control" })
-
-        </div>
-
-        <div class="col-auto">
-            <button type="submit" class="btn btn-primary mb-2">Buscar</button>
-        </div>
-    </div>
     }
-
-
 </div>
 
 
-    </div>
 
 @section Scripts {
 
@@ -75,7 +79,7 @@
     </script>
 
     <script>
-        
+
         function LoadDelegaciones() {
             $.ajax({
                 url: '@Url.Action("GetOperadores", "Historico")',
@@ -135,7 +139,7 @@
                 width: 150
             }]
         });
-                                            // puedes invocar métodos en JavaScript tamibién
-                                            //example2.greet() // -> 'Hello Vue.js!'
+                                                                        // puedes invocar métodos en JavaScript tamibién
+                                                                        //example2.greet() // -> 'Hello Vue.js!'
     </script>
 }
