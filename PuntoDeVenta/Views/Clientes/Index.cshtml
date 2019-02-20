@@ -196,7 +196,7 @@
                         {
                             field: "NombreCompleto",
                             title: "Nombre completo",
-                            width: 300,
+                            width: 310,
                             filterable: {
                                 cell: {
                                     operator: "contains",
@@ -207,7 +207,7 @@
                         {
                             field: "EmailCliente",
                             title: "E-mail",
-                            width:300,
+                            width:310,
                             filterable: {
                                 cell: {
                                     operator: "contains",
@@ -218,7 +218,7 @@
                         {
                             field: "AddressCliente",
                             title: "Dirección",
-                            width: 300,
+                            width: 310,
                             filterable: {
                                 cell: {
                                     operator: "contains",
@@ -229,7 +229,7 @@
                         {
                             field: "PhoneCliente",
                             title: "Telefóno",
-                            width: 150,
+                            width: 200,
                             filterable: {
                                 cell: {
                                     showOperators: false
@@ -239,14 +239,14 @@
                         {
                             field: "StatusCliente",
                             title: "Estatus",
-                            width: 185,
+                            width: 155,
                             template: "#= StatusCliente ? 'Válido' : 'Inválido' #",
                             filterable: { messages: { isTrue: "Válido", isFalse: "Invalido" } }
                         },
                         {
                             field: "DateTCliente",
                             title: "Fecha de registro",
-                            width: 265,
+                            width: 310,
                             template: "#= kendo.toString(kendo.parseDate(DateTCliente, 'yyyy-MM-dd'), 'MM/dd/yyyy') #",
                             filterable: {
                                 ui: "datetimepicker" // use Kendo UI DateTimePicker

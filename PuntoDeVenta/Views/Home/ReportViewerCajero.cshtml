@@ -38,13 +38,13 @@
 }
 
 @{
-    var typeReportSource = new TypeReportSource() { TypeName = typeof(RestServiceTelerik.Reports.ReportCajero).AssemblyQualifiedName };
+    var typeReportSource = new TypeReportSource() { TypeName = "RestServiceTelerik.Reports.ReportCajero, RestServiceTelerik, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" };
     typeReportSource.Parameters.Add("Cajero", Model.Cajero);
     typeReportSource.Parameters.Add("NumCorte", Model.NumCorte);
     typeReportSource.Parameters.Add("Fecha", Model.Fecha);
     typeReportSource.Parameters.Add("HoraI", Model.HoraI);
     typeReportSource.Parameters.Add("HoraF", Model.HoraF);
-    typeReportSource.Parameters.Add("TotalMonto", Model.TotalMonto);
+    typeReportSource.Parameters.Add("TotalMonto", $"${Model.TotalMonto}");
     typeReportSource.Parameters.Add("Comentario", Model.Comentario);
 }
 

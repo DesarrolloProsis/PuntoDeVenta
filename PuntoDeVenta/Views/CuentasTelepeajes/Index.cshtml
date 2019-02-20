@@ -180,10 +180,11 @@
                         {
                             field: "NombreCliente",
                             title: "Nombre del cliente",
-                            width: 250,
+                            width: 310,
                             filterable: {
                                 cell: {
-                                    showOperators: false
+                                    operator: "contains",
+                                    suggestionOperator: "contains"
                                 }
                             }
                         },
@@ -209,7 +210,7 @@
                         },
                         {
                             field: "TypeCuenta",
-                            title: "Tipo",
+                            title: "Tipo de cuenta",
                             width: 310,
                             filterable: {
                                 cell: {
@@ -221,14 +222,14 @@
                         {
                             field: "StatusCuenta",
                             title: "Estatus",
-                            width: 150,
+                            width: 160,
                             template: "#= StatusCuenta ? 'Válido' : 'Inválido' #",
                             filterable: { messages: { isTrue: "Válido", isFalse: "Invalido" } }
                         },
                         {
                             field: "DateTCuenta",
                             title: "Fecha registro",
-                            width: 270,
+                            width: 310,
                             template: "#= kendo.toString(kendo.parseDate(DateTCuenta, 'yyyy-MM-dd'), 'MM/dd/yyyy') #",
                             filterable: {
                                 ui: "datetimepicker" // use Kendo UI DateTimePicker
@@ -241,7 +242,7 @@
                                 className: "ntag",
                                 click: onClick,
 
-                            }, width: 130,
+                            }, width: 128,
                         },
                         {
                             command: [{

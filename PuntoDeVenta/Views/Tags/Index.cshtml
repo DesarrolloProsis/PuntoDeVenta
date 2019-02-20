@@ -148,7 +148,7 @@
                                     TypeCuenta: {type: "string"},
                                     NumCuenta: { type: "number" },
                                     NumTag: { type: "number" },
-                                    SaldoTag: { type: "string" },
+                                    SaldoTag: { type: "number" },
                                     StatusTag: { type: "boolean" },
                                     DateTTag: { type: "date" },
                                 }
@@ -167,10 +167,11 @@
                         [{
                             field: "NombreCliente",
                             title: "Nombre del cliente",
-                            width: 250,
+                            width: 310,
                             filterable: {
                                 cell: {
-                                    showOperators: false
+                                    operator: "contains",
+                                    suggestionOperator: "contains"
                                 }
                             }
                         },
@@ -197,10 +198,11 @@
                         {
                             field: "TypeCuenta",
                             title: "Tipo Tag",
-                            width: 270,
+                            width: 310,
                             filterable: {
                                 cell: {
-                                    showOperators: false
+                                    operator: "contains",
+                                    suggestionOperator: "contains"
                                 }
                             }
                         },
@@ -217,14 +219,14 @@
                         {
                             field: "StatusTag",
                             title: "Estatus",
-                            width: 150,
+                            width: 160,
                             template: "#= StatusTag ? 'Válido' : 'Invalido' #",
                             filterable: { messages: { isTrue: "Válido", isFalse: "Invalido" } }
                         },
                         {
                             field: "DateTTag",
                             title: "Fecha registro",
-                            width:270,
+                            width:310,
                             template: "#= kendo.toString(kendo.parseDate(DateTTag, 'yyyy-MM-dd'), 'MM/dd/yyyy') #",
                             filterable: {
                                 ui: "datetimepicker" // use Kendo UI DateTimePicker
@@ -243,7 +245,7 @@
                                     var data = this.dataItem(tr);
                                     window.location.href = '@(Url.Action("Activate", "Tags").ToString())?id=' + data.Id;
                                 },
-                            }], width: 110
+                            }], width: 105
                         },
                         {
                             command: [{
