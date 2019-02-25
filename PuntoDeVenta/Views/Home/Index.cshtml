@@ -12,49 +12,49 @@
                     <!--onclick="location.href='/Clientes'"-->
                     <button class="btn boton-inicio" onclick="location.href='/Clientes/Index'">
                         <div class="row">
-                            <div class="col-md-12"><img src="~/Content/css-yisus/img/address-card-solid.svg" class="tamano"/></div>              
+                            <div class="col-md-12"><img src="~/Content/css-yisus/img/address-card-solid.svg" class="tamano" /></div>
                         </div>
-                     Crear nuevo cliente
+                        Crear nuevo cliente
                     </button>
                 </div>
                 <div class="col-md-4" style="margin-top: 2% !important;">
                     <button class="btn boton-inicio" onclick="location.href='/CuentasTelepeajes/Index'">
                         <div class="row">
-                            <div class="col-md-12"><img src="~/Content/css-yisus/img/money-check-alt-solid.svg" class="tamano"/></div>
+                            <div class="col-md-12"><img src="~/Content/css-yisus/img/money-check-alt-solid.svg" class="tamano" /></div>
                         </div>
-                         Recargar saldo cuenta
+                        Recargar saldo cuenta
                     </button>
                 </div>
                 <div class="col-md-4" style="margin-top: 2% !important;">
                     <button class="btn boton-inicio" onclick="location.href='/Tags/Index'">
                         <div class="row">
-                            <div class="col-md-12"><img src="~/Content/css-yisus/img/credit-card-solid.svg" class="tamano"/></div>
+                            <div class="col-md-12"><img src="~/Content/css-yisus/img/credit-card-solid.svg" class="tamano" /></div>
                         </div>
-                         Recargar saldo tag
+                        Recargar saldo tag
                     </button>
                 </div>
                 <div class="col-md-4" style="margin-top: 2% !important;">
                     <button class="btn boton-inicio" onclick="location.href='/Historico/Index'">
                         <div class="row">
-                            <div class="col-md-12"><img src="~/Content/css-yisus/img/clipboard-list-solid.svg" class="tamano"/></div>
+                            <div class="col-md-12"><img src="~/Content/css-yisus/img/clipboard-list-solid.svg" class="tamano" /></div>
                         </div>
-                         Historial de cruces
+                        Historial de cruces
                     </button>
                 </div>
                 <div class="col-md-4" style="margin-top: 2% !important;">
                     <button class="btn boton-inicio" onclick="location.href='/Account/Register'">
                         <div class="row">
-                            <div class="col-md-12"><img src="~/Content/css-yisus/img/address-book-solid.svg" class="tamano"/></div>
+                            <div class="col-md-12"><img src="~/Content/css-yisus/img/address-book-solid.svg" class="tamano" /></div>
                         </div>
-                         Registrar nuevo cajero
+                        Registrar nuevo cajero
                     </button>
                 </div>
                 <div class="col-md-4" style="margin-top: 2% !important;">
                     <button class="btn boton-inicio" onclick="location.href='/Home/GenerarReportes'">
                         <div class="row">
-                            <div class="col-md-12"><img src="~/Content/css-yisus/img/list-ul-solid.svg" class="tamano"/></div>
+                            <div class="col-md-12"><img src="~/Content/css-yisus/img/list-ul-solid.svg" class="tamano" /></div>
                         </div>
-                         Generar Reportes
+                        Generar Reportes
                     </button>
                 </div>
             </div>
@@ -63,16 +63,16 @@
 </div>
 
 
-<div class="container" style="margin-top: 40px;">
+<!--<div class="container" style="margin-top: 40px;">
     <div class="row">
         <div class="col-12 text-center">
-            <!-- Button trigger modal -->
             <button type="button" class="btn btn-danger boton-cerrar btn-lg btn-block" data-toggle="modal" data-target="#exampleModalCenter">
                 Cerrar sesión
             </button>
         </div>
     </div>
-</div>
+</div>-->
+<span class="hacia-arriba icon-ctrl" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-sign-out-alt"></i> Cerrar</span>
 
 @using (Html.BeginForm("LogOff", "Account", FormMethod.Post))
 {
@@ -102,7 +102,7 @@
                     @Html.HiddenFor(model => model.Id)
                 </div>
                 <div class="modal-footer">
-                  
+
                     <button type="submit" class="btn btn-success botonaceptar">Guardar</button>
                 </div>
             </div>

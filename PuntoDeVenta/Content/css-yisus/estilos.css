@@ -2,6 +2,34 @@
     font-family: fjalla;
     src: url(../../Content/css-yisus/FjallaOne-Regular.ttf);
 }
+.hacia-arriba {
+    padding: 15px;
+    /*establecemos espacios en el boton*/
+    display: inline-block;
+    background: #222;
+    /*establecemos un color de fondo*/
+    color: #fff;
+    /*cambiamos el color de la fuente*/
+    position: fixed;
+    /*lo ponemos fijo a pantalla*/
+    font-size: 20px;
+    /*establecemos un tamaño a nuestra fuente*/
+    bottom: 20px;
+    /*establecemos un espacio de abajo*/
+    right: 20px;
+    /*establecemos un espacio de la parte derecha de nuestro sitio*/
+    cursor: pointer;
+    /*a la hora de que el usuario pase el mause cambie a una manita para que pueda darle click*/
+    border-radius: 4.7px;
+    /*establecemos un redondeado al boton, esto puede variar*/
+}
+
+.icon-ctrl {
+    padding-top: 15px;
+    margin-bottom: 45px;
+    /*acomodamos el icono*/
+    z-index: 1;
+}
 .search
 {
     width: 20px !important;
@@ -82,26 +110,24 @@
     overflow: hidden;
     width: 100% !important;
     height: 180px !important;
-    background-color: #2980B9;
+    background-color: #f16021;
     border-radius: 20px;
     color: white;
     border: 0;
-    box-shadow: 0px 10px 0px 0px #1F618D;
+    box-shadow: 0px 10px 0px 0px #BF360C;
     padding-top: 40px;
     padding-bottom: 12px;
     font-family: fjalla;
     font-size: 1.3rem !important;
     margin-top: 7px;
     vertical-align: middle !important;
-
-
 }
 .boton-inicio:hover {
     color: white;
 }
 
     .boton-inicio:active {
-        box-shadow: 0px 4px 0px 0px #1F618D;
+        box-shadow: 0px 4px 0px 0px #BF360C;
         transform: translateY(5px);
     }
 
@@ -120,13 +146,13 @@
     display: block;
     padding-bottom: 30px !important;
     padding-top: 10% !important;
-    width: 300px !important;
+    width: 200px !important;
     height: auto !important;
 }
 
 /* NAV BAR */
 .navstyle {
-    background-color: #2980B9 !important;
+    background-color: #00a73c !important; 
     color: white !important;
     font-family: fjalla;
     letter-spacing: 1px;
@@ -169,6 +195,11 @@
 .text-align-center{
     text-align:center;
 }
+.logonav{
+    width: 50px;
+    height: auto;
+    margin-right: 20px;
+}
 /* FOOTER */
 footer {
     position: fixed;
@@ -197,11 +228,11 @@ footer {
 
 /* BOTONES */
 .botonstyle {
-    background-color: #2980B9;
+    background-color: #f16021;
     border-radius: 20px;
     color: white;
     border: 0;
-    box-shadow: 0px 5px 0px 0px #1F618D;
+    box-shadow: 0px 5px 0px 0px #BF360C;
     padding-top: 12px;
     padding-bottom: 12px;
     font-family: fjalla;
@@ -210,11 +241,11 @@ footer {
 }
 
     .botonstyle:hover {
-        background-color: #2980B9;
+        background-color: #f16021;
         border-radius: 20px;
         color: white;
         border: 0;
-        box-shadow: 0px 5px 0px 0px #1F618D;
+        box-shadow: 0px 5px 0px 0px #BF360C;
         padding-top: 12px;
         padding-bottom: 12px;
         font-family: fjalla;
@@ -223,17 +254,17 @@ footer {
     }
 
     .botonstyle:active {
-        box-shadow: 0px 2px 0px 0px #1F618D;
+        box-shadow: 0px 2px 0px 0px #BF360C;
         transform: translateY(2px);
     }
 
 .botonstyle2 {
     margin-top: 7px;
-    background-color: #2980B9;
+    background-color: #f16021;
     border-radius: 20px;
     color: white;
     border: 0;
-    box-shadow: 0px 5px 0px 0px #1F618D;
+    box-shadow: 0px 5px 0px 0px #BF360C;
     padding-top: 8px;
     padding-bottom: 8px;
     font-family: fjalla;
@@ -243,11 +274,11 @@ footer {
 
     .botonstyle2:hover {
         margin-top: 7px;
-        background-color: #2980B9;
+        background-color: #f16021;
         border-radius: 20px;
         color: white;
         border: 0;
-        box-shadow: 0px 5px 0px 0px #1F618D;
+        box-shadow: 0px 5px 0px 0px #BF360C;
         padding-top: 8px;
         padding-bottom: 8px;
         font-family: fjalla;
@@ -256,7 +287,7 @@ footer {
     }
 
     .botonstyle2:active {
-        box-shadow: 0px 2px 0px 0px #1F618D;
+        box-shadow: 0px 2px 0px 0px #BF360C;
         transform: translateY(2px);
     }
 
@@ -462,7 +493,7 @@ body {
 }
 
 body {
-    background-color: #E5E7E9 !important;
+    background-color: whitesmoke !important;
     padding-bottom: 60px;
 }
 .textlogin {
