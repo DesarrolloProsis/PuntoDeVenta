@@ -99,6 +99,16 @@ namespace PuntoDeVenta.Models
         [NotMapped]
         [Required]
         public string Rol { get; set; }
+
+        [NotMapped]
+        [Display(Name = "Nombre")]
+        [Required]
+        public string Name { get; set; }
+
+        [NotMapped]
+        [Display(Name = "Apellidos")]
+        [Required]
+        public string LastName { get; set; }
     }
 
     public class ResetPasswordViewModel

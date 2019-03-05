@@ -7,26 +7,7 @@ using System.Web;
 
 namespace PuntoDeVenta.Models
 {
-    //[Table("Historico")]
-    //public class Historico
-    //{
-    //    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    //    [Key]
-    //    public int Id { get; set; }
-    //    public string NumTag { get; set; }
-    //    public string Carril { get; set; }
-    //    public DateTime Fecha { get; set; }
-    //    public float SaldoTag { get; set; }
-    //}
 
-    //public class TableHistorico
-    //{
-    //    public DateTime Fecha_Inicio { get; set; }
-    //    public DateTime Fecha_Fin { get; set; }
-    //    public List<Historicos> ListaHistorico { get; set; }
-    //    public Historicos Historicos { get; set; }
-
-    //}
 
     [Table("Historico")]
     public class Historico
@@ -34,14 +15,23 @@ namespace PuntoDeVenta.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int Id { get; set; }
+        [StringLength(25)]
+        [Column ("Tag")]
         public string Tag { get; set; }
+        [StringLength(35)]
         public string Delegacion { get; set; }
+        [StringLength(35)]
         public string Plaza { get; set; }
-        public string Fecha { get; set; }
+        public DateTime Fecha { get; set; }
+        [StringLength(10)]
         public string Cuerpo { get; set; }
+        [StringLength(10)]
         public string Carril { get; set; }
+        [StringLength(10)]
         public string Clase { get; set; }
-        public string Saldo { get; set; }
+        [Column("Saldo")]
+        public double Saldo { get; set; }
+        [StringLength(20)]
         public string Operador { get; set; }
     }
 }

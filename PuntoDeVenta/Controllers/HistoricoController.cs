@@ -19,18 +19,27 @@ namespace PuntoDeVenta.Controllers
     {
 
         public static DataTable dtstatic = new DataTable();
+        public static List<Historicos> ListPDF = new List<Historicos>();
         public static string Fecha1;
         public static string Fecha2;
         public static string Plaza;
         // GET: Historico
+        [HttpGet]
         public ActionResult Index()
         {
-            return View();
+            var model = new TableHistorico();
+            model.Fecha_Inicio = DateTime.Now;
+            model.Fecha_Fin = DateTime.Now;
+            return View(model);
         }
 
         public ActionResult Regresar()
         {
-            return View("Index");
+
+            var model = new TableHistorico();
+            model.Fecha_Inicio = DateTime.Now;
+            model.Fecha_Fin = DateTime.Now;
+            return View("Index", model);
         }
 
         public JsonResult GetOperadores()
@@ -57,8 +66,8 @@ namespace PuntoDeVenta.Controllers
 
             Items.Add(new SelectListItem
             {
-                Text = "Pase Urbano",
-                Value = "Pase Urbano"
+                Text = "SIVA",
+                Value = "SIVA"
             });
 
             Items.Add(new SelectListItem
@@ -92,16 +101,143 @@ namespace PuntoDeVenta.Controllers
             string Operador = model.Operador;
             string Tag = model.Tag;
             Fecha1 = Fecha_Inicio;
- 
-            
+
+
+            AppDbContext db = new AppDbContext();
+            List<Historicos> List = new List<Historicos>();
             DataTable dt = new DataTable();
             if (Fecha_Fin == "01/01/0001")
             {
                 if (Fecha_Inicio != "01/01/0001")
                 {
-                        
-                        dt = Llenar_Tabla(model.Fecha_Inicio, Operador, Tag);
-                        dtstatic = dt;
+
+
+                    if (Operador != null)
+                    {
+
+                        if (Tag != null)
+                        {
+
+                            var ListaLinq = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio).Where(x => x.Operador == Operador).Where(x => x.Tag.Contains(Tag)).ToList();
+
+                            for (int i = 0; i < ListaLinq.Count(); i++)
+                            {
+                                Historicos newfila = new Historicos();
+
+                                newfila.Id = i + 1;
+                                newfila.Tag = ListaLinq[i].Tag.ToString();
+                                newfila.Delegacion = ListaLinq[i].Delegacion.ToString();
+                                newfila.Plaza = ListaLinq[i].Plaza.ToString();
+                                newfila.Fecha = ListaLinq[i].Fecha.ToString();
+                                newfila.Cuerpo = ListaLinq[i].Cuerpo.ToString();
+                                newfila.Carril = ListaLinq[i].Carril.ToString();
+                                newfila.Clase = ListaLinq[i].Clase.ToString();
+                                newfila.Saldo = ListaLinq[i].Saldo.ToString();
+                                newfila.Operador = ListaLinq[i].Operador.ToString();
+                                List.Add(newfila);
+
+                            }
+
+                            Fecha1 = Fecha_Inicio;
+                            Plaza = "Pruebas";
+                            ListPDF = List;
+                            model.ListaHistorico = List;
+
+                        }
+                        else
+                        {
+                            var ListaLinq = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio).Where(x => x.Operador == Operador).ToList();
+
+                            for (int i = 0; i < ListaLinq.Count(); i++)
+                            {
+                                Historicos newfila = new Historicos();
+
+                                newfila.Id = i + 1;
+                                newfila.Tag = ListaLinq[i].Tag.ToString();
+                                newfila.Delegacion = ListaLinq[i].Delegacion.ToString();
+                                newfila.Plaza = ListaLinq[i].Plaza.ToString();
+                                newfila.Fecha = ListaLinq[i].Fecha.ToString();
+                                newfila.Cuerpo = ListaLinq[i].Cuerpo.ToString();
+                                newfila.Carril = ListaLinq[i].Carril.ToString();
+                                newfila.Clase = ListaLinq[i].Clase.ToString();
+                                newfila.Saldo = ListaLinq[i].Saldo.ToString();
+                                newfila.Operador = ListaLinq[i].Operador.ToString();
+                                List.Add(newfila);
+
+                            }
+
+                            Fecha1 = Fecha_Inicio;
+                            Plaza = "Pruebas";
+                            ListPDF = List;
+                            model.ListaHistorico = List;
+                        }
+
+                    }
+
+                    else
+                    {
+                        if (Tag != null)
+                        {
+
+                            var ListaLinq = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio).Where(x => x.Tag.Contains(Tag)).ToList();
+
+                            for (int i = 0; i < ListaLinq.Count(); i++)
+                            {
+                                Historicos newfila = new Historicos();
+
+                                newfila.Id = i + 1;
+                                newfila.Tag = ListaLinq[i].Tag.ToString();
+                                newfila.Delegacion = ListaLinq[i].Delegacion.ToString();
+                                newfila.Plaza = ListaLinq[i].Plaza.ToString();
+                                newfila.Fecha = ListaLinq[i].Fecha.ToString();
+                                newfila.Cuerpo = ListaLinq[i].Cuerpo.ToString();
+                                newfila.Carril = ListaLinq[i].Carril.ToString();
+                                newfila.Clase = ListaLinq[i].Clase.ToString();
+                                newfila.Saldo = ListaLinq[i].Saldo.ToString();
+                                newfila.Operador = ListaLinq[i].Operador.ToString();
+                                List.Add(newfila);
+
+                            }
+
+                            Fecha1 = Fecha_Inicio;
+                            Plaza = "Pruebas";
+                            ListPDF = List;
+                            model.ListaHistorico = List;
+
+                        }
+                        else
+                        {
+
+                            //var ListaLinq = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio).ToList();
+                            var ListaLinq = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio).ToList();
+                            for (int i = 0; i < ListaLinq.Count(); i++)
+                            {
+                                Historicos newfila = new Historicos();
+
+                                newfila.Id = i + 1;
+                                newfila.Tag = ListaLinq[i].Tag.ToString();
+                                newfila.Delegacion = ListaLinq[i].Delegacion.ToString();
+                                newfila.Plaza = ListaLinq[i].Plaza.ToString();
+                                newfila.Fecha = ListaLinq[i].Fecha.ToString();
+                                newfila.Cuerpo = ListaLinq[i].Cuerpo.ToString();
+                                newfila.Carril = ListaLinq[i].Carril.ToString();
+                                newfila.Clase = ListaLinq[i].Clase.ToString();
+                                newfila.Saldo = ListaLinq[i].Saldo.ToString();
+                                newfila.Operador = ListaLinq[i].Operador.ToString();
+                                List.Add(newfila);
+
+                            }
+
+                            Fecha1 = Fecha_Inicio;
+                            Plaza = "Pruebas";
+                            ListPDF = List;
+                            model.ListaHistorico = List;
+
+                        }
+                    }
+
+
+
 
                 }
                 else if (Fecha_Inicio == "01/01/0001")
@@ -109,128 +245,361 @@ namespace PuntoDeVenta.Controllers
             }
             else if (model.Fecha_Fin > model.Fecha_Inicio)
             {
-                dt = Llenar_Tabla(model.Fecha_Inicio, model.Fecha_Fin, Operador, Tag);
-                dtstatic = dt;
-                Fecha2 = Fecha_Fin;
+                if (Operador != null)
+                {
+
+                    if (Tag != null)
+                    {
+
+                        var ListaLinq = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio).Where(x => x.Operador == Operador).Where(x => x.Tag.Contains(Tag)).ToList();
+
+                        for (int i = 0; i < ListaLinq.Count(); i++)
+                        {
+                            Historicos newfila = new Historicos();
+
+                            newfila.Id = i + 1;
+                            newfila.Tag = ListaLinq[i].Tag.ToString();
+                            newfila.Delegacion = ListaLinq[i].Delegacion.ToString();
+                            newfila.Plaza = ListaLinq[i].Plaza.ToString();
+                            newfila.Fecha = ListaLinq[i].Fecha.ToString();
+                            newfila.Cuerpo = ListaLinq[i].Cuerpo.ToString();
+                            newfila.Carril = ListaLinq[i].Carril.ToString();
+                            newfila.Clase = ListaLinq[i].Clase.ToString();
+                            newfila.Saldo = ListaLinq[i].Saldo.ToString();
+                            newfila.Operador = ListaLinq[i].Operador.ToString();
+                            List.Add(newfila);
+
+                        }
+
+                        Fecha1 = Fecha_Inicio;
+                        Plaza = "Pruebas";
+                        ListPDF = List;
+                        model.ListaHistorico = List;
+
+                    }
+                    else
+                    {
+                        var ListaLinq = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio).Where(x => x.Operador == Operador).ToList();
+
+                        for (int i = 0; i < ListaLinq.Count(); i++)
+                        {
+                            Historicos newfila = new Historicos();
+
+                            newfila.Id = i + 1;
+                            newfila.Tag = ListaLinq[i].Tag.ToString();
+                            newfila.Delegacion = ListaLinq[i].Delegacion.ToString();
+                            newfila.Plaza = ListaLinq[i].Plaza.ToString();
+                            newfila.Fecha = ListaLinq[i].Fecha.ToString();
+                            newfila.Cuerpo = ListaLinq[i].Cuerpo.ToString();
+                            newfila.Carril = ListaLinq[i].Carril.ToString();
+                            newfila.Clase = ListaLinq[i].Clase.ToString();
+                            newfila.Saldo = ListaLinq[i].Saldo.ToString();
+                            newfila.Operador = ListaLinq[i].Operador.ToString();
+                            List.Add(newfila);
+
+                        }
+
+                        Fecha1 = Fecha_Inicio;
+                        Plaza = "Pruebas";
+                        ListPDF = List;
+                        model.ListaHistorico = List;
+                    }
+                }
+                else
+                {
+                    if (Tag != null)
+                    {
+
+                        var ListaLinq = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio).Where(x => x.Tag.Contains(Tag)).ToList();
+
+                        for (int i = 0; i < ListaLinq.Count(); i++)
+                        {
+                            Historicos newfila = new Historicos();
+
+                            newfila.Id = i + 1;
+                            newfila.Tag = ListaLinq[i].Tag.ToString();
+                            newfila.Delegacion = ListaLinq[i].Delegacion.ToString();
+                            newfila.Plaza = ListaLinq[i].Plaza.ToString();
+                            newfila.Fecha = ListaLinq[i].Fecha.ToString();
+                            newfila.Cuerpo = ListaLinq[i].Cuerpo.ToString();
+                            newfila.Carril = ListaLinq[i].Carril.ToString();
+                            newfila.Clase = ListaLinq[i].Clase.ToString();
+                            newfila.Saldo = ListaLinq[i].Saldo.ToString();
+                            newfila.Operador = ListaLinq[i].Operador.ToString();
+                            List.Add(newfila);
+
+                        }
+
+                        Fecha1 = Fecha_Inicio;
+                        Plaza = "Pruebas";
+                        ListPDF = List;
+                        model.ListaHistorico = List;
+
+                    }
+                    else
+                    {
+
+                        var ListaLinq = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio).Where(x => x.Fecha <= model.Fecha_Fin).ToList();
+
+                        for (int i = 0; i < ListaLinq.Count(); i++)
+                        {
+                            Historicos newfila = new Historicos();
+
+                            newfila.Id = i + 1;
+                            newfila.Tag = ListaLinq[i].Tag.ToString();
+                            newfila.Delegacion = ListaLinq[i].Delegacion.ToString();
+                            newfila.Plaza = ListaLinq[i].Plaza.ToString();
+                            newfila.Fecha = ListaLinq[i].Fecha.ToString();
+                            newfila.Cuerpo = ListaLinq[i].Cuerpo.ToString();
+                            newfila.Carril = ListaLinq[i].Carril.ToString();
+                            newfila.Clase = ListaLinq[i].Clase.ToString();
+                            newfila.Saldo = ListaLinq[i].Saldo.ToString();
+                            newfila.Operador = ListaLinq[i].Operador.ToString();
+                            List.Add(newfila);
+
+                        }
+
+                        Fecha1 = Fecha_Inicio;
+                        Fecha2 = Fecha_Fin;
+                        Plaza = "Pruebas";
+                        ListPDF = List;
+                        model.ListaHistorico = List;
+
+                    }
+                }
+
+
             }
             else if (Fecha_Fin == "01/01/0001")
             {
                 if (Fecha_Inicio == "01/01/0001")
                     return View("Index");
             }
+            else if(Fecha_Fin != "01/01/0001")
+            {
+                if(Fecha_Inicio != "01/01/0001")
+                {
+                    if (Fecha_Inicio == Fecha_Fin)
+                    {
+                        if (Operador != null)
+                        {
+
+                            if (Tag != null)
+                            {
+
+                                var ListaLinq = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio).Where(x => x.Operador == Operador).Where(x => x.Tag.Contains(Tag)).ToList();
+
+                                for (int i = 0; i < ListaLinq.Count(); i++)
+                                {
+                                    Historicos newfila = new Historicos();
+
+                                    newfila.Id = i + 1;
+                                    newfila.Tag = ListaLinq[i].Tag.ToString();
+                                    newfila.Delegacion = ListaLinq[i].Delegacion.ToString();
+                                    newfila.Plaza = ListaLinq[i].Plaza.ToString();
+                                    newfila.Fecha = ListaLinq[i].Fecha.ToString();
+                                    newfila.Cuerpo = ListaLinq[i].Cuerpo.ToString();
+                                    newfila.Carril = ListaLinq[i].Carril.ToString();
+                                    newfila.Clase = ListaLinq[i].Clase.ToString();
+                                    newfila.Saldo = ListaLinq[i].Saldo.ToString();
+                                    newfila.Operador = ListaLinq[i].Operador.ToString();
+                                    List.Add(newfila);
+
+                                }
+
+                                Fecha1 = Fecha_Inicio;
+                                Plaza = "Pruebas";
+                                ListPDF = List;
+                                model.ListaHistorico = List;
+
+                            }
+                            else
+                            {
+                                var ListaLinq = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio).Where(x => x.Operador == Operador).ToList();
+
+                                for (int i = 0; i < ListaLinq.Count(); i++)
+                                {
+                                    Historicos newfila = new Historicos();
+
+                                    newfila.Id = i + 1;
+                                    newfila.Tag = ListaLinq[i].Tag.ToString();
+                                    newfila.Delegacion = ListaLinq[i].Delegacion.ToString();
+                                    newfila.Plaza = ListaLinq[i].Plaza.ToString();
+                                    newfila.Fecha = ListaLinq[i].Fecha.ToString();
+                                    newfila.Cuerpo = ListaLinq[i].Cuerpo.ToString();
+                                    newfila.Carril = ListaLinq[i].Carril.ToString();
+                                    newfila.Clase = ListaLinq[i].Clase.ToString();
+                                    newfila.Saldo = ListaLinq[i].Saldo.ToString();
+                                    newfila.Operador = ListaLinq[i].Operador.ToString();
+                                    List.Add(newfila);
+
+                                }
+
+                                Fecha1 = Fecha_Inicio;
+                                Plaza = "Pruebas";
+                                ListPDF = List;
+                                model.ListaHistorico = List;
+                            }
+
+                        }
+
+                        else
+                        {
+                            if (Tag != null)
+                            {
+
+                                var ListaLinq = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio).Where(x => x.Tag.Contains(Tag)).ToList();
+
+                                for (int i = 0; i < ListaLinq.Count(); i++)
+                                {
+                                    Historicos newfila = new Historicos();
+
+                                    newfila.Id = i + 1;
+                                    newfila.Tag = ListaLinq[i].Tag.ToString();
+                                    newfila.Delegacion = ListaLinq[i].Delegacion.ToString();
+                                    newfila.Plaza = ListaLinq[i].Plaza.ToString();
+                                    newfila.Fecha = ListaLinq[i].Fecha.ToString();
+                                    newfila.Cuerpo = ListaLinq[i].Cuerpo.ToString();
+                                    newfila.Carril = ListaLinq[i].Carril.ToString();
+                                    newfila.Clase = ListaLinq[i].Clase.ToString();
+                                    newfila.Saldo = ListaLinq[i].Saldo.ToString();
+                                    newfila.Operador = ListaLinq[i].Operador.ToString();
+                                    List.Add(newfila);
+
+                                }
+
+                                Fecha1 = Fecha_Inicio;
+                                Plaza = "Pruebas";
+                                ListPDF = List;
+                                model.ListaHistorico = List;
+
+                            }
+                            else
+                            {
+
+                                //var ListaLinq = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio).ToList();
+                                var ListaLinq = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio).ToList();
+                                for (int i = 0; i < ListaLinq.Count(); i++)
+                                {
+                                    Historicos newfila = new Historicos();
+
+                                    newfila.Id = i + 1;
+                                    newfila.Tag = ListaLinq[i].Tag.ToString();
+                                    newfila.Delegacion = ListaLinq[i].Delegacion.ToString();
+                                    newfila.Plaza = ListaLinq[i].Plaza.ToString();
+                                    newfila.Fecha = ListaLinq[i].Fecha.ToString();
+                                    newfila.Cuerpo = ListaLinq[i].Cuerpo.ToString();
+                                    newfila.Carril = ListaLinq[i].Carril.ToString();
+                                    newfila.Clase = ListaLinq[i].Clase.ToString();
+                                    newfila.Saldo = ListaLinq[i].Saldo.ToString();
+                                    newfila.Operador = ListaLinq[i].Operador.ToString();
+                                    List.Add(newfila);
+
+                                }
+
+                                Fecha1 = Fecha_Inicio;
+                                Plaza = "Pruebas";
+                                ListPDF = List;
+                                model.ListaHistorico = List;
+
+                            }
+                        }
+                    }
+                }
+                else
+                {
+
+                }
+            }
             else
             {
                 return View("Index");
             }
-            List<Historicos> Lista = new List<Historicos>();
-            int id = 0;
-            foreach (DataRow item in dt.Rows)
-            {
-                Historicos newrow = new Historicos();
-                newrow.Id = id++;
-                //newrow.Tag = item["NumTag"].ToString();
-                newrow.Tag = item["Tag"].ToString();
-                newrow.Delegacion = item["Delegacion"].ToString();
-                newrow.Plaza = item["Plaza"].ToString();
-                newrow.Cuerpo = item["Cuerpo"].ToString();
-                newrow.Carril = item["Carril"].ToString();
-                newrow.Fecha = item["Fecha"].ToString();
-                newrow.Clase = item["Clase"].ToString();
-                //newrow.Saldo = item["SaldoTag"].ToString();
-                newrow.Saldo = item["Saldo"].ToString();
-                newrow.Operador = item["Operador"].ToString();
-                Lista.Add(newrow);
-            }
 
-            if (Lista.Count > 0)
-            {
-                Plaza = Lista[0].Plaza.ToString();
-            }
-            model.ListaHistorico = Lista;
 
             return View("Tabla_Historico", model);
         }
 
-        public DataTable Llenar_Tabla(DateTime Fecha_Inicio, DateTime Fecha_Fin, string Operador, string Tag)
-        {
-            DataTable dt = new DataTable();
-            string conexion = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            SqlConnection sqlConnection = new SqlConnection(conexion);
+        //public DataTable Llenar_Tabla(DateTime Fecha_Inicio, DateTime Fecha_Fin, string Operador, string Tag)
+        //{
+        //    DataTable dt = new DataTable();
+        //    string conexion = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+        //    SqlConnection sqlConnection = new SqlConnection(conexion);
 
 
-            if (Operador == null || Operador == "Todos")
-            {
-                using (SqlCommand cmd = new SqlCommand("", sqlConnection))
-                {
-                    sqlConnection.Open();
-                    string _Fecha = Fecha_Inicio.ToString("yyyyMMdd");
-                    string Fecha_ = Fecha_Fin.AddDays(1).ToString("yyyyMMdd");
-                    cmd.CommandText = "Select * From Historico Where Fecha >= '" + _Fecha + "' and Fecha <= '" + Fecha_ + "' and NumTag Like '%" + Tag + "%' order by Fecha desc";
-                    cmd.ExecuteNonQuery();
-                    SqlDataAdapter sqlData = new SqlDataAdapter(cmd);
-                    sqlData.Fill(dt);
-                    sqlConnection.Close();
+        //    if (Operador == null || Operador == "Todos")
+        //    {
+        //        using (SqlCommand cmd = new SqlCommand("", sqlConnection))
+        //        {
+        //            sqlConnection.Open();
+        //            string _Fecha = Fecha_Inicio.ToString("yyyyMMdd");
+        //            string Fecha_ = Fecha_Fin.AddDays(1).ToString("yyyyMMdd");
+        //            cmd.CommandText = "Select * From Historico Where Fecha >= '" + _Fecha + "' and Fecha <= '" + Fecha_ + "' and NumTag Like '%" + Tag + "%' order by Fecha desc";
+        //            cmd.ExecuteNonQuery();
+        //            SqlDataAdapter sqlData = new SqlDataAdapter(cmd);
+        //            sqlData.Fill(dt);
+        //            sqlConnection.Close();
 
 
-                }
-            }
-            else
-            {
+        //        }
+        //    }
+        //    else
+        //    {
 
-                using (SqlCommand cmd = new SqlCommand("", sqlConnection))
-                {
-                    sqlConnection.Open();
-                    string _Fecha = Fecha_Inicio.ToString("yyyyMMdd");
-                    string Fecha_ = Fecha_Fin.AddDays(1).ToString("yyyyMMdd");
-                    cmd.CommandText = "Select * From Historico Where Fecha >= '" + _Fecha + "' and Fecha <= '" + Fecha_ + "'and Operador = '" + Operador + "'  and NumTag Like '%" + Tag + "%' order by Fecha desc";
-                    cmd.ExecuteNonQuery();
-                    SqlDataAdapter sqlData = new SqlDataAdapter(cmd);
-                    sqlData.Fill(dt);
-                    sqlConnection.Close();
+        //        using (SqlCommand cmd = new SqlCommand("", sqlConnection))
+        //        {
+        //            sqlConnection.Open();
+        //            string _Fecha = Fecha_Inicio.ToString("yyyyMMdd");
+        //            string Fecha_ = Fecha_Fin.AddDays(1).ToString("yyyyMMdd");
+        //            cmd.CommandText = "Select * From Historico Where Fecha >= '" + _Fecha + "' and Fecha <= '" + Fecha_ + "'and Operador = '" + Operador + "'  and NumTag Like '%" + Tag + "%' order by Fecha desc";
+        //            cmd.ExecuteNonQuery();
+        //            SqlDataAdapter sqlData = new SqlDataAdapter(cmd);
+        //            sqlData.Fill(dt);
+        //            sqlConnection.Close();
 
-                }
-            }
+        //        }
+        //    }
 
 
-            return dt;
-        }
-        public DataTable Llenar_Tabla(DateTime Fecha_Inicio, string Operador, string Tag)
-        {
-            DataTable dt = new DataTable();
-            string conexion = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            SqlConnection sqlConnection = new SqlConnection(conexion);
+        //    return dt;
+        //}
+        //public DataTable Llenar_Tabla(DateTime Fecha_Inicio, string Operador, string Tag)
+        //{
+        //    DataTable dt = new DataTable();
+        //    string conexion = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+        //    SqlConnection sqlConnection = new SqlConnection(conexion);
 
-            if (Operador == null || Operador == "Todos")
-            {
-                using (SqlCommand cmd = new SqlCommand("", sqlConnection))
-                {
-                    sqlConnection.Open();
-                    string _Fecha = Fecha_Inicio.ToString("yyyyMMdd");
-                    string Fecha_ = Fecha_Inicio.AddDays(1).ToString("yyyyMMdd");
-                    //cmd.CommandText = "Select * From Historico Where Fecha >= '" + _Fecha + "' and Fecha <= '" + Fecha_ + "' and NumTag Like '%" + Tag + "%' order by Fecha desc";
-                    cmd.CommandText = "Select * From Historico Where Fecha >= '" + _Fecha + "' and Fecha <= '" + Fecha_ + "' and Tag Like '%" + Tag + "%' order by Fecha desc";
-                    cmd.ExecuteNonQuery();
-                    SqlDataAdapter sqlData = new SqlDataAdapter(cmd);
-                    sqlData.Fill(dt);
-                    sqlConnection.Close();
-                }
-            }
-            else
-            {
-                using (SqlCommand cmd = new SqlCommand("", sqlConnection))
-                {
-                    sqlConnection.Open();
-                    string _Fecha = Fecha_Inicio.ToString("yyyyMMdd");
-                    string Fecha_ = Fecha_Inicio.AddDays(1).ToString("yyyyMMdd");
-                    cmd.CommandText = "Select * From Historico Where Fecha >= '" + _Fecha + "' and Fecha <= '" + Fecha_ + "' and Operador = '" + Operador + "'  and NumTag Like '%" + Tag + "%' order by Fecha desc";
-                    cmd.ExecuteNonQuery();
-                    SqlDataAdapter sqlData = new SqlDataAdapter(cmd);
-                    sqlData.Fill(dt);
-                    sqlConnection.Close();
-                }
-            }
-            return dt;
-        }
+        //    if (Operador == null || Operador == "Todos")
+        //    {
+        //        using (SqlCommand cmd = new SqlCommand("", sqlConnection))
+        //        {
+        //            sqlConnection.Open();
+        //            string _Fecha = Fecha_Inicio.ToString("yyyyMMdd");
+        //            string Fecha_ = Fecha_Inicio.AddDays(1).ToString("yyyyMMdd");
+        //            //cmd.CommandText = "Select * From Historico Where Fecha >= '" + _Fecha + "' and Fecha <= '" + Fecha_ + "' and NumTag Like '%" + Tag + "%' order by Fecha desc";
+        //            cmd.CommandText = "Select * From Historico Where Fecha >= '" + _Fecha + "' and Fecha <= '" + Fecha_ + "' and Tag Like '%" + Tag + "%' order by Fecha desc";
+        //            cmd.ExecuteNonQuery();
+        //            SqlDataAdapter sqlData = new SqlDataAdapter(cmd);
+        //            sqlData.Fill(dt);
+        //            sqlConnection.Close();
+        //        }
+        //    }
+        //    else
+        //    {
+        //        using (SqlCommand cmd = new SqlCommand("", sqlConnection))
+        //        {
+        //            sqlConnection.Open();
+        //            string _Fecha = Fecha_Inicio.ToString("yyyyMMdd");
+        //            string Fecha_ = Fecha_Inicio.AddDays(1).ToString("yyyyMMdd");
+        //            cmd.CommandText = "Select * From Historico Where Fecha >= '" + _Fecha + "' and Fecha <= '" + Fecha_ + "' and Operador = '" + Operador + "'  and NumTag Like '%" + Tag + "%' order by Fecha desc";
+        //            cmd.ExecuteNonQuery();
+        //            SqlDataAdapter sqlData = new SqlDataAdapter(cmd);
+        //            sqlData.Fill(dt);
+        //            sqlConnection.Close();
+        //        }
+        //    }
+        //    return dt;
+        //}
 
         public ActionResult Pdf()
         {
@@ -296,7 +665,7 @@ namespace PuntoDeVenta.Controllers
             var coldWidthPorcentages = new[] { 3f, 2f, 1f, 2f, 5f, 2f, 2f, 3f };
             table.SetWidths(coldWidthPorcentages);
 
-            foreach (DataRow item in dtstatic.Rows)
+            foreach (var item in ListPDF)
             {
 
                 PdfPCell _cell = new PdfPCell();
@@ -306,21 +675,21 @@ namespace PuntoDeVenta.Controllers
 
                 //table.AddCell(new Paragraph(item["NumTag"].ToString()));
                 //_cell = new PdfPCell(new Paragraph(item["NumTag"].ToString()));
-                _cell = new PdfPCell(new Paragraph(item["Tag"].ToString()));
+                _cell = new PdfPCell(new Paragraph(item.Tag.ToString()));
                 _cell.HorizontalAlignment = Element.ALIGN_CENTER;
                 _cell.FixedHeight = 10f;
                 table.AddCell(_cell);
 
 
                 //table.AddCell(new Paragraph(item["Plaza"].ToString()));
-                _cell = new PdfPCell(new Paragraph(item["Plaza"].ToString()));
+                _cell = new PdfPCell(new Paragraph(item.Plaza.ToString()));
                 _cell.HorizontalAlignment = Element.ALIGN_CENTER;
 
                 table.AddCell(_cell);
 
 
                 //table.AddCell(new Paragraph(item["Cuerpo"].ToString()));
-                _cell = new PdfPCell(new Paragraph(item["Cuerpo"].ToString()));
+                _cell = new PdfPCell(new Paragraph(item.Cuerpo.ToString()));
                 _cell.HorizontalAlignment = Element.ALIGN_CENTER;
                 _cell.FixedHeight = 10f;
                 table.AddCell(_cell);
@@ -328,35 +697,35 @@ namespace PuntoDeVenta.Controllers
 
 
                 //table.AddCell(new Paragraph(item["Carril"].ToString()));
-                _cell = new PdfPCell(new Paragraph(item["Carril"].ToString()));
+                _cell = new PdfPCell(new Paragraph(item.Carril.ToString()));
                 _cell.HorizontalAlignment = Element.ALIGN_CENTER;
                 _cell.FixedHeight = 10f;
                 table.AddCell(_cell);
 
 
                 //table.AddCell(new Paragraph(item["Fecha"].ToString()));
-                _cell = new PdfPCell(new Paragraph(item["Fecha"].ToString()));
+                _cell = new PdfPCell(new Paragraph(item.Fecha.ToString()));
                 _cell.HorizontalAlignment = Element.ALIGN_CENTER;
                 _cell.FixedHeight = 10f;
                 table.AddCell(_cell);
 
 
                 //table.AddCell(new Paragraph(item["Clase"].ToString()));
-                _cell = new PdfPCell(new Paragraph(item["Clase"].ToString()));
+                _cell = new PdfPCell(new Paragraph(item.Clase.ToString()));
                 _cell.HorizontalAlignment = Element.ALIGN_CENTER;
                 _cell.FixedHeight = 10f;
                 table.AddCell(_cell);
 
                 //table.AddCell(new Paragraph(item["SaldoTag"].ToString()));
                 //_cell = new PdfPCell(new Paragraph(item["SaldoTag"].ToString()));
-                _cell = new PdfPCell(new Paragraph(item["Saldo"].ToString()));
+                _cell = new PdfPCell(new Paragraph(item.Saldo.ToString()));
                 _cell.HorizontalAlignment = Element.ALIGN_CENTER;
                 _cell.FixedHeight = 10f;
                 table.AddCell(_cell);
 
 
                 //table.AddCell(new Paragraph(item["Operador"].ToString()));
-                _cell = new PdfPCell(new Paragraph(item["Operador"].ToString()));
+                _cell = new PdfPCell(new Paragraph(item.Operador.ToString()));
                 _cell.HorizontalAlignment = Element.ALIGN_CENTER;
                 _cell.FixedHeight = 10f;
                 table.AddCell(_cell);

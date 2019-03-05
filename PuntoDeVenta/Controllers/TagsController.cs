@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using PuntoDeVenta.Models;
 using Microsoft.AspNet.Identity;
+using System.Globalization;
 
 namespace PuntoDeVenta.Controllers
 {
@@ -49,7 +50,7 @@ namespace PuntoDeVenta.Controllers
                         DateTTag = x.cuex.tag.DateTTag,
                         NumTag = x.cuex.tag.NumTag,
                         IdCajero = x.cuex.tag.IdCajero,
-                        SaldoTag = x.cuex.tag.SaldoTag != null ? (Convert.ToDouble(x.cuex.tag.SaldoTag) / 100).ToString() : "Sin saldo",
+                        SaldoTag = x.cuex.tag.SaldoTag != null ? (double.Parse(x.cuex.tag.SaldoTag) / 100).ToString("F2") : "Sin saldo",
                         StatusTag = x.cuex.tag.StatusTag,
                         TypeCuenta = x.cuex.cue.TypeCuenta,
                         StatusResidente = x.cuex.tag.StatusResidente,
@@ -81,7 +82,7 @@ namespace PuntoDeVenta.Controllers
                         DateTTag = x.cuex.tag.DateTTag,
                         NumTag = x.cuex.tag.NumTag,
                         IdCajero = x.cuex.tag.IdCajero,
-                        SaldoTag = x.cuex.tag.SaldoTag != null ? (Convert.ToDouble(x.cuex.tag.SaldoTag) / 100).ToString() : "Sin saldo",
+                        SaldoTag = x.cuex.tag.SaldoTag != null ? (double.Parse(x.cuex.tag.SaldoTag) / 100).ToString("F2") : "Sin saldo",
                         StatusTag = x.cuex.tag.StatusTag,
                         TypeCuenta = x.cuex.cue.TypeCuenta,
                         StatusResidente = x.cuex.tag.StatusResidente,
@@ -118,17 +119,23 @@ namespace PuntoDeVenta.Controllers
                     return HttpNotFound();
                 }
 
+                var UserId = User.Identity.GetUserId();
+
+                var lastCorteUser = await db.CortesCajeros
+                                                .Where(x => x.IdCajero == UserId)
+                                                .OrderByDescending(x => x.DateTApertura).FirstOrDefaultAsync();
+                if (lastCorteUser == null)
+                {
+                    return HttpNotFound();
+                }
+
                 if (FoundTag.cue.TypeCuenta == "Individual")
                 {
                     if (FoundTag.cue.StatusCuenta == true)
                     {
-                        //var SaldoNuevo = (Convert.ToDouble(FoundTag.tag.SaldoTag) + Convert.ToDouble(model.SaldoARecargar)).ToString();
-                        //SaldoNuevo = SaldoNuevo.Replace(",", string.Empty);
-                        //FoundTag.tag.SaldoTag = SaldoNuevo.Replace(".", string.Empty);
+                        var Saldo = (double.Parse(FoundTag.tag.SaldoTag) / 100).ToString("F2");
 
-                        var Saldo = (Convert.ToDouble(FoundTag.tag.SaldoTag) / 100).ToString("F2");
-
-                        var SaldoNuevo = (Convert.ToDouble(Saldo) + Convert.ToDouble(model.SaldoARecargar));
+                        var SaldoNuevo = (Convert.ToDouble(Saldo) + double.Parse(model.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }));
 
                         var SaldoSend = SaldoNuevo.ToString("F2");
 
@@ -138,13 +145,7 @@ namespace PuntoDeVenta.Controllers
                         if (FoundTag.tag.StatusTag == false)
                             FoundTag.tag.StatusTag = true;
 
-                        var UserId = User.Identity.GetUserId();
-
-                        var lastCorteUser = await db.CortesCajeros
-                                                        .Where(x => x.IdCajero == UserId)
-                                                        .OrderByDescending(x => x.DateTApertura).ToListAsync();
-
-                        if (lastCorteUser.Count > 0)
+                        if (lastCorteUser != null)
                         {
                             var detalle = new OperacionesCajero
                             {
@@ -153,8 +154,8 @@ namespace PuntoDeVenta.Controllers
                                 Numero = FoundTag.tag.NumTag,
                                 Tipo = "TAG",
                                 TipoPago = "NOR",
-                                Monto = Convert.ToDouble(model.SaldoARecargar),
-                                CorteId = lastCorteUser.FirstOrDefault().Id
+                                Monto = double.Parse(model.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }),
+                                CorteId = lastCorteUser.Id
                             };
 
                             db.OperacionesCajeros.Add(detalle);
@@ -219,9 +220,10 @@ namespace PuntoDeVenta.Controllers
         // POST: Tags/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        // [Bind(Include = "Id,NumTag,SaldoTag,StatusTag,StatusResidente,DateTTag,CuentaId,IdCajero,CobroTag")] 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,NumTag,SaldoTag,StatusTag,StatusResidente,DateTTag,CuentaId,IdCajero,CobroTag")] Tags tags)
+        public async Task<ActionResult> Create(Tags tags)
         {
             try
             {
@@ -231,6 +233,8 @@ namespace PuntoDeVenta.Controllers
                 ModelState.Remove("SaldoARecargar");
                 ModelState.Remove("ConfSaldoARecargar");
                 ModelState.Remove("IdCajero");
+
+                tags.NumTag.Trim();
 
                 var cuenta = await db.CuentasTelepeajes.FindAsync(tags.CuentaId);
 
@@ -255,9 +259,9 @@ namespace PuntoDeVenta.Controllers
 
                             var lastCorteUser = await db.CortesCajeros
                                                             .Where(x => x.IdCajero == UserId)
-                                                            .OrderByDescending(x => x.DateTApertura).ToListAsync();
+                                                            .OrderByDescending(x => x.DateTApertura).FirstOrDefaultAsync();
 
-                            if (lastCorteUser.Count > 0)
+                            if (lastCorteUser != null)
                             {
                                 var detalle = new OperacionesCajero
                                 {
@@ -266,23 +270,32 @@ namespace PuntoDeVenta.Controllers
                                     Numero = tags.NumTag,
                                     Tipo = "TAG",
                                     TipoPago = "NOR",
-                                    Monto = Convert.ToDouble(tags.SaldoTag),
-                                    CorteId = lastCorteUser.FirstOrDefault().Id,
-                                    CobroTag = Convert.ToDouble(tags.CobroTag),
+                                    CorteId = lastCorteUser.Id,
+                                    CobroTag = double.Parse(tags.CobroTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }),
                                 };
 
                                 switch (cuenta.TypeCuenta)
                                 {
                                     case "Colectiva":
                                         tags.SaldoTag = cuenta.SaldoCuenta;
+                                        detalle.Monto = null;
                                         break;
                                     case "Individual":
                                         var SaldoSend = tags.SaldoTag;
                                         SaldoSend = SaldoSend.Replace(",", string.Empty);
                                         tags.SaldoTag = SaldoSend.Replace(".", string.Empty);
+                                        detalle.Monto = double.Parse(tags.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," });
                                         break;
                                     default:
                                         break;
+                                }
+
+                                if (tags.Checked)
+                                {
+                                    var listnegra = new ListaNegra { Date = DateTime.Now, IdCajero = User.Identity.GetUserId(), Observacion = tags.Observacion, Numero = tags.OldTag, Tipo = "TAG" };
+
+                                    listnegra.SaldoAnterior = tags.OldSaldo == null || tags.OldSaldo == string.Empty ? (double?)null : double.Parse(tags.OldSaldo, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," });
+                                    db.ListaNegras.Add(listnegra);
                                 }
 
                                 db.Tags.Add(tags);
@@ -498,26 +511,26 @@ namespace PuntoDeVenta.Controllers
                 return HttpNotFound();
             }
 
-            if (model.Checked == true)
+            var UserId = User.Identity.GetUserId();
+
+            var lastCorteUser = await db.CortesCajeros
+                                            .Where(x => x.IdCajero == UserId)
+                                            .OrderByDescending(x => x.DateTApertura).ToListAsync();
+            if (lastCorteUser.Count > 0)
             {
-                var tagNew = new Tags
-                {
-                    StatusResidente = false,
-                    StatusTag = true,
-                    DateTTag = DateTime.Now.Date,
-                    IdCajero = User.Identity.GetUserId(),
-                    NumTag = model.NumNewTag,
-                    CobroTag = model.CobroTag,
-                    CuentaId = cuenta.Id,
-                };
 
-                var UserId = User.Identity.GetUserId();
-
-                var lastCorteUser = await db.CortesCajeros
-                                                .Where(x => x.IdCajero == UserId)
-                                                .OrderByDescending(x => x.DateTApertura).ToListAsync();
-                if (lastCorteUser.Count > 0)
+                if (model.Checked == true)
                 {
+                    var tagNew = new Tags
+                    {
+                        StatusResidente = false,
+                        StatusTag = true,
+                        DateTTag = DateTime.Now.Date,
+                        IdCajero = User.Identity.GetUserId(),
+                        NumTag = model.NumNewTag,
+                        CobroTag = model.CobroTag,
+                        CuentaId = cuenta.Id,
+                    };
                     var detalle = new OperacionesCajero
                     {
                         Concepto = "TAG TRASPASO",
@@ -547,31 +560,50 @@ namespace PuntoDeVenta.Controllers
 
                     db.Tags.Add(tagNew);
                     db.OperacionesCajeros.Add(detalle);
+
                 }
+                else
+                {
+                    var detalle = new OperacionesCajero
+                    {
+                        Concepto = "TAG ELIMINADO",
+                        DateTOperacion = DateTime.Now,
+                        Numero = tagOld.NumTag,
+                        Tipo = "TAG",
+                        TipoPago = null,
+                        CorteId = lastCorteUser.FirstOrDefault().Id,
+                        CobroTag = null,
+                        Monto = null
+                    };
+
+                    db.OperacionesCajeros.Add(detalle);
+                }
+
+                var listNegra = new ListaNegra
+                {
+                    Tipo = "TAG",
+                    Numero = tagOld.NumTag,
+                    Observacion = model.Observacion,
+                    Date = DateTime.Now,
+                    IdCajero = User.Identity.GetUserId(),
+                    Clase = cuenta.TypeCuenta,
+                };
+
+                switch (cuenta.TypeCuenta)
+                {
+                    case "Individual":
+                        listNegra.SaldoAnterior = Convert.ToDouble(model.SaldoTag);
+                        break;
+                    default:
+                        break;
+                }
+
+                db.ListaNegras.Add(listNegra);
+                db.Tags.Remove(tagOld);
+                await db.SaveChangesAsync();
+
+                ViewBag.Success = $"Se eliminó correctamente el tag: {tagOld.NumTag}.";
             }
-
-            var listNegra = new ListaNegra
-            {
-                Tipo = "TAG",
-                Numero = tagOld.NumTag,
-                Observacion = model.Observacion,
-                Date = DateTime.Now,
-                IdCajero = User.Identity.GetUserId(),
-                Clase = cuenta.TypeCuenta,
-            };
-
-            switch (cuenta.TypeCuenta)
-            {
-                case "Individual":
-                    listNegra.SaldoAnterior = Convert.ToDouble(model.SaldoTag);
-                    break;
-                default:
-                    break;
-            }
-
-            db.ListaNegras.Add(listNegra);
-            db.Tags.Remove(tagOld);
-            await db.SaveChangesAsync();
 
             return View("Index");
         }

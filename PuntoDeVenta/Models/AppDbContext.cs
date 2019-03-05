@@ -26,6 +26,8 @@ namespace PuntoDeVenta.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+
+
             modelBuilder.Entity<CuentasTelepeaje>()
                 .HasRequired<Clientes>(x => x.Clientes)
                 .WithMany(x => x.CuentasTelepeajes)

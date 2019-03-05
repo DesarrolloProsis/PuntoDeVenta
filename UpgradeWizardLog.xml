@@ -1,0 +1,659 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="_UpgradeWizard_Files\UpgradeWizardLog.xslt"?>
+<log>
+  <event action="Analyze" type="Success" name="Assembly References" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\PuntoDeVenta.csproj" />
+  <event action="Analyze" type="Success" name="Assembly References" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\ApplicationInsights.config" />
+  <event action="Analyze" type="Success" name="Http Handlers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\ApplicationInsights.config" />
+  <event action="Analyze" type="Success" name="Handlers (IIS7+)" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\ApplicationInsights.config" />
+  <event action="Analyze" type="Success" name="Config Sections" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\ApplicationInsights.config" />
+  <event action="Analyze" type="Success" name="Render Extensions" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\ApplicationInsights.config" />
+  <event action="Analyze" type="Success" name="Session State Providers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\ApplicationInsights.config" />
+  <event action="Analyze" type="Success" name="ApplicationInsights.config" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\ApplicationInsights.config" />
+  <event action="Analyze" type="Success" name="Binary References" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\" />
+  <event action="Analyze" type="Success" name="Assembly References" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\ApplicationInsights.config" />
+  <event action="Analyze" type="Success" name="Http Handlers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\ApplicationInsights.config" />
+  <event action="Analyze" type="Success" name="Handlers (IIS7+)" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\ApplicationInsights.config" />
+  <event action="Analyze" type="Success" name="Config Sections" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\ApplicationInsights.config" />
+  <event action="Analyze" type="Success" name="Render Extensions" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\ApplicationInsights.config" />
+  <event action="Analyze" type="Success" name="Session State Providers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\ApplicationInsights.config" />
+  <event action="Analyze" type="Success" name="ApplicationInsights.config" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\ApplicationInsights.config" />
+  <event action="Analyze" type="Success" name="Assembly References" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\PuntoDeVenta.dll.config" />
+  <event action="Analyze" type="Success" name="Http Handlers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\PuntoDeVenta.dll.config" />
+  <event action="Analyze" type="Success" name="Handlers (IIS7+)" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\PuntoDeVenta.dll.config" />
+  <event action="Analyze" type="Success" name="Config Sections" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\PuntoDeVenta.dll.config" />
+  <event action="Analyze" type="Success" name="Render Extensions" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\PuntoDeVenta.dll.config" />
+  <event action="Analyze" type="Success" name="Session State Providers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\PuntoDeVenta.dll.config" />
+  <event action="Analyze" type="Success" name="PuntoDeVenta.dll.config" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\PuntoDeVenta.dll.config" />
+  <event action="Analyze" type="Success" name="Assembly References" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\csc.exe.config" />
+  <event action="Analyze" type="Success" name="Http Handlers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\csc.exe.config" />
+  <event action="Analyze" type="Success" name="Handlers (IIS7+)" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\csc.exe.config" />
+  <event action="Analyze" type="Success" name="Config Sections" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\csc.exe.config" />
+  <event action="Analyze" type="Success" name="Render Extensions" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\csc.exe.config" />
+  <event action="Analyze" type="Success" name="Session State Providers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\csc.exe.config" />
+  <event action="Analyze" type="Success" name="csc.exe.config" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\csc.exe.config" />
+  <event action="Analyze" type="Success" name="Assembly References" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\csi.exe.config" />
+  <event action="Analyze" type="Success" name="Http Handlers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\csi.exe.config" />
+  <event action="Analyze" type="Success" name="Handlers (IIS7+)" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\csi.exe.config" />
+  <event action="Analyze" type="Success" name="Config Sections" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\csi.exe.config" />
+  <event action="Analyze" type="Success" name="Render Extensions" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\csi.exe.config" />
+  <event action="Analyze" type="Success" name="Session State Providers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\csi.exe.config" />
+  <event action="Analyze" type="Success" name="csi.exe.config" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\csi.exe.config" />
+  <event action="Analyze" type="Success" name="Assembly References" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\vbc.exe.config" />
+  <event action="Analyze" type="Success" name="Http Handlers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\vbc.exe.config" />
+  <event action="Analyze" type="Success" name="Handlers (IIS7+)" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\vbc.exe.config" />
+  <event action="Analyze" type="Success" name="Config Sections" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\vbc.exe.config" />
+  <event action="Analyze" type="Success" name="Render Extensions" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\vbc.exe.config" />
+  <event action="Analyze" type="Success" name="Session State Providers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\vbc.exe.config" />
+  <event action="Analyze" type="Success" name="vbc.exe.config" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\vbc.exe.config" />
+  <event action="Analyze" type="Success" name="Assembly References" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\VBCSCompiler.exe.config" />
+  <event action="Analyze" type="Success" name="Http Handlers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\VBCSCompiler.exe.config" />
+  <event action="Analyze" type="Success" name="Handlers (IIS7+)" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\VBCSCompiler.exe.config" />
+  <event action="Analyze" type="Success" name="Config Sections" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\VBCSCompiler.exe.config" />
+  <event action="Analyze" type="Success" name="Render Extensions" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\VBCSCompiler.exe.config" />
+  <event action="Analyze" type="Success" name="Session State Providers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\VBCSCompiler.exe.config" />
+  <event action="Analyze" type="Success" name="VBCSCompiler.exe.config" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\roslyn\VBCSCompiler.exe.config" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\demo.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\demo.html" />
+  <event action="Analyze" type="Success" name="demo.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\demo.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\country-sync.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\country-sync.html" />
+  <event action="Analyze" type="Success" name="country-sync.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\country-sync.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\default-country-ip.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\default-country-ip.html" />
+  <event action="Analyze" type="Success" name="default-country-ip.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\default-country-ip.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\display-number.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\display-number.html" />
+  <event action="Analyze" type="Success" name="display-number.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\display-number.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\hidden-input.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\hidden-input.html" />
+  <event action="Analyze" type="Success" name="hidden-input.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\hidden-input.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\init-promise.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\init-promise.html" />
+  <event action="Analyze" type="Success" name="init-promise.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\init-promise.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\is-valid-number.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\is-valid-number.html" />
+  <event action="Analyze" type="Success" name="is-valid-number.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\is-valid-number.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\modify-country-data.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\modify-country-data.html" />
+  <event action="Analyze" type="Success" name="modify-country-data.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\modify-country-data.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\multiple-instances.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\multiple-instances.html" />
+  <event action="Analyze" type="Success" name="multiple-instances.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\multiple-instances.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\national-mode.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\national-mode.html" />
+  <event action="Analyze" type="Success" name="national-mode.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\national-mode.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\only-countries-europe.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\only-countries-europe.html" />
+  <event action="Analyze" type="Success" name="only-countries-europe.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\gen\only-countries-europe.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\countrySync.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\countrySync.html" />
+  <event action="Analyze" type="Success" name="countrySync.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\countrySync.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\defaultCountryIp.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\defaultCountryIp.html" />
+  <event action="Analyze" type="Success" name="defaultCountryIp.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\defaultCountryIp.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\displayNumber.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\displayNumber.html" />
+  <event action="Analyze" type="Success" name="displayNumber.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\displayNumber.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\hiddenInput.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\hiddenInput.html" />
+  <event action="Analyze" type="Success" name="hiddenInput.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\hiddenInput.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\initPromise.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\initPromise.html" />
+  <event action="Analyze" type="Success" name="initPromise.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\initPromise.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\isValidNumber.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\isValidNumber.html" />
+  <event action="Analyze" type="Success" name="isValidNumber.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\isValidNumber.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\multipleInstances.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\multipleInstances.html" />
+  <event action="Analyze" type="Success" name="multipleInstances.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\multipleInstances.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\nationalMode.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\nationalMode.html" />
+  <event action="Analyze" type="Success" name="nationalMode.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\nationalMode.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\simpleInput.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\simpleInput.html" />
+  <event action="Analyze" type="Success" name="simpleInput.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\examples\partials\simpleInput.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\spec.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\spec.html" />
+  <event action="Analyze" type="Success" name="spec.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Content\css-yisus\intl-tel-input-master\spec.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="201812072240045_requiredSaldoCuentaIsNull.resx" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Migrations\201812072240045_requiredSaldoCuentaIsNull.resx" />
+  <event action="Analyze" type="Success" name="201812131830582_saldotagnull.resx" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Migrations\201812131830582_saldotagnull.resx" />
+  <event action="Analyze" type="Success" name="201812171833035_addtablehistorico.resx" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Migrations\201812171833035_addtablehistorico.resx" />
+  <event action="Analyze" type="Success" name="201812191816374_changebdlistanegra.resx" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Migrations\201812191816374_changebdlistanegra.resx" />
+  <event action="Analyze" type="Success" name="201812191822274_changeopecajero.resx" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Migrations\201812191822274_changeopecajero.resx" />
+  <event action="Analyze" type="Success" name="201812202213047_addtipoopcajero.resx" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Migrations\201812202213047_addtipoopcajero.resx" />
+  <event action="Analyze" type="Success" name="201812202221497_nulltipoopcajero.resx" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Migrations\201812202221497_nulltipoopcajero.resx" />
+  <event action="Analyze" type="Success" name="201812210044477_chagesaldosvarchar.resx" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Migrations\201812210044477_chagesaldosvarchar.resx" />
+  <event action="Analyze" type="Success" name="201901161643377_addcobrotag.resx" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Migrations\201901161643377_addcobrotag.resx" />
+  <event action="Analyze" type="Success" name="201902061734182_addtipotaglistnegra.resx" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Migrations\201902061734182_addtipotaglistnegra.resx" />
+  <event action="Analyze" type="Success" name="201902160032299_modificamosHistorico.resx" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Migrations\201902160032299_modificamosHistorico.resx" />
+  <event action="Analyze" type="Success" name="201902261900569_CambioDeTamaños.resx" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Migrations\201902261900569_CambioDeTamaños.resx" />
+  <event action="Analyze" type="Success" name="201902261956063_CambioEnNombres.resx" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Migrations\201902261956063_CambioEnNombres.resx" />
+  <event action="Analyze" type="Success" name="201902262019538_NoSeQuPaso.resx" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Migrations\201902262019538_NoSeQuPaso.resx" />
+  <event action="Analyze" type="Success" name="201902271741166_NuTagXTag.resx" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Migrations\201902271741166_NuTagXTag.resx" />
+  <event action="Analyze" type="Success" name="201902271746179_NombresColumn.resx" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Migrations\201902271746179_NombresColumn.resx" />
+  <event action="Analyze" type="Success" name="201902271857475_cientecampos.resx" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Migrations\201902271857475_cientecampos.resx" />
+  <event action="Analyze" type="Success" name="Assembly References" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\packages.config" />
+  <event action="Analyze" type="Success" name="Http Handlers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\packages.config" />
+  <event action="Analyze" type="Success" name="Handlers (IIS7+)" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\packages.config" />
+  <event action="Analyze" type="Success" name="Config Sections" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\packages.config" />
+  <event action="Analyze" type="Success" name="Render Extensions" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\packages.config" />
+  <event action="Analyze" type="Success" name="Session State Providers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\packages.config" />
+  <event action="Analyze" type="Success" name="packages.config" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\packages.config" />
+  <event action="Analyze" type="Success" name="telerikReportViewer-12.1.18.620.min.js" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\ReportViewer\js\telerikReportViewer-12.1.18.620.min.js" />
+  <event action="Analyze" type="Success" name="telerikReportViewer.kendo-12.1.18.620.min.js" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\ReportViewer\js\telerikReportViewer.kendo-12.1.18.620.min.js" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\jQuery-Mask-Plugin-master\test\test-for-jquery-1.11.1.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\jQuery-Mask-Plugin-master\test\test-for-jquery-1.11.1.html" />
+  <event action="Analyze" type="Success" name="test-for-jquery-1.11.1.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\jQuery-Mask-Plugin-master\test\test-for-jquery-1.11.1.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\jQuery-Mask-Plugin-master\test\test-for-jquery-1.7.2.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\jQuery-Mask-Plugin-master\test\test-for-jquery-1.7.2.html" />
+  <event action="Analyze" type="Success" name="test-for-jquery-1.7.2.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\jQuery-Mask-Plugin-master\test\test-for-jquery-1.7.2.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\jQuery-Mask-Plugin-master\test\test-for-jquery-1.8.3.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\jQuery-Mask-Plugin-master\test\test-for-jquery-1.8.3.html" />
+  <event action="Analyze" type="Success" name="test-for-jquery-1.8.3.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\jQuery-Mask-Plugin-master\test\test-for-jquery-1.8.3.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\jQuery-Mask-Plugin-master\test\test-for-jquery-1.9.1.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\jQuery-Mask-Plugin-master\test\test-for-jquery-1.9.1.html" />
+  <event action="Analyze" type="Success" name="test-for-jquery-1.9.1.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\jQuery-Mask-Plugin-master\test\test-for-jquery-1.9.1.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\jQuery-Mask-Plugin-master\test\test-for-jquery-2.1.1.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\jQuery-Mask-Plugin-master\test\test-for-jquery-2.1.1.html" />
+  <event action="Analyze" type="Success" name="test-for-jquery-2.1.1.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\jQuery-Mask-Plugin-master\test\test-for-jquery-2.1.1.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\jQuery-Mask-Plugin-master\test\test-for-jquery-3.0.0.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\jQuery-Mask-Plugin-master\test\test-for-jquery-3.0.0.html" />
+  <event action="Analyze" type="Success" name="test-for-jquery-3.0.0.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\jQuery-Mask-Plugin-master\test\test-for-jquery-3.0.0.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\jQuery-Mask-Plugin-master\test\test-for-zepto.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\jQuery-Mask-Plugin-master\test\test-for-zepto.html" />
+  <event action="Analyze" type="Success" name="test-for-zepto.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\jQuery-Mask-Plugin-master\test\test-for-zepto.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\RobinHerbots-Inputmask-8d0c60f\index.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\RobinHerbots-Inputmask-8d0c60f\index.html" />
+  <event action="Analyze" type="Success" name="index.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\RobinHerbots-Inputmask-8d0c60f\index.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\qunit.html" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\qunit.html" />
+  <event action="Analyze" type="Success" name="qunit.html" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\qunit.html" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\_ViewStart.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\_ViewStart.cshtml" />
+  <event action="Analyze" type="Success" name="_ViewStart.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\_ViewStart.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\_ExternalLoginsListPartial.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\_ExternalLoginsListPartial.cshtml" />
+  <event action="Analyze" type="Success" name="_ExternalLoginsListPartial.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\_ExternalLoginsListPartial.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\_ModalCorte.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\_ModalCorte.cshtml" />
+  <event action="Analyze" type="Success" name="_ModalCorte.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\_ModalCorte.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\ConfirmEmail.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\ConfirmEmail.cshtml" />
+  <event action="Analyze" type="Success" name="ConfirmEmail.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\ConfirmEmail.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\ExternalLoginConfirmation.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\ExternalLoginConfirmation.cshtml" />
+  <event action="Analyze" type="Success" name="ExternalLoginConfirmation.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\ExternalLoginConfirmation.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\ExternalLoginFailure.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\ExternalLoginFailure.cshtml" />
+  <event action="Analyze" type="Success" name="ExternalLoginFailure.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\ExternalLoginFailure.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\ForgotPassword.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\ForgotPassword.cshtml" />
+  <event action="Analyze" type="Success" name="ForgotPassword.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\ForgotPassword.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\ForgotPasswordConfirmation.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\ForgotPasswordConfirmation.cshtml" />
+  <event action="Analyze" type="Success" name="ForgotPasswordConfirmation.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\ForgotPasswordConfirmation.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\Login.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\Login.cshtml" />
+  <event action="Analyze" type="Success" name="Login.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\Login.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\Register.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\Register.cshtml" />
+  <event action="Analyze" type="Success" name="Register.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\Register.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\ResetPassword.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\ResetPassword.cshtml" />
+  <event action="Analyze" type="Success" name="ResetPassword.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\ResetPassword.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\ResetPasswordConfirmation.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\ResetPasswordConfirmation.cshtml" />
+  <event action="Analyze" type="Success" name="ResetPasswordConfirmation.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\ResetPasswordConfirmation.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\SendCode.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\SendCode.cshtml" />
+  <event action="Analyze" type="Success" name="SendCode.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\SendCode.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\VerifyCode.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\VerifyCode.cshtml" />
+  <event action="Analyze" type="Success" name="VerifyCode.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Account\VerifyCode.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Clientes\Create.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Clientes\Create.cshtml" />
+  <event action="Analyze" type="Success" name="Create.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Clientes\Create.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Clientes\Delete.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Clientes\Delete.cshtml" />
+  <event action="Analyze" type="Success" name="Delete.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Clientes\Delete.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Clientes\Details.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Clientes\Details.cshtml" />
+  <event action="Analyze" type="Success" name="Details.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Clientes\Details.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Clientes\Edit.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Clientes\Edit.cshtml" />
+  <event action="Analyze" type="Success" name="Edit.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Clientes\Edit.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Clientes\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Clientes\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Index.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Clientes\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\CuentasTelepeajes\_AddTags.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\CuentasTelepeajes\_AddTags.cshtml" />
+  <event action="Analyze" type="Success" name="_AddTags.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\CuentasTelepeajes\_AddTags.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\CuentasTelepeajes\Create.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\CuentasTelepeajes\Create.cshtml" />
+  <event action="Analyze" type="Success" name="Create.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\CuentasTelepeajes\Create.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\CuentasTelepeajes\Delete.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\CuentasTelepeajes\Delete.cshtml" />
+  <event action="Analyze" type="Success" name="Delete.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\CuentasTelepeajes\Delete.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\CuentasTelepeajes\Details.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\CuentasTelepeajes\Details.cshtml" />
+  <event action="Analyze" type="Success" name="Details.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\CuentasTelepeajes\Details.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\CuentasTelepeajes\Edit.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\CuentasTelepeajes\Edit.cshtml" />
+  <event action="Analyze" type="Success" name="Edit.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\CuentasTelepeajes\Edit.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\CuentasTelepeajes\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\CuentasTelepeajes\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Index.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\CuentasTelepeajes\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Historico\EditorTemplates\DateTime.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Historico\EditorTemplates\DateTime.cshtml" />
+  <event action="Analyze" type="Success" name="DateTime.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Historico\EditorTemplates\DateTime.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Historico\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Historico\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Index.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Historico\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Historico\Tabla_Historico.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Historico\Tabla_Historico.cshtml" />
+  <event action="Analyze" type="Success" name="Tabla_Historico.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Historico\Tabla_Historico.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Home\About.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Home\About.cshtml" />
+  <event action="Analyze" type="Success" name="About.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Home\About.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Home\Contact.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Home\Contact.cshtml" />
+  <event action="Analyze" type="Success" name="Contact.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Home\Contact.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Home\GenerarReportes.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Home\GenerarReportes.cshtml" />
+  <event action="Analyze" type="Success" name="GenerarReportes.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Home\GenerarReportes.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Home\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Home\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Index.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Home\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Home\ReportViewerCajero.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Home\ReportViewerCajero.cshtml" />
+  <event action="Analyze" type="Success" name="ReportViewerCajero.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Home\ReportViewerCajero.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Manage\AddPhoneNumber.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Manage\AddPhoneNumber.cshtml" />
+  <event action="Analyze" type="Success" name="AddPhoneNumber.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Manage\AddPhoneNumber.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Manage\ChangePassword.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Manage\ChangePassword.cshtml" />
+  <event action="Analyze" type="Success" name="ChangePassword.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Manage\ChangePassword.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Manage\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Manage\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Index.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Manage\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Manage\ManageLogins.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Manage\ManageLogins.cshtml" />
+  <event action="Analyze" type="Success" name="ManageLogins.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Manage\ManageLogins.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Manage\SetPassword.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Manage\SetPassword.cshtml" />
+  <event action="Analyze" type="Success" name="SetPassword.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Manage\SetPassword.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Manage\VerifyPhoneNumber.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Manage\VerifyPhoneNumber.cshtml" />
+  <event action="Analyze" type="Success" name="VerifyPhoneNumber.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Manage\VerifyPhoneNumber.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Shared\_Layout.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Shared\_Layout.cshtml" />
+  <event action="Analyze" type="Success" name="_Layout.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Shared\_Layout.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Shared\_LoginAdmin.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Shared\_LoginAdmin.cshtml" />
+  <event action="Analyze" type="Success" name="_LoginAdmin.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Shared\_LoginAdmin.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Shared\_LoginPartial.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Shared\_LoginPartial.cshtml" />
+  <event action="Analyze" type="Success" name="_LoginPartial.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Shared\_LoginPartial.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Shared\EditorTemplates\DateTime.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Shared\EditorTemplates\DateTime.cshtml" />
+  <event action="Analyze" type="Success" name="DateTime.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Shared\EditorTemplates\DateTime.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Shared\Error.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Shared\Error.cshtml" />
+  <event action="Analyze" type="Success" name="Error.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Shared\Error.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Shared\Lockout.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Shared\Lockout.cshtml" />
+  <event action="Analyze" type="Success" name="Lockout.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Shared\Lockout.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Tags\Activate.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Tags\Activate.cshtml" />
+  <event action="Analyze" type="Success" name="Activate.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Tags\Activate.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Tags\Create.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Tags\Create.cshtml" />
+  <event action="Analyze" type="Success" name="Create.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Tags\Create.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Tags\Delete.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Tags\Delete.cshtml" />
+  <event action="Analyze" type="Success" name="Delete.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Tags\Delete.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Tags\Deshabilitar.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Tags\Deshabilitar.cshtml" />
+  <event action="Analyze" type="Success" name="Deshabilitar.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Tags\Deshabilitar.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Tags\Details.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Tags\Details.cshtml" />
+  <event action="Analyze" type="Success" name="Details.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Tags\Details.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Tags\Edit.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Tags\Edit.cshtml" />
+  <event action="Analyze" type="Success" name="Edit.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Tags\Edit.cshtml" />
+  <event action="Analyze" type="Success" name="Register Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Tags\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly Directives" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Tags\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Index.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Tags\Index.cshtml" />
+  <event action="Analyze" type="Success" name="Assembly References" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Web.config" />
+  <event action="Analyze" type="Success" name="Http Handlers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Web.config" />
+  <event action="Analyze" type="Success" name="Handlers (IIS7+)" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Web.config" />
+  <event action="Analyze" type="Success" name="Config Sections" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Web.config" />
+  <event action="Analyze" type="Success" name="Render Extensions" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Web.config" />
+  <event action="Analyze" type="Success" name="Session State Providers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Web.config" />
+  <event action="Analyze" type="Success" name="Web.config" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Web.config" />
+  <event action="Analyze" type="Success" name="Assembly References" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Web.config" />
+  <event action="Analyze" type="Success" name="Http Handlers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Web.config" />
+  <event action="Analyze" type="Success" name="Handlers (IIS7+)" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Web.config" />
+  <event action="Analyze" type="Success" name="Config Sections" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Web.config" />
+  <event action="Analyze" type="Success" name="Render Extensions" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Web.config" />
+  <event action="Analyze" type="Success" name="Session State Providers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Web.config" />
+  <event action="Analyze" type="Success" name="Web.config" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Web.config" />
+  <event action="Analyze" type="Success" name="Assembly References" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Web.Debug.config" />
+  <event action="Analyze" type="Success" name="Http Handlers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Web.Debug.config" />
+  <event action="Analyze" type="Success" name="Handlers (IIS7+)" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Web.Debug.config" />
+  <event action="Analyze" type="Success" name="Config Sections" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Web.Debug.config" />
+  <event action="Analyze" type="Success" name="Render Extensions" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Web.Debug.config" />
+  <event action="Analyze" type="Success" name="Session State Providers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Web.Debug.config" />
+  <event action="Analyze" type="Success" name="Web.Debug.config" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Web.Debug.config" />
+  <event action="Analyze" type="Success" name="Assembly References" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Web.Release.config" />
+  <event action="Analyze" type="Success" name="Http Handlers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Web.Release.config" />
+  <event action="Analyze" type="Success" name="Handlers (IIS7+)" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Web.Release.config" />
+  <event action="Analyze" type="Success" name="Config Sections" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Web.Release.config" />
+  <event action="Analyze" type="Success" name="Render Extensions" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Web.Release.config" />
+  <event action="Analyze" type="Success" name="Session State Providers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Web.Release.config" />
+  <event action="Analyze" type="Success" name="Web.Release.config" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Web.Release.config" />
+  <event action="Analyze" type="Success" name="PuntoDeVenta" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\PuntoDeVenta.csproj" />
+  <event action="Analyze" type="Success" name="Assembly References" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\RestServiceTelerik\RestServiceTelerik.csproj" />
+  <event action="Analyze" type="Success" name="Assembly References" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\RestServiceTelerik\packages.config" />
+  <event action="Analyze" type="Success" name="Http Handlers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\RestServiceTelerik\packages.config" />
+  <event action="Analyze" type="Success" name="Handlers (IIS7+)" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\RestServiceTelerik\packages.config" />
+  <event action="Analyze" type="Success" name="Config Sections" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\RestServiceTelerik\packages.config" />
+  <event action="Analyze" type="Success" name="Render Extensions" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\RestServiceTelerik\packages.config" />
+  <event action="Analyze" type="Success" name="Session State Providers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\RestServiceTelerik\packages.config" />
+  <event action="Analyze" type="Success" name="packages.config" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\RestServiceTelerik\packages.config" />
+  <event action="Analyze" type="Success" name="ReportCajero.resx" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\RestServiceTelerik\Reports\ReportCajero.resx" />
+  <event action="Analyze" type="Success" name="Assembly References" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\RestServiceTelerik\Web.config" />
+  <event action="Analyze" type="Success" name="Http Handlers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\RestServiceTelerik\Web.config" />
+  <event action="Analyze" type="Success" name="Handlers (IIS7+)" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\RestServiceTelerik\Web.config" />
+  <event action="Analyze" type="Success" name="Config Sections" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\RestServiceTelerik\Web.config" />
+  <event action="Analyze" type="Success" name="Render Extensions" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\RestServiceTelerik\Web.config" />
+  <event action="Analyze" type="Success" name="Session State Providers" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\RestServiceTelerik\Web.config" />
+  <event action="Analyze" type="Success" name="Web.config" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\RestServiceTelerik\Web.config" />
+  <event action="Analyze" type="Success" name="Web.Debug.config" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\RestServiceTelerik\Web.Debug.config" />
+  <event action="Analyze" type="Success" name="Web.Release.config" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\RestServiceTelerik\Web.Release.config" />
+  <event action="Analyze" type="Success" name="RestServiceTelerik" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\RestServiceTelerik\RestServiceTelerik.csproj" />
+  <event action="Analyze" type="Success" name="PuntoDeVenta" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta.sln" />
+  <event action="Analyze" type="Success" name="telerikReportViewer-12.1.18.620.min.js" path="telerikReportViewer-12.1.18.620.min.js" />
+  <event action="Analyze" type="Success" name="telerikReportViewer.kendo-12.1.18.620.min.js" path="telerikReportViewer.kendo-12.1.18.620.min.js" />
+  <event action="Backup" type="Success" name="PuntoDeVenta" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\PuntoDeVenta.csproj" />
+  <event action="Backup" type="Success" name="RestServiceTelerik" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\RestServiceTelerik\RestServiceTelerik.csproj" />
+  <event action="Upgrade" type="Success" name="Assembly References" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\PuntoDeVenta.csproj" />
+  <event action="Upgrade" type="Success" name="Binary References" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\bin\" />
+  <event action="Upgrade" type="Success" name="telerikReportViewer-12.1.18.620.min.js" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\ReportViewer\js\telerikReportViewer-12.1.18.620.min.js" />
+  <event action="Upgrade" type="Success" name="telerikReportViewer.kendo-12.1.18.620.min.js" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\ReportViewer\js\telerikReportViewer.kendo-12.1.18.620.min.js" />
+  <event action="Upgrade" type="Success" name="telerikReportViewer-12.1.18.620.min.js" path="telerikReportViewer-12.1.18.620.min.js" />
+  <event action="Upgrade" type="Success" name="telerikReportViewer.kendo-12.1.18.620.min.js" path="telerikReportViewer.kendo-12.1.18.620.min.js" />
+  <event action="Upgrade" type="Success" name="ReportViewerCajero.cshtml" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\Views\Home\ReportViewerCajero.cshtml" />
+  <event action="Upgrade" type="Success" name="PuntoDeVenta" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta\PuntoDeVenta.csproj" />
+  <event action="Upgrade" type="Success" name="Assembly References" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\RestServiceTelerik\RestServiceTelerik.csproj" />
+  <event action="Upgrade" type="Success" name="ReportCajero.resx" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\RestServiceTelerik\Reports\ReportCajero.resx" />
+  <event action="Upgrade" type="Success" name="RestServiceTelerik" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\RestServiceTelerik\RestServiceTelerik.csproj" />
+  <event action="Upgrade" type="Success" name="PuntoDeVenta" path="C:\Users\Usuario\Documents\PuntoDeVentaMarhnos\PuntoDeVenta.sln" />
+</log>

@@ -65,5 +65,25 @@ namespace PuntoDeVenta.Models
         [Display(Name = "Nombre completo")]
         public string NombreCompleto { get; set; }
 
+        [Display(Name = "Empresa")]
+        public string Empresa { get; set; }
+
+        [Display(Name = "Código postal")]
+        public string CP { get; set; }
+
+        [Display(Name = "País")]
+        public string Pais { get; set; }
+
+        [Display(Name = "Ciudad")]
+        public string City { get; set; }
+
+        [Display(Name = "Departamento")]
+        public string Departamento { get; set; }
+
+        [Display(Name = "NIT")]
+        public string NIT { get; set; }
+
+        [Display(Name = "Tel. Oficina")]
+        public string PhoneOffice { get; set; }
     }
 }

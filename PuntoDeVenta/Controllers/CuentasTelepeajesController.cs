@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using PuntoDeVenta.Models;
 using Microsoft.AspNet.Identity;
+using System.Globalization;
 
 namespace PuntoDeVenta.Controllers
 {
@@ -42,7 +43,7 @@ namespace PuntoDeVenta.Controllers
                         NumCliente = x.cli.NumCliente,
                         ClienteId = x.cli.Id,
                         DateTCuenta = x.cue.DateTCuenta,
-                        SaldoCuenta = x.cue.SaldoCuenta != null ? (Convert.ToDouble(x.cue.SaldoCuenta) / 100).ToString() : "Sin saldo",
+                        SaldoCuenta = x.cue.SaldoCuenta != null ? (double.Parse(x.cue.SaldoCuenta) / 100).ToString("F2") : "Sin saldo",
                         NumCuenta = x.cue.NumCuenta,
                         IdCajero = x.cue.IdCajero,
                         TypeCuenta = x.cue.TypeCuenta,
@@ -69,7 +70,7 @@ namespace PuntoDeVenta.Controllers
                         NumCliente = x.cli.NumCliente,
                         ClienteId = x.cli.Id,
                         DateTCuenta = x.cue.DateTCuenta,
-                        SaldoCuenta = x.cue.SaldoCuenta != null ? (Convert.ToDouble(x.cue.SaldoCuenta) / 100).ToString() : "Sin saldo",
+                        SaldoCuenta = x.cue.SaldoCuenta != null ? (double.Parse(x.cue.SaldoCuenta) / 100).ToString("F2") : "Sin saldo",
                         NumCuenta = x.cue.NumCuenta,
                         IdCajero = x.cue.IdCajero,
                         TypeCuenta = x.cue.TypeCuenta,
@@ -110,13 +111,13 @@ namespace PuntoDeVenta.Controllers
 
                         var lastCorteUser = await db.CortesCajeros
                                                         .Where(x => x.IdCajero == UserId)
-                                                        .OrderByDescending(x => x.DateTApertura).ToListAsync();
+                                                        .OrderByDescending(x => x.DateTApertura).FirstOrDefaultAsync();
 
-                        if (lastCorteUser.Count > 0)
+                        if (lastCorteUser != null)
                         {
-                            var Saldo = (Convert.ToDouble(FoundCuenta.cue.SaldoCuenta) / 100).ToString("F2");
+                            var Saldo = (double.Parse(FoundCuenta.cue.SaldoCuenta) / 100).ToString("F2");
 
-                            var SaldoNuevo = (Convert.ToDouble(Saldo) + Convert.ToDouble(model.SaldoARecargar));
+                            var SaldoNuevo = (double.Parse(Saldo) + double.Parse(model.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }));
 
                             var SaldoSend = SaldoNuevo.ToString("F2");
 
@@ -133,8 +134,8 @@ namespace PuntoDeVenta.Controllers
                                 Numero = FoundCuenta.cue.NumCuenta,
                                 Tipo = "CUENTA",
                                 TipoPago = "NOR",
-                                Monto = Convert.ToDouble(model.SaldoARecargar),
-                                CorteId = lastCorteUser.FirstOrDefault().Id,
+                                Monto = double.Parse(model.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }),
+                                CorteId = lastCorteUser.Id,
                             };
 
                             db.OperacionesCajeros.Add(detalle);
@@ -237,9 +238,9 @@ namespace PuntoDeVenta.Controllers
 
                     var lastCorteUser = await db.CortesCajeros
                                                     .Where(x => x.IdCajero == UserId)
-                                                    .OrderByDescending(x => x.DateTApertura).ToListAsync();
+                                                    .OrderByDescending(x => x.DateTApertura).FirstOrDefaultAsync();
 
-                    if (lastCorteUser.Count > 0)
+                    if (lastCorteUser != null)
                     {
                         cuentasTelepeaje.NumCuenta = RandomNumCuenta();
 
@@ -268,8 +269,8 @@ namespace PuntoDeVenta.Controllers
                                     DateTOperacion = DateTime.Now,
                                     Numero = cuentasTelepeaje.NumCuenta,
                                     Tipo = "CUENTA",
-                                    Monto = Convert.ToDouble(cuentasTelepeaje.SaldoCuenta),
-                                    CorteId = lastCorteUser.FirstOrDefault().Id,
+                                    Monto = double.Parse(cuentasTelepeaje.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }),
+                                    CorteId = lastCorteUser.Id,
                                 };
 
                                 if (cuentasTelepeaje.TypeCuenta == "Colectiva")

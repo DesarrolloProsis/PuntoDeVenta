@@ -9,10 +9,10 @@ namespace RestServiceTelerik.Models
     {
         public string Concepto { get; set; }
         public string TipoPago { get; set; }
-        public double? Monto { get; set; }
+        public string Monto { get; set; }
         public DateTime DataTOperacion { get; set; }
         public string Numero { get; set; }
         public string Tipo { get; set; }
-        public double? CobroTag { get; set; }
+        public string CobroTag { get; set; }
     }
 }

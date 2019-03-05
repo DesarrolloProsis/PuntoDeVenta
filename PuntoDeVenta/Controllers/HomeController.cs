@@ -5,6 +5,7 @@ using PuntoDeVenta.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -135,6 +136,12 @@ namespace PuntoDeVenta.Controllers
             return View(model);
         }
 
+
+        public async Task<ActionResult> ListaNegraIndex()
+        {
+            return View(await db.ListaNegras.ToListAsync());
+        }
+
         [AllowAnonymous]
         public ActionResult About()
         {
@@ -240,7 +247,7 @@ namespace PuntoDeVenta.Controllers
                 Comentario = result.Comentario
             };
 
-            var movimientos = db.OperacionesCajeros.Where(x => x.CorteId == result.Id).ToList();
+            var movimientos = await db.OperacionesCajeros.Where(x => x.CorteId == result.Id).ToListAsync();
 
             var model = new List<object>();
 
@@ -250,7 +257,7 @@ namespace PuntoDeVenta.Controllers
                 {
                     Concepto = item.Concepto,
                     TipoPago = item.TipoPago,
-                    Monto = item.Monto,
+                    Monto = item.Monto.HasValue ? double.Parse(item.Monto.Value.ToString("#.##"), new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }).ToString("F2") : null,
                     DataTOperacion = item.DateTOperacion,
                     Numero = item.Numero,
                     Tipo = item.Tipo,

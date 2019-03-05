@@ -1,6 +1,8 @@
 ﻿@model PuntoDeVenta.Models.CuentasTelepeaje
 
 @{
+    /**/
+
     ViewBag.Title = "Cuentas Telepeajes";
 }
 <div class="col-md-12 text-align-center">
@@ -98,7 +100,6 @@
                 </div>
             </div>
             <div class="modal-footer">
-
                 <button type="button" class="btn btn-success botonaceptar" id="submitForm">Guardar</button>
             </div>
         </div>
@@ -148,9 +149,8 @@
                                 fields: {
                                     Id: { type: "number" },
                                     NombreCliente: { type: "string" },
-                                    NumCliente: { type: "number" },
                                     NumCuenta: { type: "number" },
-                                    SaldoCuenta: { type: "number" },
+                                    SaldoCuenta: { type: "string" },
                                     TypeCuenta: { type: "string" },
                                     StatusCuenta: { type: "boolean" },
                                     DateTCuenta: { type: "date" },
@@ -168,16 +168,6 @@
                     pageable: true,
                     columns:
                         [{
-                            field: "NumCliente",
-                            title: "Número de cliente",
-                            width: 250,
-                            filterable: {
-                                cell: {
-                                    showOperators: false
-                                }
-                            }
-                        },
-                        {
                             field: "NombreCliente",
                             title: "Nombre del cliente",
                             width: 310,
@@ -211,13 +201,8 @@
                         {
                             field: "TypeCuenta",
                             title: "Tipo de cuenta",
-                            width: 310,
-                            filterable: {
-                                cell: {
-                                    operator: "contains",
-                                    suggestionOperator: "contains"
-                                }
-                            }
+                            width: 150,
+                            filterable: false
                         },
                         {
                             field: "StatusCuenta",
@@ -225,16 +210,6 @@
                             width: 160,
                             template: "#= StatusCuenta ? 'Válido' : 'Inválido' #",
                             filterable: { messages: { isTrue: "Válido", isFalse: "Invalido" } }
-                        },
-                        {
-                            field: "DateTCuenta",
-                            title: "Fecha registro",
-                            width: 310,
-                            template: "#= kendo.toString(kendo.parseDate(DateTCuenta, 'yyyy-MM-dd'), 'MM/dd/yyyy') #",
-                            filterable: {
-                                ui: "datetimepicker" // use Kendo UI DateTimePicker
-                            },
-                            format: "{0:M/d/yy}",
                         },
                         {
                             command: {
@@ -273,6 +248,16 @@
                                 },
                             }],
                             width: 110
+                        },
+                        {
+                            field: "DateTCuenta",
+                            title: "Fecha registro",
+                            width: 310,
+                            template: "#= kendo.toString(kendo.parseDate(DateTCuenta, 'yyyy-MM-dd'), 'MM/dd/yyyy') #",
+                            filterable: {
+                                ui: "datetimepicker" // use Kendo UI DateTimePicker
+                            },
+                            format: "{0:M/d/yy}",
                         }],
                 });
 
@@ -298,8 +283,10 @@
 
                     if (dataItem.TypeCuenta == "Colectiva") {
                         $("#fromTo").hide();
+                        $("#fromTo1").hide();
                     } else if (dataItem.TypeCuenta == "Individual") {
                         $("#fromTo").show();
+                        $("#fromTo1").show();
                     }
 
                     //console.log(dataItem);
@@ -382,7 +369,19 @@
                 $('#ConfSaldoARecargar').mask("#,##0.00", { reverse: true });
                 $('#SaldoTag').mask("#,##0.00", { reverse: true });
                 $("#CobroTag").mask("#,##0.00", { reverse: true });
+                $("#OldSaldo").mask("#,##0.00", { reverse: true });
             });
+        });
+    </script>
+
+    <script>
+        let datos = new Vue({
+            el: '#datos',
+            data: {
+                checked: false,
+                max: 12,
+                text: ''
+            },
         });
     </script>
 

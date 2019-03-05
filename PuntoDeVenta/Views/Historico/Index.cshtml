@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "TablaHistorico";
 }
-<div class="col-md-12 text-align-center">
+<div class="col-md-12 text-align-center" style="padding-top:20px;">
 
     <h4 class="titulo1">Tabla Historico</h4>
     <p class="lead">
@@ -21,24 +21,30 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="col-md-12">
+                                <label>Busqueda por Operadora</label>
+                                @Html.DropDownListFor(x => x.Operador, new SelectList(string.Empty, "Value", "Text"), "Seleccione Marca", htmlAttributes: new { @class = "form-control espacio" })
+                            </div>
+                            <div class="col-md-12">
+                                <label>Fecha Inicial</label>
                                 @Html.LabelFor(model => model.Fecha_Inicio, htmlAttributes: new { @class = "sr-only", @for = "Date" })
                                 @Html.EditorFor(model => model.Fecha_Inicio)
                                 @Html.ValidationMessageFor(model => model.Fecha_Inicio, "", new { @class = "text-danger" })
                             </div>
                             <div class="col-md-12">
+                                <label>Fecha Final</label>
                                 @Html.LabelFor(model => model.Fecha_Fin, htmlAttributes: new { @class = "sr-only", @for = "Date" })
                                 @Html.EditorFor(model => model.Fecha_Fin)
                             </div>
 
                             <div class="col-md-12">
+                                <label>Busqueda por Tag</label>
                                 @Html.EditorFor(x => x.Tag, "", new { htmlAttributes = new { @class = "form-control espacio" } })
                             </div>
-                            <div class="col-md-12">
-                                @Html.DropDownListFor(x => x.Operador, new SelectList(string.Empty, "Value", "Text"), "Seleccione Marca", htmlAttributes: new { @class = "form-control espacio" })
-                            </div>
+
 
                             <div class="col-md-12">
-                                <button type="submit" class="btn btn-primary botonbuscar"><img class="search"src="~/Content/css-yisus/img/search-solid.svg" /> Buscar
+                                <button type="submit" class="btn btn-primary botonbuscar">
+                                    <img class="search" src="~/Content/css-yisus/img/search-solid.svg" /> Buscar
                                 </button>
                             </div>
                         </div>
