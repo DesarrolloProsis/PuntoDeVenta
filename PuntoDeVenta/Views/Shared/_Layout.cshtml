@@ -17,7 +17,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark navstyle fixed-top">
         <div class="container-fluid">
-            <img class="logonav" src="~/Content/css-yisus/img/SiVAwhite.png"/>
+            <img class="logonav" src="~/Content/css-yisus/img/SiVAwhite.png" />
             @*@Html.ActionLink("", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -27,38 +27,6 @@
                     <li class="nav-item @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">
                         @Html.ActionLink("Inicio", "Index", "Home", routeValues: null, htmlAttributes: new { @class = "nav-link" })
                     </li>
-                    @*<li class="nav-item" @(ViewContext.RouteData.Values["Controller"].ToString() == "Clientes" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")>
-                        @Html.ActionLink("Clientes", "Index", "Clientes", routeValues: null, htmlAttributes: new { @class = "nav-link" })
-                    </li>
-                    <li class="nav-item" @(ViewContext.RouteData.Values["Controller"].ToString() == "CuentasTelepeajes" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")>
-                        @Html.ActionLink("Cuentas", "Index", "CuentasTelepeajes", routeValues: null, htmlAttributes: new { @class = "nav-link" })
-                    </li>
-                    <li class="nav-item" @(ViewContext.RouteData.Values["Controller"].ToString() == "Tags" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")>
-                        @Html.ActionLink("Tags", "Index", "Tags", routeValues: null, htmlAttributes: new { @class = "nav-link" })
-                    </li>
-                    <li class="nav-item" @(ViewContext.RouteData.Values["Controller"].ToString() == "Historico" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")>
-                        @Html.ActionLink("Historico", "Index", "Historico", routeValues: null, htmlAttributes: new { @class = "nav-link" })
-                    </li>*@
-                    @{
-                        if (User.Identity.IsAuthenticated)
-                        {
-                            using (ApplicationDbContext app = new ApplicationDbContext())
-                            {
-                                var IdUser = User.Identity.GetUserId();
-                                var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
-
-                                if (userManager.IsInRole(IdUser, "SuperUsuario"))
-                                {
-                                    @*<li class="nav-item @(ViewContext.RouteData.Values["Action"].ToString() == "Register" ? "active" : "")">
-                                        @Html.ActionLink("Registrarse", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", @class = "nav-link" })
-                                    </li>
-                                    <li class="nav-item @(ViewContext.RouteData.Values["Action"].ToString() == "Home" ? "active" : "")">
-                                        @Html.ActionLink("Generar reportes", "GenerarReportes", "Home", routeValues: null, htmlAttributes: new { id = "registerLink", @class = "nav-link" })
-                                    </li>*@
-                                }
-                            }
-                        }
-                    }
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
@@ -66,7 +34,7 @@
     </nav>
 
     <div class="container-fluid body-content">
-       
+
         @RenderBody()
         <footer>
             <p id="footerstyle"><img class="imgfooterstyle" src="~/Content/css-yisus/img/Logo.png" /></p>

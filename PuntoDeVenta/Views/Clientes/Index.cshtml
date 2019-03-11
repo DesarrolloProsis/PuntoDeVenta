@@ -11,319 +11,397 @@
     </p>
 </div>
 <hr />
-    <p>
-        @Html.ActionLink("Crear nuevo cliente", "Create", routeValues: null, htmlAttributes: new { @class = "btn botonstyle2" })
-    </p>
-    
-    @if (ViewData["Success"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            @ViewData["Success"]
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    }
 
-    @if (ViewData["Error"] != null)
-    {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            @ViewData["Error"]
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    }
-
-    <div id="example">
-        <div id="grid"></div>
-    </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenterTitle">Crear cuenta</h5>
-                    <button type="button" class="close" aria-label="Close" data-dismiss="modal">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                @using (Html.BeginForm("Create", "CuentasTelepeajes", FormMethod.Post, htmlAttributes: new { @id = "Form0" }))
-                {
-                    @Html.AntiForgeryToken()
-                    <div class="modal-body">
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                        <div class="form-group">
-                            <label for="numcliente">
-                                <img class="img-modal" src="~/Content/css-yisus/img/slack-hash-brands.svg" /> Número de cliente
-                            </label>
-                            <input id="numcliente" class="form-control formulario1" type="text" placeholder="Readonly input here…" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="nomcliente"><img class="img-modal" src="~/Content/css-yisus/img/user-circle-solid.svg" /> Nombre</label>
-                            <input id="nomcliente" class="form-control formulario1" type="text" placeholder="Readonly input here…" readonly>
-                        </div>
-                        <div class="form-group">
-                            <img class="img-modal" src="~/Content/css-yisus/img/columns-solid.svg" /> @Html.LabelFor(model => model.TypeCuenta, htmlAttributes: new { @for = "TypeCuenta" })
-                            @Html.DropDownListFor(model => model.TypeCuenta, (SelectList)ViewBag.TipoCuentas, htmlAttributes: new { @class = "form-control formulario2" })
-                            @Html.ValidationMessageFor(model => model.TypeCuenta, "", new { @class = "text-danger" })
-                        </div>
-
-                        <div id="fromTo">
-                            <div class="form-group">
-
-                                <img class="img-modal2" src="~/Content/css-yisus/img/file-invoice-dollar-solid.svg" /> @Html.LabelFor(model => model.SaldoCuenta, htmlAttributes: new { @class = "control-label" })
-                                @Html.EditorFor(model => model.SaldoCuenta, new { htmlAttributes = new { @class = "form-control formulario1" } })
-                                @Html.ValidationMessageFor(model => model.SaldoCuenta, "", new { @class = "text-danger" })
-
-                            </div>
-                        </div>
-                        @Html.Hidden("ClienteId")
-                    </div>
-                    <div class="modal-footer">
-
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-success botonaceptar" id="crear">Crear</button>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-
-    <!--------------------------------------------------------------------------------------------->
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenterTitle1">¡Advertencia!</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <img class="img-modal" src="~/Content/css-yisus/img/slack-hash-brands.svg" /> Número de cliente: <label id="numclienteVal"></label>
-                        </div>
-                        <div class="form-group">
-                            <img class="img-modal" src="~/Content/css-yisus/img/user-circle-solid.svg" /> Nombre: <label id="nomclienteVal"></label>
-                        </div>
-                        <div id="saldovalID">
-                            <div class="form-group">
-                                <img class="img-modal2" src="~/Content/css-yisus/img/file-invoice-dollar-solid.svg" /> Saldo inicial: <label id="saldoVal"></label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            ¿Seguro de crear la cuenta?
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">     
-                    <button type="button" class="btn btn-success botonaceptar" id="submitForm">Guardar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    @section Scripts
+@if (ViewData["Success"] != null)
 {
-        @Scripts.Render("~/bundles/jqueryval")
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @ViewData["Success"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
 
-        <script>
+@if (ViewData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @ViewData["Error"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+
+<div class="table-responsive">
+    <table id="example" class="table table-hover" style="width:100%">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Número cliente</th>
+                <th scope="col">Nombre completo</th>
+                <th scope="col">Email cliente</th>
+                <th scope="col">Teléfono cliente</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+@Html.Partial("_CuentasTags")
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Crear cuenta</h5>
+                <button type="button" class="close" aria-label="Close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("Create", "CuentasTelepeajes", FormMethod.Post, htmlAttributes: new { @id = "Form0" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        <label for="numcliente">
+                            <img class="img-modal" src="~/Content/css-yisus/img/slack-hash-brands.svg" /> Número de cliente
+                        </label>
+                        <input id="numcliente" class="form-control formulario1" type="text" placeholder="Readonly input here…" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="nomcliente"><img class="img-modal" src="~/Content/css-yisus/img/user-circle-solid.svg" /> Nombre</label>
+                        <input id="nomcliente" class="form-control formulario1" type="text" placeholder="Readonly input here…" readonly>
+                    </div>
+                    <div class="form-group">
+                        <img class="img-modal" src="~/Content/css-yisus/img/columns-solid.svg" /> @Html.LabelFor(model => model.TypeCuenta, htmlAttributes: new { @for = "TypeCuenta" })
+                        @Html.DropDownListFor(model => model.TypeCuenta, (SelectList)ViewBag.TipoCuentas, htmlAttributes: new { @class = "form-control formulario2" })
+                        @Html.ValidationMessageFor(model => model.TypeCuenta, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div id="fromTo">
+                        <div class="form-group">
+
+                            <img class="img-modal2" src="~/Content/css-yisus/img/file-invoice-dollar-solid.svg" /> @Html.LabelFor(model => model.SaldoCuenta, htmlAttributes: new { @class = "control-label" })
+                            @Html.EditorFor(model => model.SaldoCuenta, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                            @Html.ValidationMessageFor(model => model.SaldoCuenta, "", new { @class = "text-danger" })
+
+                        </div>
+                    </div>
+                    @Html.Hidden("ClienteId")
+                </div>
+                <div class="modal-footer">
+
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-success botonaceptar" id="crear">Crear</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!--------------------------------------------------------------------------------------------->
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle1">¡Advertencia!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <img class="img-modal" src="~/Content/css-yisus/img/slack-hash-brands.svg" /> Número de cliente: <label id="numclienteVal"></label>
+                    </div>
+                    <div class="form-group">
+                        <img class="img-modal" src="~/Content/css-yisus/img/user-circle-solid.svg" /> Nombre: <label id="nomclienteVal"></label>
+                    </div>
+                    <div id="saldovalID">
+                        <div class="form-group">
+                            <img class="img-modal2" src="~/Content/css-yisus/img/file-invoice-dollar-solid.svg" /> Saldo inicial: <label id="saldoVal"></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        ¿Seguro de crear la cuenta?
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success botonaceptar" id="submitForm">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles
+{
+    <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+
+    <style>
+        td.details-control {
+            background: url('https://cdn.rawgit.com/DataTables/DataTables/6c7ada53ebc228ea9bc28b1b216e793b1825d188/examples/resources/details_open.png') no-repeat center center;
+            cursor: pointer;
+        }
+
+        tr.shown td.details-control {
+            background: url('https://cdn.rawgit.com/DataTables/DataTables/6c7ada53ebc228ea9bc28b1b216e793b1825d188/examples/resources/details_close.png') no-repeat center center;
+        }
+    </style>
+}
+
+
+@section Scripts
+{
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
+    <script>
+
+        /* Formatting function for row details - modify as you need */
+        function format(d) {
+            // `d` is the original data object for the row
+            return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+                '<tr>' +
+                '<td>Dirección de cliente:</td>' +
+                '<td>' + d.AddressCliente + '</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td>Estatus de cliente:</td>' +
+                '<td>' + d.StatusCliente + '</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td>Fecha de registro cliente:</td>' +
+                '<td>' + d.DateTCliente + '</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td>Extra info:</td>' +
+                '<td>And any further details here (images etc)...</td>' +
+                '</tr>' +
+                '</table>';
+        }
+
+        /* Formatting function for row details - modify as you need */
+        function formatcuentas() {
+
+            return '<div class="container-fluid">' +
+                '<div class="table-responsive">' +
+                '<table class="table table-bordered table-sm" style="width:100%">' +
+                '<thead>' +
+                '<tr>' +
+                '<th scope="col">NumTag</th>' +
+                '<th scope="col">SaldoTag</th>' +
+                '<th scope="col"></th>' +
+                '<th scope="col"></th>' +
+                '<th scope="col"></th>' +
+                '<th scope="col"></th>' +
+                '</tr>' +
+                '</thead>' +
+                '<tbody id="contenido">' +
+                '</tbody>' +
+                '</table>' +
+                '</div>' +
+                '</div>';
+        }
+
         $(document).ready(function () {
 
-            $(function () {
-
-                var serviceURL = "@Url.Action("GetDataClientes", "Clientes")";
-
-                $.ajax({
-                    url: serviceURL,
-                    dataType: "json",
-                    contentType: "application/json; charset=utf-8",
-                    success: function (data) {
-                        GridDataBind(data);
-                        console.log(data);
+            var example_table = $("#example_table").DataTable({
+                data: [],
+                columns: [
+                    {
+                        'className': 'details-control',
+                        'orderable': false,
+                        'data': null,
+                        'defaultContent': ''
                     },
-                    error: function (ex) {
-                        alert(ex);
-                    }
-                });
+                    { 'data': 'NumCuenta' },
+                    { 'data': 'TypeCuenta' },
+                    { 'data': 'SaldoCuenta' },
+                    { 'data': 'StatusCuenta' },
+                    { 'data': 'DateTCuenta' },
+                    {
+                        "className": "ntagcue",
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '<button type="button" class="btn btn-primary btn-sm">Agregar tag</button>'
+                    },
+                    {
+                        "className": "nhabilitarcue",
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '<button type="button" class="btn btn-primary btn-sm">Habilitar cuenta</button>'
+                    },
+                    {
+                        "className": "ndeshabilitarcue",
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '<button type="button" class="btn btn-primary btn-sm">Deshabilitar cuenta</button>'
+                    },
+                ],
+                order: [[1, 'asc']],
             });
 
-            function GridDataBind(gridData) {
-                $("#grid").kendoGrid({
-                    dataSource: {
-                        data: gridData,
-                        text: "es-ES",
-                        sort: { field: "DateTCliente", dir: "desc" },
-                        schema: {
-                            model: {
-                                fields: {
-                                    Id: { type: "number" },
-                                    NumCliente: { type: "number" },
-                                    NombreCompleto: { type: "string" },
-                                    EmailCliente: { type: "string" },
-                                    AddressCliente: { type: "string" },
-                                    PhoneCliente: { type: "number" },
-                                    StatusCliente: { type: "boolean" },
-                                    DateTCliente: { type: "date" }
-                                }
-                            }
-                        },
-                        pageSize: 20,
-                        serverPaging: true,
+            // Add event listener for opening and closing details
+            $('#example_table tbody').on('click', 'td.details-control', function (e) {
+                e.preventDefault();
+
+                var tr = $(this).closest('tr');
+                var row = example_table.row(tr);
+
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                }
+                else {
+                    // Open this row
+                    row.child(formatcuentas()).show();
+                    tr.addClass('shown');
+
+                    $.each(row.data().Tags, function () {
+                        $.each($(this), function (k, v) {
+                            $("#contenido")
+                                .append(
+                                    "<tr>" +
+                                    "<td>" + v.NumTag + "</td>" +
+                                    "<td>" + v.SaldoTag + "</td>" +
+                                    '<td><button type="button" class="btn btn-primary btn-sm">Recargar saldo</button></td>' +
+                                    '<td><button type="button" class="btn btn-primary btn-sm">Habilitar tag</button></td>' +
+                                    '<td><button type="button" class="btn btn-primary btn-sm">Deshabilitar tag</button></td>' +
+                                    '<td><button type="button" class="btn btn-primary btn-sm">Eliminar tag</button></td>' +
+                                    "</tr>"
+                                );
+                        });
+                    });
+                }
+            });
+
+            var table = $('#example').DataTable({
+                language: {
+                    "lengthMenu": "Desplegar _MENU_ por página",
+                    "zeroRecords": "Sin resultados - disculpe",
+                    "info": "Mostrando página _PAGE_ de _PAGES_",
+                    "infoEmpty": "Sin registros disponibles",
+                    "infoFiltered": "(registros filtrados _MAX_ )",
+                    "search": "Buscar:",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Último",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
                     },
-                    sortable: true,
-                    height: 550,
-                    filterable: {
-                        mode: "row"
+                },
+                ajax: {
+                    url: "/Clientes/GetDataClientes",
+                    type: "GET",
+                    datatype: "json",
+                },
+                columns: [
+                    {
+                        "className": 'details-control',
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": ''
                     },
-                    pageable: true,
-                    columns:
-                        [{
-                            field: "NumCliente",
-                            title: "Número de cliente",
-                            width: 200,
-                            filterable: {
-                                cell: {
-                                    showOperators: false
-                                }
-                            }
-                        },
-                        {
-                            field: "NombreCompleto",
-                            title: "Nombre completo",
-                            width: 310,
-                            filterable: {
-                                cell: {
-                                    operator: "contains",
-                                    suggestionOperator: "contains"
-                                }
-                            }
-                        },
-                        {
-                            field: "EmailCliente",
-                            title: "E-mail",
-                            width:310,
-                            filterable: {
-                                cell: {
-                                    operator: "contains",
-                                     suggestionOperator: "contains"
-                                }
-                            }
-                        },
-                        {
-                            field: "AddressCliente",
-                            title: "Dirección",
-                            width: 310,
-                            filterable: {
-                                cell: {
-                                    operator: "contains",
-                                    suggestionOperator: "contains"
-                                }
-                            }
-                        },
-                        {
-                            field: "PhoneCliente",
-                            title: "Telefóno",
-                            width: 200,
-                            filterable: {
-                                cell: {
-                                    showOperators: false
-                                }
-                            }
-                        },
-                        {
-                            field: "StatusCliente",
-                            title: "Estatus",
-                            width: 155,
-                            template: "#= StatusCliente ? 'Válido' : 'Inválido' #",
-                            filterable: { messages: { isTrue: "Válido", isFalse: "Invalido" } }
-                        },
-                        {
-                            field: "DateTCliente",
-                            title: "Fecha de registro",
-                            width: 310,
-                            template: "#= kendo.toString(kendo.parseDate(DateTCliente, 'yyyy-MM-dd'), 'MM/dd/yyyy') #",
-                            filterable: {
-                                ui: "datetimepicker" // use Kendo UI DateTimePicker
-                            },
-                            format: "{0:M/d/yy}",
-                        },
-                        {
-                            command: {
-                                text: "Nueva cuenta",
-                                className: "ncuenta",
-                                click: function (e) {
-                                    e.preventDefault();
+                    { "data": "NumCliente" },
+                    { "data": "NombreCompleto" },
+                    { "data": "EmailCliente" },
+                    { "data": "PhoneCliente" },
+                    {
+                        "className": "ncuentaclie",
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '<button type="button" class="btn btn-primary">Nueva cuenta</button>'
+                    },
+                    {
+                        "className": "nhabilitarclie",
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '<button type="button" class="btn btn-primary">Habilitar cliente</button>'
+                    },
+                    {
+                        "className": "ndeshabilitarclie",
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '<button type="button" class="btn btn-primary">Deshabilitar cliente</button>'
+                    },
+                    {
+                        "className": "vcuentasmodalclie",
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '<button type="button" class="btn btn-primary">Cuentas y tags</button>'
+                    }
+                ],
+                order: [[1, 'asc']]
+            });
 
-                                    $("#numcliente").val("");
-                                    $("#nomcliente").val("");
-                                    $("#ClienteId").val("");
-                                    $("#SaldoCuenta").val("");
+            // Add event listener for opening and closing details
+            $('#example tbody').on('click', 'td.details-control', function (e) {
+                e.preventDefault();
 
-                                    var grid = $("#grid").data("kendoGrid");
-                                    var row = $(e.target).closest("tr");
-                                    var dataItem = grid.dataItem(row);
+                var tr = $(this).closest('tr');
+                var row = table.row(tr);
 
-                                    $('#exampleModalCenter').modal('show');
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                }
+                else {
+                    // Open this row
+                    row.child(format(row.data())).show();
+                    tr.addClass('shown');
+                }
+            });
 
-                                    $("#numcliente").val(dataItem.NumCliente);
-                                    $("#nomcliente").val(dataItem.NombreCompleto);
-                                    $("#ClienteId").val(dataItem.Id);
+            /***************************** FIN DATATABLES *****************************/
 
-                                    //console.log(dataItem);
-                                },
-                            },
-                            width: 155
-                        },
-                        {
-                            command: [{
-                                name: "Editar",
-                                click: function (e) {
-                                    // prevent page scroll position change
-                                    e.preventDefault();
-                                    // e.target is the DOM element representing the button
-                                    var tr = $(e.target).closest("tr"); // get the current table row (tr)
-                                    // get the data bound to the current table row
-                                    var data = this.dataItem(tr);
-                                    window.location.href = '@(Url.Action("Edit", "Clientes").ToString())?id=' + data.Id;
-                                },
-                            }], width: 100
-                        },
-                        {
-                            command: [{
-                                name: "Eliminar",
-                                click: function (e) {
-                                    // prevent page scroll position change
-                                    e.preventDefault();
-                                    // e.target is the DOM element representing the button
-                                    var tr = $(e.target).closest("tr"); // get the current table row (tr)
-                                    // get the data bound to the current table row
-                                    var data = this.dataItem(tr);
-                                    window.location.href = '@(Url.Action("Delete", "Clientes").ToString())?id=' + data.Id;
-                                },
-                            }], width:110
-                        },
-                        {
-                            command: [{
-                                name: "Ver cuentas",
-                                click: function (e) {
-                                    // prevent page scroll position change
-                                    e.preventDefault();
-                                    // e.target is the DOM element representing the button
-                                    var tr = $(e.target).closest("tr"); // get the current table row (tr)
-                                    // get the data bound to the current table row
-                                    var data = this.dataItem(tr);
-                                    window.location.href = '@(Url.Action("ListCuentas", "CuentasTelepeajes").ToString())?id=' + data.Id;
-                                },
-                            }], width:135
-                        }],
+            $('#example tbody').on('click', 'td.ncuentaclie', function (e) {
+                e.preventDefault();
+                var data = table.row($(this).parents('tr')).data();
+
+                $("#numcliente").val("");
+                $("#nomcliente").val("");
+                $("#ClienteId").val("");
+                $("#SaldoCuenta").val("");
+
+                $('#exampleModalCenter').modal('show');
+
+                $("#numcliente").val(data.NumCliente);
+                $("#nomcliente").val(data.NombreCompleto);
+                $("#ClienteId").val(data.Id);
+
+            });
+
+            $("#example tbody").on('click', 'td.vcuentasmodalclie', function (e) {
+
+                e.preventDefault();
+
+                var datos = table.row($(this).parents('tr')).data();
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Clientes/CuentasTags",
+                    data: { IdCliente: datos.Id },
+                }).done(function (result) {
+                    console.log(result);
+                    example_table.clear().draw();
+                    example_table.rows.add(result).draw();
+                    $("#clientename").text(datos.NombreCompleto);
+                    $("#modalcuentastags").modal('show');
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    // needs to implement if it fails
+                    alert(jqXHR.responseText)
                 });
-            }
+            });
 
             $('#TypeCuenta').change(function (e) {
 
@@ -373,6 +451,72 @@
                 $('#SaldoCuenta').mask("#,##0.00", { reverse: true });
             });
         });
-        </script>
+    </script>
 
-    }
+    @Scripts.Render("~/bundles/jqueryval")
+
+}
+
+@*
+
+    <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">NumCuenta</th>
+                            <th scope="col">TypeCuenta</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contenido"></tbody>
+                </table>
+
+    $("#example tbody").on('click', 'td.vcuentas', function (e) {
+        // prevent page scroll position change
+        e.preventDefault();
+        // e.target is the DOM element representing the button
+        var data = table.row($(this).parents('tr')).data(); // get the current table row (tr)
+        window.location.href = '@(Url.Action("ListCuentas", "CuentasTelepeajes").ToString())?id=' + data.Id;
+    });
+
+
+            $("#example tbody").on('click', 'td.editar', function (e) {
+                // prevent page scroll position change
+                e.preventDefault();
+                // e.target is the DOM element representing the button
+                var data = table.row($(this).parents('tr')).data(); // get the current table row (tr)
+                window.location.href = '@(Url.Action("Edit", "Clientes").ToString())?Id=' + data.Id;
+            });
+
+     //$("#modalcuentastags").modal('show');
+                //To Reload The Ajax
+                //See DataTables.net for more information about the reload method
+                //example_table.ajax.reload()
+
+
+                //$.ajax({
+                //    type: "POST",
+                //    url: "/Clientes/CuentasTags",
+                //    data: { IdCliente: datos.Id },
+                //    success: function (data) {
+                //        $.each(data, function (index, value) {
+                //            $("#contenido")
+                //                .append("<tr><td>" + value.NumCuenta + "</td><td>" + value.TypeCuenta + "</td><td></tr>");
+                //        });
+                //    },
+                //    error: function (ex) {
+                //        alert(ex.responseText);
+                //    }
+                //});
+
+
+                //$.ajax({
+                //    type: "POST",
+                //    url: "/Clientes/CuentasTags",
+                //    data: { IdCliente: datos.Id },
+                //    success: function (data) {
+                //        console.log(data);
+                //    },
+                //    error: function (ex) {
+                //        alert(ex.responseText);
+                //    }
+                //});
+*@

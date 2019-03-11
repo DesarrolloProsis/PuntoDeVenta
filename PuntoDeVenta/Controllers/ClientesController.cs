@@ -19,6 +19,37 @@ namespace PuntoDeVenta.Controllers
     {
         private AppDbContext db = new AppDbContext();
 
+        public async Task<ActionResult> CuentasTags(int? IdCliente)
+        {
+            try
+            {
+                if (IdCliente == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                var cuentasresult = await (from cuentas in db.CuentasTelepeajes
+                                           join tags in db.Tags on cuentas.Id equals tags.CuentaId into tagslist
+                                           where cuentas.ClienteId == IdCliente
+                                           select new
+                                           {
+                                               Id = cuentas.Id,
+                                               NumCuenta = cuentas.NumCuenta,
+                                               TypeCuenta = cuentas.TypeCuenta,
+                                               SaldoCuenta = cuentas.SaldoCuenta,
+                                               StatusCuenta = cuentas.StatusCuenta,
+                                               DateTCuenta = cuentas.DateTCuenta,
+                                               Tags = tagslist.Select(l => new { l.NumTag, l.SaldoTag })
+                                           }).ToListAsync();
+
+                return Json(cuentasresult, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+        }
+
+
         public async Task<ActionResult> GetDataClientes()
         {
             List<Clientes> clientes = new List<Clientes>();
@@ -41,7 +72,7 @@ namespace PuntoDeVenta.Controllers
                 clientes.Add(value);
             }
 
-            return Json(clientes, JsonRequestBehavior.AllowGet);
+            return Json(new { data = clientes }, JsonRequestBehavior.AllowGet);
         }
 
         // GET: Clientes

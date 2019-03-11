@@ -964,6 +964,7 @@
     <Content Include="Views\Historico\Index.cshtml" />
     <Content Include="Views\Historico\Tabla_Historico.cshtml" />
     <Content Include="Views\Home\ListaNegraIndex.cshtml" />
+    <Content Include="Views\Clientes\_CuentasTags.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
