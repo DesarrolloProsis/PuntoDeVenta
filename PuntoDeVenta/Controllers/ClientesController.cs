@@ -11,6 +11,8 @@ using PuntoDeVenta.Models;
 using Kendo.Mvc.UI;
 using Kendo.Mvc.Extensions;
 using Microsoft.AspNet.Identity;
+using System.Globalization;
+using System.Dynamic;
 
 namespace PuntoDeVenta.Controllers
 {
@@ -27,21 +29,33 @@ namespace PuntoDeVenta.Controllers
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
-                var cuentasresult = await (from cuentas in db.CuentasTelepeajes
-                                           join tags in db.Tags on cuentas.Id equals tags.CuentaId into tagslist
-                                           where cuentas.ClienteId == IdCliente
-                                           select new
-                                           {
-                                               Id = cuentas.Id,
-                                               NumCuenta = cuentas.NumCuenta,
-                                               TypeCuenta = cuentas.TypeCuenta,
-                                               SaldoCuenta = cuentas.SaldoCuenta,
-                                               StatusCuenta = cuentas.StatusCuenta,
-                                               DateTCuenta = cuentas.DateTCuenta,
-                                               Tags = tagslist.Select(l => new { l.NumTag, l.SaldoTag })
-                                           }).ToListAsync();
 
-                return Json(cuentasresult, JsonRequestBehavior.AllowGet);
+                var model = await (from cuentas in db.CuentasTelepeajes
+                                   where cuentas.ClienteId == IdCliente
+                                   select cuentas).ToListAsync();
+
+                return Json(model, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+        }
+
+        public async Task<ActionResult> Tags(int? IdCuenta)
+        {
+            try
+            {
+                if (IdCuenta == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+
+                var model = await (from tags in db.Tags
+                                   where tags.CuentaId == IdCuenta
+                                   select tags).ToListAsync();
+
+                return Json(model, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -234,7 +248,7 @@ namespace PuntoDeVenta.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: Clientes/Delete/5
+        // GET: Clientes/Deshabilitar/5
         public async Task<ActionResult> Delete(long? id)
         {
             if (id == null)
@@ -281,6 +295,8 @@ namespace PuntoDeVenta.Controllers
                             tags.ForEach(a =>
                             {
                                 a.StatusTag = false;
+                                db.Tags.Attach(a);
+                                db.Entry(a).State = EntityState.Modified;
                             });
                         }
                     }
@@ -296,6 +312,93 @@ namespace PuntoDeVenta.Controllers
                     return RedirectToAction("Index");
                 }
 
+            }
+            catch (Exception ex)
+            {
+                TempData["EDelete"] = $"¡Ups! ha ocurrido un error inesperado, {ex.Message}";
+                return RedirectToAction("Index");
+            }
+        }
+
+        // GET: Clientes/Habilitar/5
+        public async Task<ActionResult> Habilitar(long? id)
+        {
+            try
+            {
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Clientes clientes = await db.Clientes.FindAsync(id);
+                if (clientes == null)
+                {
+                    return HttpNotFound();
+                }
+
+                if (clientes.StatusCliente == false)
+                {
+                    var cuentaslist = await (from cuentas in db.CuentasTelepeajes
+                                             join tags in db.Tags on cuentas.Id equals tags.CuentaId into tagslist
+                                             where cuentas.ClienteId == clientes.Id
+                                             select new
+                                             {
+                                                 cuentas,
+                                                 Tags = tagslist.ToList(),
+                                             }).ToListAsync();
+
+                    foreach (var item in cuentaslist)
+                    {
+                        switch (item.cuentas.TypeCuenta)
+                        {
+                            case "Colectiva":
+                                if ((double.Parse(item.cuentas.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }) / 100) >= 100)
+                                {
+                                    item.cuentas.StatusCuenta = true;
+                                    db.CuentasTelepeajes.Attach(item.cuentas);
+                                    db.Entry(item.cuentas).State = EntityState.Modified;
+
+                                    item.Tags.ForEach(x =>
+                                    {
+                                        x.StatusTag = true;
+                                        db.Tags.Attach(x);
+                                        db.Entry(x).State = EntityState.Modified;
+                                    });
+                                }
+                                break;
+
+                            case "Individual":
+
+                                item.cuentas.StatusCuenta = true;
+                                db.CuentasTelepeajes.Attach(item.cuentas);
+                                db.Entry(item.cuentas).State = EntityState.Modified;
+
+                                item.Tags.ForEach(x =>
+                                {
+                                    if ((double.Parse(x.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }) / 100) >= 20)
+                                    {
+                                        x.StatusTag = true;
+                                        db.Tags.Attach(x);
+                                        db.Entry(x).State = EntityState.Modified;
+                                    }
+                                });
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                    clientes.StatusCliente = true;
+
+                    db.Clientes.Attach(clientes);
+                    db.Entry(clientes).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+
+                    TempData["SDelete"] = $"Se dio de alta correctamente el cliente: {clientes.NumCliente}, junto con sus cuentas y tags validos por saldo.";
+                    return RedirectToAction("Index");
+                }
+
+                TempData["EDelete"] = $"El cliente: {clientes.NumCliente} ya esta dado de alta.";
+                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {

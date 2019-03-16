@@ -15,7 +15,7 @@ namespace PuntoDeVenta
                         "~/Scripts/jquery.validate*"));
 
             bundles.Add(new ScriptBundle("~/bundles/vue").Include(
-           "~/Scripts/vue.min.js"));
+           "~/Scripts/vue.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/popper").Include(
             "~/Scripts/popper.min.js"));

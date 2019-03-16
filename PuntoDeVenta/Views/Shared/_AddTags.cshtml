@@ -3,9 +3,10 @@
 @using PuntoDeVenta.Models;
 @model PuntoDeVenta.Models.Tags
 
-<!-- Modal -->
+
+<!-- Modal Add Tags-->
 <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle2" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalCenterTitle2">Agregar tag</h5>
@@ -14,7 +15,7 @@
                 </button>
             </div>
             <div id="datos">
-                @using (Html.BeginForm("Create", "Tags", FormMethod.Post, htmlAttributes: new { @id = "Form1" }))
+                @using (Html.BeginForm("Create", "Tags", FormMethod.Post, htmlAttributes: new { @id = "FormAddTags" }))
                 {
                     @Html.AntiForgeryToken()
                     <div class="modal-body">
@@ -103,7 +104,7 @@
                             <label class="custom-control-label" for="customControlInline">Traspaso</label>
                         </div>
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-success botonaceptar" id="crearTag">Crear</button>
+                        <button type="button" class="btn btn-success botonaceptar" id="CrearTag">Crear</button>
                     </div>
                 }
             </div>
@@ -147,7 +148,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success botonaceptar" id="submitForm0">Guardar</button>
+                <button type="button" class="btn btn-success botonaceptar" id="submitFormAddTag">Guardar</button>
             </div>
         </div>
     </div>

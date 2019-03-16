@@ -165,7 +165,7 @@ namespace PuntoDeVenta.Controllers
                             await db.SaveChangesAsync();
 
                             ViewBag.Success = $"Se recargó correctamente el tag: {FoundTag.tag.NumTag}.";
-                            return View("Index");
+                            return RedirectToAction("Index");
                         }
 
                         ViewBag.Error = "¡Ups! ocurrio un error inesperado.";
@@ -396,13 +396,14 @@ namespace PuntoDeVenta.Controllers
             {
                 Tags tags = await db.Tags.FindAsync(id);
                 db.Tags.Remove(tags);
-                ViewBag.Success = $"Se elimino correctamente el tag: {tag.NumTag}.";
                 await db.SaveChangesAsync();
-                return View("Index");
+
+                TempData["SDelete"] = $"Se eliminó correctamente el tag: {tag.NumTag}.";
+                return RedirectToAction("Index", "Clientes");
             }
 
-            ViewBag.Error = "Primero debe deshabilitar el tag.";
-            return View("Index");
+            TempData["EDelete"] = "Primero debe deshabilitar el tag.";
+            return RedirectToAction("Index", "Clientes");
 
         }
         [Authorize(Roles = "SuperUsuario")]
@@ -420,8 +421,8 @@ namespace PuntoDeVenta.Controllers
             }
             return View(tags);
         }
-        [Authorize(Roles = "SuperUsuario")]
 
+        [Authorize(Roles = "SuperUsuario")]
         [HttpPost, ActionName("Deshabilitar")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeshabilitarConfirmed(long id)
@@ -435,56 +436,42 @@ namespace PuntoDeVenta.Controllers
                 db.Tags.Attach(tag);
                 db.Entry(tag).State = EntityState.Modified;
 
-                ViewBag.Success = $"Se dio de baja correctamente el tag: {tag.NumTag}.";
-
                 await db.SaveChangesAsync();
-                return View("Index");
+
+                TempData["SDelete"] = $"Se dio de baja correctamente el tag: {tag.NumTag}.";
+                return RedirectToAction("Index", "Clientes");
             }
 
-            ViewBag.Error = "El tag ya esta dada de baja.";
-            return View("Index");
+            TempData["EDelete"] = $"El tag: {tag.NumTag} ya está dado de baja.";
+            return RedirectToAction("Index", "Clientes");
         }
 
-
-        [Authorize(Roles = "SuperUsuario")]
-        // GET: Tags/Delete/5
+        // POST: Tags/Activate/5
         public async Task<ActionResult> Activate(long? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Tags tags = await db.Tags.FindAsync(id);
-            if (tags == null)
-            {
-                return HttpNotFound();
-            }
-            return View(tags);
-        }
-
-        [Authorize(Roles = "SuperUsuario")]
-        // POST: Tags/Delete/5
-        [HttpPost, ActionName("Activate")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ActivateConfirmed(long id)
         {
             db.Configuration.ValidateOnSaveEnabled = false;
             Tags tag = await db.Tags.FindAsync(id);
 
             if (tag.StatusTag == false)
             {
-                tag.StatusTag = true;
-                db.Tags.Attach(tag);
-                db.Entry(tag).State = EntityState.Modified;
+                if (((double.Parse(tag.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }) / 100) >= 20))
+                {
+                    tag.StatusTag = true;
+                    db.Tags.Attach(tag);
+                    db.Entry(tag).State = EntityState.Modified;
 
-                ViewBag.Success = $"Se dio de Alta correctamente el tag: {tag.NumTag}.";
+                    await db.SaveChangesAsync();
 
-                await db.SaveChangesAsync();
-                return View("Index");
+                    TempData["SDelete"] = $"Se dio de alta correctamente el tag: {tag.NumTag}.";
+                    return RedirectToAction("Index", "Clientes");
+                }
+
+                TempData["EDelete"] = $"El tag: {tag.NumTag} no tiene saldo válido.";
+                return RedirectToAction("Index", "Clientes");
             }
 
-            ViewBag.Error = "El tag ya esta dada de Alta.";
-            return View("Index");
+            TempData["EDelete"] = $"El tag: {tag.NumTag} ya está dado de alta.";
+            return RedirectToAction("Index", "Clientes");
         }
 
         [HttpPost]
@@ -602,10 +589,12 @@ namespace PuntoDeVenta.Controllers
                 db.Tags.Remove(tagOld);
                 await db.SaveChangesAsync();
 
-                ViewBag.Success = $"Se eliminó correctamente el tag: {tagOld.NumTag}.";
+                TempData["SDelete"] = $"Se eliminó correctamente el tag: {tagOld.NumTag}.";
+                return RedirectToAction("Index", "Clientes");
             }
 
-            return View("Index");
+            TempData["EDelete"] = $"¡Ups! ha ocurrido un error inesperado.";
+            return RedirectToAction("Index", "Clientes");
         }
 
         protected override void Dispose(bool disposing)

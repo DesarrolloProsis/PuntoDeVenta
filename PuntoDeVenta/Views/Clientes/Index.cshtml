@@ -4,13 +4,18 @@
 @{
     ViewBag.Title = "Clientes";
 }
+
 <div class="col-md-12 text-align-center">
     <h4 class="titulo1">Busqueda de Clientes</h4>
     <p class="lead">
         Realice una busqueda por un cliente específico.
     </p>
 </div>
+
 <hr />
+
+<div id="app"></div>
+
 
 @if (ViewData["Success"] != null)
 {
@@ -32,16 +37,15 @@
     </div>
 }
 
-
 <div class="table-responsive">
     <table id="example" class="table table-hover" style="width:100%">
         <thead>
             <tr>
-                <th scope="col"></th>
-                <th scope="col">Número cliente</th>
-                <th scope="col">Nombre completo</th>
-                <th scope="col">Email cliente</th>
-                <th scope="col">Teléfono cliente</th>
+                <th scope="col">Más info.</th>
+                <th scope="col">Número de cliente</th>
+                <th scope="col">Nombre de completo</th>
+                <th scope="col">Email de cliente</th>
+                <th scope="col">Teléfono de cliente</th>
                 <th scope="col"></th>
                 <th scope="col"></th>
                 <th scope="col"></th>
@@ -51,9 +55,63 @@
     </table>
 </div>
 
-@Html.Partial("_CuentasTags")
+<!-- Modal Lista De Cuentas -->
+<div class="modal fade bd-example-modal-xl" id="modalcuentastags" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cuentas y tags de: <label id="clientename"></label></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("_CuentasTags")
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Atrás</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-<!-- Modal -->
+<!-- Modal Lista De Tags -->
+<div class="modal fade bd-example-modal-xl" id="modallisttags" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tags de la cuenta: <label id="cuentanum"></label></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table id="table_tags" class="table table-hover" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th scope="col">Número de tag</th>
+                                <th scope="col">Saldo de tag</th>
+                                <th scope="col">Estatus de tag</th>
+                                <th scope="col">Fecha registro tag</th>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="atrasmodaltag">Atrás</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_AddTags")
+
+<!-- Modal Create Cuenta -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -63,7 +121,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            @using (Html.BeginForm("Create", "CuentasTelepeajes", FormMethod.Post, htmlAttributes: new { @id = "Form0" }))
+            @using (Html.BeginForm("Create", "CuentasTelepeajes", FormMethod.Post, htmlAttributes: new { @id = "FormCreateCuenta" }))
             {
                 @Html.AntiForgeryToken()
                 <div class="modal-body">
@@ -84,9 +142,8 @@
                         @Html.ValidationMessageFor(model => model.TypeCuenta, "", new { @class = "text-danger" })
                     </div>
 
-                    <div id="fromTo">
+                    <div id="fromTocreate">
                         <div class="form-group">
-
                             <img class="img-modal2" src="~/Content/css-yisus/img/file-invoice-dollar-solid.svg" /> @Html.LabelFor(model => model.SaldoCuenta, htmlAttributes: new { @class = "control-label" })
                             @Html.EditorFor(model => model.SaldoCuenta, new { htmlAttributes = new { @class = "form-control formulario1" } })
                             @Html.ValidationMessageFor(model => model.SaldoCuenta, "", new { @class = "text-danger" })
@@ -98,15 +155,14 @@
                 <div class="modal-footer">
 
                     <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-success botonaceptar" id="crear">Crear</button>
+                    <button type="button" class="btn btn-success botonaceptar" id="CreateCuenta">Crear</button>
                 </div>
             }
         </div>
     </div>
 </div>
 
-<!--------------------------------------------------------------------------------------------->
-<!-- Modal -->
+<!-- Modal Confirmar Cuenta exampleModalCenter1 -->
 <div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -135,7 +191,76 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success botonaceptar" id="submitForm">Guardar</button>
+                <button type="button" class="btn btn-success botonaceptar" id="submitCreateCuenta">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Habilitar ModalHabilitar Cliente -->
+<div class="modal fade" id="ModalHabilitar" tabindex="-1" role="dialog" aria-labelledby="ModalHabilitarLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalHabilitarLabel">Habilitar cliente</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input id="idclientehab" name="IdCliente" type="hidden">
+                ¿Seguro de habilitar al cliente <label id="nomclienthab"></label>?
+                <small class="form-text text-muted">Cuando habilite al cliente, sus cuentas y tags (con saldo hábil) se activarán automaticamente.</small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="submitClienteHabil">Habilitar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Habilitar ModalHabilitar Cuenta -->
+<div class="modal fade" id="ModalHabilitarCuenta" tabindex="-1" role="dialog" aria-labelledby="ModalHabilitarCuentaLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalHabilitarCuentaLabel">Habilitar cuenta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input id="idcuentahab" name="IdCuenta" type="hidden">
+                ¿Seguro de habilitar la cuenta <label id="numcuentahab"></label>?
+                <small class="form-text text-muted">Cuando habilite la cuenta, sus tags (con saldo hábil) se activarán automaticamente.</small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="submitHabilCuenta">Habilitar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Habilitar ModalHabilitar Tag -->
+<div class="modal fade" id="ModalHabilitarTag" tabindex="-1" role="dialog" aria-labelledby="ModalHabilitarTagLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalHabilitarTagLabel">Habilitar tag</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input id="idtaghab" name="IdTag" type="hidden">
+                ¿Seguro de habilitar el tag <label id="numtaghab"></label>?
+                <small class="form-text text-muted">El tag se habilitará si el saldo es válido el saldo.</small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="submitHabilTag">Habilitar</button>
             </div>
         </div>
     </div>
@@ -188,101 +313,10 @@
                 '</table>';
         }
 
-        /* Formatting function for row details - modify as you need */
-        function formatcuentas() {
-
-            return '<div class="container-fluid">' +
-                '<div class="table-responsive">' +
-                '<table class="table table-bordered table-sm" style="width:100%">' +
-                '<thead>' +
-                '<tr>' +
-                '<th scope="col">NumTag</th>' +
-                '<th scope="col">SaldoTag</th>' +
-                '<th scope="col"></th>' +
-                '<th scope="col"></th>' +
-                '<th scope="col"></th>' +
-                '<th scope="col"></th>' +
-                '</tr>' +
-                '</thead>' +
-                '<tbody id="contenido">' +
-                '</tbody>' +
-                '</table>' +
-                '</div>' +
-                '</div>';
-        }
 
         $(document).ready(function () {
 
-            var example_table = $("#example_table").DataTable({
-                data: [],
-                columns: [
-                    {
-                        'className': 'details-control',
-                        'orderable': false,
-                        'data': null,
-                        'defaultContent': ''
-                    },
-                    { 'data': 'NumCuenta' },
-                    { 'data': 'TypeCuenta' },
-                    { 'data': 'SaldoCuenta' },
-                    { 'data': 'StatusCuenta' },
-                    { 'data': 'DateTCuenta' },
-                    {
-                        "className": "ntagcue",
-                        "orderable": false,
-                        "data": null,
-                        "defaultContent": '<button type="button" class="btn btn-primary btn-sm">Agregar tag</button>'
-                    },
-                    {
-                        "className": "nhabilitarcue",
-                        "orderable": false,
-                        "data": null,
-                        "defaultContent": '<button type="button" class="btn btn-primary btn-sm">Habilitar cuenta</button>'
-                    },
-                    {
-                        "className": "ndeshabilitarcue",
-                        "orderable": false,
-                        "data": null,
-                        "defaultContent": '<button type="button" class="btn btn-primary btn-sm">Deshabilitar cuenta</button>'
-                    },
-                ],
-                order: [[1, 'asc']],
-            });
-
-            // Add event listener for opening and closing details
-            $('#example_table tbody').on('click', 'td.details-control', function (e) {
-                e.preventDefault();
-
-                var tr = $(this).closest('tr');
-                var row = example_table.row(tr);
-
-                if (row.child.isShown()) {
-                    // This row is already open - close it
-                    row.child.hide();
-                    tr.removeClass('shown');
-                }
-                else {
-                    // Open this row
-                    row.child(formatcuentas()).show();
-                    tr.addClass('shown');
-
-                    $.each(row.data().Tags, function () {
-                        $.each($(this), function (k, v) {
-                            $("#contenido")
-                                .append(
-                                    "<tr>" +
-                                    "<td>" + v.NumTag + "</td>" +
-                                    "<td>" + v.SaldoTag + "</td>" +
-                                    '<td><button type="button" class="btn btn-primary btn-sm">Recargar saldo</button></td>' +
-                                    '<td><button type="button" class="btn btn-primary btn-sm">Habilitar tag</button></td>' +
-                                    '<td><button type="button" class="btn btn-primary btn-sm">Deshabilitar tag</button></td>' +
-                                    '<td><button type="button" class="btn btn-primary btn-sm">Eliminar tag</button></td>' +
-                                    "</tr>"
-                                );
-                        });
-                    });
-                }
-            });
+            /***************************** CLIENTES *****************************/
 
             var table = $('#example').DataTable({
                 language: {
@@ -340,7 +374,7 @@
                         "defaultContent": '<button type="button" class="btn btn-primary">Cuentas y tags</button>'
                     }
                 ],
-                order: [[1, 'asc']]
+                order: [[1, 'desc']]
             });
 
             // Add event listener for opening and closing details
@@ -362,8 +396,6 @@
                 }
             });
 
-            /***************************** FIN DATATABLES *****************************/
-
             $('#example tbody').on('click', 'td.ncuentaclie', function (e) {
                 e.preventDefault();
                 var data = table.row($(this).parents('tr')).data();
@@ -381,18 +413,36 @@
 
             });
 
+            $('#example tbody').on('click', 'td.ndeshabilitarclie', function (e) {
+                e.preventDefault();
+                var data = table.row($(this).parents('tr')).data();
+
+                var url = '@Url.Action("Delete", "Clientes", new { id = "__id__" })';
+                window.location.href = url.replace('__id__', data.Id);
+            });
+
+            $('#example tbody').on('click', 'td.nhabilitarclie', function (e) {
+                e.preventDefault();
+                var data = table.row($(this).parents('tr')).data();
+
+                $("#idclientehab").val(data.Id);
+                $("#nomclienthab").text(data.NombreCompleto);
+
+                $('#ModalHabilitar').modal('show');
+            });
+
             $("#example tbody").on('click', 'td.vcuentasmodalclie', function (e) {
 
                 e.preventDefault();
 
                 var datos = table.row($(this).parents('tr')).data();
 
-                $.ajax({
+                  $.ajax({
                     type: "POST",
                     url: "/Clientes/CuentasTags",
                     data: { IdCliente: datos.Id },
                 }).done(function (result) {
-                    console.log(result);
+                    //console.log(result);
                     example_table.clear().draw();
                     example_table.rows.add(result).draw();
                     $("#clientename").text(datos.NombreCompleto);
@@ -401,6 +451,13 @@
                     // needs to implement if it fails
                     alert(jqXHR.responseText)
                 });
+
+            });
+
+            $("#submitClienteHabil").on('click', function (e) {
+                e.preventDefault();
+                var url = '@Url.Action("Habilitar", "Clientes", new { id = "__id__" })';
+                window.location.href = url.replace('__id__', $("#idclientehab").val());
             });
 
             $('#TypeCuenta').change(function (e) {
@@ -409,18 +466,18 @@
                 var ddlValue = $(this).val();
 
                 if (ddlValue == "Colectiva") {
-                    $('#fromTo').show();
+                    $('#fromTocreate').show();
                 }
                 else if (ddlValue == "Individual") {
                     // show fromTo div, hide time div
-                    $('#fromTo').hide();
+                    $('#fromTocreate').hide();
                 }
             });
 
-            $('#crear').on('click', function (e) {
+            $('#CreateCuenta').on('click', function (e) {
 
                 e.preventDefault();
-                var form = $("#Form0").validate();
+                var form = $("#FormCreateCuenta").validate();
 
                 if (form.valid()) {
                     $('#exampleModalCenter').modal('hide');
@@ -442,15 +499,321 @@
                 }
             });
 
-            $('#submitForm').on('click', function (e) {
+            $('#submitCreateCuenta').on('click', function (e) {
                 e.preventDefault();
-                $("#Form0").submit();
+                $("#FormCreateCuenta").submit();
             });
 
             $(function () {
                 $('#SaldoCuenta').mask("#,##0.00", { reverse: true });
             });
+
+            /******************* CUENTAS ******************************/
+
+            var example_table = $('#example_table').DataTable({
+                language: {
+                    "lengthMenu": "Desplegar _MENU_ por página",
+                    "zeroRecords": "Sin resultados - disculpe",
+                    "info": "Mostrando página _PAGE_ de _PAGES_",
+                    "infoEmpty": "Sin registros disponibles",
+                    "infoFiltered": "(registros filtrados _MAX_ )",
+                    "search": "Buscar:",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Último",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    },
+                },
+                data: [],
+                columns: [
+                    { "data": "NumCuenta" },
+                    { "data": "TypeCuenta" },
+                    { "data": "SaldoCuenta" },
+                    { "data": "StatusCuenta" },
+                    { "data": "DateTCuenta" },
+                    {
+                        "className": "ntagcue",
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '<button type="button" class="btn btn-primary">Agregar Tag</button>'
+                    },
+                    {
+                        "className": "nhabilitarcue",
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '<button type="button" class="btn btn-primary">Habilitar cuenta</button>'
+                    },
+                    {
+                        "className": "ndeshabilitarcue",
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '<button type="button" class="btn btn-primary">Deshabilitar cuenta</button>'
+                    },
+                    {
+                        "className": "viewtagscue",
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '<button type="button" class="btn btn-primary">Ver tags</button>'
+                    }
+                ],
+                order: [[1, 'desc']]
+            });
+
+            $("#example_table tbody").on('click', 'td.viewtagscue', function (e) {
+                e.preventDefault();
+
+                var datos = example_table.row($(this).parents('tr')).data();
+
+                console.log(datos);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Clientes/Tags",
+                    data: { IdCuenta: datos.Id },
+                }).done(function (result) {
+                    //console.log(result);
+                    table_tags.clear().draw();
+                    table_tags.rows.add(result).draw();
+                    $("#cuentanum").text(datos.NumCuenta);
+                    $("#modallisttags").modal('show');
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    // needs to implement if it fails
+                    alert(jqXHR.responseText)
+                });
+
+                $("#modalcuentastags").modal('hide');
+
+            });
+
+            $("#example_table tbody").on('click', 'td.ntagcue', function (e) {
+
+                e.preventDefault();
+
+                var data = example_table.row($(this).parents('tr')).data();
+
+                //console.log(data);
+
+                $("#numcuenta").val("");
+                $("#CuentaId").val("");
+                $("#CobroTag").val("");
+                $("#tipocuenta").val("");
+                $("#SaldoTag").val("");
+                $("#NumTag").val("");
+
+                $("#numcuenta").val(data.NumCuenta);
+                $("#CuentaId").val(data.Id);
+                $("#CobroTag").val("100.00");
+                $("#tipocuenta").val(data.TypeCuenta);
+
+                if (data.TypeCuenta == "Colectiva") {
+                    $("#fromTo").hide();
+                    $("#fromTo1").hide();
+                } else if (data.TypeCuenta == "Individual") {
+                    $("#fromTo").show();
+                    $("#fromTo1").show();
+                }
+
+                //console.log(dataItem);
+
+                $('#exampleModalCenter2').modal('show');
+            });
+
+            $("#example_table tbody").on('click', 'td.ndeshabilitarcue', function (e) {
+
+                e.preventDefault();
+
+                var data = example_table.row($(this).parents('tr')).data();
+
+                var url = '@Url.Action("Delete", "CuentasTelepeajes", new { id = "__id__" })';
+                window.location.href = url.replace('__id__', data.Id);
+            });
+
+            $('#example_table tbody').on('click', 'td.nhabilitarcue', function (e) {
+                e.preventDefault();
+                var data = example_table.row($(this).parents('tr')).data();
+
+                $("#idcuentahab").val(data.Id);
+                $("#numcuentahab").text(data.NumCuenta);
+
+                $('#ModalHabilitarCuenta').modal('show');
+            });
+
+            $("#submitHabilCuenta").on('click', function (e) {
+                e.preventDefault();
+                var url = '@Url.Action("Habilitar", "CuentasTelepeajes", new { id = "__id__" })';
+                window.location.href = url.replace('__id__', $("#idcuentahab").val());
+            });
+
+            $('#CrearTag').on('click', function (e) {
+                e.preventDefault();
+                var form = $("#FormAddTags").validate();
+
+                if (form.valid() && $("#NumTag").val() != "") {
+
+                    if ($("#tipocuenta").val() == "Colectiva" && $("#SaldoTag").val() == "") {
+                        $('#exampleModalCenter2').modal('hide');
+
+                        $("#fromtotag").hide();
+                        saldoTag = 0;
+
+                        var costotag = $("#CobroTag").val();
+                        var total = parseFloat(costotag) + parseFloat(saldoTag);
+
+                        $("#Tagnumcuenta").text($("#numcuenta").val());
+                        $("#Tagnum").text($("#NumTag").val());
+                        $("#TagCosto").text(costotag);
+                        $("#TagSaldo").text(saldoTag);
+                        $("#total").text(total);
+
+                        $('#exampleModalCenter3').modal('show');
+                    }
+                    else if ($("#tipocuenta").val() == "Individual" && $("#SaldoTag").val() != "") {
+                        $('#exampleModalCenter2').modal('hide');
+
+                        var saldoTag = 0;
+
+                        $("#fromtotag").show();
+                        saldoTag = $("#SaldoTag").val();
+
+                        var costotag = $("#CobroTag").val();
+                        var total = parseFloat(costotag) + parseFloat(saldoTag);
+
+                        $("#Tagnumcuenta").text($("#numcuenta").val());
+                        $("#Tagnum").text($("#NumTag").val());
+                        $("#TagCosto").text(costotag);
+                        $("#TagSaldo").text(saldoTag);
+                        $("#total").text(total);
+
+                        $('#exampleModalCenter3').modal('show');
+                    }
+                }
+            });
+
+            $("#submitFormAddTag").on("click", function (e) {
+                e.preventDefault();
+                $("#FormAddTags").submit();
+            });
+
+            $(function () {
+                $('#SaldoARecargar').mask("#,##0.00", { reverse: true });
+                $('#ConfSaldoARecargar').mask("#,##0.00", { reverse: true });
+                $('#SaldoTag').mask("#,##0.00", { reverse: true });
+                $("#CobroTag").mask("#,##0.00", { reverse: true });
+                $("#OldSaldo").mask("#,##0.00", { reverse: true });
+            });
+            /******************* TAGS ***************************/
+
+            var table_tags = $('#table_tags').DataTable({
+                language: {
+                    "lengthMenu": "Desplegar _MENU_ por página",
+                    "zeroRecords": "Sin resultados - disculpe",
+                    "info": "Mostrando página _PAGE_ de _PAGES_",
+                    "infoEmpty": "Sin registros disponibles",
+                    "infoFiltered": "(registros filtrados _MAX_ )",
+                    "search": "Buscar:",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Último",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    },
+                },
+                data: [],
+                columns: [
+                    { "data": "NumTag" },
+                    { "data": "SaldoTag" },
+                    { "data": "StatusTag" },
+                    { "data": "DateTTag" },
+                    {
+                        "className": "thabilitartag",
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '<button type="button" class="btn btn-primary">Habilitar tag</button>'
+                    },
+                    {
+                        "className": "tdeshabilitartag",
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '<button type="button" class="btn btn-primary">Deshabilitar tag</button>'
+                    },
+                    {
+                        "className": "teliminartag",
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '<button type="button" class="btn btn-primary">Eliminar tag</button>'
+                    }
+                ],
+                order: [[1, 'desc']]
+            });
+
+            $("#table_tags tbody").on('click', 'td.teliminartag', function (e) {
+
+                e.preventDefault();
+
+                var data = table_tags.row($(this).parents('tr')).data();
+
+                var url = '@Url.Action("Delete", "Tags", new { id = "__id__" })';
+                window.location.href = url.replace('__id__', data.Id);
+            });
+
+            $("#table_tags tbody").on('click', 'td.tdeshabilitartag', function (e) {
+
+                e.preventDefault();
+
+                var data = table_tags.row($(this).parents('tr')).data();
+
+                var url = '@Url.Action("Deshabilitar", "Tags", new { id = "__id__" })';
+                window.location.href = url.replace('__id__', data.Id);
+            });
+
+            $('#table_tags tbody').on('click', 'td.thabilitartag', function (e) {
+                e.preventDefault();
+
+                var data = table_tags.row($(this).parents('tr')).data();
+
+                $("#idtaghab").val(data.Id);
+                $("#numtaghab").text(data.NumTag);
+
+                $('#ModalHabilitarTag').modal('show');
+            });
+
+            $("#submitHabilTag").on('click', function (e) {
+                e.preventDefault();
+                var url = '@Url.Action("Activate", "Tags", new { id = "__id__" })';
+                window.location.href = url.replace('__id__', $("#idtaghab").val());
+            });
+
+            $("#atrasmodaltag").on('click', function (e) {
+                $("#modallisttags").modal('hide');
+                $("#modalcuentastags").modal('show');
+            });
         });
+    </script>
+
+    <script>
+        let datos = new Vue({
+            el: '#datos',
+            data: {
+                checked: false,
+                max: 12,
+                text: ''
+            },
+        });
+
+        // you can invoke methods in JavaScript too
+        //example2.greet() // => 'Hello Vue.js!'
+
+      var res = Vue.compile('<div><span>{{ msg }}</span></div>')
+
+        new Vue({
+            data: {
+                msg: 'hello'
+            },
+            render: res.render,
+            staticRenderFns: res.staticRenderFns
+        });
+
     </script>
 
     @Scripts.Render("~/bundles/jqueryval")
@@ -458,65 +821,46 @@
 }
 
 @*
+    //$.ajax({
+    //    type: "POST",
+    //    url: "/Clientes/CuentasTags",
+    //    data: { IdCliente: datos.Id },
+    //    success: function (data) {
+    //        console.log(data);
+    //    },
+    //    error: function (ex) {
+    //        alert(ex.responseText);
+    //    }
+    //});
 
-    <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">NumCuenta</th>
-                            <th scope="col">TypeCuenta</th>
-                        </tr>
-                    </thead>
-                    <tbody id="contenido"></tbody>
-                </table>
+      //$.each(row.data().Tags, function () {
+                    //    $.each($(this), function (k, v) {
+                    //        $("#contenido")
+                    //            .append(
+                    //                "<tr>" +
+                    //                "<td>" + v.NumTag + "</td>" +
+                    //                "<td>" + v.SaldoTag + "</td>" +
+                    //                "<td>" + v.StatusTag + "</td>" +
+                    //                "<td>" + v.DateTTag + "</td>" +
+                    //                '<td><button type="button" class="btn btn-primary btn-sm" v-on:click="counter += 1">Recargar saldo</button></td>' +
+                    //                '<td><button type="button" class="btn btn-primary btn-sm">Habilitar tag</button></td>' +
+                    //                '<td><button type="button" class="btn btn-primary btn-sm">Deshabilitar tag</button></td>' +
+                    //                '<td><button type="button" class="btn btn-primary btn-sm">Eliminar tag</button></td>' +
+                    //            "</tr>"
+                    //            ).html();
+                    //    });
+                    //});
 
-    $("#example tbody").on('click', 'td.vcuentas', function (e) {
-        // prevent page scroll position change
-        e.preventDefault();
-        // e.target is the DOM element representing the button
-        var data = table.row($(this).parents('tr')).data(); // get the current table row (tr)
-        window.location.href = '@(Url.Action("ListCuentas", "CuentasTelepeajes").ToString())?id=' + data.Id;
-    });
-
-
-            $("#example tbody").on('click', 'td.editar', function (e) {
-                // prevent page scroll position change
-                e.preventDefault();
-                // e.target is the DOM element representing the button
-                var data = table.row($(this).parents('tr')).data(); // get the current table row (tr)
-                window.location.href = '@(Url.Action("Edit", "Clientes").ToString())?Id=' + data.Id;
-            });
-
-     //$("#modalcuentastags").modal('show');
-                //To Reload The Ajax
-                //See DataTables.net for more information about the reload method
-                //example_table.ajax.reload()
-
-
-                //$.ajax({
+                    //$.ajax({
                 //    type: "POST",
                 //    url: "/Clientes/CuentasTags",
                 //    data: { IdCliente: datos.Id },
-                //    success: function (data) {
-                //        $.each(data, function (index, value) {
-                //            $("#contenido")
-                //                .append("<tr><td>" + value.NumCuenta + "</td><td>" + value.TypeCuenta + "</td><td></tr>");
-                //        });
-                //    },
-                //    error: function (ex) {
-                //        alert(ex.responseText);
-                //    }
-                //});
-
-
-                //$.ajax({
-                //    type: "POST",
-                //    url: "/Clientes/CuentasTags",
-                //    data: { IdCliente: datos.Id },
-                //    success: function (data) {
-                //        console.log(data);
-                //    },
-                //    error: function (ex) {
-                //        alert(ex.responseText);
-                //    }
+                //}).done(function (result) {
+                //    //console.log(result);
+                //    $("#clientename").text(datos.NombreCompleto);
+                //    $("#modalcuentastags").modal('show');
+                //}).fail(function (jqXHR, textStatus, errorThrown) {
+                //    // needs to implement if it fails
+                //    alert(jqXHR.responseText)
                 //});
 *@

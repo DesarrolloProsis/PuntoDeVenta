@@ -16,7 +16,7 @@ namespace PuntoDeVenta.Models
         public long Id { get; set; }
 
         [Display(Name = "Número de tag")]
-        [RegularExpression("^[0-9]*$", ErrorMessage = "{0} sólo acepta números.")]
+        //[RegularExpression("^[0-9]*$", ErrorMessage = "{0} sólo acepta números.")]
         [StringLength(50)]
         [Required]
         public string NumTag { get; set; }
@@ -49,7 +49,7 @@ namespace PuntoDeVenta.Models
 
         [Display(Name = "Cobro por tag")]
         [NotMapped]
-        [Required]
+        //[Required]
         public string CobroTag { get; set; }
 
         [Display(Name = "Saldo a recargar")]

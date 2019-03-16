@@ -1,105 +1,105 @@
 ﻿@model PuntoDeVenta.Models.Clientes
 
 @{
-    ViewBag.Title = "Eliminar";
+    ViewBag.Title = "Deshabilitar";
 }
 <div class="col-md-12 text-align-center">
-    <h4 class="titulo1">Eliminar Cliente</h4>
+    <h4 class="titulo1">Deshabilitar Cliente</h4>
     <p class="lead">
-        Elimina los datos del cliente.
+        Deshabilitar el cliente junto con todas sus cuentas y tags.
     </p>
-    </div>
-    <div>
-        <hr />
-        <div class="container">
-            <div class="row justify-content-md-center">
-                <div class="col-md-8">
-                    <div class="card">
-                        <div class="card-body">
-                            <dl class="dl-horizontal">
-                                <dt>
-                                    @Html.DisplayNameFor(model => model.NumCliente)
-                                </dt>
+</div>
+<div>
+    <hr />
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <dl class="dl-horizontal">
+                            <dt>
+                                @Html.DisplayNameFor(model => model.NumCliente)
+                            </dt>
 
-                                <dd>
-                                    @Html.DisplayFor(model => model.NumCliente)
-                                </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.NumCliente)
+                            </dd>
 
-                                <dt>
-                                    @Html.DisplayNameFor(model => model.Nombre)
-                                </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Nombre)
+                            </dt>
 
-                                <dd>
-                                    @Html.DisplayFor(model => model.Nombre)
-                                </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.Nombre)
+                            </dd>
 
-                                <dt>
-                                    @Html.DisplayNameFor(model => model.Apellidos)
-                                </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Apellidos)
+                            </dt>
 
-                                <dd>
-                                    @Html.DisplayFor(model => model.Apellidos)
-                                </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.Apellidos)
+                            </dd>
 
-                                <dt>
-                                    @Html.DisplayNameFor(model => model.EmailCliente)
-                                </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.EmailCliente)
+                            </dt>
 
-                                <dd>
-                                    @Html.DisplayFor(model => model.EmailCliente)
-                                </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.EmailCliente)
+                            </dd>
 
-                                <dt>
-                                    @Html.DisplayNameFor(model => model.AddressCliente)
-                                </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.AddressCliente)
+                            </dt>
 
-                                <dd>
-                                    @Html.DisplayFor(model => model.AddressCliente)
-                                </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.AddressCliente)
+                            </dd>
 
-                                <dt>
-                                    @Html.DisplayNameFor(model => model.PhoneCliente)
-                                </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.PhoneCliente)
+                            </dt>
 
-                                <dd>
-                                    @Html.DisplayFor(model => model.PhoneCliente)
-                                </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.PhoneCliente)
+                            </dd>
 
-                                <dt>
-                                    @Html.DisplayNameFor(model => model.StatusCliente)
-                                </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.StatusCliente)
+                            </dt>
 
-                                <dd>
-                                    @Html.DisplayFor(model => model.StatusCliente)
-                                </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.StatusCliente)
+                            </dd>
 
-                                <dt>
-                                    @Html.DisplayNameFor(model => model.DateTCliente)
-                                </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.DateTCliente)
+                            </dt>
 
-                                <dd>
-                                    @Html.DisplayFor(model => model.DateTCliente)
-                                </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.DateTCliente)
+                            </dd>
 
-                            </dl>
+                        </dl>
 
-                            @using (Html.BeginForm())
-                            {
-                                @Html.AntiForgeryToken()
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        <input type="submit" value="Eliminar" class="btn btn-danger botoncancelar" />
-                                    </div>
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <input type="submit" value="Deshabilitar" class="btn btn-danger botoncancelar" />
                                 </div>
-                                <div>
-                                    @Html.ActionLink("Regresar a la lista", "Index", routeValues: null, htmlAttributes: new { @Class = "link1" })
-                                </div>
-                              
-                            }
-                        </div>
+                            </div>
+                            <div>
+                                @Html.ActionLink("Regresar a la lista", "Index", routeValues: null, htmlAttributes: new { @Class = "link1" })
+                            </div>
+
+                        }
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 

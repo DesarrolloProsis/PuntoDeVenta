@@ -19,6 +19,12 @@ namespace PuntoDeVenta.Controllers
         private AppDbContext db = new AppDbContext();
         static public long? keyCliente = 0;
 
+        public ActionResult ListCuentas(int? id)
+        {
+            keyCliente = id;
+            return RedirectToAction("Index");
+        }
+
         [HttpGet]
         public async Task<ActionResult> GetDataCuentas()
         {
@@ -157,39 +163,48 @@ namespace PuntoDeVenta.Controllers
 
                             await db.SaveChangesAsync();
 
-                            ViewBag.Success = $"Se guardó correctamente la cuenta: {FoundCuenta.cue.NumCuenta}.";
-                            return View("Index");
+                            TempData["SCreate"] = $"Se guardó correctamente la cuenta: {FoundCuenta.cue.NumCuenta}.";
+                            return RedirectToAction("Index", "Clientes");
                         }
 
-                        ViewBag.Error = $"¡Ups! ocurrio un error inesperado.";
-                        return View("Index");
+                        TempData["ECreate"] = $"¡Ups! ocurrio un error inesperado.";
+                        return RedirectToAction("Index", "Clientes");
                     }
 
-                    ViewBag.Error = "La cuenta: " + model.NumCuenta + " es individual o puede que este dado de baja.";
-                    return View("Index");
+                    TempData["ECreate"] = "La cuenta: " + model.NumCuenta + " es individual o puede que este dado de baja.";
+                    return RedirectToAction("Index", "Clientes");
                 }
 
-                ViewBag.Error = "No se puede recargar saldo a la cuenta: " + model.NumCuenta + " porque el cliente al que pertenece está dado de baja.";
-                return View("Index");
+                TempData["ECreate"] = "No se puede recargar saldo a la cuenta: " + model.NumCuenta + " porque el cliente al que pertenece está dado de baja.";
+                return RedirectToAction("Index", "Clientes");
             }
             catch (Exception ex)
             {
-                ViewBag.Error = $"¡Ups! ocurrio un error inesperado, {ex.Message}";
-                return View("Index");
+                TempData["ECreate"] = $"¡Ups! ocurrio un error inesperado, {ex.Message}";
+                return RedirectToAction("Index", "Clientes");
             }
-        }
-
-        public ActionResult ListCuentas(int? id)
-        {
-            keyCliente = id;
-            return RedirectToAction("Index");
         }
 
         // GET: CuentasTelepeajes
         public ActionResult Index()
         {
-            ViewBag.Success = null;
-            ViewBag.Error = null;
+            if (TempData.ContainsKey("SCreate"))
+                ViewBag.Success = TempData["SCreate"].ToString();
+            else if (TempData.ContainsKey("SEdit"))
+                ViewBag.Success = TempData["SEdit"].ToString();
+            else if (TempData.ContainsKey("SDelete"))
+                ViewBag.Success = TempData["SDelete"].ToString();
+            else
+                ViewBag.Success = null;
+
+            if (TempData.ContainsKey("ECreate"))
+                ViewBag.Error = TempData["ECreate"].ToString();
+            else if (TempData.ContainsKey("EEdit"))
+                ViewBag.Error = TempData["EEdit"].ToString();
+            else if (TempData.ContainsKey("EDelete"))
+                ViewBag.Error = TempData["EDelete"].ToString();
+            else
+                ViewBag.Error = null;
 
             //var cuentasTelepeajes = db.CuentasTelepeajes.Include(c => c.Clientes);
             //return View(await cuentasTelepeajes.ToListAsync());
@@ -269,13 +284,13 @@ namespace PuntoDeVenta.Controllers
                                     DateTOperacion = DateTime.Now,
                                     Numero = cuentasTelepeaje.NumCuenta,
                                     Tipo = "CUENTA",
-                                    Monto = double.Parse(cuentasTelepeaje.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }),
                                     CorteId = lastCorteUser.Id,
                                 };
 
                                 if (cuentasTelepeaje.TypeCuenta == "Colectiva")
                                 {
                                     detalle.TipoPago = "NOR";
+                                    detalle.Monto = double.Parse(cuentasTelepeaje.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," });
 
                                     var SaldoSend = cuentasTelepeaje.SaldoCuenta;
                                     SaldoSend = SaldoSend.Replace(",", string.Empty);
@@ -286,28 +301,28 @@ namespace PuntoDeVenta.Controllers
 
                                 db.CuentasTelepeajes.Add(cuentasTelepeaje);
                                 await db.SaveChangesAsync();
-                                ViewBag.Success = "Se registró correctamente la cuenta: " + cuentasTelepeaje.NumCuenta + ".";
-                                return View("Index");
+                                TempData["SCreate"] = "Se registró correctamente la cuenta: " + cuentasTelepeaje.NumCuenta + ".";
+                                return RedirectToAction("Index", "Clientes");
                             }
                             else
                             {
-                                ViewBag.Error = "La cuenta: " + cuentasTelepeaje.NumCuenta + " ya existe!";
-                                return View("Index");
+                                TempData["ECreate"] = "La cuenta: " + cuentasTelepeaje.NumCuenta + " ya existe!";
+                                return RedirectToAction("Index", "Clientes");
                             }
                         }
                     }
 
-                    ViewBag.Error = $"¡Ups! ocurrio un error inesperado.";
-                    return View("Index");
+                    TempData["ECreate"] = $"¡Ups! ocurrio un error inesperado.";
+                    return RedirectToAction("Index", "Clientes");
                 }
 
-                ViewBag.Error = "El cliente no puede crear una cuenta porque esta dado de baja.";
-                return View("Index");
+                TempData["ECreate"] = "El cliente no puede crear una cuenta porque esta dado de baja.";
+                return RedirectToAction("Index", "Clientes");
             }
             catch (Exception ex)
             {
-                ViewBag.Error = $"¡Ups! ocurrio un error inesperado, {ex.Message}";
-                return View("Index");
+                TempData["ECreate"] = $"¡Ups! ocurrio un error inesperado, {ex.Message}";
+                return RedirectToAction("Index", "Clientes");
             }
         }
 
@@ -385,33 +400,140 @@ namespace PuntoDeVenta.Controllers
         public async Task<ActionResult> DeleteConfirmed(long id)
         {
             db.Configuration.ValidateOnSaveEnabled = false;
-            CuentasTelepeaje cuentasTelepeaje = await db.CuentasTelepeajes.FindAsync(id);
 
-            if (cuentasTelepeaje.StatusCuenta == true)
+            var cuentasTelepeaje = await (from cuentas in db.CuentasTelepeajes
+                                          join tags in db.Tags on cuentas.Id equals tags.CuentaId into tagslist
+                                          select new
+                                          {
+                                              cuentas,
+                                              Tags = tagslist.ToList()
+                                          }).SingleOrDefaultAsync(x => x.cuentas.Id == id);
+
+            if (cuentasTelepeaje.cuentas.StatusCuenta == true)
             {
-                cuentasTelepeaje.StatusCuenta = false;
-                db.CuentasTelepeajes.Attach(cuentasTelepeaje);
-                db.Entry(cuentasTelepeaje).State = EntityState.Modified;
-                List<Tags> tags = await db.Tags.Where(x => x.CuentaId == cuentasTelepeaje.Id).ToListAsync();
-
-                tags.ForEach(a =>
+                switch (cuentasTelepeaje.cuentas.TypeCuenta)
                 {
-                    a.StatusTag = false;
-                });
+                    case "Colectiva":
+                        cuentasTelepeaje.cuentas.StatusCuenta = false;
+                        db.CuentasTelepeajes.Attach(cuentasTelepeaje.cuentas);
+                        db.Entry(cuentasTelepeaje.cuentas).State = EntityState.Modified;
+
+                        cuentasTelepeaje.Tags.ForEach(x =>
+                        {
+                            x.StatusTag = false;
+                            db.Tags.Attach(x);
+                            db.Entry(x).State = EntityState.Modified;
+                        });
+                        break;
+
+                    case "Individual":
+                        cuentasTelepeaje.cuentas.StatusCuenta = false;
+                        db.CuentasTelepeajes.Attach(cuentasTelepeaje.cuentas);
+                        db.Entry(cuentasTelepeaje.cuentas).State = EntityState.Modified;
+
+                        cuentasTelepeaje.Tags.ForEach(x =>
+                        {
+                            x.StatusTag = false;
+                            db.Tags.Attach(x);
+                            db.Entry(x).State = EntityState.Modified;
+                        });
+                        break;
+                    default:
+                        break;
+                }
 
                 await db.SaveChangesAsync();
-
-                ViewBag.Success = $"Se dio de baja correctamente la cuenta: {cuentasTelepeaje.NumCuenta}.";
-                return View("Index");
+                TempData["SDelete"] = $"Se dio de baja correctamente la cuenta: {cuentasTelepeaje.cuentas.NumCuenta}.";
+                return RedirectToAction("Index", "Clientes");
             }
 
-            ViewBag.Error = "La cuenta ya esta dada de baja.";
-            return View("Index");
+            TempData["EDelete"] = "La cuenta ya esta dada de baja.";
 
-            //CuentasTelepeaje cuentasTelepeaje = await db.CuentasTelepeajes.FindAsync(id);
-            //db.CuentasTelepeajes.Remove(cuentasTelepeaje);
-            //await db.SaveChangesAsync();
-            //return RedirectToAction("Index");
+            return RedirectToAction("Index", "Clientes");
+
+        }
+
+        // GET: CuentasTelepeajes/Habilitar/5
+        public async Task<ActionResult> Habilitar(long? id)
+        {
+            try
+            {
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+
+                var cuentasTelepeaje = await (from cuentas in db.CuentasTelepeajes
+                                              join tags in db.Tags on cuentas.Id equals tags.CuentaId into tagslist
+                                              where cuentas.Id == id
+                                              select new
+                                              {
+                                                  cuentas,
+                                                  Tags = tagslist.ToList(),
+                                              }).FirstOrDefaultAsync();
+
+                if (cuentasTelepeaje == null)
+                {
+                    return HttpNotFound();
+                }
+
+                if (cuentasTelepeaje.cuentas.StatusCuenta == false)
+                {
+
+                    switch (cuentasTelepeaje.cuentas.TypeCuenta)
+                    {
+                        case "Colectiva":
+                            if ((double.Parse(cuentasTelepeaje.cuentas.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }) / 100) >= 100)
+                            {
+                                cuentasTelepeaje.cuentas.StatusCuenta = true;
+                                db.CuentasTelepeajes.Attach(cuentasTelepeaje.cuentas);
+                                db.Entry(cuentasTelepeaje.cuentas).State = EntityState.Modified;
+
+                                cuentasTelepeaje.Tags.ForEach(x =>
+                                {
+                                    x.StatusTag = true;
+                                    db.Tags.Attach(x);
+                                    db.Entry(x).State = EntityState.Modified;
+                                });
+                            }
+                            break;
+
+                        case "Individual":
+
+                            cuentasTelepeaje.cuentas.StatusCuenta = true;
+                            db.CuentasTelepeajes.Attach(cuentasTelepeaje.cuentas);
+                            db.Entry(cuentasTelepeaje.cuentas).State = EntityState.Modified;
+
+                            cuentasTelepeaje.Tags.ForEach(x =>
+                            {
+                                if ((double.Parse(x.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }) / 100) >= 20)
+                                {
+                                    x.StatusTag = true;
+                                    db.Tags.Attach(x);
+                                    db.Entry(x).State = EntityState.Modified;
+                                }
+                            });
+                            break;
+                        default:
+                            break;
+                    }
+
+                    db.CuentasTelepeajes.Attach(cuentasTelepeaje.cuentas);
+                    db.Entry(cuentasTelepeaje.cuentas).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+
+                    TempData["SDelete"] = $"Se dio de alta correctamente la cuenta: {cuentasTelepeaje.cuentas.NumCuenta}, junto con sus tags validos por saldo.";
+                    return RedirectToAction("Index", "Clientes");
+                }
+
+                TempData["EDelete"] = $"La cuenta: {cuentasTelepeaje.cuentas.NumCuenta} ya esta dada de alta.";
+                return RedirectToAction("Index", "Clientes");
+            }
+            catch (Exception ex)
+            {
+                TempData["EDelete"] = $"¡Ups! ha ocurrido un error inesperado, {ex.Message}";
+                return RedirectToAction("Index", "Clientes");
+            }
         }
 
         protected override void Dispose(bool disposing)

@@ -31,7 +31,7 @@
 @section scripts
 {
     @* Scripts from the report view. Note that in order to be fired, they need to be at the end of the body
-        "RestServiceTelerik.Reports.ReportCajero, RestServiceTelerik, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"*@
+        "RestServiceTelerik.Reports.ReportCajero, RestServiceTelerik, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" 10.1.10.109*@
     <script src="@Url.Content("~/ReportViewer/js/telerikReportViewer.kendo-12.1.18.620.min.js")"></script>
     <script src="@Url.Content("~/ReportViewer/js/telerikReportViewer-12.1.18.620.min.js")"></script>
     @*End of the scripts*@
@@ -50,14 +50,14 @@
 
 <div class="container">
     @(Html.TelerikReporting().ReportViewer()
-            .Id("reportViewer1")
-            .ServiceUrl(Url.Content("http://10.1.10.109:56342/api/reports/"))
-            .ReportSource(typeReportSource)
-            .ViewMode(ViewMode.Interactive)
-            .ScaleMode(ScaleMode.Specific)
-            .Scale(1.0)
-            .PersistSession(false)
-            .PrintMode(PrintMode.AutoSelect)
-            .EnableAccessibility(false)
+        .Id("reportViewer1")
+        .ServiceUrl(Url.Content("http://127.0.0.1:56342/api/reports/"))
+        .ReportSource(typeReportSource)
+        .ViewMode(ViewMode.Interactive)
+        .ScaleMode(ScaleMode.Specific)
+        .Scale(1.0)
+        .PersistSession(false)
+        .PrintMode(PrintMode.AutoSelect)
+        .EnableAccessibility(false)
     )
 </div>
