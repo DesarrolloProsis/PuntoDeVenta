@@ -127,6 +127,30 @@ namespace PuntoDeVenta.Controllers
                                         .OrderByDescending(x => x.DateTApertura).ToListAsync();
                 model.NumCorte = cortelast.FirstOrDefault().NumCorte;
                 model.Id = cortelast.FirstOrDefault().Id;
+
+                if (TempData.ContainsKey("SCreate"))
+                    ViewBag.Success = TempData["SCreate"].ToString();
+                else if (TempData.ContainsKey("SEdit"))
+                    ViewBag.Success = TempData["SEdit"].ToString();
+                else if (TempData.ContainsKey("SDelete"))
+                    ViewBag.Success = TempData["SDelete"].ToString();
+                else
+                    ViewBag.Success = null;
+
+                if (TempData.ContainsKey("ECreate"))
+                    ViewBag.Error = TempData["ECreate"].ToString();
+                else if (TempData.ContainsKey("EEdit"))
+                    ViewBag.Error = TempData["EEdit"].ToString();
+                else if (TempData.ContainsKey("EDelete"))
+                    ViewBag.Error = TempData["EDelete"].ToString();
+                else
+                    ViewBag.Error = null;
+
+
+                /*** Models para recargas ***/
+
+                ViewBag.ModelCuenta = new CuentasTelepeaje();
+                ViewBag.ModelTag = new Tags();
             }
             catch (Exception ex)
             {

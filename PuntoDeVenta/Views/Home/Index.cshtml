@@ -1,78 +1,106 @@
 ﻿@model PuntoDeVenta.Models.CortesCajero
+
 @{
     ViewBag.Title = "Inicio";
-}
-<h1 align="center" ><a class="shine">BIENVENIDO</a></h1>
 
-<div class="row">
-    <div class="container-fluid">
-        <div class="col-md-12" style="margin-top: 10px !important;">
-            <div class="row">
-                <div class="col-md-4" style="margin-top: 2% !important;">
-                    <!--onclick="location.href='/Clientes'"-->
-                    <button class="btn boton-inicio" onclick="location.href='/Clientes/Index'">
-                        <div class="row">
-                            <div class="col-md-12"><img src="~/Content/css-yisus/img/address-card-solid.svg" class="tamano" /></div>
-                        </div>
-                        Crear nuevo cliente
-                    </button>
+    var modelCuenta = (PuntoDeVenta.Models.CuentasTelepeaje)ViewBag.ModelCuenta;
+    var modelTag = (PuntoDeVenta.Models.Tags)ViewBag.ModelTag;
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="margin-section shadow">
+                <div class="msj-binevenida">
+                    <h1 class="rojo">BIENVENIDO</h1>
+                    <h6>Nombre de Usuario</h6>
+                    <h6># Cajero</h6>
+                    <h6># Corte</h6>
+                    <h6>Fecha de inicio</h6>
                 </div>
-                <div class="col-md-4" style="margin-top: 2% !important;">
-                    <button class="btn boton-inicio" onclick="location.href='/CuentasTelepeajes/Index'">
-                        <div class="row">
-                            <div class="col-md-12"><img src="~/Content/css-yisus/img/money-check-alt-solid.svg" class="tamano" /></div>
-                        </div>
-                        Recargar saldo cuenta
-                    </button>
+            </div>
+        </div>
+        <div class="col-xl-3">
+            <button type="button" class="btn  btn-lg btn-block nav-button-new2 shadow" data-toggle="modal" data-target="#ModalTagReca">
+                <div class="row">
+                    <div class="col-md-12"><img src="~/Content/css-yisus/img/tagrecarga.svg" class="tamano" /></div>
                 </div>
-                <div class="col-md-4" style="margin-top: 2% !important;">
-                    <button class="btn boton-inicio" onclick="location.href='/Tags/Index'">
-                        <div class="row">
-                            <div class="col-md-12"><img src="~/Content/css-yisus/img/credit-card-solid.svg" class="tamano" /></div>
-                        </div>
-                        Recargar saldo tag
-                    </button>
+                Recargar Tag
+            </button>
+        </div>
+        <div class="col-xl-3">
+            <button type="button" class="btn btn-lg btn-block nav-button-new2 shadow" data-toggle="modal" data-target="#ModalCuentaReca">
+                <div class="row">
+                    <div class="col-md-12"><img src="~/Content/css-yisus/img/boxes-solid.svg" class="tamano" /></div>
                 </div>
-                <div class="col-md-4" style="margin-top: 2% !important;">
-                    <button class="btn boton-inicio" onclick="location.href='/Historico/Index'">
-                        <div class="row">
-                            <div class="col-md-12"><img src="~/Content/css-yisus/img/clipboard-list-solid.svg" class="tamano" /></div>
-                        </div>
-                        Historial de cruces
-                    </button>
-                </div>
-                <div class="col-md-4" style="margin-top: 2% !important;">
-                    <button class="btn boton-inicio" onclick="location.href='/Account/Register'">
-                        <div class="row">
-                            <div class="col-md-12"><img src="~/Content/css-yisus/img/address-book-solid.svg" class="tamano" /></div>
-                        </div>
-                        Registrar nuevo cajero
-                    </button>
-                </div>
-                <div class="col-md-4" style="margin-top: 2% !important;">
-                    <button class="btn boton-inicio" onclick="location.href='/Home/GenerarReportes'">
-                        <div class="row">
-                            <div class="col-md-12"><img src="~/Content/css-yisus/img/list-ul-solid.svg" class="tamano" /></div>
-                        </div>
-                        Generar Reportes
-                    </button>
-                </div>
+                Recargar Cuenta
+            </button>
+        </div>
+    </div>
+
+    <hr class="hr-new" />
+
+    @if (ViewData["Success"] != null)
+    {
+
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @ViewData["Success"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    @if (ViewData["Error"] != null)
+    {
+
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @ViewData["Error"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    <div class="col-md-12" style="margin-top: 10px !important;">
+        <div class="row">
+            <div class="col-md-4" style="margin-top: 2% !important;">
+                <button class="btn boton-inicio" onclick="location.href='@Url.Action("Index", "Clientes")'">
+                    <div class="row">
+                        <div class="col-md-12"><img src="~/Content/css-yisus/img/cliente.svg" class="tamano" /></div>
+                    </div>
+                    Busqueda de clientes
+                </button>
+            </div>
+            <div class="col-md-4" style="margin-top: 2% !important;">
+                <button class="btn boton-inicio" onclick="location.href='@Url.Action("Generar", "Historico")'">
+                    <div class="row">
+                        <div class="col-md-12"><img src="~/Content/css-yisus/img/cruces.svg" class="tamano" /></div>
+                    </div>
+                    Historial de cruces clientes
+                </button>
+            </div>
+            <div class="col-md-4" style="margin-top: 2% !important;">
+                <button class="btn boton-inicio" onclick="location.href='@Url.Action("GenerarReportes", "Home")'">
+                    <div class="row">
+                        <div class="col-md-12"><img src="~/Content/css-yisus/img/pluma.svg" class="tamano2" /></div>
+                    </div>
+                    Reporte de cajero
+                </button>
+            </div>
+            <div class="col-md-4" style="margin-top: 2% !important;">
+                <button class="btn boton-inicio">
+                    <div class="row">
+                        <div class="col-md-12"><img src="~/Content/css-yisus/img/list-ul-solid.svg" class="tamano" /></div>
+                    </div>
+                    Historial de movimientos cajero
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-
-<!--<div class="container" style="margin-top: 40px;">
-    <div class="row">
-        <div class="col-12 text-center">
-            <button type="button" class="btn btn-danger boton-cerrar btn-lg btn-block" data-toggle="modal" data-target="#exampleModalCenter">
-                Cerrar sesión
-            </button>
-        </div>
-    </div>
-</div>-->
-<span class="hacia-arriba icon-ctrl" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-sign-out-alt"></i> Cerrar</span>
+<span class="hacia-arriba icon-ctrl" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</span>
 
 @using (Html.BeginForm("LogOff", "Account", FormMethod.Post))
 {
@@ -108,4 +136,209 @@
             </div>
         </div>
     </div>
+}
+
+<!-- Modal Recargar Cuenta -->
+<div class="modal fade" id="ModalCuentaReca" tabindex="-1" role="dialog" aria-labelledby="ModalCuentaRecaTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalCuentaRecaTitle">Recargar cuenta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("RecargarSaldo", "CuentasTelepeajes", routeValues: new { ReturnController = "Home" }, method: FormMethod.Post, htmlAttributes: new { @id = "FormRecargarCuenta" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        <img class="img-modal" src="~/Content/css-yisus/img/slack-hash-brands.svg" /> @Html.LabelFor(model => modelCuenta.NumCuenta, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => modelCuenta.NumCuenta, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                        @Html.ValidationMessageFor(model => modelCuenta.NumCuenta, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" /> @Html.LabelFor(model => modelCuenta.SaldoARecargar, htmlAttributes: new { @class = "control-label" })
+                        @Html.TextBoxFor(model => modelCuenta.SaldoARecargar, new { @class = "form-control formulario1" })
+                        @Html.ValidationMessageFor(model => modelCuenta.SaldoARecargar, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" /> @Html.LabelFor(model => modelCuenta.ConfSaldoARecargar, htmlAttributes: new { @class = "control-label" })
+                        @Html.TextBoxFor(model => modelCuenta.ConfSaldoARecargar, new { @class = "form-control formulario1" })
+                        @Html.ValidationMessageFor(model => modelCuenta.ConfSaldoARecargar, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success botonaceptar" id="RecargarCuenta">Recargar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal Recargar Cuenta Confirmar -->
+<div class="modal fade" id="ModalCuentaConf" tabindex="-1" role="dialog" aria-labelledby="ModalCuentaConfTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalCuentaConfTitle">¡Advertencia!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <img class="img-modal" src="~/Content/css-yisus/img/slack-hash-brands.svg" /> Número de cuenta: <label id="numcuentaVal"></label>
+                </div>
+                <div class="form-group">
+                    <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" /> Saldo a recargar: <label id="saldoarecargarCuentaVal"></label>
+                </div>
+                <div class="form-group">
+                    ¿Seguro de recargar?
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success botonaceptar" id="submitFormCuentaReca">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Recargar Tag -->
+<div class="modal fade" id="ModalTagReca" tabindex="-1" role="dialog" aria-labelledby="ModalTagRecaTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalTagRecaTitle">Recargar tag</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("RecargarSaldo", "Tags", routeValues: new { ReturnController = "Home" }, method: FormMethod.Post, htmlAttributes: new { @id = "FormRecargarTag", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        <img class="img-modal" src="~/Content/css-yisus/img/slack-hash-brands.svg" /> @Html.LabelFor(m => modelTag.NumTag, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(m => modelTag.NumTag, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                        @Html.ValidationMessageFor(m => modelTag.NumTag, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" />@Html.LabelFor(m => modelTag.SaldoARecargar, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(m => modelTag.SaldoARecargar, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                        @Html.ValidationMessageFor(m => modelTag.SaldoARecargar, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" />@Html.LabelFor(m => modelTag.ConfSaldoARecargar, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(m => modelTag.ConfSaldoARecargar, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                        @Html.ValidationMessageFor(m => modelTag.ConfSaldoARecargar, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-success botonaceptar" id="RecargarTag">Recargar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal Recargar Tag Confirmar -->
+<div class="modal fade" id="ModalTagConf" tabindex="-1" role="dialog" aria-labelledby="ModalTagConfTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalTagConfTitle">¡Advertencia!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <img class="img-modal" src="~/Content/css-yisus/img/slack-hash-brands.svg" /> Número de tag: <label id="numtagVal"></label>
+                </div>
+                <div class="form-group">
+                    <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" /> Saldo a recargar: <label id="saldoarecargarTagVal"></label>
+                </div>
+                <div class="form-group">
+                    ¿Seguro de recargar?
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn botonstyle3" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn botonstyle2" id="submitFormTagReca">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            $('#RecargarCuenta').on('click', function (e) {
+                e.preventDefault();
+
+                var form = $("#FormRecargarCuenta").validate();
+
+                if (form.valid() && $("#modelCuenta_NumCuenta").val() != "" && $("#modelCuenta_SaldoARecargar").val() != "" && $("#modelCuenta_ConfSaldoARecargar").val() != "") {
+                    $('#ModalCuentaReca').modal('hide');
+
+                    $("#numcuentaVal").text($("#modelCuenta_NumCuenta").val());
+                    $("#saldoarecargarCuentaVal").text($("#modelCuenta_SaldoARecargar").val());
+
+                    $('#ModalCuentaConf').modal('show');
+                }
+            });
+
+            $('#submitFormCuentaReca').on('click', function (e) {
+                e.preventDefault();
+
+                $("#FormRecargarCuenta").submit();
+
+                //console.log($("#FormRecargarCuenta").serialize());
+                //console.log($("#FormRecargarCuenta").serializeArray());
+            });
+
+            $('#RecargarTag').on('click', function (e) {
+                e.preventDefault();
+
+                var form = $("#FormRecargarTag").validate();
+
+                if (form.valid() && $("#modelTag_NumTag").val() != "" && $("#modelTag_SaldoARecargar").val() != "" && $("#modelTag_ConfSaldoARecargar").val() != "") {
+                    $('#ModalTagReca').modal('hide');
+
+                    $("#numtagVal").text($("#modelTag_NumTag").val());
+                    $("#saldoarecargarTagVal").text($("#modelTag_SaldoARecargar").val());
+
+                    $('#ModalTagConf').modal('show');
+                }
+            });
+
+            $('#submitFormTagReca').on('click', function (e) {
+                e.preventDefault();
+
+                $("#FormRecargarTag").submit();
+
+                //console.log($("#FormRecargarTag").serialize());
+                //console.log($("#FormRecargarTag").serializeArray());
+            });
+
+
+            $(function () {
+                $('#modelCuenta_SaldoARecargar').mask("#,##0.00", { reverse: true });
+                $('#modelCuenta_ConfSaldoARecargar').mask("#,##0.00", { reverse: true });
+                $('#modelCuenta_SaldoTag').mask("#,##0.00", { reverse: true });
+                $("#modelCuenta_CobroTag").mask("#,##0.00", { reverse: true });
+                $("#modelCuenta_OldSaldo").mask("#,##0.00", { reverse: true });
+
+                $('#modelTag_SaldoARecargar').mask("#,##0.00", { reverse: true });
+                $('#modelTag_ConfSaldoARecargar').mask("#,##0.00", { reverse: true });
+            });
+        });
+    </script>
 }

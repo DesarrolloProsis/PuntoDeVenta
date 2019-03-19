@@ -3,6 +3,9 @@
 
 @{
     ViewBag.Title = "Clientes";
+
+    var modelCuenta = (PuntoDeVenta.Models.CuentasTelepeaje)ViewBag.ModelCuenta;
+    var modelTag = (PuntoDeVenta.Models.Tags)ViewBag.ModelTag;
 }
 
 <div class="col-md-12 text-align-center">
@@ -12,10 +15,11 @@
     </p>
 </div>
 
+<p>
+    @Html.ActionLink("Crear nuevo cliente", "Create", routeValues: null, htmlAttributes: new { @class = "btn botonstyle2" })
+</p>
+
 <hr />
-
-<div id="app"></div>
-
 
 @if (ViewData["Success"] != null)
 {
@@ -38,7 +42,7 @@
 }
 
 <div class="table-responsive">
-    <table id="example" class="table table-hover" style="width:100%">
+    <table id="example" class="table table-bordered table-hover" style="width:100%">
         <thead>
             <tr>
                 <th scope="col">Más info.</th>
@@ -87,13 +91,14 @@
             </div>
             <div class="modal-body">
                 <div class="table-responsive">
-                    <table id="table_tags" class="table table-hover" style="width:100%">
+                    <table id="table_tags" class="table table-bordered table-hover" style="width:100%">
                         <thead>
                             <tr>
                                 <th scope="col">Número de tag</th>
                                 <th scope="col">Saldo de tag</th>
                                 <th scope="col">Estatus de tag</th>
                                 <th scope="col">Fecha registro tag</th>
+                                <th scope="col"></th>
                                 <th scope="col"></th>
                                 <th scope="col"></th>
                                 <th scope="col"></th>
@@ -266,6 +271,142 @@
     </div>
 </div>
 
+<!-- Modal Recargar Cuenta -->
+<div class="modal fade" id="ModalCuentaReca" tabindex="-1" role="dialog" aria-labelledby="ModalCuentaRecaTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalCuentaRecaTitle">Recargar cuenta</h5>
+                <button type="button" class="close" id="closemodalcuenta" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("RecargarSaldo", "CuentasTelepeajes", routeValues: new { ReturnController = "Clientes" }, method: FormMethod.Post, htmlAttributes: new { @id = "FormRecargarCuenta" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        <img class="img-modal" src="~/Content/css-yisus/img/slack-hash-brands.svg" /> @Html.LabelFor(model => modelCuenta.NumCuenta, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => modelCuenta.NumCuenta, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                        @Html.ValidationMessageFor(model => modelCuenta.NumCuenta, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" /> @Html.LabelFor(model => modelCuenta.SaldoARecargar, htmlAttributes: new { @class = "control-label" })
+                        @Html.TextBoxFor(model => modelCuenta.SaldoARecargar, new { @class = "form-control formulario1" })
+                        @Html.ValidationMessageFor(model => modelCuenta.SaldoARecargar, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" /> @Html.LabelFor(model => modelCuenta.ConfSaldoARecargar, htmlAttributes: new { @class = "control-label" })
+                        @Html.TextBoxFor(model => modelCuenta.ConfSaldoARecargar, new { @class = "form-control formulario1" })
+                        @Html.ValidationMessageFor(model => modelCuenta.ConfSaldoARecargar, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success botonaceptar" id="RecargarCuenta">Recargar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal Recargar Cuenta Confirmar -->
+<div class="modal fade" id="ModalCuentaConf" tabindex="-1" role="dialog" aria-labelledby="ModalCuentaConfTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalCuentaConfTitle">¡Advertencia!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <img class="img-modal" src="~/Content/css-yisus/img/slack-hash-brands.svg" /> Número de cuenta: <label id="numcuentaVal"></label>
+                </div>
+                <div class="form-group">
+                    <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" /> Saldo a recargar: <label id="saldoarecargarCuentaVal"></label>
+                </div>
+                <div class="form-group">
+                    ¿Seguro de recargar?
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success botonaceptar" id="submitFormCuentaReca">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Recargar Tag -->
+<div class="modal fade" id="ModalTagReca" tabindex="-1" role="dialog" aria-labelledby="ModalTagRecaTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalTagRecaTitle">Recargar tag</h5>
+                <button type="button" class="close" id="closemodaltag" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("RecargarSaldo", "Tags", routeValues: new { ReturnController = "Clientes" }, method: FormMethod.Post, htmlAttributes: new { @id = "FormRecargarTag", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        <img class="img-modal" src="~/Content/css-yisus/img/slack-hash-brands.svg" /> @Html.LabelFor(m => modelTag.NumTag, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(m => modelTag.NumTag, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                        @Html.ValidationMessageFor(m => modelTag.NumTag, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" />@Html.LabelFor(m => modelTag.SaldoARecargar, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(m => modelTag.SaldoARecargar, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                        @Html.ValidationMessageFor(m => modelTag.SaldoARecargar, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" />@Html.LabelFor(m => modelTag.ConfSaldoARecargar, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(m => modelTag.ConfSaldoARecargar, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                        @Html.ValidationMessageFor(m => modelTag.ConfSaldoARecargar, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-success botonaceptar" id="RecargarTag">Recargar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal Recargar Tag Confirmar -->
+<div class="modal fade" id="ModalTagConf" tabindex="-1" role="dialog" aria-labelledby="ModalTagConfTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalTagConfTitle">¡Advertencia!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <img class="img-modal" src="~/Content/css-yisus/img/slack-hash-brands.svg" /> Número de tag: <label id="numtagVal"></label>
+                </div>
+                <div class="form-group">
+                    <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" /> Saldo a recargar: <label id="saldoarecargarTagVal"></label>
+                </div>
+                <div class="form-group">
+                    ¿Seguro de recargar?
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn botonstyle3" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn botonstyle2" id="submitFormTagReca">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Styles
 {
     <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
@@ -371,7 +512,7 @@
                         "className": "vcuentasmodalclie",
                         "orderable": false,
                         "data": null,
-                        "defaultContent": '<button type="button" class="btn btn-primary">Cuentas y tags</button>'
+                        "defaultContent": '<button type="button" class="btn btn-primary">Ver cuentas y tags</button>'
                     }
                 ],
                 order: [[1, 'desc']]
@@ -533,6 +674,12 @@
                     { "data": "StatusCuenta" },
                     { "data": "DateTCuenta" },
                     {
+                        "className": "recargacue",
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '<button type="button" class="btn btn-primary">Recargar saldo</button>'
+                    },
+                    {
                         "className": "ntagcue",
                         "orderable": false,
                         "data": null,
@@ -639,6 +786,44 @@
                 $('#ModalHabilitarCuenta').modal('show');
             });
 
+            /**** Recargar saldo cuenta ****/
+
+            $('#example_table tbody').on('click', 'td.recargacue', function (e) {
+                e.preventDefault();
+                var data = example_table.row($(this).parents('tr')).data();
+
+                $("#modelCuenta_NumCuenta").val(data.NumCuenta);
+
+                $("#modalcuentastags").modal('hide');
+                $("#ModalCuentaReca").modal('show');
+            });
+
+            $('#RecargarCuenta').on('click', function (e) {
+                e.preventDefault();
+
+                var form = $("#FormRecargarCuenta").validate();
+
+                if (form.valid() && $("#modelCuenta_NumCuenta").val() != "" && $("#modelCuenta_SaldoARecargar").val() != "" && $("#modelCuenta_ConfSaldoARecargar").val() != "") {
+                    $('#ModalCuentaReca').modal('hide');
+
+                    $("#numcuentaVal").text($("#modelCuenta_NumCuenta").val());
+                    $("#saldoarecargarCuentaVal").text($("#modelCuenta_SaldoARecargar").val());
+
+                    $('#ModalCuentaConf').modal('show');
+                }
+            });
+
+            $('#submitFormCuentaReca').on('click', function (e) {
+                e.preventDefault();
+
+                $("#FormRecargarCuenta").submit();
+
+                //console.log($("#FormRecargarCuenta").serialize());
+                //console.log($("#FormRecargarCuenta").serializeArray());
+            });
+
+            /**** Fin Recargar saldo cuenta ****/
+
             $("#submitHabilCuenta").on('click', function (e) {
                 e.preventDefault();
                 var url = '@Url.Action("Habilitar", "CuentasTelepeajes", new { id = "__id__" })';
@@ -695,6 +880,13 @@
                 $("#FormAddTags").submit();
             });
 
+            $('#closemodalcuenta').on('click', function (e) {
+                e.preventDefault();
+
+                $("#ModalCuentaReca").modal('hide');
+                $("#modalcuentastags").modal('show');
+            });
+
             $(function () {
                 $('#SaldoARecargar').mask("#,##0.00", { reverse: true });
                 $('#ConfSaldoARecargar').mask("#,##0.00", { reverse: true });
@@ -702,6 +894,7 @@
                 $("#CobroTag").mask("#,##0.00", { reverse: true });
                 $("#OldSaldo").mask("#,##0.00", { reverse: true });
             });
+
             /******************* TAGS ***************************/
 
             var table_tags = $('#table_tags').DataTable({
@@ -725,6 +918,12 @@
                     { "data": "SaldoTag" },
                     { "data": "StatusTag" },
                     { "data": "DateTTag" },
+                    {
+                        "className": "recargartag",
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '<button type="button" class="btn btn-primary">Recargar saldo</button>'
+                    },
                     {
                         "className": "thabilitartag",
                         "orderable": false,
@@ -788,6 +987,65 @@
                 $("#modallisttags").modal('hide');
                 $("#modalcuentastags").modal('show');
             });
+
+            /**** Recargar saldo tags *****/
+
+            $('#table_tags tbody').on('click', 'td.recargartag', function (e) {
+                e.preventDefault();
+
+                var data = table_tags.row($(this).parents('tr')).data();
+
+                $("#modelTag_NumTag").val(data.NumTag);
+
+                $("#modallisttags").modal('hide');
+                $("#ModalTagReca").modal('show');
+            });
+
+            $('#RecargarTag').on('click', function (e) {
+                e.preventDefault();
+
+                var form = $("#FormRecargarTag").validate();
+
+                if (form.valid() && $("#modelTag_NumTag").val() != "" && $("#modelTag_SaldoARecargar").val() != "" && $("#modelTag_ConfSaldoARecargar").val() != "") {
+                    $('#ModalTagReca').modal('hide');
+
+                    $("#numtagVal").text($("#modelTag_NumTag").val());
+                    $("#saldoarecargarTagVal").text($("#modelTag_SaldoARecargar").val());
+
+                    $('#ModalTagConf').modal('show');
+                }
+            });
+
+            $('#submitFormTagReca').on('click', function (e) {
+                e.preventDefault();
+
+                $("#FormRecargarTag").submit();
+
+                //console.log($("#FormRecargarTag").serialize());
+                //console.log($("#FormRecargarTag").serializeArray());
+            });
+
+            $('#closemodaltag').on('click', function (e) {
+                e.preventDefault();
+
+                $("#ModalTagReca").modal('hide');
+                $("#modallisttags").modal('show');
+            });
+
+            /**** Fin Recargar saldo tags ****/
+
+            /******************** Otras cosas ************************/
+
+            $(function () {
+                $('#modelCuenta_SaldoARecargar').mask("#,##0.00", { reverse: true });
+                $('#modelCuenta_ConfSaldoARecargar').mask("#,##0.00", { reverse: true });
+                $('#modelCuenta_SaldoTag').mask("#,##0.00", { reverse: true });
+                $("#modelCuenta_CobroTag").mask("#,##0.00", { reverse: true });
+                $("#modelCuenta_OldSaldo").mask("#,##0.00", { reverse: true });
+
+                $('#modelTag_SaldoARecargar').mask("#,##0.00", { reverse: true });
+                $('#modelTag_ConfSaldoARecargar').mask("#,##0.00", { reverse: true });
+            });
         });
     </script>
 
@@ -804,15 +1062,15 @@
         // you can invoke methods in JavaScript too
         //example2.greet() // => 'Hello Vue.js!'
 
-      var res = Vue.compile('<div><span>{{ msg }}</span></div>')
+      //var res = Vue.compile('<div><span>{{ msg }}</span></div>')
 
-        new Vue({
-            data: {
-                msg: 'hello'
-            },
-            render: res.render,
-            staticRenderFns: res.staticRenderFns
-        });
+      //  new Vue({
+      //      data: {
+      //          msg: 'hello'
+      //      },
+      //      render: res.render,
+      //      staticRenderFns: res.staticRenderFns
+      //  });
 
     </script>
 
@@ -832,25 +1090,6 @@
     //        alert(ex.responseText);
     //    }
     //});
-
-      //$.each(row.data().Tags, function () {
-                    //    $.each($(this), function (k, v) {
-                    //        $("#contenido")
-                    //            .append(
-                    //                "<tr>" +
-                    //                "<td>" + v.NumTag + "</td>" +
-                    //                "<td>" + v.SaldoTag + "</td>" +
-                    //                "<td>" + v.StatusTag + "</td>" +
-                    //                "<td>" + v.DateTTag + "</td>" +
-                    //                '<td><button type="button" class="btn btn-primary btn-sm" v-on:click="counter += 1">Recargar saldo</button></td>' +
-                    //                '<td><button type="button" class="btn btn-primary btn-sm">Habilitar tag</button></td>' +
-                    //                '<td><button type="button" class="btn btn-primary btn-sm">Deshabilitar tag</button></td>' +
-                    //                '<td><button type="button" class="btn btn-primary btn-sm">Eliminar tag</button></td>' +
-                    //            "</tr>"
-                    //            ).html();
-                    //    });
-                    //});
-
                     //$.ajax({
                 //    type: "POST",
                 //    url: "/Clientes/CuentasTags",
@@ -863,4 +1102,7 @@
                 //    // needs to implement if it fails
                 //    alert(jqXHR.responseText)
                 //});
+
+    <div id="app"></div>
+
 *@

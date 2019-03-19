@@ -101,7 +101,7 @@ namespace PuntoDeVenta.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> RecargarSaldo(Tags model)
+        public async Task<ActionResult> RecargarSaldo(Tags modelTag, string ReturnController)
         {
             try
             {
@@ -111,12 +111,13 @@ namespace PuntoDeVenta.Controllers
                                         tag => tag.CuentaId,
                                         cue => cue.Id,
                                         (tag, cue) => new { tag, cue })
-                                        .Where(x => x.tag.NumTag == model.NumTag)
+                                        .Where(x => x.tag.NumTag == modelTag.NumTag)
                                         .FirstOrDefaultAsync();
 
                 if (FoundTag == null)
                 {
-                    return HttpNotFound();
+                    TempData["ECreate"] = $"El tag no existe.";
+                    return RedirectToAction("Index", ReturnController);
                 }
 
                 var UserId = User.Identity.GetUserId();
@@ -135,7 +136,7 @@ namespace PuntoDeVenta.Controllers
                     {
                         var Saldo = (double.Parse(FoundTag.tag.SaldoTag) / 100).ToString("F2");
 
-                        var SaldoNuevo = (Convert.ToDouble(Saldo) + double.Parse(model.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }));
+                        var SaldoNuevo = (Convert.ToDouble(Saldo) + double.Parse(modelTag.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }));
 
                         var SaldoSend = SaldoNuevo.ToString("F2");
 
@@ -154,7 +155,7 @@ namespace PuntoDeVenta.Controllers
                                 Numero = FoundTag.tag.NumTag,
                                 Tipo = "TAG",
                                 TipoPago = "NOR",
-                                Monto = double.Parse(model.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }),
+                                Monto = double.Parse(modelTag.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }),
                                 CorteId = lastCorteUser.Id
                             };
 
@@ -164,25 +165,25 @@ namespace PuntoDeVenta.Controllers
                             db.Entry(FoundTag.tag).State = EntityState.Modified;
                             await db.SaveChangesAsync();
 
-                            ViewBag.Success = $"Se recargó correctamente el tag: {FoundTag.tag.NumTag}.";
-                            return RedirectToAction("Index");
+                            TempData["SCreate"] = $"Se recargó ${modelTag.SaldoARecargar} al tag: {FoundTag.tag.NumTag} con éxito.";
+                            return RedirectToAction("Index", ReturnController);
                         }
 
-                        ViewBag.Error = "¡Ups! ocurrio un error inesperado.";
-                        return View("Index");
+                        TempData["ECreate"] = "¡Ups! ocurrio un error inesperado.";
+                        return View("Index", ReturnController);
                     }
 
-                    ViewBag.Error = "No se puede recargar saldo al tag: " + model.NumTag + " porque la cuenta a la que pertenece está dada de baja.";
-                    return View("Index");
+                    TempData["ECreate"] = "No se puede recargar saldo al tag: " + modelTag.NumTag + " porque la cuenta a la que pertenece está dada de baja.";
+                    return View("Index", ReturnController);
                 }
 
-                ViewBag.Error = "El tag: " + model.NumTag + " es colectivo.";
-                return View("Index");
+                TempData["ECreate"] = "El tag: " + modelTag.NumTag + " es colectivo.";
+                return View("Index", ReturnController);
             }
             catch (Exception ex)
             {
-                ViewBag.Error = $"¡Ups! ocurrio un error inesperado, {ex.Message}";
-                return View("Index");
+                TempData["ECreate"] = $"¡Ups! ocurrio un error inesperado, {ex.Message}";
+                return View("Index", ReturnController);
             }
         }
 

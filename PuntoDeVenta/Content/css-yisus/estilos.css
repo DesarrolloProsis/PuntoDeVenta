@@ -2,6 +2,7 @@
     font-family: fjalla;
     src: url(../../Content/css-yisus/FjallaOne-Regular.ttf);
 }
+
 .hacia-arriba {
     padding: 15px;
     /*establecemos espacios en el boton*/
@@ -30,29 +31,32 @@
     /*acomodamos el icono*/
     z-index: 1;
 }
-.search
-{
+
+.search {
     width: 20px !important;
     height: auto;
     padding-left: 5px !important;
-
 }
-.espacio{
-  
+
+.espacio {
     margin-bottom: 20px !important;
 }
-.img-modal{
-    width:25px !important;
+
+.img-modal {
+    width: 25px !important;
     height: auto !important;
 }
+
 .img-modal2 {
     width: 20px !important;
     height: auto !important;
 }
+
 .tamano {
     width: 50px !important;
     height: auto;
 }
+
 .botonbuscar {
     width: 100% !important;
     border-radius: 20px !important;
@@ -68,34 +72,39 @@
         box-shadow: 0px 2px 0px 0px #21618C !important;
         transform: translateY(5px);
     }
+
 .botoncancelar {
     width: 100% !important;
     border-radius: 20px !important;
     border: 0;
-    box-shadow: 0px 5px 0px 0px #97170C ;
+    box-shadow: 0px 5px 0px 0px #97170C;
     padding-top: 12px !important;
     padding-bottom: 12px !important;
     font-family: fjalla !important;
     margin-top: 7px !important;
 }
+
     .botoncancelar:active {
         box-shadow: 0px 2px 0px 0px #97170C !important;
         transform: translateY(5px);
     }
+
 .botonaceptar {
     width: 100% !important;
     border-radius: 20px !important;
     border: 0;
-    box-shadow: 0px 5px 0px 0px #196F3D ;
+    box-shadow: 0px 5px 0px 0px #196F3D;
     padding-top: 12px !important;
     padding-bottom: 12px !important;
     font-family: fjalla !important;
     margin-top: 7px !important;
 }
-.botonaceptar:active {
-    box-shadow: 0px 2px 0px 0px #196F3D !important;
-    transform: translateY(5px);
-}
+
+    .botonaceptar:active {
+        box-shadow: 0px 2px 0px 0px #196F3D !important;
+        transform: translateY(5px);
+    }
+
 .boton-cerrar {
     width: 100% !important;
     border-radius: 20px !important;
@@ -106,6 +115,7 @@
     font-family: fjalla !important;
     margin-top: 7px !important;
 }
+
 .boton-inicio {
     overflow: hidden;
     width: 100% !important;
@@ -122,9 +132,10 @@
     margin-top: 7px;
     vertical-align: middle !important;
 }
-.boton-inicio:hover {
-    color: white;
-}
+
+    .boton-inicio:hover {
+        color: white;
+    }
 
     .boton-inicio:active {
         box-shadow: 0px 4px 0px 0px #BF360C;
@@ -152,50 +163,61 @@
 
 /* NAV BAR */
 .navstyle {
-    background-color: #00a73c !important; 
+    background-color: #00a73c !important;
     color: white !important;
     font-family: fjalla;
     letter-spacing: 1px;
 }
-.k-grid-Eliminar{
+
+.k-grid-Eliminar {
     color: white !important;
     text-decoration: none;
 }
+
 .k-grid-Nuevacuenta {
     color: white !important;
     text-decoration: none;
 }
+
 .k-grid-Editar {
     color: white !important;
     text-decoration: none;
 }
+
 .k-grid-Vercuentas {
     color: white !important;
     text-decoration: none;
 }
-.k-grid-Vertags{
+
+.k-grid-Vertags {
     color: white !important;
     text-decoration: none;
 }
+
 .k-grid-Activar {
     color: white !important;
     text-decoration: none;
 }
+
 .k-grid-Deshabilitar {
     color: white !important;
     text-decoration: none;
 }
+
 .k-grid-Nuevotag {
     color: white !important;
     text-decoration: none;
 }
-.active{
+
+.active {
     color: white !important;
 }
-.text-align-center{
-    text-align:center;
+
+.text-align-center {
+    text-align: center;
 }
-.logonav{
+
+.logonav {
     width: 30px;
     height: auto;
     margin-right: 20px;
@@ -343,8 +365,8 @@ footer {
     font-size: 13px !important;
     font-family: fjalla;
 }
+
 .titulo4 {
-    
     color: black !important;
     font-size: 13px !important;
     font-family: fjalla;
@@ -451,8 +473,8 @@ footer {
 }
 
 body {
-    margin-bottom: 58px !important;
-    padding-top: 54px !important;
+    padding-top: 5rem;
+    margin-bottom: 5rem;
 }
 
 ::-moz-selection {
@@ -496,15 +518,18 @@ body {
     background-color: whitesmoke !important;
     padding-bottom: 60px;
 }
+
 .textlogin {
     font-size: 10vh;
     color: #eb1c2c !important;
 }
-.userlogin{
+
+.userlogin {
     font-size: 5rem;
 }
+
 .shine {
-   margin-top:20px !important;
+    margin-top: 20px !important;
     color: white;
     font-size: 1.5em;
     text-decoration: none;
@@ -545,18 +570,18 @@ a.shine {
     border: none;
 }
 
-/*workaround*/ 
+/*workaround*/
 .intl-tel-input {
     display: table-cell;
 }
 
-.intl-tel-input .selected-flag {
-    z-index: 4;
-}
+    .intl-tel-input .selected-flag {
+        z-index: 4;
+    }
 
-.intl-tel-input .country-list {
-    z-index: 5;
-}
+    .intl-tel-input .country-list {
+        z-index: 5;
+    }
 
 .input-group .intl-tel-input .form-control {
     border-top-left-radius: 4px;
@@ -567,4 +592,42 @@ a.shine {
 
 .intl-tel-input {
     width: 100%;
+}
+.margin-section {
+    border: 1px solid #E5E7E9 !important;
+    border-radius: 5px !important;
+    padding: 10px !important;
+    background-color: white;
+}
+.nav-button-new2 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: #5DADE2;
+    border-radius: 5px;
+    color: white;
+    border: 0;
+    height: 90%;
+}
+
+    .nav-button-new2:hover {
+        background-color: #5DADE2;
+        border-radius: 5px;
+        color: white;
+        border: 0;
+        opacity: .7;
+    }
+
+.tamano {
+    width: 50px !important;
+    height: auto;
+}
+
+.tamano2 {
+    width: 90px !important;
+    height: auto;
+}
+
+.rojo {
+    color: #00a73c !important;
+    letter-spacing: 3.5px;
 }

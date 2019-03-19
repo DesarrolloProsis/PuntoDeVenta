@@ -511,10 +511,13 @@
     <Content Include="Content\css-yisus\estilos.css" />
     <Content Include="Content\css-yisus\img\address-book-solid.svg" />
     <Content Include="Content\css-yisus\img\address-card-solid.svg" />
+    <Content Include="Content\css-yisus\img\boxes-solid.svg" />
     <Content Include="Content\css-yisus\img\capufe.png" />
+    <Content Include="Content\css-yisus\img\cliente.svg" />
     <Content Include="Content\css-yisus\img\clipboard-list-solid.svg" />
     <Content Include="Content\css-yisus\img\columns-solid.svg" />
     <Content Include="Content\css-yisus\img\credit-card-solid.svg" />
+    <Content Include="Content\css-yisus\img\cruces.svg" />
     <Content Include="Content\css-yisus\img\file-invoice-dollar-solid.svg" />
     <Content Include="Content\css-yisus\img\hand-holding-usd-solid.svg" />
     <Content Include="Content\css-yisus\img\list-ul-solid.svg" />
@@ -524,10 +527,12 @@
     <Content Include="Content\css-yisus\img\Marhnoswithred.png" />
     <Content Include="Content\css-yisus\img\money-bill-solid.svg" />
     <Content Include="Content\css-yisus\img\money-check-alt-solid.svg" />
+    <Content Include="Content\css-yisus\img\pluma.svg" />
     <Content Include="Content\css-yisus\img\search-solid.svg" />
     <Content Include="Content\css-yisus\img\siva.jpeg" />
     <Content Include="Content\css-yisus\img\SiVAwhite.png" />
     <Content Include="Content\css-yisus\img\slack-hash-brands.svg" />
+    <Content Include="Content\css-yisus\img\tagrecarga.svg" />
     <Content Include="Content\css-yisus\img\user-circle-solid.svg" />
     <Content Include="Content\css-yisus\intl-tel-input-master\.gitignore" />
     <Content Include="Content\css-yisus\intl-tel-input-master\.grenrc.js" />

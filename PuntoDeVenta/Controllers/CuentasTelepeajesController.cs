@@ -91,7 +91,7 @@ namespace PuntoDeVenta.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> RecargarSaldo(CuentasTelepeaje model)
+        public async Task<ActionResult> RecargarSaldo(CuentasTelepeaje modelCuenta, string ReturnController)
         {
             try
             {
@@ -102,11 +102,12 @@ namespace PuntoDeVenta.Controllers
                                         cue => cue.ClienteId,
                                         cli => cli.Id,
                                         (cue, cli) => new { cue, cli })
-                                        .SingleOrDefaultAsync(x => x.cue.NumCuenta == model.NumCuenta);
+                                        .SingleOrDefaultAsync(x => x.cue.NumCuenta == modelCuenta.NumCuenta);
 
                 if (FoundCuenta == null)
                 {
-                    return HttpNotFound();
+                    TempData["ECreate"] = $"La cuenta no existe.";
+                    return RedirectToAction("Index", ReturnController);
                 }
 
                 if (FoundCuenta.cli.StatusCliente == true)
@@ -123,7 +124,7 @@ namespace PuntoDeVenta.Controllers
                         {
                             var Saldo = (double.Parse(FoundCuenta.cue.SaldoCuenta) / 100).ToString("F2");
 
-                            var SaldoNuevo = (double.Parse(Saldo) + double.Parse(model.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }));
+                            var SaldoNuevo = (double.Parse(Saldo) + double.Parse(modelCuenta.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }));
 
                             var SaldoSend = SaldoNuevo.ToString("F2");
 
@@ -140,7 +141,7 @@ namespace PuntoDeVenta.Controllers
                                 Numero = FoundCuenta.cue.NumCuenta,
                                 Tipo = "CUENTA",
                                 TipoPago = "NOR",
-                                Monto = double.Parse(model.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }),
+                                Monto = double.Parse(modelCuenta.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }),
                                 CorteId = lastCorteUser.Id,
                             };
 
@@ -163,25 +164,26 @@ namespace PuntoDeVenta.Controllers
 
                             await db.SaveChangesAsync();
 
-                            TempData["SCreate"] = $"Se guardó correctamente la cuenta: {FoundCuenta.cue.NumCuenta}.";
-                            return RedirectToAction("Index", "Clientes");
+                            TempData["SCreate"] = $"Se recargó ${modelCuenta.SaldoARecargar} a la cuenta: {FoundCuenta.cue.NumCuenta} con éxito.";
+
+                            return RedirectToAction("Index", ReturnController);
                         }
 
                         TempData["ECreate"] = $"¡Ups! ocurrio un error inesperado.";
-                        return RedirectToAction("Index", "Clientes");
+                        return RedirectToAction("Index", ReturnController);
                     }
 
-                    TempData["ECreate"] = "La cuenta: " + model.NumCuenta + " es individual o puede que este dado de baja.";
-                    return RedirectToAction("Index", "Clientes");
+                    TempData["ECreate"] = "La cuenta: " + modelCuenta.NumCuenta + " es individual o puede que este dada de baja.";
+                    return RedirectToAction("Index", ReturnController);
                 }
 
-                TempData["ECreate"] = "No se puede recargar saldo a la cuenta: " + model.NumCuenta + " porque el cliente al que pertenece está dado de baja.";
+                TempData["ECreate"] = "No se puede recargar saldo a la cuenta: " + modelCuenta.NumCuenta + " porque el cliente al que pertenece está dado de baja.";
                 return RedirectToAction("Index", "Clientes");
             }
             catch (Exception ex)
             {
                 TempData["ECreate"] = $"¡Ups! ocurrio un error inesperado, {ex.Message}";
-                return RedirectToAction("Index", "Clientes");
+                return RedirectToAction("Index", ReturnController);
             }
         }
 
@@ -206,8 +208,6 @@ namespace PuntoDeVenta.Controllers
             else
                 ViewBag.Error = null;
 
-            //var cuentasTelepeajes = db.CuentasTelepeajes.Include(c => c.Clientes);
-            //return View(await cuentasTelepeajes.ToListAsync());
             return View();
         }
 
