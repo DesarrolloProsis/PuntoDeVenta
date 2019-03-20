@@ -45,12 +45,12 @@ namespace PuntoDeVenta.Controllers
                             {
                                 var lastCorteUser = await db.CortesCajeros
                                                            .Where(x => x.IdCajero == UserId)
-                                                           .OrderByDescending(x => x.DateTApertura).ToListAsync();
+                                                           .OrderByDescending(x => x.DateTApertura).FirstOrDefaultAsync();
 
-                                if (lastCorteUser.Count > 0)
+                                if (lastCorteUser != null)
                                 {
-                                    if (lastCorteUser.FirstOrDefault().DateTCierre == null && lastCorteUser.FirstOrDefault().Comentario == null)
-                                        return RedirectToAction("LogOff", "Account", routeValues: new { id = lastCorteUser.FirstOrDefault().Id });
+                                    if (lastCorteUser.DateTCierre == null && lastCorteUser.Comentario == null)
+                                        return RedirectToAction("LogOff", "Account", routeValues: new { id = lastCorteUser.Id });
                                 }
 
                                 digitoscorte = query.FirstOrDefault().NumCorte.Substring(6, 3);
@@ -124,9 +124,10 @@ namespace PuntoDeVenta.Controllers
 
                 var cortelast = await db.CortesCajeros
                                         .Where(x => x.IdCajero == UserId)
-                                        .OrderByDescending(x => x.DateTApertura).ToListAsync();
-                model.NumCorte = cortelast.FirstOrDefault().NumCorte;
-                model.Id = cortelast.FirstOrDefault().Id;
+                                        .OrderByDescending(x => x.DateTApertura).FirstOrDefaultAsync();
+
+                model.NumCorte = cortelast.NumCorte;
+                model.Id = cortelast.Id;
 
                 if (TempData.ContainsKey("SCreate"))
                     ViewBag.Success = TempData["SCreate"].ToString();
@@ -151,10 +152,14 @@ namespace PuntoDeVenta.Controllers
 
                 ViewBag.ModelCuenta = new CuentasTelepeaje();
                 ViewBag.ModelTag = new Tags();
+                ViewBag.NombreUsuario = User.Identity.Name;
+                ViewBag.Cajero = User.Identity.Name;
+                ViewBag.Corte = cortelast.NumCorte;
+                ViewBag.FechaInicio = cortelast.DateTApertura;
             }
             catch (Exception ex)
             {
-
+                return HttpNotFound();
             }
 
             return View(model);
@@ -266,7 +271,7 @@ namespace PuntoDeVenta.Controllers
                 NumCorte = result.NumCorte,
                 Fecha = result.DateTApertura.ToString("dd/MM/yyyy"),
                 HoraI = result.DateTApertura.ToString("HH:mm:ss"),
-                HoraF = result.DateTCierre.Value.ToString("HH:mm:ss"),
+                HoraF = result.DateTCierre.Value.ToString("dd/MM/yyyy HH:mm:ss"),
                 TotalMonto = result.MontoTotal.Value.ToString(),
                 Comentario = result.Comentario
             };
@@ -282,7 +287,7 @@ namespace PuntoDeVenta.Controllers
                     Concepto = item.Concepto,
                     TipoPago = item.TipoPago,
                     Monto = item.Monto.HasValue ? double.Parse(item.Monto.Value.ToString("#.##"), new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }).ToString("F2") : null,
-                    DataTOperacion = item.DateTOperacion,
+                    DataTOperacion = item.DateTOperacion.ToString(),
                     Numero = item.Numero,
                     Tipo = item.Tipo,
                     CobroTag = item.CobroTag

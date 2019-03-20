@@ -9,9 +9,9 @@
 }
 
 <div class="col-md-12 text-align-center">
-    <h4 class="titulo1">Busqueda de Clientes</h4>
+    <h4 class="titulo1">Busqueda de Clientes con sus Cuentas y Tags</h4>
     <p class="lead">
-        Realice una busqueda por un cliente específico.
+        Realice una busqueda por un cliente específico, además de sus cuentas y tags del mismo.
     </p>
 </div>
 
@@ -41,6 +41,7 @@
     </div>
 }
 
+<!-- Tabla de clientes -->
 <div class="table-responsive">
     <table id="example" class="table table-bordered table-hover" style="width:100%">
         <thead>
@@ -48,6 +49,7 @@
                 <th scope="col">Más info.</th>
                 <th scope="col">Número de cliente</th>
                 <th scope="col">Nombre de completo</th>
+                <th scope="col">Empresa</th>
                 <th scope="col">Email de cliente</th>
                 <th scope="col">Teléfono de cliente</th>
                 <th scope="col"></th>
@@ -400,8 +402,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn botonstyle3" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn botonstyle2" id="submitFormTagReca">Guardar</button>
+
+                <button type="button" class="btn btn-success botonaceptar" id="submitFormTagReca">Guardar</button>
             </div>
         </div>
     </div>
@@ -428,36 +430,63 @@
 {
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/Scripts/date.format.js"></script>
+
 
     <script>
-
-        /* Formatting function for row details - modify as you need */
-        function format(d) {
-            // `d` is the original data object for the row
-            return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
-                '<tr>' +
-                '<td>Dirección de cliente:</td>' +
-                '<td>' + d.AddressCliente + '</td>' +
-                '</tr>' +
-                '<tr>' +
-                '<td>Estatus de cliente:</td>' +
-                '<td>' + d.StatusCliente + '</td>' +
-                '</tr>' +
-                '<tr>' +
-                '<td>Fecha de registro cliente:</td>' +
-                '<td>' + d.DateTCliente + '</td>' +
-                '</tr>' +
-                '<tr>' +
-                '<td>Extra info:</td>' +
-                '<td>And any further details here (images etc)...</td>' +
-                '</tr>' +
-                '</table>';
-        }
-
 
         $(document).ready(function () {
 
             /***************************** CLIENTES *****************************/
+
+            /* Formatting function for row details - modify as you need */
+            function format(d) {
+
+                var status = (d.StatusCliente) ? "Válido" : "Inválido";
+
+                var date = d.DateTCliente;
+                var nowDate = new Date(parseInt(date.substr(6)));
+
+                // `d` is the original data object for the row
+                return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+                    '<tr>' +
+                    '<td>Dirección de cliente:</td>' +
+                    '<td>' + d.AddressCliente + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>CP:</td>' +
+                    '<td>' + d.CP + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>Ciudad:</td>' +
+                    '<td>' + d.City + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>País:</td>' +
+                    '<td>' + d.Pais + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>Departamento:</td>' +
+                    '<td>' + d.Departamento + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>NIT:</td>' +
+                    '<td>' + d.NIT + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>Teléfono oficina:</td>' +
+                    '<td>' + d.PhoneOffice + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>Fecha de registro cliente:</td>' +
+                    '<td>' + nowDate.format("dd/mm/yyyy HH:MM:ss") + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>Estatus de cliente:</td>' +
+                    '<td>' + status + '</td>' +
+                    '</tr>' +
+                    '</table>';
+            }
 
             var table = $('#example').DataTable({
                 language: {
@@ -488,31 +517,32 @@
                     },
                     { "data": "NumCliente" },
                     { "data": "NombreCompleto" },
+                    { "data": "Empresa" },
                     { "data": "EmailCliente" },
                     { "data": "PhoneCliente" },
                     {
                         "className": "ncuentaclie",
                         "orderable": false,
                         "data": null,
-                        "defaultContent": '<button type="button" class="btn btn-primary">Nueva cuenta</button>'
+                        "defaultContent": '<button type="button" class="btn btn-warning">Nueva cuenta</button>'
                     },
                     {
                         "className": "nhabilitarclie",
                         "orderable": false,
                         "data": null,
-                        "defaultContent": '<button type="button" class="btn btn-primary">Habilitar cliente</button>'
+                        "defaultContent": '<button type="button" class="btn btn-success">Habilitar cliente</button>'
                     },
                     {
                         "className": "ndeshabilitarclie",
                         "orderable": false,
                         "data": null,
-                        "defaultContent": '<button type="button" class="btn btn-primary">Deshabilitar cliente</button>'
+                        "defaultContent": '<button type="button" class="btn btn-danger">Deshabilitar cliente</button>'
                     },
                     {
                         "className": "vcuentasmodalclie",
                         "orderable": false,
                         "data": null,
-                        "defaultContent": '<button type="button" class="btn btn-primary">Ver cuentas y tags</button>'
+                        "defaultContent": '<button type="button" class="btn btn-tabla">Ver cuentas y tags</button>'
                     }
                 ],
                 order: [[1, 'desc']]
@@ -670,38 +700,56 @@
                 columns: [
                     { "data": "NumCuenta" },
                     { "data": "TypeCuenta" },
-                    { "data": "SaldoCuenta" },
-                    { "data": "StatusCuenta" },
-                    { "data": "DateTCuenta" },
+                    {
+                        "data": "SaldoCuenta",
+                        render: function (data, type, row) {
+                            var saldocuenta = (parseFloat(data) / 100);
+                            return saldocuenta;
+                        },
+                    },
+                    {
+                        "data": "StatusCuenta",
+                        render: function (data, type, row) {
+                            var status = (data) ? "Válido" : "Inválido";
+                            return status;
+                        },
+                    },
+                    {
+                        "data": "DateTCuenta",
+                        render: function (data, type, row) {
+                            var nowDateCuenta = new Date(parseInt(data.substr(6)));
+                            return nowDateCuenta.format("dd/mm/yyyy HH:MM:ss");
+                        },
+                    },
                     {
                         "className": "recargacue",
                         "orderable": false,
                         "data": null,
-                        "defaultContent": '<button type="button" class="btn btn-primary">Recargar saldo</button>'
+                        "defaultContent": '<button type="button" class="btn btn-info">Recargar saldo</button>'
                     },
                     {
                         "className": "ntagcue",
                         "orderable": false,
                         "data": null,
-                        "defaultContent": '<button type="button" class="btn btn-primary">Agregar Tag</button>'
+                        "defaultContent": '<button type="button" class="btn btn-warning">Agregar Tag</button>'
                     },
                     {
                         "className": "nhabilitarcue",
                         "orderable": false,
                         "data": null,
-                        "defaultContent": '<button type="button" class="btn btn-primary">Habilitar cuenta</button>'
+                        "defaultContent": '<button type="button" class="btn btn-success">Habilitar cuenta</button>'
                     },
                     {
                         "className": "ndeshabilitarcue",
                         "orderable": false,
                         "data": null,
-                        "defaultContent": '<button type="button" class="btn btn-primary">Deshabilitar cuenta</button>'
+                        "defaultContent": '<button type="button" class="btn btn-danger">Deshabilitar cuenta</button>'
                     },
                     {
                         "className": "viewtagscue",
                         "orderable": false,
                         "data": null,
-                        "defaultContent": '<button type="button" class="btn btn-primary">Ver tags</button>'
+                        "defaultContent": '<button type="button" class="btn btn-tabla">Ver tags</button>'
                     }
                 ],
                 order: [[1, 'desc']]
@@ -915,32 +963,49 @@
                 data: [],
                 columns: [
                     { "data": "NumTag" },
-                    { "data": "SaldoTag" },
-                    { "data": "StatusTag" },
-                    { "data": "DateTTag" },
+                    {
+                        "data": "SaldoTag",
+                        render: function (data, type, row) {
+                            var saldotag = (parseFloat(data) / 100);
+                            return saldotag;
+                        },
+                    },
+                    {
+                        "data": "StatusTag", render: function (data, type, row) {
+                            var status = (data) ? "Válido" : "Inválido";
+                            return status;
+                        },
+                    },
+                    {
+                        "data": "DateTTag",
+                        render: function (data, type, row) {
+                            var nowDateCuenta = new Date(parseInt(data.substr(6)));
+                            return nowDateCuenta.format("dd/mm/yyyy HH:MM:ss");
+                        },
+                    },
                     {
                         "className": "recargartag",
                         "orderable": false,
                         "data": null,
-                        "defaultContent": '<button type="button" class="btn btn-primary">Recargar saldo</button>'
+                        "defaultContent": '<button type="button" class="btn btn-info">Recargar saldo</button>'
                     },
                     {
                         "className": "thabilitartag",
                         "orderable": false,
                         "data": null,
-                        "defaultContent": '<button type="button" class="btn btn-primary">Habilitar tag</button>'
+                        "defaultContent": '<button type="button" class="btn btn-success">Habilitar tag</button>'
                     },
                     {
                         "className": "tdeshabilitartag",
                         "orderable": false,
                         "data": null,
-                        "defaultContent": '<button type="button" class="btn btn-primary">Deshabilitar tag</button>'
+                        "defaultContent": '<button type="button" class="btn btn-danger">Deshabilitar tag</button>'
                     },
                     {
                         "className": "teliminartag",
                         "orderable": false,
                         "data": null,
-                        "defaultContent": '<button type="button" class="btn btn-primary">Eliminar tag</button>'
+                        "defaultContent": '<button type="button" class="btn btn-tabla">Eliminar tag</button>'
                     }
                 ],
                 order: [[1, 'desc']]

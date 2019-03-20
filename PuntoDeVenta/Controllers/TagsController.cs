@@ -282,10 +282,10 @@ namespace PuntoDeVenta.Controllers
                                         detalle.Monto = null;
                                         break;
                                     case "Individual":
+                                        detalle.Monto = double.Parse(tags.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," });
                                         var SaldoSend = tags.SaldoTag;
                                         SaldoSend = SaldoSend.Replace(",", string.Empty);
                                         tags.SaldoTag = SaldoSend.Replace(".", string.Empty);
-                                        detalle.Monto = double.Parse(tags.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," });
                                         break;
                                     default:
                                         break;
@@ -303,28 +303,29 @@ namespace PuntoDeVenta.Controllers
                                 db.OperacionesCajeros.Add(detalle);
 
                                 await db.SaveChangesAsync();
-                                ViewBag.Success = "Se activó correctamente el tag: " + tags.NumTag + ".";
-                                return View("Index");
+
+                                TempData["SCreate"] = "Se activó correctamente el tag: " + tags.NumTag + " para la cuenta: " + cuenta.NumCuenta + ".";
+                                return RedirectToAction("Index", "Clientes");
                             }
                         }
 
-                        ViewBag.Error = "¡Ups! ocurrio un error inesperado.";
-                        return View("Index");
+                        TempData["ECreate"] = "¡Ups! ocurrio un error inesperado.";
+                        return RedirectToAction("Index", "Clientes");
                     }
                     else
                     {
-                        ViewBag.Error = "El tag: " + tags.NumTag + " ya esta activado.";
-                        return View("Index");
+                        TempData["ECreate"] = "El tag: " + tags.NumTag + " ya esta activado.";
+                        return RedirectToAction("Index", "Clientes");
                     }
                 }
 
-                ViewBag.Error = $"No se puede agregar el tag: {tags.NumTag} a la cuenta porque esta dada de baja.";
-                return View("Index");
+                TempData["ECreate"] = $"No se puede agregar el tag: {tags.NumTag} a la cuenta porque esta dada de baja.";
+                return RedirectToAction("Index", "Clientes");
             }
             catch (Exception ex)
             {
-                ViewBag.Error = $"¡Ups! ocurrio un error inesperado, {ex.Message}";
-                return View("Index");
+                TempData["ECreate"] = $"¡Ups! ocurrio un error inesperado, {ex.Message}";
+                return RedirectToAction("Index", "Clientes");
             }
         }
 

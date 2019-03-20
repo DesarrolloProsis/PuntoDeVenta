@@ -70,21 +70,28 @@ namespace PuntoDeVenta.Controllers
 
             var query = await db.Clientes.ToListAsync();
 
-            foreach (var item in query)
+            query.ForEach(x =>
             {
                 var value = new Clientes
                 {
-                    Id = item.Id,
-                    NumCliente = item.NumCliente,
-                    NombreCompleto = $"{item.Nombre} {item.Apellidos}",
-                    EmailCliente = item.EmailCliente,
-                    AddressCliente = item.AddressCliente,
-                    PhoneCliente = item.PhoneCliente,
-                    StatusCliente = item.StatusCliente,
-                    DateTCliente = item.DateTCliente
+                    Id = x.Id,
+                    NumCliente = x.NumCliente,
+                    NombreCompleto = $"{x.Nombre} {x.Apellidos}",
+                    EmailCliente = x.EmailCliente,
+                    AddressCliente = x.AddressCliente,
+                    PhoneCliente = x.PhoneCliente,
+                    StatusCliente = x.StatusCliente,
+                    DateTCliente = x.DateTCliente,
+                    Empresa = x.Empresa,
+                    CP = x.CP,
+                    Pais = x.Pais,
+                    City = x.City,
+                    Departamento = x.Departamento,
+                    NIT = x.NIT,
+                    PhoneOffice = x.PhoneOffice ?? string.Empty,
                 };
                 clientes.Add(value);
-            }
+            });
 
             return Json(new { data = clientes }, JsonRequestBehavior.AllowGet);
         }
@@ -389,6 +396,9 @@ namespace PuntoDeVenta.Controllers
 
                     clientes.StatusCliente = true;
 
+                    db.Configuration.ValidateOnSaveEnabled = false;
+                    ModelState.Remove("EmailCliente");
+                    ModelState.Remove("PhoneCliente");
                     db.Clientes.Attach(clientes);
                     db.Entry(clientes).State = EntityState.Modified;
                     await db.SaveChangesAsync();

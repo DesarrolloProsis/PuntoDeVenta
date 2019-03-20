@@ -301,7 +301,7 @@ namespace PuntoDeVenta.Controllers
 
                                 db.CuentasTelepeajes.Add(cuentasTelepeaje);
                                 await db.SaveChangesAsync();
-                                TempData["SCreate"] = "Se registró correctamente la cuenta: " + cuentasTelepeaje.NumCuenta + ".";
+                                TempData["SCreate"] = "Se registró correctamente la cuenta: " + cuentasTelepeaje.NumCuenta + " para el cliente: " + cliente.NumCliente + " " + cliente.Nombre + " " + cliente.Apellidos + ".";
                                 return RedirectToAction("Index", "Clientes");
                             }
                             else
@@ -518,6 +518,7 @@ namespace PuntoDeVenta.Controllers
                             break;
                     }
 
+                    db.Configuration.ValidateOnSaveEnabled = false;
                     db.CuentasTelepeajes.Attach(cuentasTelepeaje.cuentas);
                     db.Entry(cuentasTelepeaje.cuentas).State = EntityState.Modified;
                     await db.SaveChangesAsync();

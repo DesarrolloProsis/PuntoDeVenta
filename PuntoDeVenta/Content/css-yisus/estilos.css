@@ -2,7 +2,14 @@
     font-family: fjalla;
     src: url(../../Content/css-yisus/FjallaOne-Regular.ttf);
 }
-
+.btn-tabla {
+    background-color: #f16021;
+    color: white;
+}
+    .btn-tabla:hover {
+        background-color: #d35400;
+        color: white;
+    }
 .hacia-arriba {
     padding: 15px;
     /*establecemos espacios en el boton*/
@@ -139,6 +146,31 @@
 
     .boton-inicio:active {
         box-shadow: 0px 4px 0px 0px #BF360C;
+        transform: translateY(5px);
+    }
+.boton-inicioinactive {
+    overflow: hidden;
+    width: 100% !important;
+    height: 180px !important;
+    background-color: #b2babb;
+    border-radius: 20px;
+    color: white;
+    border: 0;
+    box-shadow: 0px 10px 0px 0px #616a6b;
+    padding-top: 40px;
+    padding-bottom: 12px;
+    font-family: fjalla;
+    font-size: 1.3rem !important;
+    margin-top: 7px;
+    vertical-align: middle !important;
+}
+
+    .boton-inicioinactive:hover {
+        color: white;
+    }
+
+    .boton-inicioinactive:active {
+        box-shadow: 0px 4px 0px 0px #616a6b;
         transform: translateY(5px);
     }
 

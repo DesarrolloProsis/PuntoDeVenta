@@ -8,89 +8,89 @@
     <p class="lead">
         Elimina los datos de la cuenta.
     </p>
-    </div>
-    <div>
-        <hr />
-        <div class="container">
-            <div class="row justify-content-md-center">
-                <div class="col-md-8">
-                    <div class="card">
-                        <div class="card-body">
-                            <dl class="dl-horizontal">
-                                <dt>
-                                    @Html.DisplayNameFor(model => model.Clientes.NumCliente)
-                                </dt>
+</div>
+<div>
+    <hr />
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <dl class="dl-horizontal">
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Clientes.NumCliente)
+                            </dt>
 
-                                <dd>
-                                    @Html.DisplayFor(model => model.Clientes.NumCliente)
-                                </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.Clientes.NumCliente)
+                            </dd>
 
-                                <dt>
-                                    @Html.DisplayNameFor(model => model.NumCuenta)
-                                </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.NumCuenta)
+                            </dt>
 
-                                <dd>
-                                    @Html.DisplayFor(model => model.NumCuenta)
-                                </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.NumCuenta)
+                            </dd>
 
-                                <dt>
-                                    @Html.DisplayNameFor(model => model.SaldoCuenta)
-                                </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.SaldoCuenta)
+                            </dt>
 
-                                <dd>
-                                    @Html.DisplayFor(model => model.SaldoCuenta)
-                                </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.SaldoCuenta)
+                            </dd>
 
-                                <dt>
-                                    @Html.DisplayNameFor(model => model.TypeCuenta)
-                                </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.TypeCuenta)
+                            </dt>
 
-                                <dd>
-                                    @Html.DisplayFor(model => model.TypeCuenta)
-                                </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.TypeCuenta)
+                            </dd>
 
-                                <dt>
-                                    @Html.DisplayNameFor(model => model.StatusCuenta)
-                                </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.StatusCuenta)
+                            </dt>
 
-                                <dd>
-                                    @Html.DisplayFor(model => model.StatusCuenta)
-                                </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.StatusCuenta)
+                            </dd>
 
-                                <dt>
-                                    @Html.DisplayNameFor(model => model.StatusResidenteCuenta)
-                                </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.StatusResidenteCuenta)
+                            </dt>
 
-                                <dd>
-                                    @Html.DisplayFor(model => model.StatusResidenteCuenta)
-                                </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.StatusResidenteCuenta)
+                            </dd>
 
-                                <dt>
-                                    @Html.DisplayNameFor(model => model.DateTCuenta)
-                                </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.DateTCuenta)
+                            </dt>
 
-                                <dd>
-                                    @Html.DisplayFor(model => model.DateTCuenta)
-                                </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.DateTCuenta)
+                            </dd>
 
-                            </dl>
+                        </dl>
 
-                            @using (Html.BeginForm())
-                            {
-                                @Html.AntiForgeryToken()
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
 
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        <input type="submit" value="Eliminar" class="btn btn-danger botoncancelar" />
-                                    </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <input type="submit" value="Eliminar" class="btn btn-danger botoncancelar" />
                                 </div>
-                                <div>
-                                    @Html.ActionLink("Regresar a la lista", "Index", routeValues: null, htmlAttributes: new { @Class = "link1" })
-                                </div>
-                            }
-                        </div>
+                            </div>
+                            <div>
+                                @Html.ActionLink("Regresar a la lista", "Index", "Clientes", routeValues: null, htmlAttributes: new { @Class = "link1" })
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
-            </div>
         </div>
+    </div>
+</div>

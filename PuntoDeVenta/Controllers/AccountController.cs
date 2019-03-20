@@ -210,7 +210,7 @@ namespace PuntoDeVenta.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = $"{model.Name} {model.LastName}", Email = model.Email };
+                var user = new ApplicationUser { UserName = $"{model.Name}-{model.LastName}", Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -521,14 +521,11 @@ namespace PuntoDeVenta.Controllers
                 {
                     foreach (var item in detalles)
                     {
-                        if (item.Monto != null && item.CobroTag != null)
-                        {
-                            monto += Convert.ToDouble(item.Monto);
+                        if (item.Monto != null)
+                            monto += double.Parse(item.Monto.ToString(), new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," });
 
-                            if (item.CobroTag != null)
-                                monto += Convert.ToDouble(item.CobroTag);
-
-                        }
+                        if (item.CobroTag != null)
+                            monto += double.Parse(item.CobroTag.ToString(), new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," });
                     }
 
                     corte.Comentario = model.Comentario;
