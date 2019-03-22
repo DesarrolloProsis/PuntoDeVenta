@@ -33,7 +33,7 @@ namespace PuntoDeVenta.Models
         [StringLength(150)]
         [DataType(DataType.EmailAddress)]
         [EmailAddress(ErrorMessage = "Invalid Email Address.")]
-        [Required]
+        //[Required]
         public string EmailCliente { get; set; }
 
         [Display(Name = "Dirección del cliente")]
@@ -43,7 +43,7 @@ namespace PuntoDeVenta.Models
         [Display(Name = "Número telefónico del cliente")]
         [StringLength(50)]
         [Phone(ErrorMessage = "Invalid Phone Number.")]
-        [Required]
+        //[Required]
         public string PhoneCliente { get; set; }
 
         [Display(Name = "Estatus del cliente")]

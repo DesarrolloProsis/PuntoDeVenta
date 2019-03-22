@@ -56,6 +56,7 @@
                 <th scope="col"></th>
                 <th scope="col"></th>
                 <th scope="col"></th>
+                <th scope="col"></th>
             </tr>
         </thead>
     </table>
@@ -527,6 +528,12 @@
                         "defaultContent": '<button type="button" class="btn btn-warning">Nueva cuenta</button>'
                     },
                     {
+                        "className": "editarclie",
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '<button type="button" class="btn btn-dark">Editar cliente</button>'
+                    },
+                    {
                         "className": "nhabilitarclie",
                         "orderable": false,
                         "data": null,
@@ -589,6 +596,14 @@
                 var data = table.row($(this).parents('tr')).data();
 
                 var url = '@Url.Action("Delete", "Clientes", new { id = "__id__" })';
+                window.location.href = url.replace('__id__', data.Id);
+            });
+
+            $('#example tbody').on('click', 'td.editarclie', function (e) {
+                e.preventDefault();
+                var data = table.row($(this).parents('tr')).data();
+
+                var url = '@Url.Action("Edit", "Clientes", new { id = "__id__" })';
                 window.location.href = url.replace('__id__', data.Id);
             });
 

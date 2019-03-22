@@ -381,13 +381,16 @@ namespace PuntoDeVenta.Controllers
                 {
                     if (Fecha_Inicio == Fecha_Fin)
                     {
+                        DateTime Fecha_Ayuda = model.Fecha_Inicio.AddDays(1);
+
                         if (Operador != null)
                         {
 
                             if (Tag != null)
                             {
 
-                                var ListaLinq = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio).Where(x => x.Operador == Operador).Where(x => x.Tag.Contains(Tag)).ToList();
+                                //var ListaLinq = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio).Where(x => x.Operador == Operador).Where(x => x.Tag.Contains(Tag)).ToList();
+                                var ListaLinq = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio && x.Fecha < Fecha_Ayuda).Where(x => x.Operador == Operador).Where(x => x.Tag.Contains(Tag)).ToList();
 
                                 for (int i = 0; i < ListaLinq.Count(); i++)
                                 {
@@ -415,7 +418,7 @@ namespace PuntoDeVenta.Controllers
                             }
                             else
                             {
-                                var ListaLinq = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio).Where(x => x.Operador == Operador).ToList();
+                                var ListaLinq = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio && x.Fecha < Fecha_Ayuda).Where(x => x.Operador == Operador).ToList();
 
                                 for (int i = 0; i < ListaLinq.Count(); i++)
                                 {
@@ -448,7 +451,7 @@ namespace PuntoDeVenta.Controllers
                             if (Tag != null)
                             {
 
-                                var ListaLinq = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio).Where(x => x.Tag.Contains(Tag)).ToList();
+                                var ListaLinq = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio && x.Fecha < Fecha_Ayuda).Where(x => x.Tag.Contains(Tag)).ToList();
 
                                 for (int i = 0; i < ListaLinq.Count(); i++)
                                 {
@@ -478,7 +481,7 @@ namespace PuntoDeVenta.Controllers
                             {
 
                                 //var ListaLinq = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio).ToList();
-                                var ListaLinq = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio).ToList();
+                                var ListaLinq = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio && x.Fecha < Fecha_Ayuda).ToList();
                                 for (int i = 0; i < ListaLinq.Count(); i++)
                                 {
                                     Historicos newfila = new Historicos();

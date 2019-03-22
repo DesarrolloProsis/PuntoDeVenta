@@ -349,6 +349,14 @@
     <Compile Include="Migrations\201902271857475_cientecampos.Designer.cs">
       <DependentUpon>201902271857475_cientecampos.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903211549026_emailnoobligatorio.cs" />
+    <Compile Include="Migrations\201903211549026_emailnoobligatorio.Designer.cs">
+      <DependentUpon>201903211549026_emailnoobligatorio.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903211650468_phoneno.cs" />
+    <Compile Include="Migrations\201903211650468_phoneno.Designer.cs">
+      <DependentUpon>201903211650468_phoneno.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AppDbContext.cs" />
@@ -1036,6 +1044,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201902271857475_cientecampos.resx">
       <DependentUpon>201902271857475_cientecampos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903211549026_emailnoobligatorio.resx">
+      <DependentUpon>201903211549026_emailnoobligatorio.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903211650468_phoneno.resx">
+      <DependentUpon>201903211650468_phoneno.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

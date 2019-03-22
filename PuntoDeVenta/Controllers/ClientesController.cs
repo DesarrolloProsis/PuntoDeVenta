@@ -160,10 +160,11 @@ namespace PuntoDeVenta.Controllers
 
         // POST: Clientes/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // [Bind(Include = "Id,NumCliente,Nombre,Apellidos,EmailCliente,AddressCliente,PhoneCliente,StatusCliente,DateTCliente,IdCajero")]
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,NumCliente,Nombre,Apellidos,EmailCliente,AddressCliente,PhoneCliente,StatusCliente,DateTCliente,IdCajero")] Clientes clientes)
+        public async Task<ActionResult> Create(Clientes clientes)
         {
             db.Configuration.ValidateOnSaveEnabled = false;
             clientes.NumCliente = await RandomNumClient();
@@ -178,7 +179,7 @@ namespace PuntoDeVenta.Controllers
             {
                 var nameclientes = clientes.Nombre + " " + clientes.Apellidos;
 
-                var query = await db.Clientes.Where(x => x.NumCliente + " " + x.Apellidos == nameclientes || x.NumCliente == clientes.NumCliente || x.EmailCliente == clientes.EmailCliente || x.PhoneCliente == clientes.PhoneCliente).ToListAsync();
+                var query = await db.Clientes.Where(x => x.NumCliente + " " + x.Apellidos == nameclientes || x.NumCliente == clientes.NumCliente /*|| x.EmailCliente == clientes.EmailCliente || x.PhoneCliente == clientes.PhoneCliente*/).ToListAsync();
 
                 if (query.Count <= 0)
                 {
@@ -358,7 +359,7 @@ namespace PuntoDeVenta.Controllers
                         switch (item.cuentas.TypeCuenta)
                         {
                             case "Colectiva":
-                                if ((double.Parse(item.cuentas.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }) / 100) >= 100)
+                                if ((double.Parse(item.cuentas.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ",", NumberGroupSeparator = "." }) / 100) >= 100)
                                 {
                                     item.cuentas.StatusCuenta = true;
                                     db.CuentasTelepeajes.Attach(item.cuentas);
@@ -381,7 +382,7 @@ namespace PuntoDeVenta.Controllers
 
                                 item.Tags.ForEach(x =>
                                 {
-                                    if ((double.Parse(x.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }) / 100) >= 20)
+                                    if ((double.Parse(x.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ",", NumberGroupSeparator = "." }) / 100) >= 20)
                                     {
                                         x.StatusTag = true;
                                         db.Tags.Attach(x);
