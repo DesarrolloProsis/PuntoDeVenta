@@ -183,7 +183,7 @@ namespace PuntoDeVenta.Controllers
                 var _UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
 
                 //var result = _roleManager.Create(new IdentityRole("SuperUsuario"));
-                //result = _roleManager.Create(new IdentityRole("Cajero"));
+                var result = _roleManager.Create(new IdentityRole("Cajero"));
 
                 //var user = _UserManager.AddToRole(idUser, "SuperUsuario");
                 //var userRole = _UserManager.IsInRole(idUser, "Cajero");
@@ -195,7 +195,6 @@ namespace PuntoDeVenta.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "SuperUsuario")]
         public ActionResult GenerarReportes()
         {
             var model = new GenerarReportesViewModel();
@@ -206,7 +205,6 @@ namespace PuntoDeVenta.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "SuperUsuario")]
         public async Task<ActionResult> GenerarReportes(GenerarReportesViewModel model)
         {
             try

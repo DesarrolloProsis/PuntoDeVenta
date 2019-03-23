@@ -125,29 +125,37 @@ namespace PuntoDeVenta.Controllers
                 var lastCorteUser = await db.CortesCajeros
                                                 .Where(x => x.IdCajero == UserId)
                                                 .OrderByDescending(x => x.DateTApertura).FirstOrDefaultAsync();
-                if (lastCorteUser == null)
+                if (lastCorteUser != null)
                 {
-                    return HttpNotFound();
-                }
 
-                if (FoundTag.cue.TypeCuenta == "Individual")
-                {
-                    if (FoundTag.cue.StatusCuenta == true)
+                    var FoundCliente = await db.CuentasTelepeajes.Join(
+                                            db.Clientes,
+                                            cue => cue.ClienteId,
+                                            cli => cli.Id,
+                                            (cue, cli) => new { cue, cli })
+                                            .Where(x => x.cli.Id == FoundTag.cue.ClienteId)
+                                            .FirstOrDefaultAsync();
+
+                    if (FoundCliente.cli.StatusCliente == false)
                     {
-                        var Saldo = (double.Parse(FoundTag.tag.SaldoTag) / 100).ToString("F2");
+                        TempData["ECreate"] = "No se puede recargar saldo al tag: " + modelTag.NumTag + " porque el cliente al que pertenece está dado de baja.";
+                        return RedirectToAction("Index", ReturnController);
+                    }
 
-                        var SaldoNuevo = (Convert.ToDouble(Saldo) + double.Parse(modelTag.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }));
-
-                        var SaldoSend = SaldoNuevo.ToString("F2");
-
-                        SaldoSend = SaldoSend.Replace(",", string.Empty);
-                        FoundTag.tag.SaldoTag = SaldoSend.Replace(".", string.Empty);
-
-                        if (FoundTag.tag.StatusTag == false)
-                            FoundTag.tag.StatusTag = true;
-
-                        if (lastCorteUser != null)
+                    if (FoundTag.cue.TypeCuenta == "Individual")
+                    {
+                        if (FoundTag.cue.StatusCuenta == true)
                         {
+                            var Saldo = (double.Parse(FoundTag.tag.SaldoTag) / 100).ToString("F2");
+
+                            var SaldoNuevo = (Convert.ToDouble(Saldo) + double.Parse(modelTag.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }));
+
+                            var SaldoSend = SaldoNuevo.ToString("F2");
+
+                            SaldoSend = SaldoSend.Replace(",", string.Empty);
+                            FoundTag.tag.SaldoTag = SaldoSend.Replace(".", string.Empty);
+
+
                             var detalle = new OperacionesCajero
                             {
                                 Concepto = "TAG RECARGA",
@@ -161,6 +169,12 @@ namespace PuntoDeVenta.Controllers
 
                             db.OperacionesCajeros.Add(detalle);
 
+                            if ((double.Parse(FoundTag.tag.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }) / 100) >= 20)
+                            {
+                                if (FoundTag.tag.StatusTag == false)
+                                    FoundTag.tag.StatusTag = true;
+                            }
+
                             db.Tags.Attach(FoundTag.tag);
                             db.Entry(FoundTag.tag).State = EntityState.Modified;
                             await db.SaveChangesAsync();
@@ -169,21 +183,21 @@ namespace PuntoDeVenta.Controllers
                             return RedirectToAction("Index", ReturnController);
                         }
 
-                        TempData["ECreate"] = "¡Ups! ocurrio un error inesperado.";
-                        return View("Index", ReturnController);
+                        TempData["ECreate"] = "No se puede recargar saldo al tag: " + modelTag.NumTag + " porque la cuenta a la que pertenece está dada de baja.";
+                        return RedirectToAction("Index", ReturnController);
                     }
 
-                    TempData["ECreate"] = "No se puede recargar saldo al tag: " + modelTag.NumTag + " porque la cuenta a la que pertenece está dada de baja.";
-                    return View("Index", ReturnController);
+                    TempData["ECreate"] = "El tag: " + modelTag.NumTag + " es colectivo.";
+                    return RedirectToAction("Index", ReturnController);
                 }
 
-                TempData["ECreate"] = "El tag: " + modelTag.NumTag + " es colectivo.";
-                return View("Index", ReturnController);
+                TempData["ECreate"] = "¡Ups! ocurrio un error inesperado.";
+                return RedirectToAction("Index", ReturnController);
             }
             catch (Exception ex)
             {
                 TempData["ECreate"] = $"¡Ups! ocurrio un error inesperado, {ex.Message}";
-                return View("Index", ReturnController);
+                return RedirectToAction("Index", ReturnController);
             }
         }
 
@@ -242,6 +256,20 @@ namespace PuntoDeVenta.Controllers
                 if (cuenta == null)
                 {
                     return HttpNotFound();
+                }
+
+                var FoundCliente = await db.CuentasTelepeajes.Join(
+                                         db.Clientes,
+                                         cue => cue.ClienteId,
+                                         cli => cli.Id,
+                                         (cue, cli) => new { cue, cli })
+                                         .Where(x => x.cli.Id == cuenta.ClienteId)
+                                         .FirstOrDefaultAsync();
+
+                if (FoundCliente.cli.StatusCliente == false)
+                {
+                    TempData["ECreate"] = "No se puede agregar tags a la cuenta: " + cuenta.NumCuenta + " porque el cliente al que pertenece está dado de baja.";
+                    return RedirectToAction("Index", "Clientes");
                 }
 
                 if (cuenta.StatusCuenta == true)
@@ -349,10 +377,11 @@ namespace PuntoDeVenta.Controllers
         [Authorize(Roles = "SuperUsuario")]
         // POST: Tags/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // [Bind(Include = "Id,NumTag,SaldoTag,StatusTag,StatusResidente,DateTTag,CuentaId,IdCajero")
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,NumTag,SaldoTag,StatusTag,StatusResidente,DateTTag,CuentaId,IdCajero")] Tags tags)
+        public async Task<ActionResult> Edit(Tags tags)
         {
             db.Configuration.ValidateOnSaveEnabled = false;
             if (ModelState.IsValid)
@@ -386,7 +415,6 @@ namespace PuntoDeVenta.Controllers
             return View(tags);
         }
 
-        [Authorize(Roles = "SuperUsuario")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(long id)
@@ -408,7 +436,8 @@ namespace PuntoDeVenta.Controllers
             return RedirectToAction("Index", "Clientes");
 
         }
-        [Authorize(Roles = "SuperUsuario")]
+
+
         // deshabilitar
         public async Task<ActionResult> Deshabilitar(long? id)
         {
@@ -424,7 +453,6 @@ namespace PuntoDeVenta.Controllers
             return View(tags);
         }
 
-        [Authorize(Roles = "SuperUsuario")]
         [HttpPost, ActionName("Deshabilitar")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeshabilitarConfirmed(long id)
@@ -452,10 +480,31 @@ namespace PuntoDeVenta.Controllers
         public async Task<ActionResult> Activate(long? id)
         {
             db.Configuration.ValidateOnSaveEnabled = false;
-            Tags tag = await db.Tags.FindAsync(id);
+            Tags tag = await db.Tags.Include(t => t.CuentasTelepeaje).SingleOrDefaultAsync(x => x.Id == id);
 
             if (tag.StatusTag == false)
             {
+
+                var FoundCliente = await db.CuentasTelepeajes.Join(
+                                            db.Clientes,
+                                            cue => cue.ClienteId,
+                                            cli => cli.Id,
+                                            (cue, cli) => new { cue, cli })
+                                            .Where(x => x.cli.Id == tag.CuentasTelepeaje.ClienteId)
+                                            .FirstOrDefaultAsync();
+
+                if (FoundCliente.cli.StatusCliente == false)
+                {
+                    TempData["ECreate"] = "No se puede activar el tag: " + tag.NumTag + " porque el cliente al que pertenece está dado de baja.";
+                    return RedirectToAction("Index", "Clientes");
+                }
+
+                if (tag.CuentasTelepeaje.StatusCuenta == false)
+                {
+                    TempData["EDelete"] = $"No es posible habilitar el tag: {tag.NumTag} porque a la cuenta que pertence ({tag.CuentasTelepeaje.NumCuenta}) está dada de baja.";
+                    return RedirectToAction("Index", "Clientes");
+                }
+
                 if (((double.Parse(tag.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }) / 100) >= 20))
                 {
                     tag.StatusTag = true;

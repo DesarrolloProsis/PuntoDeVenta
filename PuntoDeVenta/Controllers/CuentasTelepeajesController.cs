@@ -131,9 +131,6 @@ namespace PuntoDeVenta.Controllers
                             SaldoSend = SaldoSend.Replace(",", string.Empty);
                             FoundCuenta.cue.SaldoCuenta = SaldoSend.Replace(".", string.Empty);
 
-                            if (FoundCuenta.cue.StatusCuenta == false)
-                                FoundCuenta.cue.StatusCuenta = true;
-
                             var detalle = new OperacionesCajero
                             {
                                 Concepto = "CUENTA RECARGA",
@@ -147,20 +144,26 @@ namespace PuntoDeVenta.Controllers
 
                             db.OperacionesCajeros.Add(detalle);
 
+                            if ((double.Parse(FoundCuenta.cue.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }) / 100) >= 100)
+                            {
+                                if (FoundCuenta.cue.StatusCuenta == false)
+                                    FoundCuenta.cue.StatusCuenta = true;
+
+                                List<Tags> tags = await db.Tags.Where(x => x.CuentaId == FoundCuenta.cue.Id).ToListAsync();
+
+                                foreach (var item in tags)
+                                {
+                                    if (item.StatusTag == false)
+                                        item.StatusTag = true;
+
+                                    item.SaldoTag = FoundCuenta.cue.SaldoCuenta;
+                                    db.Tags.Attach(item);
+                                    db.Entry(item).State = EntityState.Modified;
+                                }
+                            }
+
                             db.CuentasTelepeajes.Attach(FoundCuenta.cue);
                             db.Entry(FoundCuenta.cue).State = EntityState.Modified;
-
-                            List<Tags> tags = await db.Tags.Where(x => x.CuentaId == FoundCuenta.cue.Id).ToListAsync();
-
-                            foreach (var item in tags)
-                            {
-                                if (item.StatusTag == false)
-                                    item.StatusTag = true;
-
-                                item.SaldoTag = FoundCuenta.cue.SaldoCuenta;
-                                db.Tags.Attach(item);
-                                db.Entry(item).State = EntityState.Modified;
-                            }
 
                             await db.SaveChangesAsync();
 
@@ -235,10 +238,11 @@ namespace PuntoDeVenta.Controllers
 
         // POST: CuentasTelepeajes/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // [Bind(Include = "Id,NumCuenta,SaldoCuenta,TypeCuenta,StatusCuenta,StatusResidenteCuenta,DateTCuenta,ClienteId,IdCajero")]
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,NumCuenta,SaldoCuenta,TypeCuenta,StatusCuenta,StatusResidenteCuenta,DateTCuenta,ClienteId,IdCajero")] CuentasTelepeaje cuentasTelepeaje)
+        public async Task<ActionResult> Create(CuentasTelepeaje cuentasTelepeaje)
         {
             try
             {
@@ -377,7 +381,6 @@ namespace PuntoDeVenta.Controllers
             return View("Index");
         }
 
-        [Authorize(Roles = "SuperUsuario")]
         // GET: CuentasTelepeajes/Delete/5
         public async Task<ActionResult> Delete(long? id)
         {
@@ -394,7 +397,6 @@ namespace PuntoDeVenta.Controllers
         }
 
         // POST: CuentasTelepeajes/Delete/5
-        [Authorize(Roles = "SuperUsuario")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(long id)
@@ -477,9 +479,24 @@ namespace PuntoDeVenta.Controllers
                     return HttpNotFound();
                 }
 
+                db.Configuration.ValidateOnSaveEnabled = false;
+
+                var FoundCliente = await db.CuentasTelepeajes.Join(
+                       db.Clientes,
+                       cue => cue.ClienteId,
+                       cli => cli.Id,
+                       (cue, cli) => new { cue, cli })
+                       .Where(x => x.cli.Id == cuentasTelepeaje.cuentas.ClienteId)
+                       .FirstOrDefaultAsync();
+
+                if (FoundCliente.cli.StatusCliente == false)
+                {
+                    TempData["ECreate"] = "No se puede habilitar la cuenta: " + cuentasTelepeaje.cuentas.NumCuenta + " porque el cliente al que pertenece está dado de baja.";
+                    return RedirectToAction("Index", "Clientes");
+                }
+
                 if (cuentasTelepeaje.cuentas.StatusCuenta == false)
                 {
-
                     switch (cuentasTelepeaje.cuentas.TypeCuenta)
                     {
                         case "Colectiva":
@@ -495,6 +512,11 @@ namespace PuntoDeVenta.Controllers
                                     db.Tags.Attach(x);
                                     db.Entry(x).State = EntityState.Modified;
                                 });
+                            }
+                            else
+                            {
+                                TempData["EDelete"] = $"No es posible habilitar la cuenta: {cuentasTelepeaje.cuentas.NumCuenta} por saldo insuficiente.";
+                                return RedirectToAction("Index", "Clientes");
                             }
                             break;
 
@@ -513,14 +535,12 @@ namespace PuntoDeVenta.Controllers
                                     db.Entry(x).State = EntityState.Modified;
                                 }
                             });
+
                             break;
                         default:
                             break;
                     }
 
-                    db.Configuration.ValidateOnSaveEnabled = false;
-                    db.CuentasTelepeajes.Attach(cuentasTelepeaje.cuentas);
-                    db.Entry(cuentasTelepeaje.cuentas).State = EntityState.Modified;
                     await db.SaveChangesAsync();
 
                     TempData["SDelete"] = $"Se dio de alta correctamente la cuenta: {cuentasTelepeaje.cuentas.NumCuenta}, junto con sus tags validos por saldo.";

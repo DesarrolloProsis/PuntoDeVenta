@@ -1,12 +1,12 @@
-﻿@model PuntoDeVenta.Models.CuentasTelepeaje
+﻿@model PuntoDeVenta.Models.Clientes
 
 @{
     ViewBag.Title = "Deshabilitar";
 }
 <div class="col-md-12 text-align-center">
-    <h4 class="titulo1">Deshabilitar Cuenta</h4>
+    <h4 class="titulo1">Deshabilitar Cliente</h4>
     <p class="lead">
-        Deshabilitar los datos de la cuenta y sus tags.
+        Deshabilitar el cliente junto con todas sus cuentas y tags.
     </p>
 </div>
 <div>
@@ -18,59 +18,67 @@
                     <div class="card-body">
                         <dl class="dl-horizontal">
                             <dt>
-                                @Html.DisplayNameFor(model => model.Clientes.NumCliente)
+                                @Html.DisplayNameFor(model => model.NumCliente)
                             </dt>
 
                             <dd>
-                                @Html.DisplayFor(model => model.Clientes.NumCliente)
+                                @Html.DisplayFor(model => model.NumCliente)
                             </dd>
 
                             <dt>
-                                @Html.DisplayNameFor(model => model.NumCuenta)
+                                @Html.DisplayNameFor(model => model.Nombre)
                             </dt>
 
                             <dd>
-                                @Html.DisplayFor(model => model.NumCuenta)
+                                @Html.DisplayFor(model => model.Nombre)
                             </dd>
 
                             <dt>
-                                @Html.DisplayNameFor(model => model.SaldoCuenta)
+                                @Html.DisplayNameFor(model => model.Apellidos)
                             </dt>
 
                             <dd>
-                                @Html.DisplayFor(model => model.SaldoCuenta)
+                                @Html.DisplayFor(model => model.Apellidos)
                             </dd>
 
                             <dt>
-                                @Html.DisplayNameFor(model => model.TypeCuenta)
+                                @Html.DisplayNameFor(model => model.EmailCliente)
                             </dt>
 
                             <dd>
-                                @Html.DisplayFor(model => model.TypeCuenta)
+                                @Html.DisplayFor(model => model.EmailCliente)
                             </dd>
 
                             <dt>
-                                @Html.DisplayNameFor(model => model.StatusCuenta)
+                                @Html.DisplayNameFor(model => model.AddressCliente)
                             </dt>
 
                             <dd>
-                                @Html.DisplayFor(model => model.StatusCuenta)
+                                @Html.DisplayFor(model => model.AddressCliente)
                             </dd>
 
                             <dt>
-                                @Html.DisplayNameFor(model => model.StatusResidenteCuenta)
+                                @Html.DisplayNameFor(model => model.PhoneCliente)
                             </dt>
 
                             <dd>
-                                @Html.DisplayFor(model => model.StatusResidenteCuenta)
+                                @Html.DisplayFor(model => model.PhoneCliente)
                             </dd>
 
                             <dt>
-                                @Html.DisplayNameFor(model => model.DateTCuenta)
+                                @Html.DisplayNameFor(model => model.StatusCliente)
                             </dt>
 
                             <dd>
-                                @Html.DisplayFor(model => model.DateTCuenta)
+                                @Html.DisplayFor(model => model.StatusCliente)
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.DateTCliente)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.DateTCliente)
                             </dd>
 
                         </dl>
@@ -78,15 +86,15 @@
                         @using (Html.BeginForm())
                         {
                             @Html.AntiForgeryToken()
-
                             <div class="form-group">
                                 <div class="col-md-12">
                                     <input type="submit" value="Deshabilitar" class="btn btn-danger botoncancelar" />
                                 </div>
                             </div>
                             <div>
-                                @Html.ActionLink("Regresar a la lista", "Index", "Clientes", routeValues: null, htmlAttributes: new { @Class = "link1" })
+                                @Html.ActionLink("Regresar a la lista", "Index", routeValues: null, htmlAttributes: new { @Class = "link1" })
                             </div>
+
                         }
                     </div>
                 </div>
@@ -94,3 +102,4 @@
         </div>
     </div>
 </div>
+

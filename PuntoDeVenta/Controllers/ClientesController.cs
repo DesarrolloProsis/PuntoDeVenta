@@ -185,7 +185,7 @@ namespace PuntoDeVenta.Controllers
                 {
                     db.Clientes.Add(clientes);
                     await db.SaveChangesAsync();
-                    TempData["SCreate"] = $"Se registró el contrato correctamente el cliente: {nameclientes}.";
+                    TempData["SCreate"] = $"Se registró el contrato correctamente el cliente: {nameclientes} {clientes.Nombre} {clientes.Apellidos}.";
                     return RedirectToAction("Index");
                 }
                 else
@@ -246,7 +246,7 @@ namespace PuntoDeVenta.Controllers
                     db.Clientes.Attach(clientes);
                     db.Entry(clientes).State = EntityState.Modified;
                     await db.SaveChangesAsync();
-                    TempData["SEdit"] = $"Se actualizó el contrato correctamente el cliente: {clientes.NumCliente}.";
+                    TempData["SEdit"] = $"Se actualizó el contrato correctamente el cliente: {clientes.NumCliente} {clientes.Nombre} {clientes.Apellidos}.";
                     return RedirectToAction("Index");
                 }
                 TempData["EEdit"] = "El cliente no puede ser actualizado porque está dado de baja.";
@@ -256,7 +256,8 @@ namespace PuntoDeVenta.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: Clientes/Deshabilitar/5
+        // GET: Clientes/Delete/5
+        [Authorize(Roles = "SuperUsuario")]
         public async Task<ActionResult> Delete(long? id)
         {
             if (id == null)
@@ -273,8 +274,50 @@ namespace PuntoDeVenta.Controllers
 
         // POST: Clientes/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "SuperUsuario")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(long id)
+        {
+            db.Configuration.ValidateOnSaveEnabled = false;
+            try
+            {
+                Clientes clientes = await db.Clientes.FindAsync(id);
+
+                db.Clientes.Remove(clientes);
+
+                await db.SaveChangesAsync();
+
+
+                TempData["SDelete"] = $"Se eliminíó correctamente el cliente: {clientes.NumCliente} {clientes.Nombre} {clientes.Apellidos}.";
+                return RedirectToAction("Index");
+
+            }
+            catch (Exception ex)
+            {
+                TempData["EDelete"] = $"¡Ups! ha ocurrido un error inesperado, {ex.Message}";
+                return RedirectToAction("Index");
+            }
+        }
+
+        // GET: Clientes/Deshabilitar/5
+        public async Task<ActionResult> Deshabilitar(long? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Clientes clientes = await db.Clientes.FindAsync(id);
+            if (clientes == null)
+            {
+                return HttpNotFound();
+            }
+            return View(clientes);
+        }
+
+        // POST: Clientes/Deshabilitar/5
+        [HttpPost, ActionName("Deshabilitar")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeshabilitarConfirmed(long id)
         {
             db.Configuration.ValidateOnSaveEnabled = false;
             try
@@ -311,12 +354,12 @@ namespace PuntoDeVenta.Controllers
 
                     await db.SaveChangesAsync();
 
-                    TempData["SDelete"] = $"Se dio de baja correctamente el cliente: {clientes.NumCliente}.";
+                    TempData["SDelete"] = $"Se dio de baja correctamente el cliente: {clientes.NumCliente} {clientes.Nombre} {clientes.Apellidos}.";
                     return RedirectToAction("Index");
                 }
                 else
                 {
-                    TempData["EDelete"] = $"El cliente: {clientes.NumCliente} ya esta dado de baja.";
+                    TempData["EDelete"] = $"El cliente: {clientes.NumCliente} {clientes.Nombre} {clientes.Apellidos} ya esta dado de baja.";
                     return RedirectToAction("Index");
                 }
 
@@ -404,11 +447,11 @@ namespace PuntoDeVenta.Controllers
                     db.Entry(clientes).State = EntityState.Modified;
                     await db.SaveChangesAsync();
 
-                    TempData["SDelete"] = $"Se dio de alta correctamente el cliente: {clientes.NumCliente}, junto con sus cuentas y tags validos por saldo.";
+                    TempData["SDelete"] = $"Se dio de alta correctamente el cliente: {clientes.NumCliente} {clientes.Nombre} {clientes.Apellidos}, junto con sus cuentas y tags validos por saldo.";
                     return RedirectToAction("Index");
                 }
 
-                TempData["EDelete"] = $"El cliente: {clientes.NumCliente} ya esta dado de alta.";
+                TempData["EDelete"] = $"El cliente: {clientes.NumCliente} {clientes.Nombre} {clientes.Apellidos} ya esta dado de alta.";
                 return RedirectToAction("Index");
             }
             catch (Exception ex)

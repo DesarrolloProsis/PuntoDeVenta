@@ -1,12 +1,12 @@
 ﻿@model PuntoDeVenta.Models.Clientes
 
 @{
-    ViewBag.Title = "Deshabilitar";
+    ViewBag.Title = "Eliminar";
 }
 <div class="col-md-12 text-align-center">
-    <h4 class="titulo1">Deshabilitar Cliente</h4>
+    <h4 class="titulo1">Eliminar Cliente</h4>
     <p class="lead">
-        Deshabilitar el cliente junto con todas sus cuentas y tags.
+        Si se elimina un cliente, su información u operaciones no podrán ser recuperadas (juntos con sus cuentas y tags).
     </p>
 </div>
 <div>
@@ -88,7 +88,7 @@
                             @Html.AntiForgeryToken()
                             <div class="form-group">
                                 <div class="col-md-12">
-                                    <input type="submit" value="Deshabilitar" class="btn btn-danger botoncancelar" />
+                                    <input type="submit" value="Eliminar" class="btn btn-danger botoncancelar" />
                                 </div>
                             </div>
                             <div>

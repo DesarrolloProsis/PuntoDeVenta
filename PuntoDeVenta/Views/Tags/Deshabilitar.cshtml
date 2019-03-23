@@ -8,67 +8,67 @@
     <p class="lead">
         Deshabilita el Tag para evitar su funcionamiento.
     </p>
-    </div>
-    <div>
-        <hr />
-        <div class="container">
-            <div class="row justify-content-md-center">
-                <div class="col-md-8">
-                    <div class="card">
-                        <div class="card-body">
-                            <dl class="dl-horizontal">
-                                <dt>
-                                    @Html.DisplayNameFor(model => model.CuentasTelepeaje.NumCuenta)
-                                </dt>
+</div>
+<div>
+    <hr />
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <dl class="dl-horizontal">
+                            <dt>
+                                @Html.DisplayNameFor(model => model.CuentasTelepeaje.NumCuenta)
+                            </dt>
 
-                                <dd>
-                                    @Html.DisplayFor(model => model.CuentasTelepeaje.NumCuenta)
-                                </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.CuentasTelepeaje.NumCuenta)
+                            </dd>
 
-                                <dt>
-                                    @Html.DisplayNameFor(model => model.NumTag)
-                                </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.NumTag)
+                            </dt>
 
-                                <dd>
-                                    @Html.DisplayFor(model => model.NumTag)
-                                </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.NumTag)
+                            </dd>
 
-                                <dt>
-                                    @Html.DisplayNameFor(model => model.SaldoTag)
-                                </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.SaldoTag)
+                            </dt>
 
-                                <dd>
-                                    @Html.DisplayFor(model => model.SaldoTag)
-                                </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.SaldoTag)
+                            </dd>
 
 
-                                <dt>
-                                    @Html.DisplayNameFor(model => model.DateTTag)
-                                </dt>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.DateTTag)
+                            </dt>
 
-                                <dd>
-                                    @Html.DisplayFor(model => model.DateTTag)
-                                </dd>
+                            <dd>
+                                @Html.DisplayFor(model => model.DateTTag)
+                            </dd>
 
-                            </dl>
+                        </dl>
 
-                            @using (Html.BeginForm())
-                            {
-                                @Html.AntiForgeryToken()
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        <input type="submit" value="Deshabilitar" class="btn btn-danger botoncancelar" />
-                                    </div>
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <input type="submit" value="Deshabilitar" class="btn btn-danger botoncancelar" />
                                 </div>
-                                <div>
-                                    @Html.ActionLink("Regresar a la lista", "Index", routeValues: null, htmlAttributes: new { @Class = "link1" })
-                                </div>
-                               
-                            }
-                        </div>
+                            </div>
+                            <div>
+                                @Html.ActionLink("Regresar a la lista", "Index", "Clientes", routeValues: null, htmlAttributes: new { @Class = "link1" })
+                            </div>
+
+                        }
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 

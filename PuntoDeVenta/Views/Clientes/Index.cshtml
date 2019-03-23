@@ -57,6 +57,7 @@
                 <th scope="col"></th>
                 <th scope="col"></th>
                 <th scope="col"></th>
+                <th scope="col"></th>
             </tr>
         </thead>
     </table>
@@ -67,7 +68,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Cuentas y tags de: <label id="clientename"></label></h5>
+                <h5 class="modal-title">Cuentas de: <label id="clientename"></label></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -101,6 +102,7 @@
                                 <th scope="col">Saldo de tag</th>
                                 <th scope="col">Estatus de tag</th>
                                 <th scope="col">Fecha registro tag</th>
+                                <th scope="col"></th>
                                 <th scope="col"></th>
                                 <th scope="col"></th>
                                 <th scope="col"></th>
@@ -525,7 +527,7 @@
                         "className": "ncuentaclie",
                         "orderable": false,
                         "data": null,
-                        "defaultContent": '<button type="button" class="btn btn-warning">Nueva cuenta</button>'
+                        "defaultContent": '<button type="button" class="btn btn-light">Nueva cuenta</button>'
                     },
                     {
                         "className": "editarclie",
@@ -543,7 +545,13 @@
                         "className": "ndeshabilitarclie",
                         "orderable": false,
                         "data": null,
-                        "defaultContent": '<button type="button" class="btn btn-danger">Deshabilitar cliente</button>'
+                        "defaultContent": '<button type="button" class="btn btn-warning">Deshabilitar cliente</button>'
+                    },
+                    {
+                        "className": "neliminarclie",
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '<button type="button" class="btn btn-danger">Eliminar cliente</button>'
                     },
                     {
                         "className": "vcuentasmodalclie",
@@ -592,6 +600,14 @@
             });
 
             $('#example tbody').on('click', 'td.ndeshabilitarclie', function (e) {
+                e.preventDefault();
+                var data = table.row($(this).parents('tr')).data();
+
+                var url = '@Url.Action("Deshabilitar", "Clientes", new { id = "__id__" })';
+                window.location.href = url.replace('__id__', data.Id);
+            });
+
+            $('#example tbody').on('click', 'td.neliminarclie', function (e) {
                 e.preventDefault();
                 var data = table.row($(this).parents('tr')).data();
 
@@ -746,7 +762,7 @@
                         "className": "ntagcue",
                         "orderable": false,
                         "data": null,
-                        "defaultContent": '<button type="button" class="btn btn-warning">Agregar Tag</button>'
+                        "defaultContent": '<button type="button" class="btn btn-light">Agregar Tag</button>'
                     },
                     {
                         "className": "nhabilitarcue",
@@ -758,7 +774,7 @@
                         "className": "ndeshabilitarcue",
                         "orderable": false,
                         "data": null,
-                        "defaultContent": '<button type="button" class="btn btn-danger">Deshabilitar cuenta</button>'
+                        "defaultContent": '<button type="button" class="btn btn-warning">Deshabilitar cuenta</button>'
                     },
                     {
                         "className": "viewtagscue",
@@ -1014,7 +1030,7 @@
                         "className": "tdeshabilitartag",
                         "orderable": false,
                         "data": null,
-                        "defaultContent": '<button type="button" class="btn btn-danger">Deshabilitar tag</button>'
+                        "defaultContent": '<button type="button" class="btn btn-warning">Deshabilitar tag</button>'
                     },
                     {
                         "className": "teliminartag",
