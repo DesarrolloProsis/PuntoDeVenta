@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using PuntoDeVenta.Models;
 using Microsoft.AspNet.Identity;
 using System.Globalization;
+using PuntoDeVenta.Services;
 
 namespace PuntoDeVenta.Controllers
 {
@@ -17,6 +18,8 @@ namespace PuntoDeVenta.Controllers
     public class CuentasTelepeajesController : Controller
     {
         private AppDbContext db = new AppDbContext();
+        private MethodsGlb methods = new MethodsGlb();
+
         static public long? keyCliente = 0;
 
         public ActionResult ListCuentas(int? id)
@@ -140,6 +143,7 @@ namespace PuntoDeVenta.Controllers
                                 TipoPago = "NOR",
                                 Monto = double.Parse(modelCuenta.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }),
                                 CorteId = lastCorteUser.Id,
+                                NoReferencia = await methods.RandomNumReferencia(),
                             };
 
                             db.OperacionesCajeros.Add(detalle);
@@ -289,6 +293,7 @@ namespace PuntoDeVenta.Controllers
                                     Numero = cuentasTelepeaje.NumCuenta,
                                     Tipo = "CUENTA",
                                     CorteId = lastCorteUser.Id,
+                                    NoReferencia = await methods.RandomNumReferencia(),
                                 };
 
                                 if (cuentasTelepeaje.TypeCuenta == "Colectiva")

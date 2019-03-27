@@ -252,7 +252,7 @@ namespace PuntoDeVenta.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var result = db.CortesCajeros.FirstOrDefault(x => x.Id == id);
+            var result = await db.CortesCajeros.FindAsync(id);
 
             if (result == null)
             {
@@ -288,7 +288,7 @@ namespace PuntoDeVenta.Controllers
                     DataTOperacion = item.DateTOperacion.ToString(),
                     Numero = item.Numero,
                     Tipo = item.Tipo,
-                    CobroTag = item.CobroTag
+                    CobroTag = item.CobroTag,
                 });
             }
 
@@ -297,7 +297,7 @@ namespace PuntoDeVenta.Controllers
             {
                 string json = JsonConvert.SerializeObject(model);
                 HttpContent postContent = new StringContent(json, Encoding.UTF8, "application/json");
-                var response = await client.PostAsync(new Uri("http://localhost:56342/api/cajero?authenticationToken=abcxyz"), postContent);
+                var response = await client.PostAsync(new Uri("http://10.1.10.109:56342/api/cajero?authenticationToken=abcxyz"), postContent);
                 var message = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
             }
 

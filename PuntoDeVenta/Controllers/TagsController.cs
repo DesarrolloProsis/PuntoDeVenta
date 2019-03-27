@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using PuntoDeVenta.Models;
 using Microsoft.AspNet.Identity;
 using System.Globalization;
+using PuntoDeVenta.Services;
 
 namespace PuntoDeVenta.Controllers
 {
@@ -17,6 +18,8 @@ namespace PuntoDeVenta.Controllers
     public class TagsController : Controller
     {
         private AppDbContext db = new AppDbContext();
+        private MethodsGlb methods = new MethodsGlb();
+
         static public long? keyCuenta = 0;
 
         [HttpGet]
@@ -164,7 +167,8 @@ namespace PuntoDeVenta.Controllers
                                 Tipo = "TAG",
                                 TipoPago = "NOR",
                                 Monto = double.Parse(modelTag.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }),
-                                CorteId = lastCorteUser.Id
+                                CorteId = lastCorteUser.Id,
+                                NoReferencia = await methods.RandomNumReferencia(),
                             };
 
                             db.OperacionesCajeros.Add(detalle);
@@ -301,6 +305,7 @@ namespace PuntoDeVenta.Controllers
                                     TipoPago = "NOR",
                                     CorteId = lastCorteUser.Id,
                                     CobroTag = double.Parse(tags.CobroTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }),
+                                    NoReferencia = await methods.RandomNumReferencia(),
                                 };
 
                                 switch (cuenta.TypeCuenta)
@@ -578,6 +583,7 @@ namespace PuntoDeVenta.Controllers
                         TipoPago = "TRA",
                         CorteId = lastCorteUser.FirstOrDefault().Id,
                         CobroTag = Convert.ToDouble(tagNew.CobroTag),
+                        NoReferencia = await methods.RandomNumReferencia(),
                     };
 
                     switch (cuenta.TypeCuenta)
@@ -611,7 +617,8 @@ namespace PuntoDeVenta.Controllers
                         TipoPago = null,
                         CorteId = lastCorteUser.FirstOrDefault().Id,
                         CobroTag = null,
-                        Monto = null
+                        Monto = null,
+                        NoReferencia = await methods.RandomNumReferencia(),
                     };
 
                     db.OperacionesCajeros.Add(detalle);

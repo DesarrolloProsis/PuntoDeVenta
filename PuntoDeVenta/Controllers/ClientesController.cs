@@ -185,7 +185,7 @@ namespace PuntoDeVenta.Controllers
                 {
                     db.Clientes.Add(clientes);
                     await db.SaveChangesAsync();
-                    TempData["SCreate"] = $"Se registró el contrato correctamente el cliente: {nameclientes} {clientes.Nombre} {clientes.Apellidos}.";
+                    TempData["SCreate"] = $"Se registró el contrato correctamente el cliente: {clientes.NumCliente} {clientes.Nombre} {clientes.Apellidos}.";
                     return RedirectToAction("Index");
                 }
                 else
