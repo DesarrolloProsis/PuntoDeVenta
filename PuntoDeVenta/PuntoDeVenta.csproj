@@ -759,6 +759,11 @@
     <Content Include="Scripts\jQuery-Mask-Plugin-master\test\zepto\data.js" />
     <Content Include="Scripts\jQuery-Mask-Plugin-master\test\zepto\event.js" />
     <Content Include="Scripts\jQuery-Mask-Plugin-master\test\zepto\zepto.min.js" />
+    <Content Include="Scripts\jquery-number-master\.gitignore" />
+    <Content Include="Scripts\jquery-number-master\examples\demo-as-you-type.html" />
+    <Content Include="Scripts\jquery-number-master\jquery.number.js" />
+    <Content Include="Scripts\jquery-number-master\jquery.number.min.js" />
+    <Content Include="Scripts\jquery-number-master\LICENSE.txt" />
     <Content Include="Scripts\jquery.mask.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
@@ -881,6 +886,10 @@
     <Content Include="Scripts\jQuery-Mask-Plugin-master\package-lock.json" />
     <Content Include="Scripts\jQuery-Mask-Plugin-master\package.json" />
     <Content Include="Scripts\jQuery-Mask-Plugin-master\README.md" />
+    <Content Include="Scripts\jquery-number-master\bower.json" />
+    <Content Include="Scripts\jquery-number-master\df-number-format.jquery.json" />
+    <Content Include="Scripts\jquery-number-master\jquery.number.min.js.map" />
+    <Content Include="Scripts\jquery-number-master\README.markdown" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />

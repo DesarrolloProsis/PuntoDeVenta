@@ -171,7 +171,7 @@ namespace PuntoDeVenta.Controllers
 
                             await db.SaveChangesAsync();
 
-                            TempData["SCreate"] = $"Se recargó ${modelCuenta.SaldoARecargar} a la cuenta: {FoundCuenta.cue.NumCuenta} con éxito.";
+                            TempData["SCreate"] = $"Se recargó Q{modelCuenta.SaldoARecargar} a la cuenta: {FoundCuenta.cue.NumCuenta} con éxito.";
 
                             return RedirectToAction("Index", ReturnController);
                         }

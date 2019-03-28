@@ -538,7 +538,10 @@ namespace PuntoDeVenta.Controllers
                         await db.SaveChangesAsync();
 
                         AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-                        return RedirectToAction("Index", "Home");
+
+                        return RedirectToAction("ReporteCajero", "Home", new { id = corte.Id });
+                        //return RedirectToAction("Index", "Home");
+
                     }
                 }
 

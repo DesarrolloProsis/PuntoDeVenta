@@ -183,7 +183,7 @@ namespace PuntoDeVenta.Controllers
                             db.Entry(FoundTag.tag).State = EntityState.Modified;
                             await db.SaveChangesAsync();
 
-                            TempData["SCreate"] = $"Se recargó ${modelTag.SaldoARecargar} al tag: {FoundTag.tag.NumTag} con éxito.";
+                            TempData["SCreate"] = $"Se recargó Q{modelTag.SaldoARecargar} al tag: {FoundTag.tag.NumTag} con éxito.";
                             return RedirectToAction("Index", ReturnController);
                         }
 

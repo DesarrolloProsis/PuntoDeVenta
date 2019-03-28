@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -11,6 +12,7 @@ namespace PuntoDeVenta.Services
     public class MethodsGlb
     {
         private AppDbContext db = new AppDbContext();
+        public NumberFormatInfo nfi = new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," };
 
         /// <summary>
         /// Método para crear num referencia en operaciones cajeros.

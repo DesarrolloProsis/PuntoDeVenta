@@ -245,6 +245,7 @@ namespace PuntoDeVenta.Controllers
         }
 
         // POST: ReporteCajero
+        [AllowAnonymous]
         public async Task<ActionResult> ReporteCajero(long? id)
         {
             if (id == null)
@@ -263,6 +264,8 @@ namespace PuntoDeVenta.Controllers
             var _UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
             var user = await _UserManager.FindByIdAsync(result.IdCajero);
 
+            var nfi = new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," };
+
             var encabezado = new EncabezadoReporteCajero
             {
                 Cajero = user.Email,
@@ -270,7 +273,7 @@ namespace PuntoDeVenta.Controllers
                 Fecha = result.DateTApertura.ToString("dd/MM/yyyy"),
                 HoraI = result.DateTApertura.ToString("HH:mm:ss"),
                 HoraF = result.DateTCierre.Value.ToString("dd/MM/yyyy HH:mm:ss"),
-                TotalMonto = result.MontoTotal.Value.ToString(),
+                TotalMonto = result.MontoTotal.Value.ToString("#,##0.00", nfi),
                 Comentario = result.Comentario
             };
 
@@ -284,7 +287,7 @@ namespace PuntoDeVenta.Controllers
                 {
                     Concepto = item.Concepto,
                     TipoPago = item.TipoPago,
-                    Monto = item.Monto.HasValue ? double.Parse(item.Monto.Value.ToString("#.##"), new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }).ToString("F2") : null,
+                    Monto = item.Monto.HasValue ? double.Parse(item.Monto.Value.ToString("#,##0.00", nfi)).ToString("F2") : null,
                     DataTOperacion = item.DateTOperacion.ToString(),
                     Numero = item.Numero,
                     Tipo = item.Tipo,

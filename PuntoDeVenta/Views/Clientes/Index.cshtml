@@ -734,7 +734,7 @@
                     {
                         "data": "SaldoCuenta",
                         render: function (data, type, row) {
-                            var saldocuenta = (parseFloat(data) / 100);
+                            var saldocuenta = $.number((parseFloat(data) / 100), 2, '.', ',');
                             return saldocuenta;
                         },
                     },
@@ -997,7 +997,7 @@
                     {
                         "data": "SaldoTag",
                         render: function (data, type, row) {
-                            var saldotag = (parseFloat(data) / 100);
+                            var saldotag = $.number((parseFloat(data) / 100), 2, '.', ',' );
                             return saldotag;
                         },
                     },
