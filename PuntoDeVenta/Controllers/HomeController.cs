@@ -22,6 +22,7 @@ namespace PuntoDeVenta.Controllers
         private AppDbContext db = new AppDbContext();
         private ApplicationDbContext app = new ApplicationDbContext();
 
+        [Authorize(Roles = "Cajero, SuperUsuario")]
         public async Task<ActionResult> Index(string verfiAction)
         {
             var model = new CortesCajero();
@@ -165,7 +166,7 @@ namespace PuntoDeVenta.Controllers
             return View(model);
         }
 
-
+        [Authorize(Roles = "Cajero, SuperUsuario")]
         public async Task<ActionResult> ListaNegraIndex()
         {
             return View(await db.ListaNegras.ToListAsync());
@@ -183,8 +184,8 @@ namespace PuntoDeVenta.Controllers
                 var _UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
 
                 //var result = _roleManager.Create(new IdentityRole("SuperUsuario"));
-                var result = _roleManager.Create(new IdentityRole("Cajero"));
-
+                //var result = _roleManager.Create(new IdentityRole("Cajero"));
+                var result = _roleManager.Create(new IdentityRole("GenerarReporte"));
                 //var user = _UserManager.AddToRole(idUser, "SuperUsuario");
                 //var userRole = _UserManager.IsInRole(idUser, "Cajero");
 
@@ -195,6 +196,7 @@ namespace PuntoDeVenta.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "GenerarReporte, Cajero, SuperUsuario")]
         public ActionResult GenerarReportes()
         {
             var model = new GenerarReportesViewModel();
@@ -205,6 +207,7 @@ namespace PuntoDeVenta.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "GenerarReporte, Cajero, SuperUsuario")]
         public async Task<ActionResult> GenerarReportes(GenerarReportesViewModel model)
         {
             try
@@ -287,7 +290,7 @@ namespace PuntoDeVenta.Controllers
                 {
                     Concepto = item.Concepto,
                     TipoPago = item.TipoPago,
-                    Monto = item.Monto.HasValue ? double.Parse(item.Monto.Value.ToString("#,##0.00", nfi)).ToString("F2") : null,
+                    Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
                     DataTOperacion = item.DateTOperacion.ToString(),
                     Numero = item.Numero,
                     Tipo = item.Tipo,

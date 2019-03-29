@@ -188,6 +188,8 @@
     </Reference>
     <Reference Include="Telerik.Reporting, Version=12.1.18.620, Culture=neutral, PublicKeyToken=a9d7983dfcc261be" />
     <Reference Include="Telerik.Reporting.OpenXmlRendering.2.7.2, Version=12.1.18.620, Culture=neutral, PublicKeyToken=a9d7983dfcc261be" />
+    <Reference Include="Telerik.Reporting.Services.WebApi, Version=12.1.18.620, Culture=neutral, PublicKeyToken=a9d7983dfcc261be" />
+    <Reference Include="Telerik.Reporting.XpsRendering, Version=12.1.18.620, Culture=neutral, PublicKeyToken=a9d7983dfcc261be" />
     <Reference Include="Telerik.ReportViewer.Mvc, Version=12.1.18.620, Culture=neutral, PublicKeyToken=a9d7983dfcc261be" />
     <Reference Include="WebGrease">
       <Private>True</Private>
@@ -274,6 +276,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
     <Compile Include="Controllers\CuentasTelepeajesController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HistoricoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -531,7 +534,9 @@
     <Content Include="Content\css-yisus\img\columns-solid.svg" />
     <Content Include="Content\css-yisus\img\credit-card-solid.svg" />
     <Content Include="Content\css-yisus\img\cruces.svg" />
+    <Content Include="Content\css-yisus\img\exclamacion.svg" />
     <Content Include="Content\css-yisus\img\file-invoice-dollar-solid.svg" />
+    <Content Include="Content\css-yisus\img\flecha.svg" />
     <Content Include="Content\css-yisus\img\hand-holding-usd-solid.svg" />
     <Content Include="Content\css-yisus\img\list-ul-solid.svg" />
     <Content Include="Content\css-yisus\img\Logo.png" />
@@ -993,6 +998,8 @@
     <Content Include="Views\Clientes\_CuentasTags.cshtml" />
     <Content Include="Views\Shared\_AddTags.cshtml" />
     <Content Include="Views\Clientes\Deshabilitar.cshtml" />
+    <Content Include="Views\Shared\_LayoutReports.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

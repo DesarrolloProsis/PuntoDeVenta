@@ -14,7 +14,7 @@ using PuntoDeVenta.Services;
 
 namespace PuntoDeVenta.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "SuperUsuario, Cajero")]
     public class TagsController : Controller
     {
         private AppDbContext db = new AppDbContext();

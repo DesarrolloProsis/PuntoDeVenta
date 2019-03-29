@@ -15,6 +15,7 @@ using System.IO;
 
 namespace PuntoDeVenta.Controllers
 {
+    [Authorize(Roles = "SuperUsuario, Cajero")]
     public class HistoricoController : Controller
     {
 
@@ -375,9 +376,9 @@ namespace PuntoDeVenta.Controllers
                 if (Fecha_Inicio == "01/01/0001")
                     return View("Index");
             }
-            else if(Fecha_Fin != "01/01/0001")
+            else if (Fecha_Fin != "01/01/0001")
             {
-                if(Fecha_Inicio != "01/01/0001")
+                if (Fecha_Inicio != "01/01/0001")
                 {
                     if (Fecha_Inicio == Fecha_Fin)
                     {

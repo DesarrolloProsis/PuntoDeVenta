@@ -14,7 +14,7 @@ using PuntoDeVenta.Services;
 
 namespace PuntoDeVenta.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "SuperUsuario, Cajero")]
     public class CuentasTelepeajesController : Controller
     {
         private AppDbContext db = new AppDbContext();

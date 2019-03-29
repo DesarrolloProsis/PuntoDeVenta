@@ -16,7 +16,7 @@ using System.Dynamic;
 
 namespace PuntoDeVenta.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "SuperUsuario, Cajero")]
     public class ClientesController : Controller
     {
         private AppDbContext db = new AppDbContext();

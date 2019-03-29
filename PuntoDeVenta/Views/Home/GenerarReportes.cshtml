@@ -1,4 +1,7 @@
-﻿@model PuntoDeVenta.Models.GenerarReportesViewModel
+﻿@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.EntityFramework;
+@using PuntoDeVenta.Models;
+@model PuntoDeVenta.Models.GenerarReportesViewModel
 
 @{
     ViewBag.Title = "Cortes cajero";
@@ -84,6 +87,21 @@
 
 </div>
 
+@{
+    if (User.Identity.IsAuthenticated)
+    {
+        using (ApplicationDbContext app = new ApplicationDbContext())
+        {
+            var IdUser = User.Identity.GetUserId();
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
+
+            if (userManager.IsInRole(IdUser, "GenerarReporte"))
+            {
+                <button class="hacia-arriba icon-ctrl" onclick="location.href='@Url.Action("LogOffWithoutCorte", "Account")'"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
+            }
+        }
+    }
+}
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 
@@ -132,7 +150,7 @@
                 }
             }
         });
-                                        // puedes invocar métodos en JavaScript tamibién
-                                        //example2.greet() // -> 'Hello Vue.js!'
+                                                                            // puedes invocar métodos en JavaScript tamibién
+                                                                            //example2.greet() // -> 'Hello Vue.js!'
     </script>
 }
