@@ -7,63 +7,71 @@
 
 
 <div class="container">
-    <h2>Tabla de Historico</h2>  <div>@Html.ActionLink("Regresar", "Regresar", "Historico", new { }, new { @class = "btn btn-info" })</div>
+    <h2>Tabla de Historico</h2>
 
-    <div>@Html.ActionLink("PDF", "Pdf", "Historico", new { }, new { @class = "btn btn-info" })</div>
 
-    <hr />
-    @if (Model.ListaHistorico != null && Model.ListaHistorico.Any())
-    {
+    <div class="row justify-content-center">
+        <div class="col-md-12">
 
-        <div class="table-responsivev">
-            <table class="table table-striped">
+            <div id="Mensaje" class=" jumbotron ">
+
+                <p class="display-4" style="font-size:5vw">DATOS SELECCIONADOS</p>
+
+                <a style="padding-right:8px; font-size:15px;" id="Cuen">Cuenta:{{ Cuenta }}</a>
+                <a style="padding-right:8px; font-size:15px;">Fecha:{{ Fecha1 }}</a>
+                <a style="padding-right:8px; font-size:15px;">Fecha:{{ Fecha2 }}</a>
+                <a style="padding-right:8px; font-size:15px;">Saldo:{{ Saldo }}</a>
+                <a style="padding-right:8px; font-size:15px;">Movimientos:{{ Movimientos }}</a>
+                <a style="padding-right:8px; font-size:15px;" id="mess">{{ message }}</a>
+
+                <div>@Html.ActionLink("EXPORTAR A PDF", "Pdf", "Historico", new { }, new { @class = "btn btn-info", @id = "Pdf" })</div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div id="aboutPage">
+        <template v-if="mostrar">
+            <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Tag</th>
-                        <th scope="col">Delegacion</th>
-                        <th scope="col">Plaza</th>
-                        <th scope="col">Fecha</th>
-                        <th scope="col">Cuerpo</th>
-                        <th scope="col">Carril</th>
-                        <th scope="col">Clase</th>
-                        <th scope="col">Tarifa</th>
-                        <th scope="col">Operadora</th>
+                        <th>Id</th>
+                        <th>Tag</th>
+                        <th>Delegacion</th>
+                        <th>Plaza</th>
+                        <th>Fecha</th>
+                        <th>Tramo</th>
+                        <th>Carril</th>
+                        <th>Clase</th>
+                        <th>Cobro</th>
+                        <th>Operadora</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @{
-                        int i = 0;
-                        foreach (var item in Model.ListaHistorico)
-                        {
-                            <tr>
-
-                                <td>@item.Id</td>
-                                <td>@item.Tag</td>
-                                <td>@item.Delegacion</td>
-                                <td>@item.Plaza</td>
-                                <td>@item.Fecha</td>
-                                <td>@item.Cuerpo</td>
-                                <td>@item.Carril</td>
-                                <td>@item.Clase</td>
-                                <td>@item.Saldo</td>
-                                <td>@item.Operador</td>
-
-
-                            </tr>
-                        }
-                    }
+                    <tr v-for="item in items">
+                        <td>{{item.Id}}</td>
+                        <td>{{item.Tag}}</td>
+                        <td>{{item.Delegacion}}</td>
+                        <td>{{item.Plaza}}</td>
+                        <td>{{item.Fecha}}</td>
+                        <td>{{item.Cuerpo}}</td>
+                        <td>{{item.Carril}}</td>
+                        <td>{{item.Clase}}</td>
+                        <td>{{item.Saldo}}</td>
+                        <td>{{item.Operador}}</td>
+                    </tr>
                 </tbody>
-            </table>
-        </div>
 
-    }
-    else
-    {
-        <div id="aboutPage" class="col-lg-12">
-            <p class="text-center lead">{{ message }}</p>
-        </div>
-    }
+            </table>
+        </template>
+
+    </div>
 
 </div>
 
@@ -71,55 +79,107 @@
 
 @section Scripts {
 
+
+
+
     @Scripts.Render("~/bundles/jqueryval")
 
     <script>
         $(document).ready(function () {
-            $(".td_1").hide();
-            // Set form variable
 
-            $(".clickme").on("click", function () {
-                var $row = $(this).closest("tr");       //, Finds the closest row <tr>
-                //$tds = $row.find("td");             // Finds all children <td> elements
-                //$("#form12").submit(function () {
-                //    alert('Form is submitting....');
-                //    // Or Do Something...
-                //    return true;
-                //});
-                alert($row.find(".td_1").html());
-                $('#form12').append('<input type="hidden" name="id" value="' + $row.find(".td_1").html() + '" />');
-                $("#form12").submit();
-            });
-        });
-    </script>
 
-    <script>
-        var aboutPage = new Vue({
-            el: '#aboutPage',
-            data: {
-                message: 'NO HAY HISTORICO.'
-            }
-        });
+            var json = @Html.Raw(Json.Encode(Model.ListaHistorico));
+            var info = @Html.Raw(Json.Encode(Model.Info));
+            console.log(JSON.stringify(json))
+            console.log(JSON.stringify(info))
 
-        var example2 = new Vue({
-            el: '#example-2',
-            data: {
-                name: 'Vue.js'
-            },
-            // define métodos dentro del objeto `methods`
-            methods: {
-                greet: function (event) {
-                    // `this` dentro de los métodos apunta a la instancia de Vue
-                    alert('Hello ' + this.name + '!')
-                    // `event` es el evento nativo del DOM
-                    if (event) {
-                        alert(event.target.tagName)
+                if (json == null) {
+
+
+                    $('#Pdf').hide();
+
+                    var Mensaje = new Vue({
+                        el: '#Mensaje',
+                        data: {
+                            message: 'Aviso: NO HAY CRUCES...',
+                            muestra: true,
+
+                        }
+
+                    })
+
+
+                    var aboutPage = new Vue({
+                        el: '#aboutPage',
+                        data: {
+
+                            items: json,
+                            mostrar: false
+                        }
+                    });
+
+                } else {
+
+                    if (info.Tipo == 'SOLO_FECHA') {
+
+                        $('#Cuen').remove();
+
+                        var Mensaje = new Vue({
+
+                            el: '#Mensaje',
+                            data: {
+
+                                Fecha1: info.Fecha_Inicio,
+                                Fecha2: info.Fecha_Fin,
+                                muestra: true,
+
+                            }
+
+                        })
+
+
                     }
+                    else {
+
+
+                        $('#mess').remove();
+
+                        var Mensaje = new Vue({
+                            el: '#Mensaje',
+                            data: {
+                                Saldo: info.Saldo_,
+                                Fecha1: info.Fecha_Inicio,
+                                Fecha2: info.Fecha_Fin,
+                                Movimientos: info.Movimientos,
+                                Cuenta: info.Cuenta,
+                                muestra: true,
+
+                            }
+
+                        })
+
+
+                    }
+
+
+
+                    var mensaje = false;
+                    var aboutPage = new Vue({
+                        el: '#aboutPage',
+                        data: {
+
+                            items: json,
+                            mostrar: true
+                        }
+                    });
                 }
-            }
-        });
-                                // puedes invocar métodos en JavaScript tamibién
-                                //example2.greet() // -> 'Hello Vue.js!'
+
+
+
+            });
     </script>
+
+
 }
+
 

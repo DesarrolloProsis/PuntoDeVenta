@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "TablaHistorico";
 }
+
 <div class="col-md-12 text-align-center" style="padding-top:20px;">
 
     <h4 class="titulo1">Tabla Historico</h4>
@@ -10,51 +11,137 @@
     </p>
 </div>
 <hr />
-<div class="container-fluid">
-    @using (Html.BeginForm("Generar", "Historico", FormMethod.Post))
-    {
-        @Html.AntiForgeryToken()
 
-        <div class="container">
-            <div class="row justify-content-md-center">
-                <div class="col-md-8">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="col-md-12">
-                                <label>Busqueda por Operadora</label>
-                                @Html.DropDownListFor(x => x.Operador, new SelectList(string.Empty, "Value", "Text"), "Seleccione Marca", htmlAttributes: new { @class = "form-control espacio" })
-                            </div>
-                            <div class="col-md-12">
-                                <label>Fecha Inicial</label>
-                                @Html.LabelFor(model => model.Fecha_Inicio, htmlAttributes: new { @class = "sr-only", @for = "Date" })
-                                @Html.EditorFor(model => model.Fecha_Inicio)
-                                @Html.ValidationMessageFor(model => model.Fecha_Inicio, "", new { @class = "text-danger" })
-                            </div>
-                            <div class="col-md-12">
-                                <label>Fecha Final</label>
-                                @Html.LabelFor(model => model.Fecha_Fin, htmlAttributes: new { @class = "sr-only", @for = "Date" })
-                                @Html.EditorFor(model => model.Fecha_Fin)
-                            </div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card text-center ">
+                <div class="card-header">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        @*<li class="nav-item">
+                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+                            </li>*@
+                        <li class="nav-item">
+                            <a class="nav-link botonpestaña" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Buscar Tag o Cuenta</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Buscar Por Fecha</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        @*<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <div>
 
-                            <div class="col-md-12">
-                                <label>Busqueda por Tag</label>
-                                @Html.EditorFor(x => x.Tag, "", new { htmlAttributes = new { @class = "form-control espacio" } })
-                            </div>
+                                </div>
+                            </div>*@
+                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                            <div>
+                                @using (Html.BeginForm("GenerarXCuenta", "Historico", FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
 
 
-                            <div class="col-md-12">
-                                <button type="submit" class="btn btn-primary botonbuscar">
-                                    <img class="search" src="~/Content/css-yisus/img/search-solid.svg" /> Buscar
-                                </button>
+                                    <div class="row justify-content-md-center">
+                                        <div class="col-md-12">
+
+                                            <div class="card">
+                                                <div class="card-body">
+
+                                             
+                                                   
+                                                    <div class="col-md-12">
+                                                        <label style="float:left !important">#Tag</label>
+                                                        @Html.EditorFor(x => x.Tag, "", new { htmlAttributes = new { @class = "form-control espacio", placeholder = "Tag" } })
+                                                    </div>
+                                               
+
+                                                    
+                                                    <div class="col-md-12">
+                                                        <label style="float:left !important">#Cuenta</label>
+                                                        @Html.EditorFor(x => x.Cuenta, "", new { htmlAttributes = new { @class = "form-control espacio", placeholder = "Cuenta" } })
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <label style="float:left !important">Fecha Inicial</label>
+
+                                                        @Html.EditorFor(model => model.Fecha_Inicio)
+                                                        @*@Html.ValidationMessageFor(model => model.Fecha_Inicio, "", new { @class = "text-danger" })*@
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <label style="float:left !important">Fecha Final</label>
+
+                                                        @Html.EditorFor(model => model.Fecha_Fin)
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <button type="submit" class="btn btn-primary botonbuscar">
+                                                            <img class="search" src="~/Content/css-yisus/img/search-solid.svg" />Buscar
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                        </div>
+                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="Buscar Solo Por Fecha">
+                            <div>
+                                @using (Html.BeginForm("GenerarXFecha", "Historico", FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+
+
+                                    <div class="row justify-content-md-center">
+                                        <div class="col-md-12">
+
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    @*<div class="col-md-12">
+                                                            <label>Busqueda por Operadora</label>
+                                                            @Html.DropDownListFor(x => x.Operador, new SelectList(string.Empty, "Value", "Text"), "Seleccione Marca", htmlAttributes: new { @class = "form-control espacio" })
+                                                        </div>*@
+                                                    <div class="col-md-12">
+                                                        <label style="float:left !important">Fecha Inicial</label>
+
+                                                        @Html.EditorFor(model => model.Fecha_Inicio)
+                                                        @Html.ValidationMessageFor(model => model.Fecha_Inicio, "", new { @class = "text-danger" })
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <label style="float:left !important">Fecha Final</label>
+
+                                                        @Html.EditorFor(model => model.Fecha_Fin)
+                                                    </div>
+
+                                                    @*<div class="col-md-12">
+                                                            <label>Busqueda por Tag</label>
+                                                            @Html.EditorFor(x => x.Tag, "", new { htmlAttributes = new { @class = "form-control espacio" } })
+                                                        </div>*@
+
+
+                                                    <div class="col-md-12">
+                                                        <button type="submit" class="btn btn-primary botonbuscar">
+                                                            <img class="search" src="~/Content/css-yisus/img/search-solid.svg" />Buscar
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
-
                 </div>
+
             </div>
         </div>
-    }
+    </div>
 </div>
+
 
 
 
@@ -62,90 +149,46 @@
 
     @Scripts.Render("~/bundles/jqueryval")
 
+
     <script>
         $(document).ready(function () {
-            $(".td_1").hide();
-            // Set form variable
-            LoadDelegaciones();
-            $(".clickme").on("click", function () {
-                var $row = $(this).closest("tr");       //, Finds the closest row <tr>
-                //$tds = $row.find("td");             // Finds all children <td> elements
-                //$("#form12").submit(function () {
-                //    alert('Form is submitting....');
-                //    // Or Do Something...
-                //    return true;
-                //});
-                alert($row.find(".td_1").html());
-                $('#form12').append('<input type="hidden" name="id" value="' + $row.find(".td_1").html() + '" />');
-                $("#form12").submit();
-            });
 
+            $('#Tag').val('');
+            $('#Cuenta').val('');
 
         });
-    </script>
-
-    <script>
-
-        function LoadDelegaciones() {
-            $.ajax({
-                url: '@Url.Action("GetOperadores", "Historico")',
-                type: "GET",
-                data: "{}",
-                cache: false,
-                success: function (data) {
-                    $.each(data, function (i, row) {
-                        var $option = $('<option>');
-                        $option.val(row.Value);
-                        $option.html(row.Text);
-                        $('#Operador').append($option);
-                    });
-                },
-                error: function (ex) {
-                    alert("Error!!!" + ex);
-                },
-            });
-        }
 
     </script>
 
+
     <script>
-        var aboutPage = new Vue({
-            el: '#aboutPage',
-            data: {
-                message: 'NO HAY HISTORICO.'
+
+        $("#Tag").change(function () {
+
+            var Mensaje = $("#Tag").val()
+
+
+            if (Mensaje != null && Mensaje != "") {
+                $("#Cuenta").prop("disabled", true)
+            }
+            else {
+                $("#Cuenta").prop("disabled", false)
+            }
+
+        });
+
+        $("#Cuenta").change(function () {
+
+
+            var Mensaje = $("#Cuenta").val()
+            if (Mensaje != null && Mensaje != "") {
+                $("#Tag").prop("disabled", true)
+            }
+            else {
+                $("#Tag").prop("disabled", false)
             }
         });
 
-        var example2 = new Vue({
-            el: '#example-2',
-            data: {
-                name: 'Vue.js'
-            },
-            height: 550,
-            groupable: true,
-            sortable: true,
-            pageable: {
-                refresh: true,
-                pageSizes: true,
-                buttonCount: 5
-            },
-            columns: [{
-
-                field: "ContactName",
-                title: "Contact Name",
-                width: 240
-            }, {
-                field: "ContactTitle",
-                title: "Contact Title"
-            }, {
-                field: "CompanyName",
-                title: "Company Name"
-            }, {
-                field: "Country",
-                width: 150
-            }]
-        });
-                                                                        // puedes invocar métodos en JavaScript tamibién
-                                                                        //example2.greet() // -> 'Hello Vue.js!'
     </script>
+
 }

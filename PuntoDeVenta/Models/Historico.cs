@@ -29,9 +29,16 @@ namespace PuntoDeVenta.Models
         public string Carril { get; set; }
         [StringLength(10)]
         public string Clase { get; set; }
+        [MaxLength(20)]
+        public string SaldoAnterior { get; set; }       
         [Column("Saldo")]
         public double Saldo { get; set; }
         [StringLength(20)]
+        public string SaldoActualizado { get; set; }
+        [StringLength(20)]
         public string Operador { get; set; }
+        [MaxLength(30)]
+        public string Excepcion { get; set; }
+
     }
 }

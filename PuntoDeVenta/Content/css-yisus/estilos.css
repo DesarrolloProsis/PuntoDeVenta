@@ -2,6 +2,18 @@
     font-family: fjalla;
     src: url(../../Content/css-yisus/FjallaOne-Regular.ttf);
 }
+
+.botonpesataña {
+    color: black !important;
+}
+
+.botonpestaña:hover {
+    color: dimgray !important;
+}
+
+.botonpestaña:active {
+    color: black !important;
+}
 .btn-tabla {
     background-color: #f16021;
     color: white;
@@ -241,9 +253,7 @@
     text-decoration: none;
 }
 
-.active {
-    color: white !important;
-}
+
 
 .text-align-center {
     text-align: center;
