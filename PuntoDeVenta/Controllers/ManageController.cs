@@ -10,7 +10,7 @@ using PuntoDeVenta.Models;
 
 namespace PuntoDeVenta.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "SuperUsuario, Cajero")]
     public class ManageController : Controller
     {
         private ApplicationSignInManager _signInManager;
@@ -32,9 +32,9 @@ namespace PuntoDeVenta.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -333,7 +333,7 @@ namespace PuntoDeVenta.Controllers
             base.Dispose(disposing);
         }
 
-#region Aplicaciones auxiliares
+        #region Aplicaciones auxiliares
         // Se usan para protección XSRF al agregar inicios de sesión externos
         private const string XsrfKey = "XsrfId";
 
@@ -384,6 +384,6 @@ namespace PuntoDeVenta.Controllers
             Error
         }
 
-#endregion
+        #endregion
     }
 }

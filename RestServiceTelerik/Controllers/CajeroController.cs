@@ -29,24 +29,24 @@ namespace RestServiceTelerik.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
+                //if (ModelState.IsValid)
+                //{
+                var prop = new List<PropertiesDetalles>();
+
+                if (detalles != null)
                 {
-                    var prop = new List<PropertiesDetalles>();
+                    detalles.ForEach(i => prop.Add(i));
 
-                    if (detalles != null)
-                    {
-                        detalles.ForEach(i => prop.Add(i));
-
-                        PropertiesDetalles = prop;
-                        return Request.CreateResponse(HttpStatusCode.OK, $"Success {authenticationToken}");
-                    }
+                    PropertiesDetalles = prop;
                 }
+                return Request.CreateResponse(HttpStatusCode.OK, $"Success {authenticationToken}");
+                //}
 
-                return Request.CreateResponse(HttpStatusCode.ExpectationFailed, "Error");
+                //return Request.CreateResponse(HttpStatusCode.ExpectationFailed, "Error ");
             }
             catch (Exception ex)
             {
-                return Request.CreateResponse(HttpStatusCode.ExpectationFailed, $"Error {ex.Message}");
+                return Request.CreateResponse(HttpStatusCode.ExpectationFailed, $"Error {ex.Message} {ex.StackTrace} {authenticationToken}");
             }
         }
     }

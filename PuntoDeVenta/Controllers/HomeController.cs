@@ -22,6 +22,7 @@ namespace PuntoDeVenta.Controllers
         private AppDbContext db = new AppDbContext();
         private ApplicationDbContext app = new ApplicationDbContext();
 
+        [Authorize(Roles = "Cajero, SuperUsuario")]
         public async Task<ActionResult> Index(string verfiAction)
         {
             var model = new CortesCajero();
@@ -165,7 +166,7 @@ namespace PuntoDeVenta.Controllers
             return View(model);
         }
 
-
+        [Authorize(Roles = "Cajero, SuperUsuario")]
         public async Task<ActionResult> ListaNegraIndex()
         {
             return View(await db.ListaNegras.ToListAsync());
@@ -183,8 +184,8 @@ namespace PuntoDeVenta.Controllers
                 var _UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
 
                 //var result = _roleManager.Create(new IdentityRole("SuperUsuario"));
-                var result = _roleManager.Create(new IdentityRole("Cajero"));
-
+                //var result = _roleManager.Create(new IdentityRole("Cajero"));
+                var result = _roleManager.Create(new IdentityRole("GenerarReporte"));
                 //var user = _UserManager.AddToRole(idUser, "SuperUsuario");
                 //var userRole = _UserManager.IsInRole(idUser, "Cajero");
 
@@ -195,6 +196,7 @@ namespace PuntoDeVenta.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "GenerarReporte, Cajero, SuperUsuario")]
         public ActionResult GenerarReportes()
         {
             var model = new GenerarReportesViewModel();
@@ -205,6 +207,7 @@ namespace PuntoDeVenta.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "GenerarReporte, Cajero, SuperUsuario")]
         public async Task<ActionResult> GenerarReportes(GenerarReportesViewModel model)
         {
             try
@@ -245,6 +248,7 @@ namespace PuntoDeVenta.Controllers
         }
 
         // POST: ReporteCajero
+        [AllowAnonymous]
         public async Task<ActionResult> ReporteCajero(long? id)
         {
             if (id == null)
@@ -252,7 +256,7 @@ namespace PuntoDeVenta.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var result = db.CortesCajeros.FirstOrDefault(x => x.Id == id);
+            var result = await db.CortesCajeros.FindAsync(id);
 
             if (result == null)
             {
@@ -263,6 +267,8 @@ namespace PuntoDeVenta.Controllers
             var _UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
             var user = await _UserManager.FindByIdAsync(result.IdCajero);
 
+            var nfi = new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," };
+
             var encabezado = new EncabezadoReporteCajero
             {
                 Cajero = user.Email,
@@ -270,7 +276,7 @@ namespace PuntoDeVenta.Controllers
                 Fecha = result.DateTApertura.ToString("dd/MM/yyyy"),
                 HoraI = result.DateTApertura.ToString("HH:mm:ss"),
                 HoraF = result.DateTCierre.Value.ToString("dd/MM/yyyy HH:mm:ss"),
-                TotalMonto = result.MontoTotal.Value.ToString(),
+                TotalMonto = result.MontoTotal.Value.ToString("#,##0.00", nfi),
                 Comentario = result.Comentario
             };
 
@@ -284,11 +290,11 @@ namespace PuntoDeVenta.Controllers
                 {
                     Concepto = item.Concepto,
                     TipoPago = item.TipoPago,
-                    Monto = item.Monto.HasValue ? double.Parse(item.Monto.Value.ToString("#.##"), new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }).ToString("F2") : null,
+                    Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
                     DataTOperacion = item.DateTOperacion.ToString(),
                     Numero = item.Numero,
                     Tipo = item.Tipo,
-                    CobroTag = item.CobroTag
+                    CobroTag = item.CobroTag,
                 });
             }
 
@@ -297,7 +303,7 @@ namespace PuntoDeVenta.Controllers
             {
                 string json = JsonConvert.SerializeObject(model);
                 HttpContent postContent = new StringContent(json, Encoding.UTF8, "application/json");
-                var response = await client.PostAsync(new Uri("http://localhost:56342/api/cajero?authenticationToken=abcxyz"), postContent);
+                var response = await client.PostAsync(new Uri("http://10.1.10.109:56342/api/cajero?authenticationToken=abcxyz"), postContent);
                 var message = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
             }
 

@@ -16,7 +16,7 @@ using System.Dynamic;
 
 namespace PuntoDeVenta.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "SuperUsuario, Cajero")]
     public class ClientesController : Controller
     {
         private AppDbContext db = new AppDbContext();
@@ -133,6 +133,7 @@ namespace PuntoDeVenta.Controllers
             };
 
             ViewBag.TipoCuentas = new SelectList(listItemsCuentas.AsEnumerable(), "Value", "Text");
+            ViewBag.TagsColectivos = new Tags();
 
             return View();
         }
@@ -168,7 +169,7 @@ namespace PuntoDeVenta.Controllers
         {
             db.Configuration.ValidateOnSaveEnabled = false;
             clientes.NumCliente = await RandomNumClient();
-            clientes.DateTCliente = DateTime.Now.Date;
+            clientes.DateTCliente = DateTime.Now;
             clientes.StatusCliente = true;
             clientes.IdCajero = User.Identity.GetUserId();
 
@@ -185,7 +186,7 @@ namespace PuntoDeVenta.Controllers
                 {
                     db.Clientes.Add(clientes);
                     await db.SaveChangesAsync();
-                    TempData["SCreate"] = $"Se registró el contrato correctamente el cliente: {nameclientes} {clientes.Nombre} {clientes.Apellidos}.";
+                    TempData["SCreate"] = $"Se registró el contrato correctamente el cliente: {clientes.NumCliente} {clientes.Nombre} {clientes.Apellidos}.";
                     return RedirectToAction("Index");
                 }
                 else

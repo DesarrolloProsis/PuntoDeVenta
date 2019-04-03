@@ -10,13 +10,16 @@ using System.Web.Mvc;
 using PuntoDeVenta.Models;
 using Microsoft.AspNet.Identity;
 using System.Globalization;
+using PuntoDeVenta.Services;
 
 namespace PuntoDeVenta.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "SuperUsuario, Cajero")]
     public class CuentasTelepeajesController : Controller
     {
         private AppDbContext db = new AppDbContext();
+        private MethodsGlb methods = new MethodsGlb();
+
         static public long? keyCliente = 0;
 
         public ActionResult ListCuentas(int? id)
@@ -140,6 +143,7 @@ namespace PuntoDeVenta.Controllers
                                 TipoPago = "NOR",
                                 Monto = double.Parse(modelCuenta.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }),
                                 CorteId = lastCorteUser.Id,
+                                NoReferencia = await methods.RandomNumReferencia(),
                             };
 
                             db.OperacionesCajeros.Add(detalle);
@@ -167,7 +171,7 @@ namespace PuntoDeVenta.Controllers
 
                             await db.SaveChangesAsync();
 
-                            TempData["SCreate"] = $"Se recargó ${modelCuenta.SaldoARecargar} a la cuenta: {FoundCuenta.cue.NumCuenta} con éxito.";
+                            TempData["SCreate"] = $"Se recargó Q{modelCuenta.SaldoARecargar} a la cuenta: {FoundCuenta.cue.NumCuenta} con éxito.";
 
                             return RedirectToAction("Index", ReturnController);
                         }
@@ -268,7 +272,7 @@ namespace PuntoDeVenta.Controllers
 
                         cuentasTelepeaje.StatusCuenta = true;
                         cuentasTelepeaje.StatusResidenteCuenta = false;
-                        cuentasTelepeaje.DateTCuenta = DateTime.Now.Date;
+                        cuentasTelepeaje.DateTCuenta = DateTime.Now;
                         cuentasTelepeaje.IdCajero = User.Identity.GetUserId();
 
                         ModelState.Remove("NumCuenta");
@@ -289,6 +293,7 @@ namespace PuntoDeVenta.Controllers
                                     Numero = cuentasTelepeaje.NumCuenta,
                                     Tipo = "CUENTA",
                                     CorteId = lastCorteUser.Id,
+                                    NoReferencia = await methods.RandomNumReferencia(),
                                 };
 
                                 if (cuentasTelepeaje.TypeCuenta == "Colectiva")

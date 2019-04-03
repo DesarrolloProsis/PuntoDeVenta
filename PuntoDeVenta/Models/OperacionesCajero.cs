@@ -38,5 +38,9 @@ namespace PuntoDeVenta.Models
         public virtual long CorteId { get; set; }
 
         public CortesCajero CortesCajero { get; set; }
+
+        public string NoReferencia { get; set; }
+
+        public bool StatusCancelacion { get; set; }
     }
 }

@@ -188,6 +188,8 @@
     </Reference>
     <Reference Include="Telerik.Reporting, Version=12.1.18.620, Culture=neutral, PublicKeyToken=a9d7983dfcc261be" />
     <Reference Include="Telerik.Reporting.OpenXmlRendering.2.7.2, Version=12.1.18.620, Culture=neutral, PublicKeyToken=a9d7983dfcc261be" />
+    <Reference Include="Telerik.Reporting.Services.WebApi, Version=12.1.18.620, Culture=neutral, PublicKeyToken=a9d7983dfcc261be" />
+    <Reference Include="Telerik.Reporting.XpsRendering, Version=12.1.18.620, Culture=neutral, PublicKeyToken=a9d7983dfcc261be" />
     <Reference Include="Telerik.ReportViewer.Mvc, Version=12.1.18.620, Culture=neutral, PublicKeyToken=a9d7983dfcc261be" />
     <Reference Include="WebGrease">
       <Private>True</Private>
@@ -274,6 +276,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ClientesController.cs" />
     <Compile Include="Controllers\CuentasTelepeajesController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HistoricoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -357,13 +360,9 @@
     <Compile Include="Migrations\201903211650468_phoneno.Designer.cs">
       <DependentUpon>201903211650468_phoneno.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201904031542563_SaldoAnteriorYExcepcion.cs" />
-    <Compile Include="Migrations\201904031542563_SaldoAnteriorYExcepcion.Designer.cs">
-      <DependentUpon>201904031542563_SaldoAnteriorYExcepcion.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201904031733234_NuevaColumna.cs" />
-    <Compile Include="Migrations\201904031733234_NuevaColumna.Designer.cs">
-      <DependentUpon>201904031733234_NuevaColumna.cs</DependentUpon>
+    <Compile Include="Migrations\201903261750409_addtwocolumns.cs" />
+    <Compile Include="Migrations\201903261750409_addtwocolumns.Designer.cs">
+      <DependentUpon>201903261750409_addtwocolumns.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -383,6 +382,7 @@
     <Compile Include="Models\TableHistorico.cs" />
     <Compile Include="Models\Tags.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\MethodsGlb.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -534,7 +534,9 @@
     <Content Include="Content\css-yisus\img\columns-solid.svg" />
     <Content Include="Content\css-yisus\img\credit-card-solid.svg" />
     <Content Include="Content\css-yisus\img\cruces.svg" />
+    <Content Include="Content\css-yisus\img\exclamacion.svg" />
     <Content Include="Content\css-yisus\img\file-invoice-dollar-solid.svg" />
+    <Content Include="Content\css-yisus\img\flecha.svg" />
     <Content Include="Content\css-yisus\img\hand-holding-usd-solid.svg" />
     <Content Include="Content\css-yisus\img\list-ul-solid.svg" />
     <Content Include="Content\css-yisus\img\Logo.png" />
@@ -763,6 +765,11 @@
     <Content Include="Scripts\jQuery-Mask-Plugin-master\test\zepto\data.js" />
     <Content Include="Scripts\jQuery-Mask-Plugin-master\test\zepto\event.js" />
     <Content Include="Scripts\jQuery-Mask-Plugin-master\test\zepto\zepto.min.js" />
+    <Content Include="Scripts\jquery-number-master\.gitignore" />
+    <Content Include="Scripts\jquery-number-master\examples\demo-as-you-type.html" />
+    <Content Include="Scripts\jquery-number-master\jquery.number.js" />
+    <Content Include="Scripts\jquery-number-master\jquery.number.min.js" />
+    <Content Include="Scripts\jquery-number-master\LICENSE.txt" />
     <Content Include="Scripts\jquery.mask.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
@@ -885,6 +892,10 @@
     <Content Include="Scripts\jQuery-Mask-Plugin-master\package-lock.json" />
     <Content Include="Scripts\jQuery-Mask-Plugin-master\package.json" />
     <Content Include="Scripts\jQuery-Mask-Plugin-master\README.md" />
+    <Content Include="Scripts\jquery-number-master\bower.json" />
+    <Content Include="Scripts\jquery-number-master\df-number-format.jquery.json" />
+    <Content Include="Scripts\jquery-number-master\jquery.number.min.js.map" />
+    <Content Include="Scripts\jquery-number-master\README.markdown" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -988,6 +999,9 @@
     <Content Include="Views\Clientes\_CuentasTags.cshtml" />
     <Content Include="Views\Shared\_AddTags.cshtml" />
     <Content Include="Views\Clientes\Deshabilitar.cshtml" />
+    <Content Include="Views\Shared\_LayoutReports.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Shared\_AddTagsColectivos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1061,11 +1075,8 @@
     <EmbeddedResource Include="Migrations\201903211650468_phoneno.resx">
       <DependentUpon>201903211650468_phoneno.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201904031542563_SaldoAnteriorYExcepcion.resx">
-      <DependentUpon>201904031542563_SaldoAnteriorYExcepcion.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201904031733234_NuevaColumna.resx">
-      <DependentUpon>201904031733234_NuevaColumna.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201903261750409_addtwocolumns.resx">
+      <DependentUpon>201903261750409_addtwocolumns.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

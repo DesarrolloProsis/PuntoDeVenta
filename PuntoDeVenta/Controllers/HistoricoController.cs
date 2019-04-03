@@ -15,6 +15,7 @@ using System.IO;
 
 namespace PuntoDeVenta.Controllers
 {
+    [Authorize(Roles = "SuperUsuario, Cajero")]
     public class HistoricoController : Controller
     {
 

@@ -90,7 +90,16 @@ namespace PuntoDeVenta.Controllers
             {
                 case SignInStatus.Success:
                     //return RedirectToLocal(returnUrl);
-                    return RedirectToAction("Index", "home", new { verfiAction = "NewLogin" });
+                    using (ApplicationDbContext app = new ApplicationDbContext())
+                    {
+                        var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
+                        var IdUser = await userManager.FindByEmailAsync(model.Email);
+
+                        if (userManager.IsInRole(IdUser.Id, "GenerarReporte"))
+                            return RedirectToAction("GenerarReportes", "Home");
+                    }
+
+                    return RedirectToAction("Index", "Home", new { verfiAction = "NewLogin" });
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -193,7 +202,8 @@ namespace PuntoDeVenta.Controllers
         {
             var items = new List<SelectListItem> {
                 new SelectListItem { Text = "Administrador", Value = "SuperUsuario" },
-                new SelectListItem { Text = "Cajero", Value = "Cajero"}
+                new SelectListItem { Text = "Cajero", Value = "Cajero"},
+                new SelectListItem { Text = "Supervisor", Value = "GenerarReporte"}
             };
 
             ViewBag.Roles = items;
@@ -538,12 +548,28 @@ namespace PuntoDeVenta.Controllers
                         await db.SaveChangesAsync();
 
                         AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-                        return RedirectToAction("Index", "Home");
+
+                        return RedirectToAction("ReporteCajero", "Home", new { id = corte.Id });
+                        //return RedirectToAction("Index", "Home");
+
                     }
                 }
 
                 return RedirectToAction("Index", "Home");
             }
+        }
+
+
+        //
+        // GET: /Account/LogOff
+        [AllowAnonymous]
+        //[ValidateAntiForgeryToken]
+        public ActionResult LogOffWithoutCorte()
+        {
+            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+
+            return RedirectToAction("Index", "Home");
+
         }
 
         //
