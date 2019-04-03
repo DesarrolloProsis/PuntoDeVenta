@@ -121,6 +121,8 @@
 
 @Html.Partial("_AddTags")
 
+@Html.Partial("_AddTagsColectivos")
+
 <!-- Modal Create Cuenta -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -829,20 +831,38 @@
 
                 $("#numcuenta").val(data.NumCuenta);
                 $("#CuentaId").val(data.Id);
-                $("#CobroTag").val("100.00");
+                $("#CobroTag").val("77.00");
                 $("#tipocuenta").val(data.TypeCuenta);
+
+                /**/
+
+                $("#modelTags_numcuenta").val("");
+                $("#modelTags_CuentaId").val("");
+                $("#modelTags_CobroTag").val("");
+                $("#modelTags_tipocuenta").val("");
+                $("#modelTags_SaldoTag").val("");
+                $("#modelTags_NumTag").val("");
+
+                $("#modelTags_numcuenta").val(data.NumCuenta);
+                $("#modelTags_CuentaId").val(data.Id);
+                $("#modelTags_CobroTag").val("77.00");
+                $("#modelTags_tipocuenta").val(data.TypeCuenta);
+
+
 
                 if (data.TypeCuenta == "Colectiva") {
                     $("#fromTo").hide();
                     $("#fromTo1").hide();
+                    $("#fromTo2").hide();
+                    $("#fromTo12").hide();
+                    $('#AddTags2').modal('show');
                 } else if (data.TypeCuenta == "Individual") {
                     $("#fromTo").show();
                     $("#fromTo1").show();
+                    $('#exampleModalCenter2').modal('show');
                 }
 
                 //console.log(dataItem);
-
-                $('#exampleModalCenter2').modal('show');
             });
 
             $("#example_table tbody").on('click', 'td.ndeshabilitarcue', function (e) {
@@ -908,6 +928,52 @@
                 var url = '@Url.Action("Habilitar", "CuentasTelepeajes", new { id = "__id__" })';
                 window.location.href = url.replace('__id__', $("#idcuentahab").val());
             });
+
+            /*****************************************/
+
+            $('#CrearTagAjax').on('click', function (e) {
+                e.preventDefault();
+                var form = $("#FormAddTags2").validate();
+
+                if (form.valid() && $("#modelTags_NumTag").val() != "") {
+
+                    if ($("#modelTags_tipocuenta").val() == "Colectiva" && $("#modelTags_SaldoTag").val() == "") {
+
+                        saldoTag = 0;
+
+                        var costotag = $("#modelTags_CobroTag").val();
+                        var total = parseFloat(costotag) + parseFloat(saldoTag);
+
+                        var tags = {};
+
+                        tags.NumTag = $("#modelTags_NumTag").val();
+                        tags.CobroTag = costotag;
+                        tags.CuentaId = $("#modelTags_CuentaId").val();
+                        //$("#Tagnumcuenta").text($("#modelTags_numcuenta").val());
+                        //$("#TagSaldo").text(saldoTag);
+                        //$("#total").text(total);
+
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("CreateTagsAjax", "Tags")',
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            data: JSON.stringify(tags),
+                            success: function (result) {
+                                alert(result.Message);
+                            },
+                            failure: function (response) {
+                                console.log(response.responseText);
+                            },
+                            error: function (response) {
+                                console.log(response.responseText);
+                            }
+                        });
+                    }
+                }
+            });
+
+            /*****************************************/
 
             $('#CrearTag').on('click', function (e) {
                 e.preventDefault();
@@ -1141,6 +1207,9 @@
 
                 $('#modelTag_SaldoARecargar').mask("#,##0.00", { reverse: true });
                 $('#modelTag_ConfSaldoARecargar').mask("#,##0.00", { reverse: true });
+
+                $("#modelTags_SaldoTag").mask("#,##0.00", { reverse: true });
+                $("#modelTags_CobroTag").mask("#,##0.00", { reverse: true });
             });
         });
     </script>
@@ -1150,7 +1219,16 @@
             el: '#datos',
             data: {
                 checked: false,
-                max: 12,
+                max: 11,
+                text: ''
+            },
+        });
+
+        let datos2 = new Vue({
+            el: '#datos2',
+            data: {
+                checked: false,
+                max: 11,
                 text: ''
             },
         });

@@ -1000,6 +1000,7 @@
     <Content Include="Views\Clientes\Deshabilitar.cshtml" />
     <Content Include="Views\Shared\_LayoutReports.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Shared\_AddTagsColectivos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

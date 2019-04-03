@@ -133,6 +133,7 @@ namespace PuntoDeVenta.Controllers
             };
 
             ViewBag.TipoCuentas = new SelectList(listItemsCuentas.AsEnumerable(), "Value", "Text");
+            ViewBag.TagsColectivos = new Tags();
 
             return View();
         }
@@ -168,7 +169,7 @@ namespace PuntoDeVenta.Controllers
         {
             db.Configuration.ValidateOnSaveEnabled = false;
             clientes.NumCliente = await RandomNumClient();
-            clientes.DateTCliente = DateTime.Now.Date;
+            clientes.DateTCliente = DateTime.Now;
             clientes.StatusCliente = true;
             clientes.IdCajero = User.Identity.GetUserId();
 
