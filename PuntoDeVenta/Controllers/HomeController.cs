@@ -185,7 +185,7 @@ namespace PuntoDeVenta.Controllers
 
                 //var result = _roleManager.Create(new IdentityRole("SuperUsuario"));
                 //var result = _roleManager.Create(new IdentityRole("Cajero"));
-                var result = _roleManager.Create(new IdentityRole("GenerarReporte"));
+                //result = _roleManager.Create(new IdentityRole("GenerarReporte"));
                 //var user = _UserManager.AddToRole(idUser, "SuperUsuario");
                 //var userRole = _UserManager.IsInRole(idUser, "Cajero");
 

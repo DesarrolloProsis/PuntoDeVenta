@@ -340,14 +340,6 @@
     <Compile Include="Migrations\201902262019538_NoSeQuPaso.Designer.cs">
       <DependentUpon>201902262019538_NoSeQuPaso.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201902271741166_NuTagXTag.cs" />
-    <Compile Include="Migrations\201902271741166_NuTagXTag.Designer.cs">
-      <DependentUpon>201902271741166_NuTagXTag.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201902271746179_NombresColumn.cs" />
-    <Compile Include="Migrations\201902271746179_NombresColumn.Designer.cs">
-      <DependentUpon>201902271746179_NombresColumn.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201902271857475_cientecampos.cs" />
     <Compile Include="Migrations\201902271857475_cientecampos.Designer.cs">
       <DependentUpon>201902271857475_cientecampos.cs</DependentUpon>
@@ -363,6 +355,10 @@
     <Compile Include="Migrations\201903261750409_addtwocolumns.cs" />
     <Compile Include="Migrations\201903261750409_addtwocolumns.Designer.cs">
       <DependentUpon>201903261750409_addtwocolumns.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904041525286_BorrarExcepcion.cs" />
+    <Compile Include="Migrations\201904041525286_BorrarExcepcion.Designer.cs">
+      <DependentUpon>201904041525286_BorrarExcepcion.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -1060,12 +1056,6 @@
     <EmbeddedResource Include="Migrations\201902262019538_NoSeQuPaso.resx">
       <DependentUpon>201902262019538_NoSeQuPaso.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201902271741166_NuTagXTag.resx">
-      <DependentUpon>201902271741166_NuTagXTag.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201902271746179_NombresColumn.resx">
-      <DependentUpon>201902271746179_NombresColumn.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201902271857475_cientecampos.resx">
       <DependentUpon>201902271857475_cientecampos.cs</DependentUpon>
     </EmbeddedResource>
@@ -1077,6 +1067,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903261750409_addtwocolumns.resx">
       <DependentUpon>201903261750409_addtwocolumns.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904041525286_BorrarExcepcion.resx">
+      <DependentUpon>201904041525286_BorrarExcepcion.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

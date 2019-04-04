@@ -124,11 +124,11 @@
 @Html.Partial("_AddTagsColectivos")
 
 <!-- Modal Create Cuenta -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="ModalNuevaCuenta" tabindex="-1" role="dialog" aria-labelledby="ModalNuevaCuentaTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Crear cuenta</h5>
+                <h5 class="modal-title" id="ModalNuevaCuentaTitle">Crear cuenta</h5>
                 <button type="button" class="close" aria-label="Close" data-dismiss="modal">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -593,7 +593,7 @@
                 $("#ClienteId").val("");
                 $("#SaldoCuenta").val("");
 
-                $('#exampleModalCenter').modal('show');
+                $('#ModalNuevaCuenta').modal('show');
 
                 $("#numcliente").val(data.NumCliente);
                 $("#nomcliente").val(data.NombreCompleto);
@@ -684,7 +684,7 @@
                 var form = $("#FormCreateCuenta").validate();
 
                 if (form.valid()) {
-                    $('#exampleModalCenter').modal('hide');
+                    $('#ModalNuevaCuenta').modal('hide');
 
                     var val = $("#TypeCuenta option:selected").val();
 

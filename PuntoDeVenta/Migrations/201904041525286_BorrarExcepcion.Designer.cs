@@ -7,18 +7,18 @@ namespace PuntoDeVenta.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class NombresColumn : IMigrationMetadata
+    public sealed partial class BorrarExcepcion : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(NombresColumn));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(BorrarExcepcion));
         
         string IMigrationMetadata.Id
         {
-            get { return "201902271746179_NombresColumn"; }
+            get { return "201904041525286_BorrarExcepcion"; }
         }
         
         string IMigrationMetadata.Source
         {
-            get { return null; }
+            get { return Resources.GetString("Source"); }
         }
         
         string IMigrationMetadata.Target
