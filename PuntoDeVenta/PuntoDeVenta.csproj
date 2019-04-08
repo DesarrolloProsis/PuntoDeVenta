@@ -356,9 +356,13 @@
     <Compile Include="Migrations\201903261750409_addtwocolumns.Designer.cs">
       <DependentUpon>201903261750409_addtwocolumns.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201904041525286_BorrarExcepcion.cs" />
-    <Compile Include="Migrations\201904041525286_BorrarExcepcion.Designer.cs">
-      <DependentUpon>201904041525286_BorrarExcepcion.cs</DependentUpon>
+    <Compile Include="Migrations\201904051537403_emihisto.cs" />
+    <Compile Include="Migrations\201904051537403_emihisto.Designer.cs">
+      <DependentUpon>201904051537403_emihisto.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904051546333_emx.cs" />
+    <Compile Include="Migrations\201904051546333_emx.Designer.cs">
+      <DependentUpon>201904051546333_emx.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -998,6 +1002,7 @@
     <Content Include="Views\Shared\_LayoutReports.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Shared\_AddTagsColectivos.cshtml" />
+    <Content Include="Views\Home\MovimientoCajero.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1068,8 +1073,11 @@
     <EmbeddedResource Include="Migrations\201903261750409_addtwocolumns.resx">
       <DependentUpon>201903261750409_addtwocolumns.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201904041525286_BorrarExcepcion.resx">
-      <DependentUpon>201904041525286_BorrarExcepcion.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201904051537403_emihisto.resx">
+      <DependentUpon>201904051537403_emihisto.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904051546333_emx.resx">
+      <DependentUpon>201904051546333_emx.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

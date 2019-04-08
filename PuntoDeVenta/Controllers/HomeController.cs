@@ -2,6 +2,7 @@
 using Microsoft.AspNet.Identity.EntityFramework;
 using Newtonsoft.Json;
 using PuntoDeVenta.Models;
+using PuntoDeVenta.Services;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -309,7 +310,153 @@ namespace PuntoDeVenta.Controllers
 
             return View("ReportViewerCajero", encabezado);
         }
+        public ActionResult MovimientoCajero(string corte, long? CorteId)
+        {
+            try
+            {
+                long id;
+                if (CorteId == null)
+                {
+                    var AtrCorte = db.CortesCajeros.Where(x => x.NumCorte == corte).ToList();
+                    id = AtrCorte[0].Id;
+                }
+                else
+                {
+                    id = Convert.ToInt64(CorteId);
+                }
 
+                ViewBag.Corte = id.ToString();
+                var MovimientoDeCorte = db.OperacionesCajeros.Where(x => x.CorteId == id).ToList();
+                var ListaOperaciones = new List<OperacionesCajero>();
+                foreach (var item in MovimientoDeCorte)
+                {
+
+                    var model = new OperacionesCajero
+                    {
+                        Id = item.Id,
+                        Concepto = item.Concepto,
+                        TipoPago = item.TipoPago,
+                        Monto = item.Monto,
+                        DateTOperacion = item.DateTOperacion,
+                        CorteId = item.CorteId,
+                        Numero = item.Numero,
+                        Tipo = item.Tipo,
+                        CobroTag = item.CobroTag,
+                        StatusCancelacion = item.StatusCancelacion,
+                        NoReferencia = item.NoReferencia
+
+                    };
+                    ListaOperaciones.Add(model);
+                }
+                return View("MovimientoCajero", ListaOperaciones.AsEnumerable());
+            }
+            catch (Exception Ex)
+            {
+                return View("Index");
+            }
+        }
+
+        public ActionResult CancelarOperacion(int id, long corteid, string Filtro)
+        {
+            MethodsGlb method = new MethodsGlb();
+            var SelectedOperacion = db.OperacionesCajeros.Where(x => x.Id == id).FirstOrDefault();
+            if (SelectedOperacion.StatusCancelacion == false)
+            {
+                db.OperacionesCajeros.Add(new OperacionesCajero
+                {
+                    Concepto = "CANCELACIÓN",
+                    TipoPago = "CAN",
+                    Monto = SelectedOperacion.Monto,
+                    DateTOperacion = DateTime.Now,
+                    CorteId = SelectedOperacion.CorteId,
+                    Numero = SelectedOperacion.Numero,
+                    Tipo = SelectedOperacion.Tipo,
+                    CobroTag = SelectedOperacion.CobroTag,
+                    NoReferencia = method.RandomNumReferencia2().ToString(),
+                    StatusCancelacion = true
+                });
+                if (SelectedOperacion.Tipo == "TAG")
+                {
+                    var UpdatedTag = db.Tags.Where(x => x.NumTag == SelectedOperacion.Numero).FirstOrDefault();
+                    UpdatedTag.SaldoTag = (Convert.ToDouble(UpdatedTag.SaldoTag) - (Convert.ToDouble(SelectedOperacion.Monto) * 100)).ToString();
+
+                    if (Convert.ToDouble(UpdatedTag.SaldoTag) < 1525)
+                        UpdatedTag.StatusTag = false;
+                }
+                else
+                {
+                    var UpdatedCuenta = db.CuentasTelepeajes.Where(x => x.NumCuenta == SelectedOperacion.Numero).FirstOrDefault();
+                    var UpdatedTags = db.Tags.Where(x => x.CuentaId == UpdatedCuenta.Id).ToList();
+                    UpdatedCuenta.SaldoCuenta = (Convert.ToDouble(UpdatedCuenta.SaldoCuenta) - (Convert.ToDouble(SelectedOperacion.Monto)) * 100).ToString();
+                    if (Convert.ToDouble(UpdatedCuenta.SaldoCuenta) < 60000)
+                        UpdatedCuenta.StatusCuenta = false;
+                    foreach (var item in UpdatedTags)
+                    {
+                        item.SaldoTag = (Convert.ToDouble(item.SaldoTag) - (Convert.ToDouble(SelectedOperacion.Monto)) * 100).ToString();
+                        if (!UpdatedCuenta.StatusCuenta)
+                            item.StatusTag = false;
+                    }
+                }
+                SelectedOperacion.StatusCancelacion = true;
+                db.SaveChanges();
+            }
+            return RedirectToAction("MovimientoCajero", new { CorteId = corteid, Concepto = Filtro });
+        }
+        [HttpPost]
+        public ActionResult MovimientoCajero(string Concepto, long CorteId)
+        {
+            ViewBag.Filtro = Concepto;
+            if (Concepto == "Todas las operaciones" || Concepto == null)
+            {
+                var MovimientosdeCorte = db.OperacionesCajeros.Where(x => x.CorteId == CorteId).ToList();
+                List<OperacionesCajero> model = new List<OperacionesCajero>();
+                foreach (var item in MovimientosdeCorte)
+                {
+                    var operacion = new OperacionesCajero
+                    {
+                        Id = item.Id,
+                        Concepto = item.Concepto,
+                        TipoPago = item.TipoPago,
+                        Monto = item.Monto,
+                        DateTOperacion = item.DateTOperacion,
+                        CorteId = item.CorteId,
+                        Numero = item.Numero,
+                        Tipo = item.Tipo,
+                        CobroTag = item.CobroTag,
+                        NoReferencia = item.NoReferencia,
+                        StatusCancelacion = item.StatusCancelacion
+                    };
+                    model.Add(operacion);
+                }
+                ViewBag.Corte = CorteId.ToString();
+                return View("MovimientoCajero", model);
+            }
+            else
+            {
+                var MovimientosdeCorte = db.OperacionesCajeros.Where(x => x.CorteId == CorteId && x.Concepto.Trim() == Concepto.Trim()).ToList();
+                List<OperacionesCajero> model = new List<OperacionesCajero>();
+                foreach (var item in MovimientosdeCorte)
+                {
+                    var operacion = new OperacionesCajero
+                    {
+                        Id = item.Id,
+                        Concepto = item.Concepto,
+                        TipoPago = item.TipoPago,
+                        Monto = item.Monto,
+                        DateTOperacion = item.DateTOperacion,
+                        CorteId = item.CorteId,
+                        Numero = item.Numero,
+                        Tipo = item.Tipo,
+                        CobroTag = item.CobroTag,
+                        NoReferencia = item.NoReferencia,
+                        StatusCancelacion = item.StatusCancelacion
+                    };
+                    model.Add(operacion);
+                }
+                ViewBag.Corte = CorteId.ToString();
+                return View("MovimientoCajero", model);
+            }
+        }
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";

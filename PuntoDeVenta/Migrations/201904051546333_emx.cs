@@ -3,16 +3,16 @@ namespace PuntoDeVenta.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class BorrarExcepcion : DbMigration
+    public partial class emx : DbMigration
     {
         public override void Up()
         {
-            DropColumn("dbo.Historico", "Excepcion");
+            AlterColumn("dbo.Historico", "Evento", c => c.String(maxLength: 10));
         }
         
         public override void Down()
         {
-            AddColumn("dbo.Historico", "Excepcion", c => c.String(maxLength: 30));
+            AlterColumn("dbo.Historico", "Evento", c => c.String(maxLength: 11));
         }
     }
 }

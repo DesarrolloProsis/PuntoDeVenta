@@ -949,6 +949,13 @@
                         tags.NumTag = $("#modelTags_NumTag").val();
                         tags.CobroTag = costotag;
                         tags.CuentaId = $("#modelTags_CuentaId").val();
+                        tags.OldTag = $("#modelTags_OldTag").val();
+                        tags.OldSaldo = $("#modelTags_OldSaldo").val();
+                        tags.Observacion = $("#modelTags_Observacion").val();
+
+                        let currChecked = $("#customControlInline2").prop("checked");
+
+                        tags.Checked = currChecked;
                         //$("#Tagnumcuenta").text($("#modelTags_numcuenta").val());
                         //$("#TagSaldo").text(saldoTag);
                         //$("#total").text(total);
@@ -961,6 +968,12 @@
                             data: JSON.stringify(tags),
                             success: function (result) {
                                 alert(result.Message);
+                                $("#modelTags_CobroTag").val("77.00");
+                                $("#modelTags_SaldoTag").val("");
+                                $("#modelTags_NumTag").val("");
+                                $("#modelTags_OldTag").val("");
+                                $("#modelTags_OldSaldo").val("");
+                                $("#modelTags_Observacion").val("");
                             },
                             failure: function (response) {
                                 console.log(response.responseText);

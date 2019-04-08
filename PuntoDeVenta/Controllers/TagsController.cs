@@ -420,6 +420,7 @@ namespace PuntoDeVenta.Controllers
                                     TipoPago = "NOR",
                                     CorteId = lastCorteUser.Id,
                                     CobroTag = double.Parse(tags.CobroTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }),
+                                    NoReferencia = await methods.RandomNumReferencia(),
                                 };
 
                                 switch (cuenta.TypeCuenta)

@@ -122,12 +122,12 @@ namespace PuntoDeVenta.Controllers
 
 
                         var Saldo = db.Tags.Where(x => x.NumTag == Tag).ToList();
-                        string Saldo_ = Convert.ToString((Convert.ToInt32(Saldo[0].SaldoTag.ToString()) / 100));
+                        
 
 
                         if (Saldo.Count > 0)
                         {
-
+                            string Saldo_ = Convert.ToString((Convert.ToDouble(Saldo[0].SaldoTag.ToString()) / 100));
                             var Lista = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio && x.Fecha < Fecha_Ayuda).Where(x => x.Tag == Tag).ToList();
                             var Movimientos = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio && x.Fecha < Fecha_Ayuda).Where(x => x.Tag == Tag).Count();
                             //Si es un Tag Mandar un True en el object
@@ -157,7 +157,7 @@ namespace PuntoDeVenta.Controllers
 
                         if (Saldo.Count > 0)
                         {
-                            string Saldo_ = Convert.ToString((Convert.ToInt32(Saldo[0].SaldoTag.ToString()) / 100));
+                            string Saldo_ = Convert.ToString((Convert.ToDouble(Saldo[0].SaldoTag.ToString()) / 100));
                             var Lista = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio && x.Fecha <= model.Fecha_Fin).Where(x => Pruebas.Contains(x.Tag)).ToList();
                             var Movimientos = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio && x.Fecha <= model.Fecha_Fin).Where(x => Pruebas.Contains(x.Tag)).Count();
                             //Si es un Tag Mandar un True en el object
@@ -191,8 +191,18 @@ namespace PuntoDeVenta.Controllers
 
                         if (Saldo.Count > 0)
                         {
+                            string Saldo_ = string.Empty;
                             var ID = Saldo[0].Id;
-                            string Saldo_ = Convert.ToString((Convert.ToInt32(Saldo[0].SaldoCuenta.ToString()) / 100));
+                            if (Saldo[0].TypeCuenta == "Individual")
+                            {
+                                var Tag_Cuenta = db.Tags.Where(x => x.CuentaId == ID).ToList();
+                                Saldo_ = Convert.ToString((Convert.ToDouble(Tag_Cuenta[0].SaldoTag) / 100));
+                                //string Saldo_ = Convert.ToString((Convert.ToInt32(Saldo[0].SaldoCuenta.ToString()) / 100));
+                            }
+                            else
+                            {
+                                Saldo_ = Convert.ToString((Convert.ToDouble(Saldo[0].SaldoCuenta.ToString()) / 100));
+                            }
                             var her = db.Tags.Where(x => x.CuentaId == ID).ToList();
 
                             foreach (var item in her)
@@ -223,7 +233,19 @@ namespace PuntoDeVenta.Controllers
                         if (Saldo.Count > 0)
                         {
                             var ID = Saldo[0].Id;
-                            string Saldo_ = Convert.ToString((Convert.ToInt32(Saldo[0].SaldoCuenta.ToString()) / 100));
+                            string Saldo_ = string.Empty;
+
+                            if (Saldo[0].TypeCuenta == "Individual")
+                            {
+                                var Tag_Cuenta = db.Tags.Where(x => x.CuentaId == ID).ToList();
+                                Saldo_ = Convert.ToString((Convert.ToDouble(Tag_Cuenta[0].SaldoTag) / 100));
+                                //string Saldo_ = Convert.ToString((Convert.ToInt32(Saldo[0].SaldoCuenta.ToString()) / 100));
+                            }
+                            else
+                            {
+                                Saldo_ = Convert.ToString((Convert.ToDouble(Saldo[0].SaldoCuenta.ToString()) / 100));
+                            }
+                            
                             var her = db.Tags.Where(x => x.CuentaId == ID).ToList();
 
                             foreach (var item in her)
@@ -282,10 +304,19 @@ namespace PuntoDeVenta.Controllers
             AppDbContext db = new AppDbContext();
             List<Historicos> List = new List<Historicos>();
             DataTable dt = new DataTable();
+            if(model.Fecha_Fin == DateTime.Now.Date)
+            {
+
+            }
+            else
+            {
+
+            }
 
 
             if (model.Fecha_Fin > model.Fecha_Inicio)
             {
+                
                 var Lista = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio && x.Fecha < model.Fecha_Fin).ToList();
                 model.Info = new { Fecha_Inicio, Fecha_Fin, Tipo = "SOLO_FECHA" };
                 Crear_Lista(Lista);
@@ -293,7 +324,7 @@ namespace PuntoDeVenta.Controllers
             else if (Fecha_Inicio == Fecha_Fin)
             {
                 DateTime Fecha_Ayuda = model.Fecha_Inicio.AddDays(1);
-                var Lista = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio && x.Fecha < model.Fecha_Fin).ToList();
+                var Lista = db.Historicos.Where(x => x.Fecha >= model.Fecha_Inicio && x.Fecha < Fecha_Ayuda).ToList();
                 model.Info = new { Fecha_Inicio, Fecha_Fin, Tipo = "SOLO_FECHA" };
                 Crear_Lista(Lista);
             }
