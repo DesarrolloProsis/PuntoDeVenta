@@ -1,0 +1,94 @@
+﻿@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.EntityFramework;
+@using PuntoDeVenta.Models;
+
+@{
+    var modelTags = (PuntoDeVenta.Models.Tags)ViewBag.TagsColectivos;
+}
+
+
+<!-- Modal Add Tags-->
+<div class="modal fade" id="AddTags2" tabindex="-1" role="dialog" aria-labelledby="AddTagsTitle2" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AddTagsTitle2">Agregar tag</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="datos2">
+                @using (Html.BeginForm("CreateTagsAjax", "Tags", FormMethod.Post, htmlAttributes: new { @id = "FormAddTags2" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="modal-body">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            <img class="img-modal" src="~/Content/css-yisus/img/slack-hash-brands.svg" /><label for="modelTags_numcuenta"> Número de cuenta</label>
+                            <input id="modelTags_numcuenta" class="form-control formulario1" type="text" placeholder="Readonly input here…" readonly>
+                        </div>
+                        <div class="form-group">
+                            <img class="img-modal" src="~/Content/css-yisus/img/columns-solid.svg" /><label for="modelTags_tipocuenta">Tipo de cuenta:</label>
+                            <input id="modelTags_tipocuenta" class="form-control formulario1" type="text" placeholder="Readonly input here…" readonly>
+                        </div>
+                        <div class="form-group">
+                            <img class="img-modal" src="~/Content/css-yisus/img/slack-hash-brands.svg" /> @Html.LabelFor(model => modelTags.NumTag, htmlAttributes: new { @class = "control-label" })
+                            @{
+                                IDictionary<string, object> dicNumTag = new Dictionary<string, object>() { { "placeholder", "Ej. 501000000000" }, { ":maxlength", "max" }, { @"class", "form-control formulario1" }, { "v-model", "text" } };
+                            }
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text" v-text="(max - text.length)"></div>
+                                </div>
+                                @Html.EditorFor(model => modelTags.NumTag, new { htmlAttributes = dicNumTag })
+                            </div>
+                            @Html.ValidationMessageFor(model => modelTags.NumTag, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            <img class="img-modal" src="~/Content/css-yisus/img/hand-holding-usd-solid.svg" />@Html.LabelFor(model => modelTags.CobroTag, htmlAttributes: new { @class = "control-label" })
+                            @Html.EditorFor(model => modelTags.CobroTag, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                            @Html.ValidationMessageFor(model => modelTags.CobroTag, "", new { @class = "text-danger" })
+                        </div>
+                        <div id="fromTo2">
+                            <div class="form-group">
+                                <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" />@Html.LabelFor(model => modelTags.SaldoTag, htmlAttributes: new { @class = "control-label" })
+                                @Html.EditorFor(model => modelTags.SaldoTag, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                                @Html.ValidationMessageFor(model => modelTags.SaldoTag, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div v-show="checked">
+                            <hr />
+                            <div class="form-group">
+                                <img class="img-modal" src="~/Content/css-yisus/img/slack-hash-brands.svg" /><label for="OldTag" class="col-form-label">Antigüo número de tag:</label>
+                                @Html.EditorFor(x => modelTags.OldTag, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                                @Html.ValidationMessageFor(x => modelTags.OldTag, "", new { @class = "text-danger" })
+                            </div>
+                            <div id="fromTo12">
+                                <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" />
+                                <label for="OldTag" class="col-form-label">Saldo antigüo del tag:</label>
+                                @Html.EditorFor(model => modelTags.OldSaldo, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                                @Html.ValidationMessageFor(model => modelTags.OldSaldo, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                <label for="Observacion" class="col-form-label">Observación:</label>
+                                @Html.TextAreaFor(x => modelTags.Observacion, htmlAttributes: new { @class = "form-control formulario1" })
+                            </div>
+                        </div>
+                        @Html.HiddenFor(model => modelTags.CuentaId)
+                    </div>
+                    <div class="modal-footer">
+                        <div class="custom-control custom-checkbox mr-sm-auto" id="modelTags_checkboxme">
+                            @{
+                                IDictionary<string, object> dicChecked2 = new Dictionary<string, object>() { { @"v-model", "checked" }, { @"type", "checkbox" }, { @"class", "custom-control-input" }, { @"id", "customControlInline2" } };
+                            }
+                            @Html.CheckBoxFor(x => modelTags.Checked, htmlAttributes: dicChecked2)
+                            <label class="custom-control-label" for="customControlInline2">Traspaso</label>
+                        </div>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-success botonaceptar" id="CrearTagAjax">Crear</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

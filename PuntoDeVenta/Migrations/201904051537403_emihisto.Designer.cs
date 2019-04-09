@@ -7,13 +7,13 @@ namespace PuntoDeVenta.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class NombresColumn : IMigrationMetadata
+    public sealed partial class emihisto : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(NombresColumn));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(emihisto));
         
         string IMigrationMetadata.Id
         {
-            get { return "201902271746179_NombresColumn"; }
+            get { return "201904051537403_emihisto"; }
         }
         
         string IMigrationMetadata.Source

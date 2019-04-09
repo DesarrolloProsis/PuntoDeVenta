@@ -144,7 +144,7 @@
                 </button>
             </div>
             <div class="col-md-4" style="margin-top: 2% !important;">
-                <button class="btn boton-inicio" onclick="location.href='@Url.Action("Generar", "Historico")'">
+                <button class="btn boton-inicio" onclick="location.href='@Url.Action("Index", "Historico")'">
                     <div class="row">
                         <div class="col-md-12"><img src="~/Content/css-yisus/img/cruces.svg" class="tamano" /></div>
                     </div>
@@ -168,7 +168,7 @@
                 </button>
             </div>
             <div class="col-md-4" style="margin-top: 2% !important;">
-                <button class="btn boton-inicioinactive">
+                <button class="btn boton-inicio" onclick="location.href='@Url.Action("MovimientoCajero", "Home",new { corte = ViewBag.Corte})'">
                     <div class="row">
                         <div class="col-md-12"><img src="~/Content/css-yisus/img/list-ul-solid.svg" class="tamano" /></div>
                     </div>

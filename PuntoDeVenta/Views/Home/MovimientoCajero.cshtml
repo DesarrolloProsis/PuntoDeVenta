@@ -1,0 +1,159 @@
+﻿@model IEnumerable<PuntoDeVenta.Models.OperacionesCajero>
+
+@{
+    ViewBag.Title = "MovimientoCajero";
+}
+@if (ViewBag.Filtro != null)
+{
+    <h4>Filtrado por  @ViewBag.Filtro</h4>
+}
+
+<select id="Filtrado" onchange="alerta()">
+    <option value="Todas las operaciones">Todas las operaciones</option>
+    <option value="TAG ACTIVADO">TAG ACTIVADO</option>
+    <option value="TAG RECARGA">TAG RECARGA</option>
+    <option value="CUENTA RECARGA">CUENTA RECARGA</option>
+    <option value="CUENTA ACTIVADA">CUENTA ACTIVADA</option>
+    <option value="CANCELACIÓN">CANCELACIÓN</option>
+</select>
+<h2>Movimientos del corte</h2>
+
+<body>
+    <div id="TablaMovimientos">
+        <table class="table">
+            <tr>
+                @*<th>
+                        @Html.DisplayNameFor(model => model.CortesCajero.NumCorte)
+                    </th>*@
+                <th>
+                    @Html.DisplayNameFor(model => model.NoReferencia)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Concepto)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Tipo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Numero)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Monto)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TipoPago)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CobroTag)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DateTOperacion)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.StatusCancelacion)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    @*<td>
+                            @Html.DisplayFor(modelItem => item.CortesCajero.NumCorte)
+                        </td>*@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NoReferencia)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Concepto)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Tipo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Numero)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Monto)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TipoPago)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CobroTag)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateTOperacion)
+                    </td>
+                    <td>
+                        @if (item.StatusCancelacion == true)
+                        {
+                            @Html.Label("Cancelado");
+                        }
+                    </td>
+                    <td>
+                        @if (item.TipoPago != "CAN" && item.StatusCancelacion != true && (item.Concepto == "TAG RECARGA" || item.Concepto == "CUENTA RECARGA"))
+                        {
+                            @Html.ActionLink("Cancelar", "CancelarOperacion", new { id = item.Id, corteid = item.CorteId, Filtro = ViewBag.Filtro }, new { @onclick = "return confirm('¿Seguro que quiere cancelar la operación con número de referencia: " + item.NoReferencia + "?');" });
+                        }
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+</body>
+
+<div class="modal fade" id="mensaje" tabindex="-1" role="dialog" aria-labelledby="ModalCuentaConfTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalCuentaConfTitle">¡Advertencia!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @*<div class="form-group">
+                        <img class="img-modal" src="~/Content/css-yisus/img/slack-hash-brands.svg" /> Número de cuenta: <label id=id></label>
+                    </div>
+                    <div class="form-group">
+                        <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" /> Saldo a recargar: <label id="saldoarecargarCuentaVal"></label>
+                    </div>*@
+                <div class="form-group">
+                    ¿Seguro de cancelar?
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success botonaceptar" id="submitFormCuentaReca">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+
+    <script>
+        function alerta() {
+            var Concepto = { Concepto: $('#Filtrado').val(), CorteId : @Convert.ToDouble(ViewBag.Corte) };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("MovimientoCajero","Home")',
+                data: Concepto,
+                success: function (response) {
+                    $("body").html(response);
+                    $("#Filtrado").val(Concepto.Concepto);
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+
+    </script>
+
+}

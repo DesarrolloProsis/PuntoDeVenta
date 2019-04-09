@@ -272,7 +272,7 @@ namespace PuntoDeVenta.Controllers
 
                         cuentasTelepeaje.StatusCuenta = true;
                         cuentasTelepeaje.StatusResidenteCuenta = false;
-                        cuentasTelepeaje.DateTCuenta = DateTime.Now.Date;
+                        cuentasTelepeaje.DateTCuenta = DateTime.Now;
                         cuentasTelepeaje.IdCajero = User.Identity.GetUserId();
 
                         ModelState.Remove("NumCuenta");

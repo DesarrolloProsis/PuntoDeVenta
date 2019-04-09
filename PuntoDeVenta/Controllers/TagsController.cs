@@ -245,6 +245,7 @@ namespace PuntoDeVenta.Controllers
         public async Task<ActionResult> Create(Tags tags)
         {
             try
+
             {
                 //ViewBag.CuentaId = new SelectList(db.CuentasTelepeajes, "Id", "NumCuenta", tags.CuentaId);
                 db.Configuration.ValidateOnSaveEnabled = false;
@@ -359,6 +360,119 @@ namespace PuntoDeVenta.Controllers
             {
                 TempData["ECreate"] = $"¡Ups! ocurrio un error inesperado, {ex.Message}";
                 return RedirectToAction("Index", "Clientes");
+            }
+        }
+
+        // POST: Tags/CreateTagsAjax
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        // [Bind(Include = "Id,NumTag,SaldoTag,StatusTag,StatusResidente,DateTTag,CuentaId,IdCajero,CobroTag")] 
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult> CreateTagsAjax(Tags tags)
+        {
+            string message = string.Empty;
+
+            try
+            {
+                //ViewBag.CuentaId = new SelectList(db.CuentasTelepeajes, "Id", "NumCuenta", tags.CuentaId);
+                db.Configuration.ValidateOnSaveEnabled = false;
+
+                ModelState.Remove("SaldoARecargar");
+                ModelState.Remove("ConfSaldoARecargar");
+                ModelState.Remove("IdCajero");
+
+                tags.NumTag.Trim();
+
+                var cuenta = await db.CuentasTelepeajes.FindAsync(tags.CuentaId);
+
+                if (cuenta == null)
+                {
+                    return HttpNotFound();
+                }
+
+                if (cuenta.StatusCuenta == true)
+                {
+                    var query = await db.Tags.Where(x => x.NumTag == tags.NumTag).ToListAsync();
+                    if (query.Count == 0)
+                    {
+                        tags.StatusResidente = false;
+                        tags.StatusTag = true;
+                        tags.DateTTag = DateTime.Now;
+                        tags.IdCajero = User.Identity.GetUserId();
+
+                        if (ModelState.IsValid)
+                        {
+                            var UserId = User.Identity.GetUserId();
+
+                            var lastCorteUser = await db.CortesCajeros
+                                                            .Where(x => x.IdCajero == UserId)
+                                                            .OrderByDescending(x => x.DateTApertura).FirstOrDefaultAsync();
+
+                            if (lastCorteUser != null)
+                            {
+                                var detalle = new OperacionesCajero
+                                {
+                                    Concepto = "TAG ACTIVADO",
+                                    DateTOperacion = DateTime.Now,
+                                    Numero = tags.NumTag,
+                                    Tipo = "TAG",
+                                    TipoPago = "NOR",
+                                    CorteId = lastCorteUser.Id,
+                                    CobroTag = double.Parse(tags.CobroTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }),
+                                    NoReferencia = await methods.RandomNumReferencia(),
+                                };
+
+                                switch (cuenta.TypeCuenta)
+                                {
+                                    case "Colectiva":
+                                        tags.SaldoTag = cuenta.SaldoCuenta;
+                                        detalle.Monto = null;
+                                        break;
+                                    case "Individual":
+                                        var SaldoSend = tags.SaldoTag;
+                                        SaldoSend = SaldoSend.Replace(",", string.Empty);
+                                        tags.SaldoTag = SaldoSend.Replace(".", string.Empty);
+                                        detalle.Monto = double.Parse(tags.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," });
+                                        break;
+                                    default:
+                                        break;
+                                }
+
+                                if (tags.Checked)
+                                {
+                                    var listnegra = new ListaNegra { Date = DateTime.Now, IdCajero = User.Identity.GetUserId(), Observacion = tags.Observacion, Numero = tags.OldTag, Tipo = "TAG" };
+
+                                    listnegra.SaldoAnterior = tags.OldSaldo == null || tags.OldSaldo == string.Empty ? (double?)null : double.Parse(tags.OldSaldo, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," });
+                                    db.ListaNegras.Add(listnegra);
+                                }
+
+                                db.Tags.Add(tags);
+                                db.OperacionesCajeros.Add(detalle);
+
+                                await db.SaveChangesAsync();
+                                message = "Se activó correctamente el tag: " + tags.NumTag + " para la cuenta: " + cuenta.NumCuenta + ".";
+                                return Json(new { Message = message, JsonRequestBehavior.AllowGet });
+                            }
+                        }
+
+                        message = "¡Ups! ocurrio un error inesperado.";
+                        return Json(new { Message = message, JsonRequestBehavior.AllowGet });
+                    }
+                    else
+                    {
+                        message = "El tag: " + tags.NumTag + " ya esta activado.";
+                        return Json(new { Message = message, JsonRequestBehavior.AllowGet });
+                    }
+                }
+
+                message = $"No se puede agregar el tag: {tags.NumTag} a la cuenta porque esta dada de baja.";
+                return Json(new { Message = message, JsonRequestBehavior.AllowGet });
+            }
+            catch (Exception ex)
+            {
+                message = $"¡Ups! ocurrio un error inesperado, {ex.Message}";
+                return Json(new { Message = message, JsonRequestBehavior.AllowGet });
             }
         }
 
@@ -568,7 +682,7 @@ namespace PuntoDeVenta.Controllers
                     {
                         StatusResidente = false,
                         StatusTag = true,
-                        DateTTag = DateTime.Now.Date,
+                        DateTTag = DateTime.Now,
                         IdCajero = User.Identity.GetUserId(),
                         NumTag = model.NumNewTag,
                         CobroTag = model.CobroTag,

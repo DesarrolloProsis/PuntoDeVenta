@@ -16,7 +16,7 @@ namespace PuntoDeVenta.Models
         [Key]
         public int Id { get; set; }
         [StringLength(25)]
-        [Column ("Tag")]
+        [Column("Tag")]
         public string Tag { get; set; }
         [StringLength(35)]
         public string Delegacion { get; set; }
@@ -29,9 +29,17 @@ namespace PuntoDeVenta.Models
         public string Carril { get; set; }
         [StringLength(10)]
         public string Clase { get; set; }
+        [StringLength(10)]
+        public string Evento { get; set; }
+        [MaxLength(20)]
+        public string SaldoAnterior { get; set; }
         [Column("Saldo")]
         public double Saldo { get; set; }
         [StringLength(20)]
+        public string SaldoActualizado { get; set; }
+        [StringLength(20)]
         public string Operador { get; set; }
+
+
     }
 }
