@@ -28,6 +28,7 @@ namespace PuntoDeVenta.Controllers
         {
             return View();
         }
+
         public async Task<ActionResult> Index(string verfiAction)
         {
             var model = new CortesCajero();
