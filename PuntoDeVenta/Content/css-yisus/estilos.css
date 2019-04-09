@@ -1,7 +1,23 @@
 @font-face {
     font-family: fjalla;
-    src: url(../../Content/css-yisus/FjallaOne-Regular.ttf);
+    src: url(FjallaOne-Regular.ttf);
 }
+.signout{
+    width:20px;
+    height: auto;
+}
+.table-style {
+    background-color: #00a73c;
+    color: white;
+}
+.btn-buscar {
+    background-color: #5DADE2;
+    color: white;
+}
+    .btn-buscar:hover {
+        background-color: #00a73c;
+        color: white;
+    }
 .btn-tabla {
     background-color: #f16021;
     color: white;
@@ -661,5 +677,5 @@ a.shine {
 
 .rojo {
     color: #00a73c !important;
-    letter-spacing: 3.5px;
+
 }

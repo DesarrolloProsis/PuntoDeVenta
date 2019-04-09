@@ -21,6 +21,7 @@
 
 <hr />
 
+
 @if (ViewData["Success"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -66,14 +67,14 @@
 <!-- Modal Lista De Cuentas -->
 <div class="modal fade bd-example-modal-xl" id="modalcuentastags" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content">
+        <div class="modal-content"  style="height:580px !important;">
             <div class="modal-header">
                 <h5 class="modal-title">Cuentas de: <label id="clientename"></label></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="overflow-y:scroll !important; height: 600px !important;">
                 @Html.Partial("_CuentasTags")
             </div>
             <div class="modal-footer">

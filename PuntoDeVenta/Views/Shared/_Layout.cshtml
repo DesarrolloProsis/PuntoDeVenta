@@ -10,7 +10,8 @@
     <title>@ViewBag.Title - Punto de venta</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+
 
     <!-- Custom styles for this template -->
     <style type="text/css">
@@ -20,6 +21,8 @@
             display: block;
         }
     </style>
+
+   
 
     @RenderSection("styles", required: false)
 </head>
@@ -85,8 +88,9 @@
     <!-- Use as a Vanilla JS plugin -->
     @Scripts.Render("~/bundles/intlTelInput")
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/popper")
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     @Scripts.Render("~/bundles/bootstrap")
+
     <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
     @Scripts.Render("~/bundles/intlTelInputjquery")
     @Scripts.Render("~/bundles/jquerymaskMoney")

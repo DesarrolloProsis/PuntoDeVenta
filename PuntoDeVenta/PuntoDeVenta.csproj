@@ -531,7 +531,9 @@
     <Content Include="Content\css-yisus\img\capufe.png" />
     <Content Include="Content\css-yisus\img\cliente.svg" />
     <Content Include="Content\css-yisus\img\clipboard-list-solid.svg" />
+    <Content Include="Content\css-yisus\img\cog-solid.svg" />
     <Content Include="Content\css-yisus\img\columns-solid.svg" />
+    <Content Include="Content\css-yisus\img\crearcliente.svg" />
     <Content Include="Content\css-yisus\img\credit-card-solid.svg" />
     <Content Include="Content\css-yisus\img\cruces.svg" />
     <Content Include="Content\css-yisus\img\exclamacion.svg" />
@@ -547,6 +549,7 @@
     <Content Include="Content\css-yisus\img\money-check-alt-solid.svg" />
     <Content Include="Content\css-yisus\img\pluma.svg" />
     <Content Include="Content\css-yisus\img\search-solid.svg" />
+    <Content Include="Content\css-yisus\img\sign-out-alt-solid.svg" />
     <Content Include="Content\css-yisus\img\siva.jpeg" />
     <Content Include="Content\css-yisus\img\SiVAwhite.png" />
     <Content Include="Content\css-yisus\img\slack-hash-brands.svg" />
@@ -1000,6 +1003,7 @@
     <Content Include="Views\Clientes\Deshabilitar.cshtml" />
     <Content Include="Views\Shared\_LayoutReports.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Home\Administrador.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
