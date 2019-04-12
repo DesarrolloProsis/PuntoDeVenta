@@ -28,6 +28,8 @@ namespace PuntoDeVenta.Controllers
         {
             return View();
         }
+
+        [Authorize(Roles = "Cajero, SuperUsuario")]
         public async Task<ActionResult> Index(string verfiAction)
         {
             var model = new CortesCajero();
@@ -39,6 +41,7 @@ namespace PuntoDeVenta.Controllers
                 {
                     switch (verfiAction)
                     {
+                        // EN ESTE CASE GENERAMOS UN NUEVO CORTE PERO CON VALIDACIONES (SI HAY PENDIENTES; SI YA GENERARON UN CORTE)
                         case "NewLogin":
                             var digitoscorte = string.Empty;
                             var numcorte = string.Empty;
@@ -49,20 +52,24 @@ namespace PuntoDeVenta.Controllers
 
                             if (query.Count > 0)
                             {
+                                var todaycorte = DateTime.Today.AddDays(-5);
                                 var lastCorteUser = await db.CortesCajeros
-                                                           .Where(x => x.IdCajero == UserId)
-                                                           .OrderByDescending(x => x.DateTApertura).FirstOrDefaultAsync();
+                                                           .Where(x => x.IdCajero == UserId && DbFunctions.TruncateTime(x.DateTApertura) >= todaycorte)
+                                                           .OrderByDescending(x => x.DateTApertura).ToListAsync();
 
                                 if (lastCorteUser != null)
                                 {
-                                    if (lastCorteUser.DateTCierre == null && lastCorteUser.Comentario == null)
-                                        return RedirectToAction("LogOff", "Account", routeValues: new { id = lastCorteUser.Id });
+                                    for (int i = 0; i < lastCorteUser.Count; i++)
+                                    {
+                                        if (lastCorteUser[i].DateTCierre == null && lastCorteUser[i].Comentario == null)
+                                            return RedirectToAction("LogOff", "Account", routeValues: new { id = lastCorteUser[i].Id });
+                                    }
                                 }
 
                                 digitoscorte = query.FirstOrDefault().NumCorte.Substring(6, 3);
                                 numcorte = DateTime.Now.ToString("yyMMdd") + (int.Parse(digitoscorte) + 1).ToString("D3");
 
-                                var verificar = db.CortesCajeros.Where(x => x.NumCorte == numcorte).ToList();
+                                var verificar = await db.CortesCajeros.Where(x => x.NumCorte == numcorte).ToListAsync();
 
                                 if (verificar.Count == 0)
                                 {
@@ -84,7 +91,7 @@ namespace PuntoDeVenta.Controllers
                                         digitoscorte = query.FirstOrDefault().NumCorte.Substring(6, 3);
                                         numcorte = DateTime.Now.ToString("yyMMdd") + (int.Parse(digitoscorte) + 1).ToString("D3");
 
-                                        verificar = db.CortesCajeros.Where(x => x.NumCorte == numcorte).ToList();
+                                        verificar = await db.CortesCajeros.Where(x => x.NumCorte == numcorte).ToListAsync();
                                     }
 
                                     var corte = new CortesCajero
@@ -100,13 +107,20 @@ namespace PuntoDeVenta.Controllers
                             }
                             else
                             {
+                                // SI NO HAY CORTES GENERADOS EL DIA DE HOY, GENERAMOS EL PRIMERO 
+                                // Y VALIDAMOS SI EL CAJERO TIENE CORTES PENDIENTES DE 5 DIAS ANTES
+                                var todaycorte = DateTime.Today.AddDays(-5);
                                 var lastCorteUser = await db.CortesCajeros
-                                                            .Where(x => x.IdCajero == UserId)
-                                                            .OrderByDescending(x => x.DateTApertura).ToListAsync();
-                                if (lastCorteUser.Count > 0)
+                                                           .Where(x => x.IdCajero == UserId && DbFunctions.TruncateTime(x.DateTApertura) >= todaycorte)
+                                                           .OrderByDescending(x => x.DateTApertura).ToListAsync();
+
+                                if (lastCorteUser != null)
                                 {
-                                    if (lastCorteUser.FirstOrDefault().DateTCierre == null && lastCorteUser.FirstOrDefault().Comentario == null)
-                                        return RedirectToAction("LogOff", "Account", routeValues: new { id = lastCorteUser.FirstOrDefault().Id });
+                                    for (int i = 0; i < lastCorteUser.Count; i++)
+                                    {
+                                        if (lastCorteUser[i].DateTCierre == null && lastCorteUser[i].Comentario == null)
+                                            return RedirectToAction("LogOff", "Account", routeValues: new { id = lastCorteUser[i].Id });
+                                    }
                                 }
 
                                 var corte = new CortesCajero
@@ -120,20 +134,22 @@ namespace PuntoDeVenta.Controllers
                                 await db.SaveChangesAsync();
                             }
                             break;
-                        case "LogOut":
-                            //return RedirectToAction("LogOff", "Account");
-                            break;
                         default:
+                            if ((System.Web.HttpContext.Current.User != null) && System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
+                                return RedirectToAction("LogOff", "Account");
                             break;
                     }
                 }
 
-                var cortelast = await db.CortesCajeros
-                                        .Where(x => x.IdCajero == UserId)
-                                        .OrderByDescending(x => x.DateTApertura).FirstOrDefaultAsync();
+                var today = DateTime.Today;
+                var CorteUser = await db.CortesCajeros
+                                    .Where(x => x.IdCajero == UserId && DbFunctions.TruncateTime(x.DateTApertura) == today)
+                                    .OrderByDescending(x => x.DateTApertura).FirstOrDefaultAsync();
 
-                model.NumCorte = cortelast.NumCorte;
-                model.Id = cortelast.Id;
+                model.NumCorte = CorteUser.NumCorte;
+                model.Id = CorteUser.Id;
+                ViewBag.Corte = CorteUser.NumCorte;
+                ViewBag.FechaInicio = CorteUser.DateTApertura;
 
                 if (TempData.ContainsKey("SCreate"))
                     ViewBag.Success = TempData["SCreate"].ToString();
@@ -160,8 +176,6 @@ namespace PuntoDeVenta.Controllers
                 ViewBag.ModelTag = new Tags();
                 ViewBag.NombreUsuario = User.Identity.Name;
                 ViewBag.Cajero = User.Identity.Name;
-                ViewBag.Corte = cortelast.NumCorte;
-                ViewBag.FechaInicio = cortelast.DateTApertura;
             }
             catch (Exception ex)
             {
@@ -256,64 +270,208 @@ namespace PuntoDeVenta.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> ReporteCajero(long? id)
         {
-            if (id == null)
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            var result = await db.CortesCajeros.FindAsync(id);
-
-            if (result == null)
-            {
-                return HttpNotFound();
-            }
-
-            // Cuando agreguemos el username cambiamos en el obj nomcajero a UserName del UserManager
-            var _UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
-            var user = await _UserManager.FindByIdAsync(result.IdCajero);
-
-            var nfi = new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," };
-
-            var encabezado = new EncabezadoReporteCajero
-            {
-                Cajero = user.Email,
-                NumCorte = result.NumCorte,
-                Fecha = result.DateTApertura.ToString("dd/MM/yyyy"),
-                HoraI = result.DateTApertura.ToString("HH:mm:ss"),
-                HoraF = result.DateTCierre.Value.ToString("dd/MM/yyyy HH:mm:ss"),
-                TotalMonto = result.MontoTotal.Value.ToString("#,##0.00", nfi),
-                Comentario = result.Comentario
-            };
-
-            var movimientos = await db.OperacionesCajeros.Where(x => x.CorteId == result.Id).ToListAsync();
-
-            var model = new List<object>();
-
-            foreach (var item in movimientos)
-            {
-                model.Add(new
+                if (id == null)
                 {
-                    Concepto = item.Concepto,
-                    TipoPago = item.TipoPago,
-                    Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
-                    DataTOperacion = item.DateTOperacion.ToString(),
-                    Numero = item.Numero,
-                    Tipo = item.Tipo,
-                    CobroTag = item.CobroTag,
-                });
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+
+                var result = await db.CortesCajeros.FindAsync(id);
+
+                if (result == null)
+                {
+                    return HttpNotFound();
+                }
+
+                // Cuando agreguemos el username cambiamos en el obj nomcajero a UserName del UserManager
+                var _UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
+                var user = await _UserManager.FindByIdAsync(result.IdCajero);
+
+                var nfi = new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," };
+
+                var encabezado = new EncabezadoReporteCajero
+                {
+                    Cajero = user.Email,
+                    NumCorte = result.NumCorte,
+                    HoraI = result.DateTApertura.ToString("dd/MM/yyyy HH:mm:ss"),
+                    HoraF = result.DateTCierre.Value.ToString("dd/MM/yyyy HH:mm:ss"),
+                    TotalMonto = result.MontoTotal.Value.ToString("#,##0.00", nfi),
+                    Comentario = result.Comentario,
+                };
+
+                double ventatags = 0.0d;
+                double recargas = 0.0d;
+
+                var movimientos = await db.OperacionesCajeros.Where(x => x.CorteId == result.Id).ToListAsync();
+
+                var model = new List<object>();
+
+                foreach (var item in movimientos)
+                {
+                    recargas += item.Monto ?? 0;
+                    ventatags += item.CobroTag ?? 0;
+
+                    switch (item.Tipo)
+                    {
+                        case "TAG":
+                            var foundclientetag = await (from cliente in db.Clientes
+                                                         join cuentas in db.CuentasTelepeajes on cliente.Id equals cuentas.ClienteId
+                                                         join tags in db.Tags on cuentas.Id equals tags.CuentaId
+                                                         where tags.NumTag == item.Numero
+                                                         select new
+                                                         {
+                                                             cliente.NumCliente,
+                                                             cuentas.NumCuenta,
+                                                             tags.NumTag
+                                                         }
+                                                    ).FirstOrDefaultAsync();
+
+                            if (foundclientetag != null)
+                            {
+                                model.Add(new
+                                {
+                                    Concepto = item.Concepto,
+                                    TipoPago = item.TipoPago,
+                                    Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
+                                    DataTOperacion = item.DateTOperacion.ToString(),
+                                    CobroTag = item.CobroTag,
+                                    NumeroAdicional = "-",
+                                    NumCliente = foundclientetag.NumCliente,
+                                    NumCuenta = foundclientetag.NumCuenta,
+                                    NumTag = foundclientetag.NumTag,
+                                    Unidad = item.Concepto == "TAG ACTIVADO" || item.Concepto == "TAG TRASPASO" ? "1" : "-",
+                                    NoReferencia = item.NoReferencia,
+                                });
+                            }
+                            else
+                            {
+                                // LISTA NEGRA
+                                var foundblacklist = await (from list in db.ListaNegras
+                                                            where list.Numero == item.Numero
+                                                            select list).FirstOrDefaultAsync();
+
+                                if (foundblacklist != null)
+                                {
+                                    model.Add(new
+                                    {
+                                        Concepto = item.Concepto,
+                                        TipoPago = item.TipoPago,
+                                        Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
+                                        DataTOperacion = item.DateTOperacion.ToString(),
+                                        CobroTag = item.CobroTag,
+                                        NumeroAdicional = "-",
+                                        NumCliente = foundblacklist.NumCliente,
+                                        NumCuenta = foundblacklist.NumCuenta,
+                                        NumTag = foundblacklist.Numero,
+                                        Unidad = "-",
+                                        NoReferencia = item.NoReferencia,
+                                    });
+                                }
+                                else
+                                {
+                                    model.Add(new
+                                    {
+                                        Concepto = item.Concepto,
+                                        TipoPago = item.TipoPago,
+                                        Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
+                                        DataTOperacion = item.DateTOperacion.ToString(),
+                                        CobroTag = item.CobroTag,
+                                        NumeroAdicional = "-",
+                                        NumCliente = "-",
+                                        NumCuenta = "-",
+                                        NumTag = item.Numero,
+                                        Unidad = item.Concepto == "TAG ACTIVADO" || item.Concepto == "TAG TRASPASO" ? "1" : "-",
+                                        NoReferencia = item.NoReferencia,
+                                    });
+                                }
+                            }
+
+                            break;
+                        case "CUENTA":
+                            var foundclientecuen = await (from cliente in db.Clientes
+                                                          join cuentas in db.CuentasTelepeajes on cliente.Id equals cuentas.ClienteId
+                                                          where cuentas.NumCuenta == item.Numero
+                                                          select new
+                                                          {
+                                                              cliente.NumCliente,
+                                                              cuentas.NumCuenta,
+                                                          }
+                                                    ).FirstOrDefaultAsync();
+
+                            if (foundclientecuen != null)
+                            {
+                                model.Add(new
+                                {
+                                    Concepto = item.Concepto,
+                                    TipoPago = item.TipoPago,
+                                    Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
+                                    DataTOperacion = item.DateTOperacion.ToString(),
+                                    CobroTag = item.CobroTag,
+                                    NumeroAdicional = "-",
+                                    NumCliente = foundclientecuen.NumCliente,
+                                    NumCuenta = foundclientecuen.NumCuenta,
+                                    NumTag = "-",
+                                    Unidad = "-",
+                                    NoReferencia = item.NoReferencia,
+                                });
+                            }
+                            else
+                            {
+                                model.Add(new
+                                {
+                                    Concepto = item.Concepto,
+                                    TipoPago = item.TipoPago,
+                                    Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
+                                    DataTOperacion = item.DateTOperacion.ToString(),
+                                    CobroTag = item.CobroTag,
+                                    NumeroAdicional = "-",
+                                    NumCliente = "-",
+                                    NumCuenta = item.Numero,
+                                    NumTag = "-",
+                                    Unidad = "-",
+                                    NoReferencia = item.NoReferencia,
+                                });
+                            }
+                            break;
+                        default:
+                            model.Add(new
+                            {
+                                Concepto = item.Concepto,
+                                TipoPago = item.TipoPago,
+                                Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
+                                DataTOperacion = item.DateTOperacion.ToString(),
+                                CobroTag = item.CobroTag,
+                                NumeroAdicional = item.Numero,
+                                NumCliente = "-",
+                                NumCuenta = "-",
+                                NumTag = "-",
+                                Unidad = "-",
+                                NoReferencia = item.NoReferencia,
+                            });
+                            break;
+                    }
+                }
+
+                encabezado.SubtotalRecar = recargas.ToString("#,##0.00", nfi);
+                encabezado.VentaTag = ventatags.ToString("#,##0.00", nfi);
+
+                using (var client = new HttpClient())
+                {
+                    string json = JsonConvert.SerializeObject(model);
+                    HttpContent postContent = new StringContent(json, Encoding.UTF8, "application/json");
+                    var response = await client.PostAsync(new Uri("http://localhost:56342/api/cajero?authenticationToken=abcxyz"), postContent);
+                    var message = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
+                }
+
+                return View("ReportViewerCajero", encabezado);
             }
-
-
-            using (var client = new HttpClient())
+            catch (Exception ex)
             {
-                string json = JsonConvert.SerializeObject(model);
-                HttpContent postContent = new StringContent(json, Encoding.UTF8, "application/json");
-                var response = await client.PostAsync(new Uri("http://localhost:56342/api/cajero?authenticationToken=abcxyz"), postContent);
-                var message = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
+                throw;
             }
-
-            return View("ReportViewerCajero", encabezado);
         }
+
         public ActionResult MovimientoCajero(string corte, long? CorteId)
         {
             try

@@ -479,15 +479,19 @@ namespace PuntoDeVenta.Controllers
         [HttpGet]
         public async Task<ActionResult> LogOff(int? id)
         {
+            LoginViewModel login = null;
+
             if (id == null)
             {
                 AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                login = new LoginViewModel();
+                return View("Login", login);
             }
 
             var db = new AppDbContext();
 
             CortesCajero corte = await db.CortesCajeros.FindAsync(id);
+
             if (corte == null)
             {
                 return HttpNotFound();
@@ -497,7 +501,7 @@ namespace PuntoDeVenta.Controllers
             ViewBag.Corte = corte;
             ViewBag.Exist = true;
 
-            var login = new LoginViewModel();
+            login = new LoginViewModel();
             return View("Login", login);
         }
 
@@ -550,12 +554,12 @@ namespace PuntoDeVenta.Controllers
                         AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
 
                         return RedirectToAction("ReporteCajero", "Home", new { id = corte.Id });
-                        //return RedirectToAction("Index", "Home");
-
                     }
                 }
 
-                return RedirectToAction("Index", "Home");
+                AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                var login = new LoginViewModel();
+                return View("Login", login);
             }
         }
 

@@ -21,7 +21,6 @@
 
 <hr />
 
-
 @if (ViewData["Success"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -67,14 +66,14 @@
 <!-- Modal Lista De Cuentas -->
 <div class="modal fade bd-example-modal-xl" id="modalcuentastags" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
-        <div class="modal-content"  style="height:580px !important;">
+        <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Cuentas de: <label id="clientename"></label></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" style="overflow-y:scroll !important; height: 600px !important;">
+            <div class="modal-body">
                 @Html.Partial("_CuentasTags")
             </div>
             <div class="modal-footer">
@@ -443,6 +442,12 @@
 
         $(document).ready(function () {
 
+            $('#submitCreateCuenta').removeAttr("disabled");
+            $('#CrearTagAjax').removeAttr("disabled");
+            $('#submitFormAddTag').removeAttr("disabled");
+            $('#submitFormCuentaReca').removeAttr("disabled");
+            $('#submitFormTagReca').removeAttr("disabled");
+
             /***************************** CLIENTES *****************************/
 
             /* Formatting function for row details - modify as you need */
@@ -705,8 +710,11 @@
             });
 
             $('#submitCreateCuenta').on('click', function (e) {
+
+                $("#submitCreateCuenta").attr("disabled", true);
                 e.preventDefault();
                 $("#FormCreateCuenta").submit();
+
             });
 
             $(function () {
@@ -914,8 +922,10 @@
             });
 
             $('#submitFormCuentaReca').on('click', function (e) {
-                e.preventDefault();
 
+                $("#submitFormCuentaReca").attr("disabled", true);
+
+                e.preventDefault();
                 $("#FormRecargarCuenta").submit();
 
                 //console.log($("#FormRecargarCuenta").serialize());
@@ -933,7 +943,10 @@
             /*****************************************/
 
             $('#CrearTagAjax').on('click', function (e) {
+
+                $("#CrearTagAjax").attr("disabled", true);
                 e.preventDefault();
+
                 var form = $("#FormAddTags2").validate();
 
                 if (form.valid() && $("#modelTags_NumTag").val() != "") {
@@ -975,12 +988,15 @@
                                 $("#modelTags_OldTag").val("");
                                 $("#modelTags_OldSaldo").val("");
                                 $("#modelTags_Observacion").val("");
+                                $('#CrearTagAjax').removeAttr("disabled");
                             },
                             failure: function (response) {
                                 console.log(response.responseText);
+                                $('#CrearTagAjax').removeAttr("disabled");
                             },
                             error: function (response) {
                                 console.log(response.responseText);
+                                $('#CrearTagAjax').removeAttr("disabled");
                             }
                         });
                     }
@@ -1035,6 +1051,9 @@
             });
 
             $("#submitFormAddTag").on("click", function (e) {
+
+                $('#submitFormAddTag').attr("disabled", true);
+
                 e.preventDefault();
                 $("#FormAddTags").submit();
             });
@@ -1193,8 +1212,10 @@
             });
 
             $('#submitFormTagReca').on('click', function (e) {
-                e.preventDefault();
 
+                $("#submitFormTagReca").attr("disabled", true);
+
+                e.preventDefault();
                 $("#FormRecargarTag").submit();
 
                 //console.log($("#FormRecargarTag").serialize());

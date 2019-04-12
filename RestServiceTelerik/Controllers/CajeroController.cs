@@ -29,8 +29,6 @@ namespace RestServiceTelerik.Controllers
         {
             try
             {
-                //if (ModelState.IsValid)
-                //{
                 var prop = new List<PropertiesDetalles>();
 
                 if (detalles != null)
@@ -40,9 +38,6 @@ namespace RestServiceTelerik.Controllers
                     PropertiesDetalles = prop;
                 }
                 return Request.CreateResponse(HttpStatusCode.OK, $"Success {authenticationToken}");
-                //}
-
-                //return Request.CreateResponse(HttpStatusCode.ExpectationFailed, "Error ");
             }
             catch (Exception ex)
             {

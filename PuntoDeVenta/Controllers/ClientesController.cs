@@ -13,6 +13,7 @@ using Kendo.Mvc.Extensions;
 using Microsoft.AspNet.Identity;
 using System.Globalization;
 using System.Dynamic;
+using System.Data.Entity.Validation;
 
 namespace PuntoDeVenta.Controllers
 {
@@ -238,10 +239,11 @@ namespace PuntoDeVenta.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(Clientes clientes)
         {
-            db.Configuration.ValidateOnSaveEnabled = false;
-            ModelState.Remove("IdCajero");
-            if (ModelState.IsValid)
+            try
             {
+                db.Configuration.ValidateOnSaveEnabled = false;
+                ModelState.Remove("IdCajero");
+
                 if (clientes.StatusCliente == true)
                 {
                     db.Clientes.Attach(clientes);
@@ -253,8 +255,21 @@ namespace PuntoDeVenta.Controllers
                 TempData["EEdit"] = "El cliente no puede ser actualizado porque está dado de baja.";
                 return RedirectToAction("Index");
             }
-            TempData["EEdit"] = "¡Ups! Hubo un error inesperado.";
-            return RedirectToAction("Index");
+            catch (DbEntityValidationException ee)
+            {
+                var errorMessage = string.Empty;
+
+                foreach (var error in ee.EntityValidationErrors)
+                {
+                    foreach (var thisError in error.ValidationErrors)
+                    {
+                        errorMessage = thisError.ErrorMessage + " / ";
+                    }
+                }
+
+                TempData["EEdit"] = errorMessage;
+                return RedirectToAction("Index");
+            }
         }
 
         // GET: Clientes/Delete/5
