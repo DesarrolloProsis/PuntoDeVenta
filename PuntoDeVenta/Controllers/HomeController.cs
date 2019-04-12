@@ -24,7 +24,7 @@ namespace PuntoDeVenta.Controllers
         private ApplicationDbContext app = new ApplicationDbContext();
 
         [Authorize(Roles = "Cajero, SuperUsuario")]
-        public async Task<ActionResult> Administrador()
+        public ActionResult Administrador()
         {
             return View();
         }
@@ -135,8 +135,8 @@ namespace PuntoDeVenta.Controllers
                             }
                             break;
                         default:
-                            if ((System.Web.HttpContext.Current.User != null) && System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
-                                return RedirectToAction("LogOff", "Account");
+                            //if ((System.Web.HttpContext.Current.User != null) && System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
+                            //    return RedirectToAction("LogOff", "Account");
                             break;
                     }
                 }

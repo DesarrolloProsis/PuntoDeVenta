@@ -31,9 +31,32 @@ namespace PuntoDeVenta.Controllers
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
 
-                var model = await (from cuentas in db.CuentasTelepeajes
-                                   where cuentas.ClienteId == IdCliente
-                                   select cuentas).ToListAsync();
+                var modelfound = await (from cuentas in db.CuentasTelepeajes
+                                        where cuentas.ClienteId == IdCliente
+                                        select cuentas).ToListAsync();
+
+                var model = new List<object>();
+
+                foreach (var item in modelfound)
+                {
+                    var countags = await (from tags in db.Tags
+                                          where tags.CuentaId == item.Id
+                                          select tags).ToListAsync();
+
+                    item.CountTags = countags.Count;
+                    model.Add(new
+                    {
+                        item.Id,
+                        item.NumCuenta,
+                        item.DateTCuenta,
+                        item.StatusCuenta,
+                        item.SaldoCuenta,
+                        item.CountTags,
+                        item.ClienteId,
+                        item.TypeCuenta,
+                        item.IdCajero,
+                    });
+                }
 
                 return Json(model, JsonRequestBehavior.AllowGet);
             }
