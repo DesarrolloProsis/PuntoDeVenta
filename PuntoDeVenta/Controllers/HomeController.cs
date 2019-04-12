@@ -341,7 +341,7 @@ namespace PuntoDeVenta.Controllers
             }
             catch (Exception Ex)
             {
-                return View("Index");
+                return View("Error");
             }
         }
         /// <summary>
