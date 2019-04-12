@@ -134,20 +134,6 @@ namespace PuntoDeVenta.Controllers
                             SaldoSend = SaldoSend.Replace(",", string.Empty);
                             FoundCuenta.cue.SaldoCuenta = SaldoSend.Replace(".", string.Empty);
 
-                            var detalle = new OperacionesCajero
-                            {
-                                Concepto = "CUENTA RECARGA",
-                                DateTOperacion = DateTime.Now,
-                                Numero = FoundCuenta.cue.NumCuenta,
-                                Tipo = "CUENTA",
-                                TipoPago = "NOR",
-                                Monto = double.Parse(modelCuenta.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }),
-                                CorteId = lastCorteUser.Id,
-                                NoReferencia = await methods.RandomNumReferencia(),
-                            };
-
-                            db.OperacionesCajeros.Add(detalle);
-
                             if ((double.Parse(FoundCuenta.cue.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }) / 100) >= 100)
                             {
                                 if (FoundCuenta.cue.StatusCuenta == false)
@@ -165,6 +151,20 @@ namespace PuntoDeVenta.Controllers
                                     db.Entry(item).State = EntityState.Modified;
                                 }
                             }
+
+                            var detalle = new OperacionesCajero
+                            {
+                                Concepto = "CUENTA RECARGA",
+                                DateTOperacion = DateTime.Now,
+                                Numero = FoundCuenta.cue.NumCuenta,
+                                Tipo = "CUENTA",
+                                TipoPago = "EFE",
+                                Monto = double.Parse(modelCuenta.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }),
+                                CorteId = lastCorteUser.Id,
+                                NoReferencia = await methods.RandomNumReferencia(),
+                            };
+
+                            db.OperacionesCajeros.Add(detalle);
 
                             db.CuentasTelepeajes.Attach(FoundCuenta.cue);
                             db.Entry(FoundCuenta.cue).State = EntityState.Modified;
@@ -265,8 +265,6 @@ namespace PuntoDeVenta.Controllers
 
                     if (lastCorteUser != null)
                     {
-                        cuentasTelepeaje.NumCuenta = RandomNumCuenta();
-
                         if (cuentasTelepeaje.TypeCuenta == "Individual")
                             cuentasTelepeaje.SaldoCuenta = null;
 
@@ -280,44 +278,47 @@ namespace PuntoDeVenta.Controllers
                         ModelState.Remove("SaldoARecargar");
                         ModelState.Remove("ConfSaldoARecargar");
 
+                        cuentasTelepeaje.NumCuenta = RandomNumCuenta();
+
                         if (ModelState.IsValid)
                         {
                             var query = await db.CuentasTelepeajes.Where(x => x.NumCuenta == cuentasTelepeaje.NumCuenta).ToListAsync();
 
-                            if (query.Count == 0)
+                            if (query.Count != 0)
                             {
-                                var detalle = new OperacionesCajero
+                                while (query.Count != 0)
                                 {
-                                    Concepto = "CUENTA ACTIVADA",
-                                    DateTOperacion = DateTime.Now,
-                                    Numero = cuentasTelepeaje.NumCuenta,
-                                    Tipo = "CUENTA",
-                                    CorteId = lastCorteUser.Id,
-                                    NoReferencia = await methods.RandomNumReferencia(),
-                                };
-
-                                if (cuentasTelepeaje.TypeCuenta == "Colectiva")
-                                {
-                                    detalle.TipoPago = "NOR";
-                                    detalle.Monto = double.Parse(cuentasTelepeaje.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," });
-
-                                    var SaldoSend = cuentasTelepeaje.SaldoCuenta;
-                                    SaldoSend = SaldoSend.Replace(",", string.Empty);
-                                    cuentasTelepeaje.SaldoCuenta = SaldoSend.Replace(".", string.Empty);
+                                    cuentasTelepeaje.NumCuenta = RandomNumCuenta();
+                                    query = await db.CuentasTelepeajes.Where(x => x.NumCuenta == cuentasTelepeaje.NumCuenta).ToListAsync();
                                 }
-
-                                db.OperacionesCajeros.Add(detalle);
-
-                                db.CuentasTelepeajes.Add(cuentasTelepeaje);
-                                await db.SaveChangesAsync();
-                                TempData["SCreate"] = "Se registró correctamente la cuenta: " + cuentasTelepeaje.NumCuenta + " para el cliente: " + cliente.NumCliente + " " + cliente.Nombre + " " + cliente.Apellidos + ".";
-                                return RedirectToAction("Index", "Clientes");
                             }
-                            else
+
+                            var detalle = new OperacionesCajero
                             {
-                                TempData["ECreate"] = "La cuenta: " + cuentasTelepeaje.NumCuenta + " ya existe!";
-                                return RedirectToAction("Index", "Clientes");
+                                Concepto = "CUENTA ACTIVADA",
+                                DateTOperacion = DateTime.Now,
+                                Numero = cuentasTelepeaje.NumCuenta,
+                                Tipo = "CUENTA",
+                                CorteId = lastCorteUser.Id,
+                                NoReferencia = await methods.RandomNumReferencia(),
+                            };
+
+                            if (cuentasTelepeaje.TypeCuenta == "Colectiva")
+                            {
+                                detalle.TipoPago = "EFE";
+                                detalle.Monto = double.Parse(cuentasTelepeaje.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," });
+
+                                var SaldoSend = cuentasTelepeaje.SaldoCuenta;
+                                SaldoSend = SaldoSend.Replace(",", string.Empty);
+                                cuentasTelepeaje.SaldoCuenta = SaldoSend.Replace(".", string.Empty);
                             }
+
+                            db.OperacionesCajeros.Add(detalle);
+
+                            db.CuentasTelepeajes.Add(cuentasTelepeaje);
+                            await db.SaveChangesAsync();
+                            TempData["SCreate"] = "Se registró correctamente la cuenta: " + cuentasTelepeaje.NumCuenta + " para el cliente: " + cliente.NumCliente + " " + cliente.Nombre + " " + cliente.Apellidos + ".";
+                            return RedirectToAction("Index", "Clientes");
                         }
                     }
 

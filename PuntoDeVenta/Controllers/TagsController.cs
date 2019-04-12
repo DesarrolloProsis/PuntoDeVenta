@@ -158,6 +158,11 @@ namespace PuntoDeVenta.Controllers
                             SaldoSend = SaldoSend.Replace(",", string.Empty);
                             FoundTag.tag.SaldoTag = SaldoSend.Replace(".", string.Empty);
 
+                            if ((double.Parse(FoundTag.tag.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }) / 100) >= 20)
+                            {
+                                if (FoundTag.tag.StatusTag == false)
+                                    FoundTag.tag.StatusTag = true;
+                            }
 
                             var detalle = new OperacionesCajero
                             {
@@ -165,19 +170,13 @@ namespace PuntoDeVenta.Controllers
                                 DateTOperacion = DateTime.Now,
                                 Numero = FoundTag.tag.NumTag,
                                 Tipo = "TAG",
-                                TipoPago = "NOR",
+                                TipoPago = "EFE",
                                 Monto = double.Parse(modelTag.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }),
                                 CorteId = lastCorteUser.Id,
                                 NoReferencia = await methods.RandomNumReferencia(),
                             };
 
                             db.OperacionesCajeros.Add(detalle);
-
-                            if ((double.Parse(FoundTag.tag.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }) / 100) >= 20)
-                            {
-                                if (FoundTag.tag.StatusTag == false)
-                                    FoundTag.tag.StatusTag = true;
-                            }
 
                             db.Tags.Attach(FoundTag.tag);
                             db.Entry(FoundTag.tag).State = EntityState.Modified;
@@ -303,7 +302,7 @@ namespace PuntoDeVenta.Controllers
                                     DateTOperacion = DateTime.Now,
                                     Numero = tags.NumTag,
                                     Tipo = "TAG",
-                                    TipoPago = "NOR",
+                                    TipoPago = "EFE",
                                     CorteId = lastCorteUser.Id,
                                     CobroTag = double.Parse(tags.CobroTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }),
                                     NoReferencia = await methods.RandomNumReferencia(),
@@ -417,7 +416,7 @@ namespace PuntoDeVenta.Controllers
                                     DateTOperacion = DateTime.Now,
                                     Numero = tags.NumTag,
                                     Tipo = "TAG",
-                                    TipoPago = "NOR",
+                                    TipoPago = "EFE",
                                     CorteId = lastCorteUser.Id,
                                     CobroTag = double.Parse(tags.CobroTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }),
                                     NoReferencia = await methods.RandomNumReferencia(),
@@ -661,7 +660,12 @@ namespace PuntoDeVenta.Controllers
                 return HttpNotFound();
             }
 
-            CuentasTelepeaje cuenta = await db.CuentasTelepeajes.FindAsync(tagOld.CuentaId);
+            var cuenta = await db.CuentasTelepeajes.Join(db.Clientes,
+                                                             cue => cue.ClienteId,
+                                                             cli => cli.Id,
+                                                             (cue, cli) => new { cue, cli })
+                                                             .Where(x => x.cue.Id == tagOld.CuentaId)
+                                                             .FirstOrDefaultAsync();
 
             if (cuenta == null)
             {
@@ -686,7 +690,7 @@ namespace PuntoDeVenta.Controllers
                         IdCajero = User.Identity.GetUserId(),
                         NumTag = model.NumNewTag,
                         CobroTag = model.CobroTag,
-                        CuentaId = cuenta.Id,
+                        CuentaId = cuenta.cue.Id,
                     };
                     var detalle = new OperacionesCajero
                     {
@@ -700,10 +704,10 @@ namespace PuntoDeVenta.Controllers
                         NoReferencia = await methods.RandomNumReferencia(),
                     };
 
-                    switch (cuenta.TypeCuenta)
+                    switch (cuenta.cue.TypeCuenta)
                     {
                         case "Colectiva":
-                            tagNew.SaldoTag = cuenta.SaldoCuenta;
+                            tagNew.SaldoTag = cuenta.cue.SaldoCuenta;
                             detalle.Monto = Convert.ToDouble(tagNew.SaldoTag);
                             break;
                         case "Individual":
@@ -745,10 +749,12 @@ namespace PuntoDeVenta.Controllers
                     Observacion = model.Observacion,
                     Date = DateTime.Now,
                     IdCajero = User.Identity.GetUserId(),
-                    Clase = cuenta.TypeCuenta,
+                    Clase = cuenta.cue.TypeCuenta,
+                    NumCliente = cuenta.cli.NumCliente,
+                    NumCuenta = cuenta.cue.NumCuenta,
                 };
 
-                switch (cuenta.TypeCuenta)
+                switch (cuenta.cue.TypeCuenta)
                 {
                     case "Individual":
                         listNegra.SaldoAnterior = Convert.ToDouble(model.SaldoTag);

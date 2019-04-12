@@ -13,6 +13,7 @@ using Kendo.Mvc.Extensions;
 using Microsoft.AspNet.Identity;
 using System.Globalization;
 using System.Dynamic;
+using System.Data.Entity.Validation;
 
 namespace PuntoDeVenta.Controllers
 {
@@ -30,9 +31,32 @@ namespace PuntoDeVenta.Controllers
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
 
-                var model = await (from cuentas in db.CuentasTelepeajes
-                                   where cuentas.ClienteId == IdCliente
-                                   select cuentas).ToListAsync();
+                var modelfound = await (from cuentas in db.CuentasTelepeajes
+                                        where cuentas.ClienteId == IdCliente
+                                        select cuentas).ToListAsync();
+
+                var model = new List<object>();
+
+                foreach (var item in modelfound)
+                {
+                    var countags = await (from tags in db.Tags
+                                          where tags.CuentaId == item.Id
+                                          select tags).ToListAsync();
+
+                    item.CountTags = countags.Count;
+                    model.Add(new
+                    {
+                        item.Id,
+                        item.NumCuenta,
+                        item.DateTCuenta,
+                        item.StatusCuenta,
+                        item.SaldoCuenta,
+                        item.CountTags,
+                        item.ClienteId,
+                        item.TypeCuenta,
+                        item.IdCajero,
+                    });
+                }
 
                 return Json(model, JsonRequestBehavior.AllowGet);
             }
@@ -238,10 +262,11 @@ namespace PuntoDeVenta.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(Clientes clientes)
         {
-            db.Configuration.ValidateOnSaveEnabled = false;
-            ModelState.Remove("IdCajero");
-            if (ModelState.IsValid)
+            try
             {
+                db.Configuration.ValidateOnSaveEnabled = false;
+                ModelState.Remove("IdCajero");
+
                 if (clientes.StatusCliente == true)
                 {
                     db.Clientes.Attach(clientes);
@@ -253,8 +278,21 @@ namespace PuntoDeVenta.Controllers
                 TempData["EEdit"] = "El cliente no puede ser actualizado porque está dado de baja.";
                 return RedirectToAction("Index");
             }
-            TempData["EEdit"] = "¡Ups! Hubo un error inesperado.";
-            return RedirectToAction("Index");
+            catch (DbEntityValidationException ee)
+            {
+                var errorMessage = string.Empty;
+
+                foreach (var error in ee.EntityValidationErrors)
+                {
+                    foreach (var thisError in error.ValidationErrors)
+                    {
+                        errorMessage = thisError.ErrorMessage + " / ";
+                    }
+                }
+
+                TempData["EEdit"] = errorMessage;
+                return RedirectToAction("Index");
+            }
         }
 
         // GET: Clientes/Delete/5

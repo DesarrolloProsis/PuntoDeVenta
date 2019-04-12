@@ -364,6 +364,14 @@
     <Compile Include="Migrations\201904051546333_emx.Designer.cs">
       <DependentUpon>201904051546333_emx.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201904091814312_numclielistanegr.cs" />
+    <Compile Include="Migrations\201904091814312_numclielistanegr.Designer.cs">
+      <DependentUpon>201904091814312_numclielistanegr.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904121407350_addnumcuenta.cs" />
+    <Compile Include="Migrations\201904121407350_addnumcuenta.Designer.cs">
+      <DependentUpon>201904121407350_addnumcuenta.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AppDbContext.cs" />
@@ -1081,6 +1089,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201904051546333_emx.resx">
       <DependentUpon>201904051546333_emx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904091814312_numclielistanegr.resx">
+      <DependentUpon>201904091814312_numclielistanegr.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904121407350_addnumcuenta.resx">
+      <DependentUpon>201904121407350_addnumcuenta.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
