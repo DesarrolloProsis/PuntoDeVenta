@@ -14,7 +14,8 @@
     <option value="TAG RECARGA">TAG RECARGA</option>
     <option value="CUENTA RECARGA">CUENTA RECARGA</option>
     <option value="CUENTA ACTIVADA">CUENTA ACTIVADA</option>
-    <option value="CANCELACIÓN">CANCELACIÓN</option>
+    <option value="CANCELACION RECARGA">CANCELACIÓN RECARGA</option>
+    <option value="CANCELACION ACTIVACION">CANCELACIÓN ACTIVACION</option>
 </select>
 <h2>Movimientos del corte</h2>
 
@@ -92,7 +93,7 @@
                         }
                     </td>
                     <td>
-                        @if (item.TipoPago != "CAN" && item.StatusCancelacion != true && (item.Concepto == "TAG RECARGA" || item.Concepto == "CUENTA RECARGA"))
+                        @if (item.TipoPago != "CAN" && item.StatusCancelacion != true && !(item.Concepto.Contains("CANCELACIÓN")))
                         {
                             @Html.ActionLink("Cancelar", "CancelarOperacion", new { id = item.Id, corteid = item.CorteId, Filtro = ViewBag.Filtro }, new { @onclick = "return confirm('¿Seguro que quiere cancelar la operación con número de referencia: " + item.NoReferencia + "?');" });
                         }

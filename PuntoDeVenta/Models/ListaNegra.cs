@@ -38,5 +38,11 @@ namespace PuntoDeVenta.Models
         [Column(TypeName = "nvarchar")]
         [Required]
         public string IdCajero { get; set; }
+
+        [StringLength(30)]
+        public string NumCliente { get; set; }
+
+        [StringLength(30)]
+        public string NumCuenta { get; set; }
     }
 }
