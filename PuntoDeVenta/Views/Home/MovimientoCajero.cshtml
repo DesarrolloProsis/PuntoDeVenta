@@ -3,105 +3,116 @@
 @{
     ViewBag.Title = "MovimientoCajero";
 }
-@if (ViewBag.Filtro != null)
-{
-    <h4>Filtrado por  @ViewBag.Filtro</h4>
-}
 
-<select id="Filtrado" onchange="alerta()">
-    <option value="Todas las operaciones">Todas las operaciones</option>
-    <option value="TAG ACTIVADO">TAG ACTIVADO</option>
-    <option value="TAG RECARGA">TAG RECARGA</option>
-    <option value="CUENTA RECARGA">CUENTA RECARGA</option>
-    <option value="CUENTA ACTIVADA">CUENTA ACTIVADA</option>
-    <option value="CANCELACION RECARGA">CANCELACIÓN RECARGA</option>
-    <option value="CANCELACION ACTIVACION">CANCELACIÓN ACTIVACION</option>
-</select>
-<h2>Movimientos del corte</h2>
+
+
+
 
 <body>
-    <div id="TablaMovimientos">
-        <table class="table">
-            <tr>
-                @*<th>
-                        @Html.DisplayNameFor(model => model.CortesCajero.NumCorte)
-                    </th>*@
-                <th>
-                    @Html.DisplayNameFor(model => model.NoReferencia)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Concepto)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Tipo)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Numero)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Monto)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.TipoPago)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CobroTag)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DateTOperacion)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.StatusCancelacion)
-                </th>
-                <th></th>
-            </tr>
-
-            @foreach (var item in Model)
+    <div class="card shadow">
+        <div class="card-header">
+            <h2>Movimientos del corte</h2>
+            <select id="Filtrado" onchange="alerta()">
+                <option value="Todas las operaciones">Todas las operaciones</option>
+                <option value="TAG ACTIVADO">TAG ACTIVADO</option>
+                <option value="TAG RECARGA">TAG RECARGA</option>
+                <option value="CUENTA RECARGA">CUENTA RECARGA</option>
+                <option value="CUENTA ACTIVADA">CUENTA ACTIVADA</option>
+                <option value="CANCELACION RECARGA">CANCELACIÓN RECARGA</option>
+                <option value="CANCELACION ACTIVACION">CANCELACIÓN ACTIVACION</option>
+            </select>
+        </div>
+        <div class="card-footer">
+            @if (ViewBag.Filtro != null)
             {
-                <tr>
-                    @*<td>
-                            @Html.DisplayFor(modelItem => item.CortesCajero.NumCorte)
-                        </td>*@
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NoReferencia)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Concepto)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Tipo)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Numero)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Monto)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TipoPago)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CobroTag)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DateTOperacion)
-                    </td>
-                    <td>
-                        @if (item.StatusCancelacion == true)
-                        {
-                            @Html.Label("Cancelado");
-                        }
-                    </td>
-                    <td>
-                        @if (item.TipoPago != "CAN" && item.StatusCancelacion != true && !(item.Concepto.Contains("CANCELACIÓN")))
-                        {
-                            @Html.ActionLink("Cancelar", "CancelarOperacion", new { id = item.Id, corteid = item.CorteId, Filtro = ViewBag.Filtro }, new { @onclick = "return confirm('¿Seguro que quiere cancelar la operación con número de referencia: " + item.NoReferencia + "?');" });
-                        }
-                    </td>
-                </tr>
+                <h5 class="text-muted">Filtrado por  @ViewBag.Filtro</h5>
             }
+            </div>
+            <div class="card-body">
+                <div id="TablaMovimientos" class="table-responsive">
+                    <table class="table table-bordered">
+                        <tr>
+                            @*<th>
+                                    @Html.DisplayNameFor(model => model.CortesCajero.NumCorte)
+                                </th>*@
+                            <th>
+                                @Html.DisplayNameFor(model => model.NoReferencia)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Concepto)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Tipo)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Numero)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Monto)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.TipoPago)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CobroTag)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.DateTOperacion)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.StatusCancelacion)
+                            </th>
+                            <th></th>
+                        </tr>
 
-        </table>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                @*<td>
+                                        @Html.DisplayFor(modelItem => item.CortesCajero.NumCorte)
+                                    </td>*@
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.NoReferencia)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Concepto)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Tipo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Numero)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Monto)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TipoPago)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CobroTag)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DateTOperacion)
+                                </td>
+                                <td>
+                                    @if (item.StatusCancelacion == true)
+                                    {
+                                        @Html.Label("Cancelado");
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.TipoPago != "CAN" && item.StatusCancelacion != true && !(item.Concepto.Contains("CANCELACIÓN")))
+                                    {
+                                        @Html.ActionLink("Cancelar", "CancelarOperacion", new { id = item.Id, corteid = item.CorteId, Filtro = ViewBag.Filtro }, new { @onclick = "return confirm('¿Seguro que quiere cancelar la operación con número de referencia: " + item.NoReferencia + "?');", @class = "btn btn-danger" });
+                                    }
+                                </td>
+                            </tr>
+                        }
+
+                    </table>
+                </div>
+            </div>
     </div>
 </body>
 
