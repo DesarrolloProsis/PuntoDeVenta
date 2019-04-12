@@ -11,19 +11,20 @@
 }
 
 <div class="container-fluid">
-    <div class="row justify-content-center">
+    <div class="row">
         <div class="col-xl-5">
-            <div class="margin-section shadow">
-                <div class="msj-binevenida">
-                    <h1 class="rojo">BIENVENIDO</h1>
-                    <h6><strong>Nombre de Usuario:</strong> @Html.Raw(ViewBag.NombreUsuario)</h6>
-                    <h6><strong># Cajero:</strong> @Html.Raw(ViewBag.Cajero)</h6>
-                    <h6><strong># Corte:</strong> @Html.Raw(ViewBag.Corte)</h6>
-                    <h6><strong>Fecha de inicio:</strong> @Html.Raw(ViewBag.FechaInicio)</h6>
+            <div class="card shadow">
+                <div class="card-body">
+                    <div class="msj-binevenida">
+                        <h1 class="rojo">BIENVENIDO</h1>
+                        <h6><strong>Nombre de Usuario:</strong> @Html.Raw(ViewBag.NombreUsuario)</h6>
+                        <h6><strong># Cajero:</strong> @Html.Raw(ViewBag.Cajero)</h6>
+                        <h6><strong># Corte:</strong> @Html.Raw(ViewBag.Corte)</h6>
+                        <h6><strong>Fecha de inicio:</strong> @Html.Raw(ViewBag.FechaInicio)</h6>
+                    </div>
                 </div>
             </div>
         </div>
-       
         <div class="col-xl-2">
             <button type="button" class="btn  btn-lg btn-block nav-button-new2 shadow" data-toggle="modal" data-target="#ModalTagReca">
                 <div class="row">
@@ -48,66 +49,68 @@
                 </div>
                 Crear Nuevo Cliente
             </button>
-
-
         </div>
     </div>
 
 
+    <div class="py-2">
+        <div class="card shadow">
+            <div class="card-header">
+                <div class=" row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#">Tag</a>
+                                    <a class="dropdown-item" href="#">Cuenta</a>
 
-    <hr class="hr-new" />
-    <div class=" row justify-content-center">
-        <div class="col-md-6">
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Tag</a>
-                        <a class="dropdown-item" href="#">Cuenta</a>
-
+                                </div>
+                            </div>
+                            <input type="text" class="form-control" aria-label="Text input with dropdown button">
+                            <div class="input-group-append">
+                                <button class="btn btn-buscar" type="button" id="button-addon2"><i class="fas fa-search"></i> Buscar</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <input type="text" class="form-control" aria-label="Text input with dropdown button">
-                <div class="input-group-append">
-                    <button class="btn btn-buscar" type="button" id="button-addon2"><i class="fas fa-search"></i> Buscar</button>
+            </div>
+            <div class="card-body">
+
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped">
+                        <thead>
+                            <tr class="table-style">
+                                <th scope="col">#</th>
+                                <th scope="col">First</th>
+                                <th scope="col">Last</th>
+                                <th scope="col">Handle</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>mdo</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Jacob</td>
+                                <td>Thornton</td>
+                                <td>fat</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td colspan="2">Larry the Bird</td>
+                                <td>twitter</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-    <div class="table-responsive">
-        <table class="table table-sm table-striped">
-            <thead>
-                <tr class="table-style">
-                    <th scope="col">#</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Handle</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>mdo</td>
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>fat</td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td colspan="2">Larry the Bird</td>
-                    <td>twitter</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-
-
 
 
 
