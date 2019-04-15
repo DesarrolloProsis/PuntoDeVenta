@@ -921,7 +921,6 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
-    <Content Include="Scripts\vue.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -1014,9 +1013,11 @@
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Shared\_AddTagsColectivos.cshtml" />
     <Content Include="Views\Home\MovimientoCajero.cshtml" />
+    <Content Include="Views\Home\Administrador.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Scripts\vuejs\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

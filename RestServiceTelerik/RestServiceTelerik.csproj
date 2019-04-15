@@ -129,15 +129,31 @@
     </Compile>
     <Compile Include="Models\MovimientosCajero.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\Car.cs" />
+    <Compile Include="Reports\Cars.cs" />
+    <Compile Include="Reports\Report1.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Report1.Designer.cs">
+      <DependentUpon>Report1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Reports\ReportCajero.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\ReportCajero.Designer.cs">
       <DependentUpon>ReportCajero.cs</DependentUpon>
     </Compile>
+    <Compile Include="Reports\ReportMovCajero.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\ReportMovCajero.Designer.cs">
+      <DependentUpon>ReportMovCajero.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Content Include="App_Data\Marhnoswithred.png" />
+    <Content Include="App_Data\SiVA-01.png" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -148,7 +164,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
@@ -156,8 +171,14 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="Reports\Report1.resx">
+      <DependentUpon>Report1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\ReportCajero.resx">
       <DependentUpon>ReportCajero.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\ReportMovCajero.resx">
+      <DependentUpon>ReportMovCajero.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

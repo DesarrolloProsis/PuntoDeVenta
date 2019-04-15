@@ -186,6 +186,28 @@ namespace PuntoDeVenta.Controllers
         }
 
         [Authorize(Roles = "Cajero, SuperUsuario")]
+        [HttpPost]
+        public async Task<ActionResult> Index(double? id, string type)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            switch (type)
+            {
+                case "Cliente":
+                    
+                    break;
+                default:
+                    break;
+            }
+
+
+            return View();
+        }
+
+        [Authorize(Roles = "Cajero, SuperUsuario")]
         public async Task<ActionResult> ListaNegraIndex()
         {
             return View(await db.ListaNegras.ToListAsync());
