@@ -18,9 +18,7 @@
             <div class="card text-center ">
                 <div class="card-header">
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
-                        @*<li class="nav-item">
-                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
-                            </li>*@
+
                         <li class="nav-item">
                             <a class="nav-link botonpestaña" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Buscar Tag o Cuenta</a>
                         </li>
@@ -29,11 +27,7 @@
                         </li>
                     </ul>
                     <div class="tab-content" id="myTabContent">
-                        @*<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                <div>
 
-                                </div>
-                            </div>*@
                         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                             <div>
                                 @using (Html.BeginForm("GenerarXCuenta", "Historico", FormMethod.Post))
@@ -47,25 +41,30 @@
                                             <div class="card">
                                                 <div class="card-body">
 
-                                             
-                                                   
+
+
                                                     <div class="col-md-12">
                                                         <label style="float:left !important">#Tag</label>
                                                         @Html.EditorFor(x => x.Tag, "", new { htmlAttributes = new { @class = "form-control espacio", placeholder = "Tag" } })
                                                     </div>
-                                               
 
-                                                    
+
+
                                                     <div class="col-md-12">
                                                         <label style="float:left !important">#Cuenta</label>
                                                         @Html.EditorFor(x => x.Cuenta, "", new { htmlAttributes = new { @class = "form-control espacio", placeholder = "Cuenta" } })
                                                     </div>
 
                                                     <div class="col-md-12">
-                                                        <label style="float:left !important">Fecha Inicial</label>
+                                                        <label style="float:left !important">Movimiento</label>
 
-                                                        @Html.EditorFor(model => model.Fecha_Inicio)
-                                                        @*@Html.ValidationMessageFor(model => model.Fecha_Inicio, "", new { @class = "text-danger" })*@
+                                                        @Html.DropDownListFor(x => x.TypeMovimiento, new SelectList(string.Empty, "Value", "Text"), htmlAttributes: new { @class = "form-control espacio", placeholder = "Seleccione.." })
+                                                        
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <label style="float:left !important">Fecha Inicial</label>
+                                                        @Html.EditorFor(model => model.Fecha_Inicio)                                                        
                                                     </div>
                                                     <div class="col-md-12">
                                                         <label style="float:left !important">Fecha Final</label>
@@ -99,10 +98,7 @@
 
                                             <div class="card">
                                                 <div class="card-body">
-                                                    @*<div class="col-md-12">
-                                                            <label>Busqueda por Operadora</label>
-                                                            @Html.DropDownListFor(x => x.Operador, new SelectList(string.Empty, "Value", "Text"), "Seleccione Marca", htmlAttributes: new { @class = "form-control espacio" })
-                                                        </div>*@
+
                                                     <div class="col-md-12">
                                                         <label style="float:left !important">Fecha Inicial</label>
 
@@ -111,14 +107,14 @@
                                                     </div>
                                                     <div class="col-md-12">
                                                         <label style="float:left !important">Fecha Final</label>
-
                                                         @Html.EditorFor(model => model.Fecha_Fin)
                                                     </div>
 
-                                                    @*<div class="col-md-12">
-                                                            <label>Busqueda por Tag</label>
-                                                            @Html.EditorFor(x => x.Tag, "", new { htmlAttributes = new { @class = "form-control espacio" } })
-                                                        </div>*@
+
+                                                    <div class="col-md-12">
+                                                        <label style="float:left !important">Movimiento</label>
+                                                        @Html.DropDownListFor(x => x.TypeMovimiento2, new SelectList(string.Empty, "Value", "Text"), htmlAttributes: new { @class = "form-control espacio", placeholder = "Seleccione.." })                                                        
+                                                    </div>
 
 
                                                     <div class="col-md-12">
@@ -153,6 +149,7 @@
     <script>
         $(document).ready(function () {
 
+            LoadMovimientos();
             $('#Tag').val('');
             $('#Cuenta').val('');
 
@@ -160,6 +157,37 @@
 
     </script>
 
+    <script>
+        function LoadMovimientos() {
+
+            $.ajax({
+                 url: '@Url.Action("GetMovimientos", "Historico")',
+                 type: "GET",
+                 data: "{}",
+                 cache: false,
+                 success: function (data) {
+                     $.each(data, function (i, row) {
+                         var $option = $('<option>');
+                         $option.val(row.Value);
+                         $option.html(row.Text);
+                         $('#TypeMovimiento').append($option);
+                     });
+                     $.each(data, function (i, row) {
+                         var $option = $('<option>');
+                         $option.val(row.Value);
+                         $option.html(row.Text);
+                         $('#TypeMovimiento2').append($option);
+                     });
+
+                 },
+                 error: function (ex) {
+                        alert("Error!!!" + ex);
+                 },
+            });           
+        }    
+
+    </script>
+    
 
     <script>
 

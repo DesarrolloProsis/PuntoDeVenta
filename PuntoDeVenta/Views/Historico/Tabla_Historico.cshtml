@@ -7,7 +7,7 @@
 
 
 <div class="container">
-    <h2>Tabla de Historico</h2>
+
 
 
     <div class="row justify-content-center">
@@ -18,14 +18,14 @@
                 <p class="display-4" style="font-size:5vw">DATOS SELECCIONADOS</p>
 
                 <a style="padding-right:8px; font-size:15px;" id="Cuen">Cuenta:{{ Cuenta }}</a>
-                <a style="padding-right:8px; font-size:15px;">Fecha:{{ Fecha1 }}</a>
-                <a style="padding-right:8px; font-size:15px;">Fecha:{{ Fecha2 }}</a>
-                <a style="padding-right:8px; font-size:15px;">Saldo:{{ Saldo }}</a>
-                <a style="padding-right:8px; font-size:15px;">Movimientos:{{ Movimientos }}</a>
+                <a style="padding-right:8px; font-size:15px;" id="Fech1">Fecha:{{ Fecha1 }}</a>
+                <a style="padding-right:8px; font-size:15px;" id="Fech2">Fecha:{{ Fecha2 }}</a>
+                <a style="padding-right:8px; font-size:15px;" id="Sal">Saldo Actual:{{ Saldo }}</a>
+                <a style="padding-right:8px; font-size:15px;" id="Movi">Movimientos:{{ Movimientos }}</a>
+                <a style="padding-right:8px; font-size:15px;" id="clien">Cliente:{{ Cliente }}</a>
                 <a style="padding-right:8px; font-size:15px;" id="mess">{{ message }}</a>
 
                 <div>@Html.ActionLink("EXPORTAR A PDF", "Pdf", "Historico", new { }, new { @class = "btn btn-info", @id = "Pdf" })</div>
-
 
 
 
@@ -34,22 +34,23 @@
     </div>
 
 
-
-
+    <!--TablaCrucesWilly-->
     <div id="aboutPage">
-        <template v-if="mostrar">
+        <template v-if="TablaCruces1">
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Id</th>
+                        <th>#</th>
                         <th>Tag</th>
-                        <th>Delegacion</th>
+                        <th>Cliente</th>
                         <th>Plaza</th>
-                        <th>Fecha</th>
+                        <th>Fecha del Cruce</th>
                         <th>Tramo</th>
                         <th>Carril</th>
                         <th>Clase</th>
+                        <th>Saldo Anterior</th>
                         <th>Cobro</th>
+                        <th>Saldo Nuevo</th>
                         <th>Operadora</th>
                     </tr>
                 </thead>
@@ -57,13 +58,15 @@
                     <tr v-for="item in items">
                         <td>{{item.Id}}</td>
                         <td>{{item.Tag}}</td>
-                        <td>{{item.Delegacion}}</td>
+                        <td>{{item.NumCliente}}</td>
                         <td>{{item.Plaza}}</td>
                         <td>{{item.Fecha}}</td>
                         <td>{{item.Cuerpo}}</td>
                         <td>{{item.Carril}}</td>
                         <td>{{item.Clase}}</td>
+                        <td>{{item.SaldoAntes}}</td>
                         <td>{{item.Saldo}}</td>
+                        <td>{{item.SaldoDespues}}</td>
                         <td>{{item.Operador}}</td>
                     </tr>
                 </tbody>
@@ -73,8 +76,118 @@
 
     </div>
 
-</div>
 
+    <!--TablaCrucesCliente-->
+    <div id="aboutPage2">
+        <template v-if="TablaCruces2">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tag</th>
+                        <th>Plaza</th>
+                        <th>Fecha del Cruce</th>
+                        <th>Tramo</th>
+                        <th>Carril</th>
+                        <th>Operadora</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in items">
+                        <td>{{item.Id}}</td>
+                        <td>{{item.Tag}}</td>
+                        <td>{{item.Plaza}}</td>
+                        <td>{{item.Fecha}}</td>
+                        <td>{{item.Cuerpo}}</td>
+                        <td>{{item.Carril}}</td>
+                        <td>{{item.Operador}}</td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </template>
+
+    </div>
+
+    <!--TablaMovimientosWilly-->
+    <div id="aboutPage3">
+
+        <template v-if="TablaMovimientos1">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Concepto</th>
+                        <th>Tipo de Pago</th>
+                        <th>Monto de Recarga</th>
+                        <th>Fecha del Cruce</th>
+                        <th>Tag o Cuenta</th>
+                        <th>Tipo de Cuenta</th>
+                        <th>Cobro del Tag</th>
+                        <th>Numero Referencia</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in items">                        
+                        <td>{{item.Id}}</td>
+                        <td>{{item.Concepto}}</td>
+                        <td>{{item.TipoPago}}</td>
+                        <td>{{item.Monto}}</td>
+                        <td>{{item.Fecha}}</td>
+                        <td>{{item.TagCuenta}}</td>
+                        <td>{{item.TypeCuenta}}</td>
+                        <td>{{item.CobroTag}}</td>
+                        <td>{{item.Referencia}}</td>                        
+                    </tr>
+                </tbody>
+
+            </table>
+        </template>
+
+    </div>
+
+    <!--TablaMovimientosCliente-->
+    <div id="aboutPage4">
+
+        <template v-if="TablaMovimientos2">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Concepto</th>
+                        <th>Tipo de Pago</th>
+                        <th>Monto de Recarga</th>
+                        <th>Fecha del Cruce</th>
+                        <th>Tag o Cuenta</th>
+                        <th>Tipo de Cuenta</th>
+                        <th>Cobro del Tag</th>
+                        <th>Numero Referencia</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in items">
+                        <td>{{item.Id}}</td>
+                        <td>{{item.Concepto}}</td>
+                        <td>{{item.TipoPago}}</td>
+                        <td>{{item.Monto}}</td>
+                        <td>{{item.Fecha}}</td>
+                        <td>{{item.TagCuenta}}</td>
+                        <td>{{item.TypeCuenta}}</td>
+                        <td>{{item.CobroTag}}</td>
+                        <td>{{item.Referencia}}</td>
+
+                    </tr>
+                </tbody>
+
+            </table>
+        </template>
+
+    </div>
+
+
+</div>
 
 
 @section Scripts {
@@ -88,14 +201,22 @@
         $(document).ready(function () {
 
 
-            var json = @Html.Raw(Json.Encode(Model.ListaHistorico));
-            var info = @Html.Raw(Json.Encode(Model.Info));
-            console.log(JSON.stringify(json))
-            console.log(JSON.stringify(info))
+            var Cruces = @Html.Raw(Json.Encode(Model.ListaCruces));
+            var Movimientos = @Html.Raw(Json.Encode(Model.ListaMovimientos));
+            var info = @Html.Raw(Json.Encode(Model.Info));            
+            console.log(JSON.stringify(Cruces))
+            console.log(JSON.stringify(Movimientos))
+            //console.log(JSON.stringify(info))
 
-                if (json == null) {
 
+            if (Cruces == null && Movimientos == null) {
 
+                    $('#Cuen').remove();
+                    $('#Sal').remove();
+                    $('#Movi').remove();
+                    $('#clien').remove();
+                    $('#Fech1').remove();
+                    $('#Fech2').remove();
                     $('#Pdf').hide();
 
                     var Mensaje = new Vue({
@@ -118,11 +239,18 @@
                         }
                     });
 
-                } else {
+            }
+            else {
+
+
+                if (Cruces != null) {
 
                     if (info.Tipo == 'SOLO_FECHA') {
-
+                                                
                         $('#Cuen').remove();
+                        $('#Sal').remove();                        
+                        $('#clien').remove();                                                                        
+                        $('#mess').remove();
 
                         var Mensaje = new Vue({
 
@@ -131,11 +259,20 @@
 
                                 Fecha1: info.Fecha_Inicio,
                                 Fecha2: info.Fecha_Fin,
+                                Movimientos: info.Count,
                                 muestra: true,
-
                             }
 
                         })
+
+                        var aboutPage2 = new Vue({
+                            el: '#aboutPage',
+                            data: {
+
+                                items: Cruces,
+                                TablaCruces1: true
+                            }
+                        });
 
 
                     }
@@ -147,11 +284,12 @@
                         var Mensaje = new Vue({
                             el: '#Mensaje',
                             data: {
-                                Saldo: info.Saldo_,
+                                Saldo: info.SaldoActual,
                                 Fecha1: info.Fecha_Inicio,
                                 Fecha2: info.Fecha_Fin,
-                                Movimientos: info.Movimientos,
-                                Cuenta: info.Cuenta,
+                                Movimientos: info.Count,
+                                Cuenta: info.TagCuenta,
+                                Cliente: info.NomCliente,
                                 muestra: true,
 
                             }
@@ -159,26 +297,90 @@
                         })
 
 
+                        var mensaje = false;
+                        var aboutPage = new Vue({
+                            el: '#aboutPage2',
+                            data: {
+
+                                items: Cruces,
+                                TablaCruces2: true
+                            }
+                        });
+
                     }
 
-
-
-                    var mensaje = false;
-                    var aboutPage = new Vue({
-                        el: '#aboutPage',
-                        data: {
-
-                            items: json,
-                            mostrar: true
-                        }
-                    });
                 }
+                else if (Movimientos != null) {
+
+                    if (info.Tipo == 'SOLO_FECHA') {
+
+                        $('#Cuen').remove();
+                        $('#Sal').remove();
+                        $('#clien').remove();                        
+                        $('#mess').remove();
 
 
+                        var Mensaje = new Vue({
+
+                            el: '#Mensaje',
+                            data: {
+
+                                Fecha1: info.Fecha_Inicio,
+                                Fecha2: info.Fecha_Fin,
+                                Movimientos: info.Count,
+                                muestra: true,
+                            }
+
+                        })
+
+                        var aboutPage2 = new Vue({
+                            el: '#aboutPage3',
+                            data: {
+
+                                items: Movimientos,
+                                TablaMovimientos1: true
+                            }
+                        });
+
+                    }
+                    else {
+
+
+                        $('#mess').remove();
+
+                        var Mensaje = new Vue({
+                            el: '#Mensaje',
+                            data: {
+                                Saldo: info.SaldoActual,
+                                Fecha1: info.Fecha_Inicio,
+                                Fecha2: info.Fecha_Fin,
+                                Movimientos: info.Count,
+                                Cuenta: info.TagCuenta,
+                                Cliente: info.NomCliente,
+                                muestra: true,
+
+                            }
+
+                        })
+
+
+                        var mensaje = false;
+                        var aboutPage = new Vue({
+                            el: '#aboutPage4',
+                            data: {
+
+                                items: Movimientos,
+                                TablaMovimientos2: true
+                            }
+                        });
+
+                    }
+                }
+                    
+            }
 
             });
     </script>
-
 
 }
 
