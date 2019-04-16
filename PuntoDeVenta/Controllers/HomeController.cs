@@ -24,10 +24,12 @@ namespace PuntoDeVenta.Controllers
         private ApplicationDbContext app = new ApplicationDbContext();
 
         [Authorize(Roles = "Cajero, SuperUsuario")]
-        public async Task<ActionResult> Administrador()
+        public ActionResult Administrador()
         {
             return View();
         }
+
+        [Authorize(Roles = "Cajero, SuperUsuario")]
         public async Task<ActionResult> Index(string verfiAction)
         {
             var model = new CortesCajero();
@@ -39,6 +41,7 @@ namespace PuntoDeVenta.Controllers
                 {
                     switch (verfiAction)
                     {
+                        // EN ESTE CASE GENERAMOS UN NUEVO CORTE PERO CON VALIDACIONES (SI HAY PENDIENTES; SI YA GENERARON UN CORTE)
                         case "NewLogin":
                             var digitoscorte = string.Empty;
                             var numcorte = string.Empty;
@@ -49,20 +52,24 @@ namespace PuntoDeVenta.Controllers
 
                             if (query.Count > 0)
                             {
+                                var todaycorte = DateTime.Today.AddDays(-5);
                                 var lastCorteUser = await db.CortesCajeros
-                                                           .Where(x => x.IdCajero == UserId)
-                                                           .OrderByDescending(x => x.DateTApertura).FirstOrDefaultAsync();
+                                                           .Where(x => x.IdCajero == UserId && DbFunctions.TruncateTime(x.DateTApertura) >= todaycorte)
+                                                           .OrderByDescending(x => x.DateTApertura).ToListAsync();
 
                                 if (lastCorteUser != null)
                                 {
-                                    if (lastCorteUser.DateTCierre == null && lastCorteUser.Comentario == null)
-                                        return RedirectToAction("LogOff", "Account", routeValues: new { id = lastCorteUser.Id });
+                                    for (int i = 0; i < lastCorteUser.Count; i++)
+                                    {
+                                        if (lastCorteUser[i].DateTCierre == null && lastCorteUser[i].Comentario == null)
+                                            return RedirectToAction("LogOff", "Account", routeValues: new { id = lastCorteUser[i].Id });
+                                    }
                                 }
 
                                 digitoscorte = query.FirstOrDefault().NumCorte.Substring(6, 3);
                                 numcorte = DateTime.Now.ToString("yyMMdd") + (int.Parse(digitoscorte) + 1).ToString("D3");
 
-                                var verificar = db.CortesCajeros.Where(x => x.NumCorte == numcorte).ToList();
+                                var verificar = await db.CortesCajeros.Where(x => x.NumCorte == numcorte).ToListAsync();
 
                                 if (verificar.Count == 0)
                                 {
@@ -84,7 +91,7 @@ namespace PuntoDeVenta.Controllers
                                         digitoscorte = query.FirstOrDefault().NumCorte.Substring(6, 3);
                                         numcorte = DateTime.Now.ToString("yyMMdd") + (int.Parse(digitoscorte) + 1).ToString("D3");
 
-                                        verificar = db.CortesCajeros.Where(x => x.NumCorte == numcorte).ToList();
+                                        verificar = await db.CortesCajeros.Where(x => x.NumCorte == numcorte).ToListAsync();
                                     }
 
                                     var corte = new CortesCajero
@@ -100,13 +107,20 @@ namespace PuntoDeVenta.Controllers
                             }
                             else
                             {
+                                // SI NO HAY CORTES GENERADOS EL DIA DE HOY, GENERAMOS EL PRIMERO
+                                // Y VALIDAMOS SI EL CAJERO TIENE CORTES PENDIENTES DE 5 DIAS ANTES
+                                var todaycorte = DateTime.Today.AddDays(-5);
                                 var lastCorteUser = await db.CortesCajeros
-                                                            .Where(x => x.IdCajero == UserId)
-                                                            .OrderByDescending(x => x.DateTApertura).ToListAsync();
-                                if (lastCorteUser.Count > 0)
+                                                           .Where(x => x.IdCajero == UserId && DbFunctions.TruncateTime(x.DateTApertura) >= todaycorte)
+                                                           .OrderByDescending(x => x.DateTApertura).ToListAsync();
+
+                                if (lastCorteUser != null)
                                 {
-                                    if (lastCorteUser.FirstOrDefault().DateTCierre == null && lastCorteUser.FirstOrDefault().Comentario == null)
-                                        return RedirectToAction("LogOff", "Account", routeValues: new { id = lastCorteUser.FirstOrDefault().Id });
+                                    for (int i = 0; i < lastCorteUser.Count; i++)
+                                    {
+                                        if (lastCorteUser[i].DateTCierre == null && lastCorteUser[i].Comentario == null)
+                                            return RedirectToAction("LogOff", "Account", routeValues: new { id = lastCorteUser[i].Id });
+                                    }
                                 }
 
                                 var corte = new CortesCajero
@@ -120,20 +134,22 @@ namespace PuntoDeVenta.Controllers
                                 await db.SaveChangesAsync();
                             }
                             break;
-                        case "LogOut":
-                            //return RedirectToAction("LogOff", "Account");
-                            break;
                         default:
+                            //if ((System.Web.HttpContext.Current.User != null) && System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
+                            //    return RedirectToAction("LogOff", "Account");
                             break;
                     }
                 }
 
-                var cortelast = await db.CortesCajeros
-                                        .Where(x => x.IdCajero == UserId)
-                                        .OrderByDescending(x => x.DateTApertura).FirstOrDefaultAsync();
+                var today = DateTime.Today;
+                var CorteUser = await db.CortesCajeros
+                                    .Where(x => x.IdCajero == UserId && DbFunctions.TruncateTime(x.DateTApertura) == today)
+                                    .OrderByDescending(x => x.DateTApertura).FirstOrDefaultAsync();
 
-                model.NumCorte = cortelast.NumCorte;
-                model.Id = cortelast.Id;
+                model.NumCorte = CorteUser.NumCorte;
+                model.Id = CorteUser.Id;
+                ViewBag.Corte = CorteUser.NumCorte;
+                ViewBag.FechaInicio = CorteUser.DateTApertura;
 
                 if (TempData.ContainsKey("SCreate"))
                     ViewBag.Success = TempData["SCreate"].ToString();
@@ -160,8 +176,6 @@ namespace PuntoDeVenta.Controllers
                 ViewBag.ModelTag = new Tags();
                 ViewBag.NombreUsuario = User.Identity.Name;
                 ViewBag.Cajero = User.Identity.Name;
-                ViewBag.Corte = cortelast.NumCorte;
-                ViewBag.FechaInicio = cortelast.DateTApertura;
             }
             catch (Exception ex)
             {
@@ -169,6 +183,28 @@ namespace PuntoDeVenta.Controllers
             }
 
             return View(model);
+        }
+
+        [Authorize(Roles = "Cajero, SuperUsuario")]
+        [HttpPost]
+        public async Task<ActionResult> Index(double? id, string type)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            switch (type)
+            {
+                case "Cliente":
+                    
+                    break;
+                default:
+                    break;
+            }
+
+
+            return View();
         }
 
         [Authorize(Roles = "Cajero, SuperUsuario")]
@@ -256,64 +292,208 @@ namespace PuntoDeVenta.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> ReporteCajero(long? id)
         {
-            if (id == null)
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            var result = await db.CortesCajeros.FindAsync(id);
-
-            if (result == null)
-            {
-                return HttpNotFound();
-            }
-
-            // Cuando agreguemos el username cambiamos en el obj nomcajero a UserName del UserManager
-            var _UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
-            var user = await _UserManager.FindByIdAsync(result.IdCajero);
-
-            var nfi = new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," };
-
-            var encabezado = new EncabezadoReporteCajero
-            {
-                Cajero = user.Email,
-                NumCorte = result.NumCorte,
-                Fecha = result.DateTApertura.ToString("dd/MM/yyyy"),
-                HoraI = result.DateTApertura.ToString("HH:mm:ss"),
-                HoraF = result.DateTCierre.Value.ToString("dd/MM/yyyy HH:mm:ss"),
-                TotalMonto = result.MontoTotal.Value.ToString("#,##0.00", nfi),
-                Comentario = result.Comentario
-            };
-
-            var movimientos = await db.OperacionesCajeros.Where(x => x.CorteId == result.Id).ToListAsync();
-
-            var model = new List<object>();
-
-            foreach (var item in movimientos)
-            {
-                model.Add(new
+                if (id == null)
                 {
-                    Concepto = item.Concepto,
-                    TipoPago = item.TipoPago,
-                    Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
-                    DataTOperacion = item.DateTOperacion.ToString(),
-                    Numero = item.Numero,
-                    Tipo = item.Tipo,
-                    CobroTag = item.CobroTag,
-                });
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+
+                var result = await db.CortesCajeros.FindAsync(id);
+
+                if (result == null)
+                {
+                    return HttpNotFound();
+                }
+
+                // Cuando agreguemos el username cambiamos en el obj nomcajero a UserName del UserManager
+                var _UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
+                var user = await _UserManager.FindByIdAsync(result.IdCajero);
+
+                var nfi = new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," };
+
+                var encabezado = new EncabezadoReporteCajero
+                {
+                    Cajero = user.Email,
+                    NumCorte = result.NumCorte,
+                    HoraI = result.DateTApertura.ToString("dd/MM/yyyy HH:mm:ss"),
+                    HoraF = result.DateTCierre.Value.ToString("dd/MM/yyyy HH:mm:ss"),
+                    TotalMonto = result.MontoTotal.Value.ToString("#,##0.00", nfi),
+                    Comentario = result.Comentario,
+                };
+
+                double ventatags = 0.0d;
+                double recargas = 0.0d;
+
+                var movimientos = await db.OperacionesCajeros.Where(x => x.CorteId == result.Id).ToListAsync();
+
+                var model = new List<object>();
+
+                foreach (var item in movimientos)
+                {
+                    recargas += item.Monto ?? 0;
+                    ventatags += item.CobroTag ?? 0;
+
+                    switch (item.Tipo)
+                    {
+                        case "TAG":
+                            var foundclientetag = await (from cliente in db.Clientes
+                                                         join cuentas in db.CuentasTelepeajes on cliente.Id equals cuentas.ClienteId
+                                                         join tags in db.Tags on cuentas.Id equals tags.CuentaId
+                                                         where tags.NumTag == item.Numero
+                                                         select new
+                                                         {
+                                                             cliente.NumCliente,
+                                                             cuentas.NumCuenta,
+                                                             tags.NumTag
+                                                         }
+                                                    ).FirstOrDefaultAsync();
+
+                            if (foundclientetag != null)
+                            {
+                                model.Add(new
+                                {
+                                    Concepto = item.Concepto,
+                                    TipoPago = item.TipoPago,
+                                    Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
+                                    DataTOperacion = item.DateTOperacion.ToString(),
+                                    CobroTag = item.CobroTag,
+                                    NumeroAdicional = "-",
+                                    NumCliente = foundclientetag.NumCliente,
+                                    NumCuenta = foundclientetag.NumCuenta,
+                                    NumTag = foundclientetag.NumTag,
+                                    Unidad = item.Concepto == "TAG ACTIVADO" || item.Concepto == "TAG TRASPASO" ? "1" : "-",
+                                    NoReferencia = item.NoReferencia,
+                                });
+                            }
+                            else
+                            {
+                                // LISTA NEGRA
+                                var foundblacklist = await (from list in db.ListaNegras
+                                                            where list.Numero == item.Numero
+                                                            select list).FirstOrDefaultAsync();
+
+                                if (foundblacklist != null)
+                                {
+                                    model.Add(new
+                                    {
+                                        Concepto = item.Concepto,
+                                        TipoPago = item.TipoPago,
+                                        Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
+                                        DataTOperacion = item.DateTOperacion.ToString(),
+                                        CobroTag = item.CobroTag,
+                                        NumeroAdicional = "-",
+                                        NumCliente = foundblacklist.NumCliente,
+                                        NumCuenta = foundblacklist.NumCuenta,
+                                        NumTag = foundblacklist.Numero,
+                                        Unidad = "-",
+                                        NoReferencia = item.NoReferencia,
+                                    });
+                                }
+                                else
+                                {
+                                    model.Add(new
+                                    {
+                                        Concepto = item.Concepto,
+                                        TipoPago = item.TipoPago,
+                                        Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
+                                        DataTOperacion = item.DateTOperacion.ToString(),
+                                        CobroTag = item.CobroTag,
+                                        NumeroAdicional = "-",
+                                        NumCliente = "-",
+                                        NumCuenta = "-",
+                                        NumTag = item.Numero,
+                                        Unidad = item.Concepto == "TAG ACTIVADO" || item.Concepto == "TAG TRASPASO" ? "1" : "-",
+                                        NoReferencia = item.NoReferencia,
+                                    });
+                                }
+                            }
+
+                            break;
+                        case "CUENTA":
+                            var foundclientecuen = await (from cliente in db.Clientes
+                                                          join cuentas in db.CuentasTelepeajes on cliente.Id equals cuentas.ClienteId
+                                                          where cuentas.NumCuenta == item.Numero
+                                                          select new
+                                                          {
+                                                              cliente.NumCliente,
+                                                              cuentas.NumCuenta,
+                                                          }
+                                                    ).FirstOrDefaultAsync();
+
+                            if (foundclientecuen != null)
+                            {
+                                model.Add(new
+                                {
+                                    Concepto = item.Concepto,
+                                    TipoPago = item.TipoPago,
+                                    Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
+                                    DataTOperacion = item.DateTOperacion.ToString(),
+                                    CobroTag = item.CobroTag,
+                                    NumeroAdicional = "-",
+                                    NumCliente = foundclientecuen.NumCliente,
+                                    NumCuenta = foundclientecuen.NumCuenta,
+                                    NumTag = "-",
+                                    Unidad = "-",
+                                    NoReferencia = item.NoReferencia,
+                                });
+                            }
+                            else
+                            {
+                                model.Add(new
+                                {
+                                    Concepto = item.Concepto,
+                                    TipoPago = item.TipoPago,
+                                    Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
+                                    DataTOperacion = item.DateTOperacion.ToString(),
+                                    CobroTag = item.CobroTag,
+                                    NumeroAdicional = "-",
+                                    NumCliente = "-",
+                                    NumCuenta = item.Numero,
+                                    NumTag = "-",
+                                    Unidad = "-",
+                                    NoReferencia = item.NoReferencia,
+                                });
+                            }
+                            break;
+                        default:
+                            model.Add(new
+                            {
+                                Concepto = item.Concepto,
+                                TipoPago = item.TipoPago,
+                                Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
+                                DataTOperacion = item.DateTOperacion.ToString(),
+                                CobroTag = item.CobroTag,
+                                NumeroAdicional = item.Numero,
+                                NumCliente = "-",
+                                NumCuenta = "-",
+                                NumTag = "-",
+                                Unidad = "-",
+                                NoReferencia = item.NoReferencia,
+                            });
+                            break;
+                    }
+                }
+
+                encabezado.SubtotalRecar = recargas.ToString("#,##0.00", nfi);
+                encabezado.VentaTag = ventatags.ToString("#,##0.00", nfi);
+
+                using (var client = new HttpClient())
+                {
+                    string json = JsonConvert.SerializeObject(model);
+                    HttpContent postContent = new StringContent(json, Encoding.UTF8, "application/json");
+                    var response = await client.PostAsync(new Uri("http://localhost:56342/api/cajero?authenticationToken=abcxyz"), postContent);
+                    var message = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
+                }
+
+                return View("ReportViewerCajero", encabezado);
             }
-
-
-            using (var client = new HttpClient())
+            catch (Exception ex)
             {
-                string json = JsonConvert.SerializeObject(model);
-                HttpContent postContent = new StringContent(json, Encoding.UTF8, "application/json");
-                var response = await client.PostAsync(new Uri("http://localhost:56342/api/cajero?authenticationToken=abcxyz"), postContent);
-                var message = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
+                throw;
             }
-
-            return View("ReportViewerCajero", encabezado);
         }
+
         public ActionResult MovimientoCajero(string corte, long? CorteId)
         {
             try
@@ -321,7 +501,7 @@ namespace PuntoDeVenta.Controllers
                 long id;
                 if (CorteId == null)
                 {
-                    var AtrCorte = db.CortesCajeros.Where(x => x.NumCorte == corte).ToList();
+                    var AtrCorte = db.CortesCajeros.Where(x => x.NumCorte == corte).ToList(); //A
                     id = AtrCorte[0].Id;
                 }
                 else
@@ -330,136 +510,204 @@ namespace PuntoDeVenta.Controllers
                 }
 
                 ViewBag.Corte = id.ToString();
-                var MovimientoDeCorte = db.OperacionesCajeros.Where(x => x.CorteId == id).ToList();
+                var MovimientoDeCorte = db.OperacionesCajeros.Where(x => x.CorteId == id).ToList().OrderByDescending(x => x.DateTOperacion);
                 var ListaOperaciones = new List<OperacionesCajero>();
                 foreach (var item in MovimientoDeCorte)
                 {
-
-                    var model = new OperacionesCajero
-                    {
-                        Id = item.Id,
-                        Concepto = item.Concepto,
-                        TipoPago = item.TipoPago,
-                        Monto = item.Monto,
-                        DateTOperacion = item.DateTOperacion,
-                        CorteId = item.CorteId,
-                        Numero = item.Numero,
-                        Tipo = item.Tipo,
-                        CobroTag = item.CobroTag,
-                        StatusCancelacion = item.StatusCancelacion,
-                        NoReferencia = item.NoReferencia
-
-                    };
-                    ListaOperaciones.Add(model);
+                    ListaOperaciones.Add(NewOperacion(item.Id, item.Concepto, item.TipoPago, item.Monto, item.DateTOperacion, item.CorteId, item.Numero, item.Tipo, item.CobroTag, item.NoReferencia, item.StatusCancelacion));
                 }
                 return View("MovimientoCajero", ListaOperaciones.AsEnumerable());
             }
             catch (Exception Ex)
             {
-                return View("Index");
+                return View("Error");
             }
         }
-
+        /// <summary>
+        /// Método para cancelar operaciones
+        /// </summary>
+        /// <param name="id">Id de la operación a eliminar</param>
+        /// <param name="corteid">Corte actual</param>
+        /// <param name="Filtro">Concepto que se cancelará</param>
+        /// <returns></returns>
         public ActionResult CancelarOperacion(int id, long corteid, string Filtro)
         {
             MethodsGlb method = new MethodsGlb();
             var SelectedOperacion = db.OperacionesCajeros.Where(x => x.Id == id).FirstOrDefault();
-            if (SelectedOperacion.StatusCancelacion == false)
+            if (SelectedOperacion.StatusCancelacion == false)                       //Se verifica si el movimiento ya fue cancelado
             {
-                db.OperacionesCajeros.Add(new OperacionesCajero
+                db.OperacionesCajeros.Add(new OperacionesCajero                     //Se agrega un movimiento para notificar la cancelación de este movimiento
                 {
-                    Concepto = "CANCELACIÓN",
+                    Concepto = SelectedOperacion.Concepto.Contains("RECARGA") ? "CANCELACION RECARGA" : "CANCELACION ACTIVACION",
                     TipoPago = "CAN",
-                    Monto = SelectedOperacion.Monto,
+                    Monto = 0 - SelectedOperacion.Monto,
                     DateTOperacion = DateTime.Now,
                     CorteId = SelectedOperacion.CorteId,
-                    Numero = SelectedOperacion.Numero,
-                    Tipo = SelectedOperacion.Tipo,
-                    CobroTag = SelectedOperacion.CobroTag,
+                    Numero = SelectedOperacion.NoReferencia,
+                    Tipo = SelectedOperacion.Tipo + " CAN",
+                    CobroTag = 0 - SelectedOperacion.CobroTag,
                     NoReferencia = method.RandomNumReferencia2().ToString(),
-                    StatusCancelacion = true
+                    StatusCancelacion = false
                 });
-                if (SelectedOperacion.Tipo == "TAG")
+                if (SelectedOperacion.Concepto.Contains("RECARGA"))                     //Si el movimiento fue una RECARGA
                 {
-                    var UpdatedTag = db.Tags.Where(x => x.NumTag == SelectedOperacion.Numero).FirstOrDefault();
-                    UpdatedTag.SaldoTag = (Convert.ToDouble(UpdatedTag.SaldoTag) - (Convert.ToDouble(SelectedOperacion.Monto) * 100)).ToString();
-
-                    if (Convert.ToDouble(UpdatedTag.SaldoTag) < 1525)
-                        UpdatedTag.StatusTag = false;
-                }
-                else
-                {
-                    var UpdatedCuenta = db.CuentasTelepeajes.Where(x => x.NumCuenta == SelectedOperacion.Numero).FirstOrDefault();
-                    var UpdatedTags = db.Tags.Where(x => x.CuentaId == UpdatedCuenta.Id).ToList();
-                    UpdatedCuenta.SaldoCuenta = (Convert.ToDouble(UpdatedCuenta.SaldoCuenta) - (Convert.ToDouble(SelectedOperacion.Monto)) * 100).ToString();
-                    if (Convert.ToDouble(UpdatedCuenta.SaldoCuenta) < 60000)
-                        UpdatedCuenta.StatusCuenta = false;
-                    foreach (var item in UpdatedTags)
+                    if (SelectedOperacion.Tipo == "TAG")                                //Si el movimiento cancelado en una recarga de Tag:
                     {
-                        item.SaldoTag = (Convert.ToDouble(item.SaldoTag) - (Convert.ToDouble(SelectedOperacion.Monto)) * 100).ToString();
-                        if (!UpdatedCuenta.StatusCuenta)
-                            item.StatusTag = false;
+                        var UpdatedTag = db.Tags.Where(x => x.NumTag == SelectedOperacion.Numero).FirstOrDefault();
+                        UpdatedTag.SaldoTag = (Convert.ToDouble(UpdatedTag.SaldoTag) - (Convert.ToDouble(SelectedOperacion.Monto) * 100)).ToString();
+                        if (Convert.ToDouble(UpdatedTag.SaldoTag) < 1525)               //Si el saldo es menor a 15.25 Quetzales, se convierte en tag inválido
+                            UpdatedTag.StatusTag = false;
+                    }
+                    else //Si el movimiento cancelado era una recarga de Cuenta:
+                    {
+                        var UpdatedCuenta = db.CuentasTelepeajes.Where(x => x.NumCuenta == SelectedOperacion.Numero).FirstOrDefault();
+                        var UpdatedTags = db.Tags.Where(x => x.CuentaId == UpdatedCuenta.Id).ToList();
+                        UpdatedCuenta.SaldoCuenta = (Convert.ToDouble(UpdatedCuenta.SaldoCuenta) - (Convert.ToDouble(SelectedOperacion.Monto)) * 100).ToString();
+                        if (Convert.ToDouble(UpdatedCuenta.SaldoCuenta) < 5000)         //Si el saldo es menor a 50 Quetzales, se convierte en cuenta invalida
+                            UpdatedCuenta.StatusCuenta = false;
+                        foreach (var item in UpdatedTags)
+                        {
+                            item.SaldoTag = (Convert.ToDouble(item.SaldoTag) - (Convert.ToDouble(SelectedOperacion.Monto)) * 100).ToString(); //Se le resta el monto cancelado a cada tag relacionado con la cuenta
+                            if (!UpdatedCuenta.StatusCuenta)                            //Si la cuenta es invalida, por ende los Tags relacionados a ella también son inválidos.
+                                item.StatusTag = false;
+                        }
                     }
                 }
-                SelectedOperacion.StatusCancelacion = true;
+                else //Si el movimiento fue una ACTIVACIÓN
+                {
+                    var OpeAfterActivacion = db.OperacionesCajeros.Where(x => x.Id > SelectedOperacion.Id).ToList();    //Para no evaluar todas las operaciones, descartamos las que hayan sido antes de la activación de la cuenta
+                    if (SelectedOperacion.Tipo == "TAG")        //En caso de que se haya cancelado la Activación de un TAG:
+                    {
+                        var CreatedTag = db.Tags.Where(x => x.NumTag == SelectedOperacion.Numero).FirstOrDefault();     //Se identifica el Tag cancelado
+                        int i = 1;
+                        foreach (var item in OpeAfterActivacion)    //Se evalúa cada operación después de la activación para cancelar posibles recargas a ese TAG
+                        {
+                            if (item.Numero == CreatedTag.NumTag)   //Si el Número de la operacaión coíncide con el NumTag del TAG, significa que se realizó una recarga al TAG que se quiere cancelar
+                            {
+                                db.OperacionesCajeros.Add(new OperacionesCajero     //Se crea un movimiento para notificar que esa recarga ya no será valida debido a la cancelación de la cuenta
+                                {
+                                    Concepto = "CANCELACION RECARGA",
+                                    TipoPago = "CAN",
+                                    Monto = 0 - item.Monto,
+                                    DateTOperacion = DateTime.Now,
+                                    CorteId = SelectedOperacion.CorteId,
+                                    Numero = item.NoReferencia,
+                                    Tipo = "TAG CAN",
+                                    CobroTag = 0 - item.CobroTag,
+                                    NoReferencia = string.Format("{0}", (Convert.ToInt32(method.RandomNumReferencia2()) + i).ToString("D7")), //Se le suma 'i' ya que el método 'RandomNumReferencia2()' evalúa el último registro de la BD y en este punto aún no se suben los cambios a la BD
+                                    StatusCancelacion = false
+                                });
+                                item.StatusCancelacion = true;      //Se notifica este movimiento como cancelado
+                                i++;
+                            }
+                        }
+                        db.Tags.Remove(CreatedTag);     //Se elimina el Tag cancelado
+                    }
+                    else    //En caso de que se haya cancelado la Activación de una CUENTA
+                    {
+                        var CreatedCuenta = db.CuentasTelepeajes.Where(x => x.NumCuenta == SelectedOperacion.Numero).FirstOrDefault();      //Se identifica la Cuenta a cancelar
+                        var RelatedTags = db.Tags.Where(x => x.CuentaId == CreatedCuenta.Id).ToList();          //Se identifican los Tags relacionados a la Cuenta a cancelar
+                        for (int i = 0; i < RelatedTags.Count; i++)     //Se buscará si hay movimientos con cada Tag relacionado
+                        {
+                            foreach (var item in OpeAfterActivacion)    //Se buscará en los movimientos después de la activación
+                            {
+                                if ((RelatedTags[i].NumTag == item.Numero) && (item.StatusCancelacion == false))        //Si el Numero del movimiento coíncide con el del Tag relacionado y además no ha sido cancelado, se generá un movimiento de cancelación
+                                {
+                                    db.OperacionesCajeros.Add(new OperacionesCajero
+                                    {
+                                        Concepto = "CANCELACION RECARGA",
+                                        TipoPago = "CAN",
+                                        Monto = 0 - item.Monto,
+                                        DateTOperacion = DateTime.Now,
+                                        CorteId = SelectedOperacion.CorteId,
+                                        Numero = item.NoReferencia,
+                                        Tipo = "TAG CAN",
+                                        CobroTag = 0 - item.CobroTag,
+                                        NoReferencia = string.Format("{0}", (Convert.ToInt32(method.RandomNumReferencia2()) + (i + 1)).ToString("D7")),
+                                        StatusCancelacion = false
+                                    });
+                                    item.StatusCancelacion = true;      //Se cancelará el movimiento
+                                }
+                            }
+                        }
+                        foreach (var item in OpeAfterActivacion)        //Se buscará en los movimientos después de la activación si ha habido recargas a la Cuenta
+                        {
+                            int i = 1;
+                            if (item.Numero == CreatedCuenta.NumCuenta) //Si el número de movimiento corresponde al Número de Cuenta, se agregará un movimiento de cancelación de operación
+                            {
+                                db.OperacionesCajeros.Add(new OperacionesCajero
+                                {
+                                    Concepto = "CANCELACION RECARGA",
+                                    TipoPago = SelectedOperacion.TipoPago != null ? "CAN" : null,
+                                    Monto = 0 - item.Monto,
+                                    DateTOperacion = DateTime.Now,
+                                    CorteId = SelectedOperacion.CorteId,
+                                    Numero = item.NoReferencia,
+                                    Tipo = "CUENTA CAN",
+                                    CobroTag = null,
+                                    NoReferencia = string.Format("{0}", (Convert.ToInt32(method.RandomNumReferencia2()) + (RelatedTags.Count + 1 + i)).ToString("D7")),
+                                    StatusCancelacion = false
+                                });
+                                item.StatusCancelacion = true;      //Cambia el status a cancelado
+                            }
+                        }
+                        db.CuentasTelepeajes.Remove(CreatedCuenta);     //Se elminará la Cuenta, junto con sus Tags
+                    }
+                }
+                SelectedOperacion.StatusCancelacion = true;     //La operación principal se cancela
                 db.SaveChanges();
             }
             return RedirectToAction("MovimientoCajero", new { CorteId = corteid, Concepto = Filtro });
         }
+        /// <summary>
+        /// Método POST para el filtrado de movimientos
+        /// </summary>
+        /// <param name="Concepto">Parametro por el cual se filtran los movimientos</param>
+        /// <param name="CorteId">Parametro por el cual se identifica el corte actual</param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult MovimientoCajero(string Concepto, long CorteId)
         {
             ViewBag.Filtro = Concepto;
-            if (Concepto == "Todas las operaciones" || Concepto == null)
+            if (Concepto == "Todas las operaciones" || Concepto == null) //Si el usuario quiere volver a ver el concentrado de todos los movimientos
             {
-                var MovimientosdeCorte = db.OperacionesCajeros.Where(x => x.CorteId == CorteId).ToList();
+                var MovimientosdeCorte = db.OperacionesCajeros.Where(x => x.CorteId == CorteId).ToList().OrderByDescending(x => x.DateTOperacion);
                 List<OperacionesCajero> model = new List<OperacionesCajero>();
                 foreach (var item in MovimientosdeCorte)
                 {
-                    var operacion = new OperacionesCajero
-                    {
-                        Id = item.Id,
-                        Concepto = item.Concepto,
-                        TipoPago = item.TipoPago,
-                        Monto = item.Monto,
-                        DateTOperacion = item.DateTOperacion,
-                        CorteId = item.CorteId,
-                        Numero = item.Numero,
-                        Tipo = item.Tipo,
-                        CobroTag = item.CobroTag,
-                        NoReferencia = item.NoReferencia,
-                        StatusCancelacion = item.StatusCancelacion
-                    };
-                    model.Add(operacion);
+                    model.Add(NewOperacion(item.Id, item.Concepto, item.TipoPago, item.Monto, item.DateTOperacion, item.CorteId, item.Numero, item.Tipo, item.CobroTag, item.NoReferencia, item.StatusCancelacion));
                 }
                 ViewBag.Corte = CorteId.ToString();
                 return View("MovimientoCajero", model);
             }
-            else
+            else //Si hay un filtro:
             {
-                var MovimientosdeCorte = db.OperacionesCajeros.Where(x => x.CorteId == CorteId && x.Concepto.Trim() == Concepto.Trim()).ToList();
+                var MovimientosdeCorte = db.OperacionesCajeros.Where(x => x.CorteId == CorteId && x.Concepto.Trim() == Concepto.Trim()).ToList().OrderByDescending(x => x.DateTOperacion); //Selecciona los movimientos en donde el concepto y el corte se cumplan
                 List<OperacionesCajero> model = new List<OperacionesCajero>();
                 foreach (var item in MovimientosdeCorte)
                 {
-                    var operacion = new OperacionesCajero
-                    {
-                        Id = item.Id,
-                        Concepto = item.Concepto,
-                        TipoPago = item.TipoPago,
-                        Monto = item.Monto,
-                        DateTOperacion = item.DateTOperacion,
-                        CorteId = item.CorteId,
-                        Numero = item.Numero,
-                        Tipo = item.Tipo,
-                        CobroTag = item.CobroTag,
-                        NoReferencia = item.NoReferencia,
-                        StatusCancelacion = item.StatusCancelacion
-                    };
-                    model.Add(operacion);
+                    model.Add(NewOperacion(item.Id, item.Concepto, item.TipoPago, item.Monto, item.DateTOperacion, item.CorteId, item.Numero, item.Tipo, item.CobroTag, item.NoReferencia, item.StatusCancelacion));
                 }
                 ViewBag.Corte = CorteId.ToString();
                 return View("MovimientoCajero", model);
             }
+        }
+        public OperacionesCajero NewOperacion(long NewId, string NewConcepto, string NewTipoPago, double? NewMonto, DateTime NewDate, long NewCorteId, string NewNumero, string NewTipo, double? NewCobroTag, string NewNoReferencia, bool NewStatus)
+        {
+            return new OperacionesCajero
+            {
+                Id = NewId,
+                Concepto = NewConcepto,
+                TipoPago = NewTipoPago,
+                Monto = NewMonto,
+                DateTOperacion = NewDate,
+                CorteId = NewCorteId,
+                Numero = NewNumero,
+                Tipo = NewTipo,
+                CobroTag = NewCobroTag,
+                NoReferencia = NewNoReferencia,
+                StatusCancelacion = NewStatus
+            };
         }
         public ActionResult Contact()
         {

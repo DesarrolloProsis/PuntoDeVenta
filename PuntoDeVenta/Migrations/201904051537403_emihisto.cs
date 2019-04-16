@@ -7,7 +7,7 @@ namespace PuntoDeVenta.Migrations
     {
         public override void Up()
         {
-            //AddColumn("dbo.Historico", "Evento", c => c.String(maxLength: 11));
+            AddColumn("dbo.Historico", "Evento", c => c.String(maxLength: 11));
             AddColumn("dbo.Historico", "SaldoAnterior", c => c.String(maxLength: 20));
             AddColumn("dbo.Historico", "SaldoActualizado", c => c.String(maxLength: 20));
         }
@@ -16,7 +16,7 @@ namespace PuntoDeVenta.Migrations
         {
             DropColumn("dbo.Historico", "SaldoActualizado");
             DropColumn("dbo.Historico", "SaldoAnterior");
-            //DropColumn("dbo.Historico", "Evento");
+            DropColumn("dbo.Historico", "Evento");
         }
     }
 }

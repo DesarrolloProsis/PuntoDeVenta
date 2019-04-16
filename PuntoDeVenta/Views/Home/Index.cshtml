@@ -11,8 +11,8 @@
 }
 
 <div class="container-fluid">
-    <div class="row justify-content-center">
-        <div class="col-xl-5">
+    <div class="row">
+        <div class="col-md-5">
             <div class="margin-section shadow">
                 <div class="msj-binevenida">
                     <h1 class="rojo">BIENVENIDO</h1>
@@ -23,7 +23,6 @@
                 </div>
             </div>
         </div>
-       
         <div class="col-xl-2">
             <button type="button" class="btn  btn-lg btn-block nav-button-new2 shadow" data-toggle="modal" data-target="#ModalTagReca">
                 <div class="row">
@@ -48,169 +47,102 @@
                 </div>
                 Crear Nuevo Cliente
             </button>
-
-
-        </div>
-    </div>
-
-
-
-    <hr class="hr-new" />
-    <div class=" row justify-content-center">
-        <div class="col-md-6">
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Tag</a>
-                        <a class="dropdown-item" href="#">Cuenta</a>
-
-                    </div>
-                </div>
-                <input type="text" class="form-control" aria-label="Text input with dropdown button">
-                <div class="input-group-append">
-                    <button class="btn btn-buscar" type="button" id="button-addon2"><i class="fas fa-search"></i> Buscar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="table-responsive">
-        <table class="table table-sm table-striped">
-            <thead>
-                <tr class="table-style">
-                    <th scope="col">#</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Handle</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>mdo</td>
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>fat</td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td colspan="2">Larry the Bird</td>
-                    <td>twitter</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-
-
-
-
-
-    @if (ViewData["Success"] != null)
-    {
-
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            @ViewData["Success"]
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    }
-
-    @if (ViewData["Error"] != null)
-    {
-
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            @ViewData["Error"]
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    }
-
-    <div class="col-md-12" style="margin-top: 10px !important;">
-        <div class="row">
-            <div class="col-md-4" style="margin-top: 2% !important;">
-                <button class="btn boton-inicio" onclick="location.href='@Url.Action("Index", "Clientes")'">
-                    <div class="row">
-                        <div class="col-md-12"><img src="~/Content/css-yisus/img/cliente.svg" class="tamano" /></div>
-                    </div>
-                    Busqueda de clientes
-                </button>
-            </div>
-            <div class="col-md-4" style="margin-top: 2% !important;">
-                <button class="btn boton-inicio" onclick="location.href='@Url.Action("Index", "Historico")'">
-                    <div class="row">
-                        <div class="col-md-12"><img src="~/Content/css-yisus/img/cruces.svg" class="tamano" /></div>
-                    </div>
-                    Historial de cruces clientes
-                </button>
-            </div>
-            <div class="col-md-4" style="margin-top: 2% !important;">
-                <button class="btn boton-inicio" onclick="location.href='@Url.Action("GenerarReportes", "Home")'">
-                    <div class="row">
-                        <div class="col-md-12"><img src="~/Content/css-yisus/img/pluma.svg" class="tamano2" /></div>
-                    </div>
-                    Reporte de cajero
-                </button>
-            </div>
-            <div class="col-md-4" style="margin-top: 2% !important;">
-                <button class="btn boton-inicio" onclick="location.href='@Url.Action("ListaNegraIndex", "Home")'">
-                    <div class="row">
-                        <div class="col-md-12"><img src="~/Content/css-yisus/img/list-ul-solid.svg" class="tamano" /></div>
-                    </div>
-                    Lista Negra
-                </button>
-            </div>
-            <div class="col-md-4" style="margin-top: 2% !important;">
-                <button class="btn boton-inicio" onclick="location.href='@Url.Action("MovimientoCajero", "Home",new { corte = ViewBag.Corte})'">
-                    <div class="row">
-                        <div class="col-md-12"><img src="~/Content/css-yisus/img/list-ul-solid.svg" class="tamano" /></div>
-                    </div>
-                    Historial de movimientos cajero
-                </button>
-            </div>
-
-            @{
-                if (User.Identity.IsAuthenticated)
-                {
-                    using (ApplicationDbContext app = new ApplicationDbContext())
-                    {
-                        var IdUser = User.Identity.GetUserId();
-                        var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
-
-                        if (userManager.IsInRole(IdUser, "SuperUsuario"))
-                        {
-                            <div class="col-md-4" style="margin-top: 2% !important;">
-                                <button class="btn boton-inicio" onclick="location.href='@Url.Action("Register", "Account")'">
-                                    <div class="row">
-                                        <div class="col-md-12"><img src="~/Content/css-yisus/img/address-book-solid.svg" class="tamano" /></div>
-                                    </div>
-                                    Registrar Cajero
-                                </button>
-                            </div>
-                        }
-                    }
-                }
-            }
-            <div class="col-md-4" style="margin-top: 2% !important;">
-                <button class="btn boton-inicio" onclick="location.href='@Url.Action("ListaNegraIndex", "Home")'">
-                    <div class="row">
-                        <div class="col-md-12"><img src="~/Content/css-yisus/img/cog-solid.svg" class="tamano" /></div>
-                    </div>
-                    Ajustes
-                </button>
-            </div>
         </div>
     </div>
 </div>
 
-<span class="hacia-arriba icon-ctrl" data-toggle="modal" data-target="#exampleModalCenter"><img class="signout" src="~/Content/css-yisus/img/sign-out-alt-solid.svg" /> Cerrar Sesión</span>
+
+
+@if (ViewData["Success"] != null)
+{
+
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @ViewData["Success"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+@if (ViewData["Error"] != null)
+{
+
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @ViewData["Error"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+<div class="col-md-12" style="margin-top: 10px !important;">
+    <div class="row">
+        <div class="col-md-4" style="margin-top: 2% !important;">
+            <button class="btn boton-inicio" onclick="location.href='@Url.Action("Index", "Clientes")'">
+                <div class="row">
+                    <div class="col-md-12"><img src="~/Content/css-yisus/img/cliente.svg" class="tamano" /></div>
+                </div>
+                Busqueda de clientes
+            </button>
+        </div>
+        <div class="col-md-4" style="margin-top: 2% !important;">
+            <button class="btn boton-inicio" onclick="location.href='@Url.Action("Index", "Historico")'">
+                <div class="row">
+                    <div class="col-md-12"><img src="~/Content/css-yisus/img/cruces.svg" class="tamano" /></div>
+                </div>
+                Historial de cruces clientes
+            </button>
+        </div>
+        <div class="col-md-4" style="margin-top: 2% !important;">
+            <button class="btn boton-inicio" onclick="location.href='@Url.Action("GenerarReportes", "Home")'">
+                <div class="row">
+                    <div class="col-md-12"><img src="~/Content/css-yisus/img/pluma.svg" class="tamano2" /></div>
+                </div>
+                Reporte de cajero
+            </button>
+        </div>
+        <div class="col-md-4" style="margin-top: 2% !important;">
+            <button class="btn boton-inicio" onclick="location.href='@Url.Action("ListaNegraIndex", "Home")'">
+                <div class="row">
+                    <div class="col-md-12"><img src="~/Content/css-yisus/img/list-ul-solid.svg" class="tamano" /></div>
+                </div>
+                Lista Negra
+            </button>
+        </div>
+        <div class="col-md-4" style="margin-top: 2% !important;">
+            <button class="btn boton-inicio" onclick="location.href='@Url.Action("MovimientoCajero", "Home",new { corte = ViewBag.Corte})'">
+                <div class="row">
+                    <div class="col-md-12"><img src="~/Content/css-yisus/img/list-ul-solid.svg" class="tamano" /></div>
+                </div>
+                Historial de movimientos cajero
+            </button>
+        </div>
+        @{
+            if (User.Identity.IsAuthenticated)
+            {
+                using (ApplicationDbContext app = new ApplicationDbContext())
+                {
+                    var IdUser = User.Identity.GetUserId();
+                    var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
+
+                    if (userManager.IsInRole(IdUser, "SuperUsuario"))
+                    {
+                        <div class="col-md-4" style="margin-top: 2% !important;">
+                            <button class="btn boton-inicio" onclick="location.href='@Url.Action("Register", "Account")'">
+                                <div class="row">
+                                    <div class="col-md-12"><img src="~/Content/css-yisus/img/address-book-solid.svg" class="tamano" /></div>
+                                </div>
+                                Registrar Cajero
+                            </button>
+                        </div>
+                    }
+                }
+            }
+        }
+    </div>
+</div>
+
+<span class="hacia-arriba icon-ctrl" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</span>
 
 @using (Html.BeginForm("LogOff", "Account", FormMethod.Post))
 {
@@ -390,6 +322,10 @@
 
     <script>
         $(document).ready(function () {
+
+            $('#submitFormCuentaReca').removeAttr("disabled");
+            $('#submitFormTagReca').removeAttr("disabled");
+
             $('#RecargarCuenta').on('click', function (e) {
                 e.preventDefault();
 
@@ -406,8 +342,10 @@
             });
 
             $('#submitFormCuentaReca').on('click', function (e) {
-                e.preventDefault();
 
+                $("#submitFormCuentaReca").attr("disabled", true);
+
+                e.preventDefault();
                 $("#FormRecargarCuenta").submit();
 
                 //console.log($("#FormRecargarCuenta").serialize());
@@ -430,8 +368,10 @@
             });
 
             $('#submitFormTagReca').on('click', function (e) {
-                e.preventDefault();
 
+                $("#submitFormTagReca").attr("disabled", true);
+
+                e.preventDefault();
                 $("#FormRecargarTag").submit();
 
                 //console.log($("#FormRecargarTag").serialize());
@@ -451,4 +391,80 @@
             });
         });
     </script>
+
+    <script>
+
+        var table1 = new Vue({
+            el: "#table1",
+            data: {
+                fields: ['first_name', 'last_name', 'show_details'],
+                items: [
+                    {
+                        isActive: false,
+                        age: 89,
+                        first_name: 'Geneva',
+                        last_name: 'Wilson',
+                        _showDetails: true
+                    },
+                ]
+            }
+        });
+    </script>
 }
+
+@*
+
+        <div class="py-2">
+        <div class="card shadow">
+            <div class="card-header">
+                <div class=" row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#">Tag</a>
+                                    <a class="dropdown-item" href="#">Cuenta</a>
+
+                                </div>
+                            </div>
+                            <input type="text" class="form-control" aria-label="Text input with dropdown button">
+                            <div class="input-group-append">
+                                <button class="btn btn-buscar" type="button" id="button-addon2"><i class="fas fa-search"></i> Buscar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+                    <div id="table1">
+                        <div>
+                            <b-table :items="items" :fields="fields" striped>
+                                <template slot="show_details" slot-scope="row">
+
+                                    <!-- As `row.showDetails` is one-way, we call the toggleDetails function on @@change -->
+                                    <b-form-checkbox v-model="row.detailsShowing" @@change="row.toggleDetails">
+                                        Details via check
+                                    </b-form-checkbox>
+                                </template>
+
+                                <template slot="row-details" slot-scope="row">
+                                    <b-card>
+                                        <b-row class="mb-2">
+                                            <b-col sm="3" class="text-sm-right"><b>Age:</b></b-col>
+                                            <b-col>{{ row.item.age }}</b-col>
+                                        </b-row>
+
+                                        <b-row class="mb-2">
+                                            <b-col sm="3" class="text-sm-right"><b>Is Active:</b></b-col>
+                                            <b-col>{{ row.item.isActive }}</b-col>
+                                        </b-row>
+                                    </b-card>
+                                </template>
+                            </b-table>
+                        </div>
+                    </div>
+                </div>*@

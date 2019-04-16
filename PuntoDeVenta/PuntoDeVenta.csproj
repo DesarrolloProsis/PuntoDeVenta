@@ -364,6 +364,14 @@
     <Compile Include="Migrations\201904051546333_emx.Designer.cs">
       <DependentUpon>201904051546333_emx.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201904091814312_numclielistanegr.cs" />
+    <Compile Include="Migrations\201904091814312_numclielistanegr.Designer.cs">
+      <DependentUpon>201904091814312_numclielistanegr.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904121407350_addnumcuenta.cs" />
+    <Compile Include="Migrations\201904121407350_addnumcuenta.Designer.cs">
+      <DependentUpon>201904121407350_addnumcuenta.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AppDbContext.cs" />
@@ -913,7 +921,6 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
-    <Content Include="Scripts\vue.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -1006,9 +1013,11 @@
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Shared\_AddTagsColectivos.cshtml" />
     <Content Include="Views\Home\MovimientoCajero.cshtml" />
+    <Content Include="Views\Home\Administrador.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Scripts\vuejs\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -1081,6 +1090,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201904051546333_emx.resx">
       <DependentUpon>201904051546333_emx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904091814312_numclielistanegr.resx">
+      <DependentUpon>201904091814312_numclielistanegr.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904121407350_addnumcuenta.resx">
+      <DependentUpon>201904121407350_addnumcuenta.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

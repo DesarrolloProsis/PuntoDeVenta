@@ -64,5 +64,7 @@ namespace PuntoDeVenta.Models
         public string NombreCliente { get; set; }
         [NotMapped]
         public string NumCliente { get; set; }
+        [NotMapped]
+        public int CountTags { get; set; }
     }
 }

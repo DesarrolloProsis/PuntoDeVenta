@@ -22,9 +22,12 @@
         }
     </style>
 
-
-
     @RenderSection("styles", required: false)
+
+    <!-- Add this to <head> -->
+    <link type="text/css"
+          rel="stylesheet"
+          href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark navstyle fixed-top">
@@ -84,7 +87,10 @@
         </footer>
     </div>
 
-    @Scripts.Render("~/bundles/vue")
+    <script src="//unpkg.com/@("@babel")/polyfill@latest/dist/polyfill.min.js"></script>
+    <script src="//unpkg.com/vue@latest/dist/vue.min.js"></script>
+    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+
     <!-- Use as a Vanilla JS plugin -->
     @Scripts.Render("~/bundles/intlTelInput")
     @Scripts.Render("~/bundles/jquery")
