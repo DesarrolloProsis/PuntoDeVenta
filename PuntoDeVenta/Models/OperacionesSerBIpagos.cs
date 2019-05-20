@@ -29,8 +29,13 @@ namespace PuntoDeVenta.Models
 
         public DateTime DateTOpSerBI { get; set; }
 
-        public virtual long TagId { get; set; }
-
-        public Tags Tags { get; set; }
+        [StringLength(30)]
+        public string Numero { get; set; }
+        [StringLength(30)]
+        public string NoReferencia { get; set; }
+        [StringLength(20)]
+        public string Tipo { get; set; }
+        [StringLength(30)]
+        public string Concepto { get; set; }
     }
 }

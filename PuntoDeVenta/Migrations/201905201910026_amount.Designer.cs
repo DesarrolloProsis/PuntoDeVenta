@@ -7,18 +7,18 @@ namespace PuntoDeVenta.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class amountsettings : IMigrationMetadata
+    public sealed partial class amount : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(amountsettings));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(amount));
         
         string IMigrationMetadata.Id
         {
-            get { return "201905151641075_amountsettings"; }
+            get { return "201905201910026_amount"; }
         }
         
         string IMigrationMetadata.Source
         {
-            get { return null; }
+            get { return Resources.GetString("Source"); }
         }
         
         string IMigrationMetadata.Target

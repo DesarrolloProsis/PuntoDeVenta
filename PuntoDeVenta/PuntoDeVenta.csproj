@@ -373,19 +373,24 @@
     <Compile Include="Migrations\201904121407350_addnumcuenta.Designer.cs">
       <DependentUpon>201904121407350_addnumcuenta.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201905151641075_amountsettings.cs" />
-    <Compile Include="Migrations\201905151641075_amountsettings.Designer.cs">
-      <DependentUpon>201905151641075_amountsettings.cs</DependentUpon>
+    <Compile Include="Migrations\201905151827321_cambiosolivier.cs" />
+    <Compile Include="Migrations\201905151827321_cambiosolivier.Designer.cs">
+      <DependentUpon>201905151827321_cambiosolivier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905201910026_amount.cs" />
+    <Compile Include="Migrations\201905201910026_amount.Designer.cs">
+      <DependentUpon>201905201910026_amount.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\AmountSettings.cs" />
+    <Compile Include="Models\AmountConfiguration.cs" />
     <Compile Include="Models\AppDbContext.cs" />
     <Compile Include="Models\Clientes.cs" />
     <Compile Include="Models\CortesCajero.cs" />
     <Compile Include="Models\CuentasTelepeaje.cs" />
     <Compile Include="Models\CustomViewModels.cs" />
     <Compile Include="Models\Historico.cs" />
+    <Compile Include="Models\HistoricoListas.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ListaNegra.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -1111,8 +1116,11 @@
     <EmbeddedResource Include="Migrations\201904121407350_addnumcuenta.resx">
       <DependentUpon>201904121407350_addnumcuenta.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905151641075_amountsettings.resx">
-      <DependentUpon>201905151641075_amountsettings.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201905151827321_cambiosolivier.resx">
+      <DependentUpon>201905151827321_cambiosolivier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905201910026_amount.resx">
+      <DependentUpon>201905201910026_amount.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

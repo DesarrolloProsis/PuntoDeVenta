@@ -45,8 +45,6 @@ namespace PuntoDeVenta.Models
         [Required]
         public string IdCajero { get; set; }
 
-        public ICollection<OperacionesSerBIpagos> OperacionesSerBIpagos { get; set; }
-
         [Display(Name = "Cobro por tag")]
         [NotMapped]
         //[Required]

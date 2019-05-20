@@ -157,8 +157,8 @@ namespace PuntoDeVenta.Controllers
 
             ViewBag.TipoCuentas = new SelectList(listItemsCuentas.AsEnumerable(), "Value", "Text");
             ViewBag.TagsColectivos = new Tags();
-            ViewBag.Amounts = new SelectList(db.AmountSettings.Where(x => x.Concept == "RECARGAS").AsEnumerable(), "Amount", "Amount");
-            ViewBag.AmountsCobroTag = new SelectList(db.AmountSettings.Where(x => x.Concept == "COBROTAG").AsEnumerable(), "Amount", "Amount");
+            ViewBag.Amounts = new SelectList(db.AmountConfigurations.Where(x => x.Concept == "RECARGAS").AsEnumerable(), "Amount", "Amount");
+            ViewBag.AmountsCobroTag = new SelectList(db.AmountConfigurations.Where(x => x.Concept == "COBROTAG").AsEnumerable(), "Amount", "Amount");
             //ViewBag.ClienteId = new SelectList(db.Clientes, "Id", "NumCliente", cuentasTelepeaje.ClienteId);
 
             return View();

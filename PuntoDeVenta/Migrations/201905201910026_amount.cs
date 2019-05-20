@@ -3,12 +3,12 @@ namespace PuntoDeVenta.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class amountsettings : DbMigration
+    public partial class amount : DbMigration
     {
         public override void Up()
         {
             CreateTable(
-                "dbo.AmountSettings",
+                "dbo.AmountConfigurations",
                 c => new
                     {
                         Id = c.Long(nullable: false, identity: true),
@@ -22,7 +22,7 @@ namespace PuntoDeVenta.Migrations
         
         public override void Down()
         {
-            DropTable("dbo.AmountSettings");
+            DropTable("dbo.AmountConfigurations");
         }
     }
 }

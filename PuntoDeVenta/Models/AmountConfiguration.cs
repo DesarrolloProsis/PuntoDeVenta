@@ -7,7 +7,7 @@ using System.Web;
 
 namespace PuntoDeVenta.Models
 {
-    public class AmountSettings
+    public class AmountConfiguration
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]

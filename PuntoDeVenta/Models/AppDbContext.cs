@@ -23,12 +23,11 @@ namespace PuntoDeVenta.Models
         public DbSet<Parametrizable> Parametrizables { get; set; }
         public DbSet<Historico> Historicos { get; set; }
         public DbSet<ListaNegra> ListaNegras { get; set; }
-        public DbSet<AmountSettings> AmountSettings { get; set; }
+        public DbSet<HistoricoListas> HistoricoListas { get; set; }
+        public DbSet<AmountConfiguration> AmountConfigurations { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-
-
             modelBuilder.Entity<CuentasTelepeaje>()
                 .HasRequired<Clientes>(x => x.Clientes)
                 .WithMany(x => x.CuentasTelepeajes)
@@ -38,11 +37,6 @@ namespace PuntoDeVenta.Models
                 .HasRequired<CuentasTelepeaje>(x => x.CuentasTelepeaje)
                 .WithMany(x => x.Tags)
                 .HasForeignKey(x => x.CuentaId);
-
-            modelBuilder.Entity<OperacionesSerBIpagos>()
-                .HasRequired<Tags>(x => x.Tags)
-                .WithMany(x => x.OperacionesSerBIpagos)
-                .HasForeignKey(x => x.TagId);
 
             modelBuilder.Entity<OperacionesCajero>()
                 .HasRequired<CortesCajero>(x => x.CortesCajero)

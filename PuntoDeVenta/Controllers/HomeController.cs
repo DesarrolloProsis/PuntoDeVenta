@@ -171,7 +171,7 @@ namespace PuntoDeVenta.Controllers
                 ViewBag.ModelTag = new Tags();
                 ViewBag.NombreUsuario = User.Identity.Name;
                 ViewBag.Cajero = User.Identity.Name;
-                ViewBag.Amounts = new SelectList(db.AmountSettings.Where(x => x.Concept == "RECARGAS").AsEnumerable(), "Amount", "Amount");
+                ViewBag.Amounts = new SelectList(db.AmountConfigurations.Where(x => x.Concept == "RECARGAS").AsEnumerable(), "Amount", "Amount");
             }
             catch (Exception ex)
             {
@@ -794,11 +794,11 @@ namespace PuntoDeVenta.Controllers
         }
 
         [HttpPost]
-        public ActionResult GeneralSettings(AmountSettings model)
+        public ActionResult GeneralSettings(AmountConfiguration model)
         {
             if (ModelState.IsValid)
             {
-                db.AmountSettings.Add(model);
+                db.AmountConfigurations.Add(model);
                 db.SaveChanges();
 
                 return View();
