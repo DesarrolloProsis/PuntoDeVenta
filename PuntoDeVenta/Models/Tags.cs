@@ -55,6 +55,7 @@ namespace PuntoDeVenta.Models
         [Display(Name = "Saldo a recargar")]
         [StringLength(20)]
         [NotMapped]
+        [Compare("ConfSaldoARecargar", ErrorMessage = "Los saldos no coinciden.")]
         public string SaldoARecargar { get; set; }
 
         [Display(Name = "Confirmar saldo a recargar")]

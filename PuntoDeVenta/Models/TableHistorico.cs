@@ -16,11 +16,23 @@ namespace PuntoDeVenta.Models
         public string TypeMovimiento { get; set; }
         public string TypeMovimiento2 { get; set; }
         public bool Mensaje { get; set; }
-        public object Info { get; set; }        
+        public object Info { get; set; }
         public List<Cruces> ListaCruces { get; set; }
         public List<Movimientos> ListaMovimientos { get; set; }
+        public List<CruceMovimiento> ListCruceMovimientos { get; set; }
 
     }
+
+    public class CruceMovimiento
+    {
+        public string Concepto { get; set; }
+        public string TagCuenta { get; set; }
+        public string Fecha { get; set; }
+        public string CobroTag { get; set; }
+        public string Referencia { get; set; }
+
+    }
+
 
     public class Cruces
     {
@@ -45,7 +57,7 @@ namespace PuntoDeVenta.Models
     public class Movimientos
     {
         public int Id { get; set; }
-        public string  Concepto { get; set; }
+        public string Concepto { get; set; }
         public string TipoPago { get; set; }
         public string Monto { get; set; }
         public string Fecha { get; set; }
@@ -53,8 +65,8 @@ namespace PuntoDeVenta.Models
         public string TagCuenta { get; set; }
         public string Cuenta { get; set; }
         public string NomCliente { get; set; }
-        public string TypeCuenta { get; set; } 
-        public string Tipo  { get; set; }
+        public string TypeCuenta { get; set; }
+        public string Tipo { get; set; }
         public string CobroTag { get; set; }
         public string Referencia { get; set; }
         public string SaldoActual { get; set; }

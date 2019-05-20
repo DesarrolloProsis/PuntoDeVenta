@@ -88,6 +88,7 @@
                         <th>Plaza</th>
                         <th>Fecha del Cruce</th>
                         <th>Tramo</th>
+                        <th>Cobro del Cruce</th>
                         <th>Carril</th>
                         <th>Operadora</th>
                     </tr>
@@ -99,6 +100,7 @@
                         <td>{{item.Plaza}}</td>
                         <td>{{item.Fecha}}</td>
                         <td>{{item.Cuerpo}}</td>
+                        <td>{{item.Saldo}}</td>
                         <td>{{item.Carril}}</td>
                         <td>{{item.Operador}}</td>
                     </tr>
@@ -125,11 +127,10 @@
                         <th>Tipo de Cuenta</th>
                         <th>Cobro del Tag</th>
                         <th>Numero Referencia</th>
-
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in items">                        
+                    <tr v-for="item in items">
                         <td>{{item.Id}}</td>
                         <td>{{item.Concepto}}</td>
                         <td>{{item.TipoPago}}</td>
@@ -138,7 +139,7 @@
                         <td>{{item.TagCuenta}}</td>
                         <td>{{item.TypeCuenta}}</td>
                         <td>{{item.CobroTag}}</td>
-                        <td>{{item.Referencia}}</td>                        
+                        <td>{{item.Referencia}}</td>
                     </tr>
                 </tbody>
 
@@ -149,7 +150,6 @@
 
     <!--TablaMovimientosCliente-->
     <div id="aboutPage4">
-
         <template v-if="TablaMovimientos2">
             <table class="table table-bordered">
                 <thead>
@@ -177,6 +177,34 @@
                         <td>{{item.TypeCuenta}}</td>
                         <td>{{item.CobroTag}}</td>
                         <td>{{item.Referencia}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </template>
+    </div>
+
+    <!--TablaMovimientosCrucesCLiente-->
+    <div id="aboutPage5">
+
+        <template v-if="TablaMovimietnosCruces1">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+
+                        <th>Concepto</th>
+                        <th>Fecha</th>
+                        <th>Monto</th>
+                        <th>Numero Referencia</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in items">
+
+                        <td>{{item.Concepto}}</td>
+                        <td>{{item.Fecha}}</td>
+                        <td>{{item.CobroTag}}</td>
+                        <td>{{item.Referencia}}</td>
 
                     </tr>
                 </tbody>
@@ -186,16 +214,13 @@
 
     </div>
 
-
 </div>
 
 
 @section Scripts {
 
-
-
-
     @Scripts.Render("~/bundles/jqueryval")
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 
     <script>
         $(document).ready(function () {
@@ -203,13 +228,15 @@
 
             var Cruces = @Html.Raw(Json.Encode(Model.ListaCruces));
             var Movimientos = @Html.Raw(Json.Encode(Model.ListaMovimientos));
-            var info = @Html.Raw(Json.Encode(Model.Info));            
-            console.log(JSON.stringify(Cruces))
-            console.log(JSON.stringify(Movimientos))
+            var CrucesMovimientos = @Html.Raw(Json.Encode(Model.ListCruceMovimientos));
+            var info = @Html.Raw(Json.Encode(Model.Info));
+          console.log(JSON.stringify(Cruces))
+          console.log(JSON.stringify(Movimientos))
+          console.log(JSON.stringify(CrucesMovimientos))
             //console.log(JSON.stringify(info))
 
 
-            if (Cruces == null && Movimientos == null) {
+          if (Cruces == null && Movimientos == null && CrucesMovimientos == null) {
 
                     $('#Cuen').remove();
                     $('#Sal').remove();
@@ -242,14 +269,80 @@
             }
             else {
 
+              if (CrucesMovimientos != null) {
 
-                if (Cruces != null) {
+                if (info.Tipo == 'SOLO_FECHA') {
+
+                  $('#Cuen').remove();
+                  $('#Sal').remove();
+                  $('#clien').remove();
+                  $('#mess').remove();
+
+                  var Mensaje = new Vue({
+
+                    el: '#Mensaje',
+                    data: {
+
+                      Fecha1: info.Fecha_Inicio,
+                      Fecha2: info.Fecha_Fin,
+                      Movimientos: info.Count,
+                      muestra: true,
+                    }
+
+                  })
+
+                  var aboutPage2 = new Vue({
+                    el: '#aboutPage',
+                    data: {
+
+                      items: Cruces,
+                      TablaCruces1: true
+                    }
+                  });
+
+
+                }
+                else {
+
+
+                  $('#mess').remove();
+
+                  var Mensaje = new Vue({
+                    el: '#Mensaje',
+                    data: {
+                      Saldo: info.SaldoActual,
+                      Fecha1: info.Fecha_Inicio,
+                      Fecha2: info.Fecha_Fin,
+                      Movimientos: info.Count,
+                      Cuenta: info.TagCuenta,
+                      Cliente: info.NomCliente,
+                      muestra: true,
+
+                    }
+
+                  })
+
+
+                  var mensaje = false;
+                  var aboutPage3 = new Vue({
+                    el: '#aboutPage5',
+                    data: {
+
+                      items: CrucesMovimientos,
+                      TablaMovimietnosCruces1: true
+                    }
+                  });
+
+                }
+
+              }
+               else if (Cruces != null) {
 
                     if (info.Tipo == 'SOLO_FECHA') {
-                                                
+
                         $('#Cuen').remove();
-                        $('#Sal').remove();                        
-                        $('#clien').remove();                                                                        
+                        $('#Sal').remove();
+                        $('#clien').remove();
                         $('#mess').remove();
 
                         var Mensaje = new Vue({
@@ -316,7 +409,7 @@
 
                         $('#Cuen').remove();
                         $('#Sal').remove();
-                        $('#clien').remove();                        
+                        $('#clien').remove();
                         $('#mess').remove();
 
 
@@ -376,7 +469,7 @@
 
                     }
                 }
-                    
+
             }
 
             });

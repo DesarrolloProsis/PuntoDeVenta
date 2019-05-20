@@ -59,12 +59,12 @@
                                                         <label style="float:left !important">Movimiento</label>
 
                                                         @Html.DropDownListFor(x => x.TypeMovimiento, new SelectList(string.Empty, "Value", "Text"), htmlAttributes: new { @class = "form-control espacio", placeholder = "Seleccione.." })
-                                                        
+
                                                     </div>
 
                                                     <div class="col-md-12">
                                                         <label style="float:left !important">Fecha Inicial</label>
-                                                        @Html.EditorFor(model => model.Fecha_Inicio)                                                        
+                                                        @Html.EditorFor(model => model.Fecha_Inicio)
                                                     </div>
                                                     <div class="col-md-12">
                                                         <label style="float:left !important">Fecha Final</label>
@@ -113,7 +113,7 @@
 
                                                     <div class="col-md-12">
                                                         <label style="float:left !important">Movimiento</label>
-                                                        @Html.DropDownListFor(x => x.TypeMovimiento2, new SelectList(string.Empty, "Value", "Text"), htmlAttributes: new { @class = "form-control espacio", placeholder = "Seleccione.." })                                                        
+                                                        @Html.DropDownListFor(x => x.TypeMovimiento2, new SelectList(string.Empty, "Value", "Text"), htmlAttributes: new { @class = "form-control espacio", placeholder = "Seleccione.." })
                                                     </div>
 
 
@@ -183,11 +183,11 @@
                  error: function (ex) {
                         alert("Error!!!" + ex);
                  },
-            });           
-        }    
+            });
+        }
 
     </script>
-    
+
 
     <script>
 

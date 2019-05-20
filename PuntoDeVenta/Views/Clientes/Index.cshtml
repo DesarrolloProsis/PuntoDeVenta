@@ -157,7 +157,7 @@
                     <div id="fromTocreate">
                         <div class="form-group">
                             <img class="img-modal2" src="~/Content/css-yisus/img/file-invoice-dollar-solid.svg" /> @Html.LabelFor(model => model.SaldoCuenta, htmlAttributes: new { @class = "control-label" })
-                            @Html.EditorFor(model => model.SaldoCuenta, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                            @Html.DropDownListFor(model => model.SaldoCuenta, (SelectList)ViewBag.Amounts, htmlAttributes: new { @class = "form-control formulario2" })
                             @Html.ValidationMessageFor(model => model.SaldoCuenta, "", new { @class = "text-danger" })
 
                         </div>
@@ -300,12 +300,13 @@
                     </div>
                     <div class="form-group">
                         <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" /> @Html.LabelFor(model => modelCuenta.SaldoARecargar, htmlAttributes: new { @class = "control-label" })
-                        @Html.TextBoxFor(model => modelCuenta.SaldoARecargar, new { @class = "form-control formulario1" })
+                        @*Html.TextBoxFor(model => modelCuenta.SaldoARecargar, new { @class = "form-control formulario1" })*@
+                        @Html.DropDownListFor(model => modelCuenta.SaldoARecargar, (SelectList)ViewBag.Amounts, htmlAttributes: new { @class = "form-control formulario2" })
                         @Html.ValidationMessageFor(model => modelCuenta.SaldoARecargar, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group">
                         <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" /> @Html.LabelFor(model => modelCuenta.ConfSaldoARecargar, htmlAttributes: new { @class = "control-label" })
-                        @Html.TextBoxFor(model => modelCuenta.ConfSaldoARecargar, new { @class = "form-control formulario1" })
+                        @Html.DropDownListFor(model => modelCuenta.ConfSaldoARecargar, (SelectList)ViewBag.Amounts, htmlAttributes: new { @class = "form-control formulario2" })
                         @Html.ValidationMessageFor(model => modelCuenta.ConfSaldoARecargar, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -367,12 +368,13 @@
                     </div>
                     <div class="form-group">
                         <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" />@Html.LabelFor(m => modelTag.SaldoARecargar, htmlAttributes: new { @class = "control-label" })
-                        @Html.EditorFor(m => modelTag.SaldoARecargar, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                        @*Html.EditorFor(m => modelTag.SaldoARecargar, new { htmlAttributes = new { @class = "form-control formulario1" } })*@
+                        @Html.DropDownListFor(m => modelTag.SaldoARecargar, (SelectList)ViewBag.Amounts, htmlAttributes: new { @class = "form-control formulario2" })
                         @Html.ValidationMessageFor(m => modelTag.SaldoARecargar, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group">
                         <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" />@Html.LabelFor(m => modelTag.ConfSaldoARecargar, htmlAttributes: new { @class = "control-label" })
-                        @Html.EditorFor(m => modelTag.ConfSaldoARecargar, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                        @Html.DropDownListFor(m => modelTag.ConfSaldoARecargar, (SelectList)ViewBag.Amounts, htmlAttributes: new { @class = "form-control formulario2" })
                         @Html.ValidationMessageFor(m => modelTag.ConfSaldoARecargar, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -433,6 +435,9 @@
 
 @section Scripts
 {
+    <!-- production version, optimized for size and speed -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/Scripts/date.format.js"></script>
@@ -597,7 +602,6 @@
                 $("#numcliente").val("");
                 $("#nomcliente").val("");
                 $("#ClienteId").val("");
-                $("#SaldoCuenta").val("");
 
                 $('#ModalNuevaCuenta').modal('show');
 
@@ -717,10 +721,6 @@
 
             });
 
-            $(function () {
-                $('#SaldoCuenta').mask("#,##0.00", { reverse: true });
-            });
-
             /******************* CUENTAS ******************************/
 
             var example_table = $('#example_table').DataTable({
@@ -803,8 +803,6 @@
 
                 var datos = example_table.row($(this).parents('tr')).data();
 
-                console.log(datos);
-
                 $.ajax({
                     type: "POST",
                     url: "/Clientes/Tags",
@@ -830,32 +828,24 @@
 
                 var data = example_table.row($(this).parents('tr')).data();
 
-                //console.log(data);
-
                 $("#numcuenta").val("");
                 $("#CuentaId").val("");
-                $("#CobroTag").val("");
                 $("#tipocuenta").val("");
-                $("#SaldoTag").val("");
                 $("#NumTag").val("");
 
                 $("#numcuenta").val(data.NumCuenta);
                 $("#CuentaId").val(data.Id);
-                $("#CobroTag").val("77.00");
                 $("#tipocuenta").val(data.TypeCuenta);
 
                 /**/
 
                 $("#modelTags_numcuenta").val("");
                 $("#modelTags_CuentaId").val("");
-                $("#modelTags_CobroTag").val("");
                 $("#modelTags_tipocuenta").val("");
-                $("#modelTags_SaldoTag").val("");
                 $("#modelTags_NumTag").val("");
 
                 $("#modelTags_numcuenta").val(data.NumCuenta);
                 $("#modelTags_CuentaId").val(data.Id);
-                $("#modelTags_CobroTag").val("77.00");
                 $("#modelTags_tipocuenta").val(data.TypeCuenta);
 
 
@@ -863,8 +853,6 @@
                 if (data.TypeCuenta == "Colectiva") {
                     $("#fromTo").hide();
                     $("#fromTo1").hide();
-                    $("#fromTo2").hide();
-                    $("#fromTo12").hide();
                     $('#AddTags2').modal('show');
                 } else if (data.TypeCuenta == "Individual") {
                     $("#fromTo").show();
@@ -945,19 +933,17 @@
 
             $('#CrearTagAjax').on('click', function (e) {
 
-                $("#CrearTagAjax").attr("disabled", true);
                 e.preventDefault();
 
-                var form = $("#FormAddTags2").validate();
+                if ($("#modelTags_NumTag").val() != "") {
 
-                if (form.valid() && $("#modelTags_NumTag").val() != "") {
+                    if ($("#modelTags_tipocuenta").val() == "Colectiva") {
 
-                    if ($("#modelTags_tipocuenta").val() == "Colectiva" && $("#modelTags_SaldoTag").val() == "") {
+                        $("#CrearTagAjax").attr("disabled", true);
 
                         saldoTag = 0;
 
                         var costotag = $("#modelTags_CobroTag").val();
-                        var total = parseFloat(costotag) + parseFloat(saldoTag);
 
                         var tags = {};
 
@@ -965,15 +951,11 @@
                         tags.CobroTag = costotag;
                         tags.CuentaId = $("#modelTags_CuentaId").val();
                         tags.OldTag = $("#modelTags_OldTag").val();
-                        tags.OldSaldo = $("#modelTags_OldSaldo").val();
                         tags.Observacion = $("#modelTags_Observacion").val();
 
                         let currChecked = $("#customControlInline2").prop("checked");
 
                         tags.Checked = currChecked;
-                        //$("#Tagnumcuenta").text($("#modelTags_numcuenta").val());
-                        //$("#TagSaldo").text(saldoTag);
-                        //$("#total").text(total);
 
                         $.ajax({
                             type: "POST",
@@ -983,8 +965,6 @@
                             data: JSON.stringify(tags),
                             success: function (result) {
                                 alert(result.Message);
-                                $("#modelTags_CobroTag").val("77.00");
-                                $("#modelTags_SaldoTag").val("");
                                 $("#modelTags_NumTag").val("");
                                 $("#modelTags_OldTag").val("");
                                 $("#modelTags_OldSaldo").val("");
@@ -1067,10 +1047,6 @@
             });
 
             $(function () {
-                $('#SaldoARecargar').mask("#,##0.00", { reverse: true });
-                $('#ConfSaldoARecargar').mask("#,##0.00", { reverse: true });
-                $('#SaldoTag').mask("#,##0.00", { reverse: true });
-                $("#CobroTag").mask("#,##0.00", { reverse: true });
                 $("#OldSaldo").mask("#,##0.00", { reverse: true });
             });
 
@@ -1235,17 +1211,7 @@
             /******************** Otras cosas ************************/
 
             $(function () {
-                $('#modelCuenta_SaldoARecargar').mask("#,##0.00", { reverse: true });
-                $('#modelCuenta_ConfSaldoARecargar').mask("#,##0.00", { reverse: true });
-                $('#modelCuenta_SaldoTag').mask("#,##0.00", { reverse: true });
-                $("#modelCuenta_CobroTag").mask("#,##0.00", { reverse: true });
                 $("#modelCuenta_OldSaldo").mask("#,##0.00", { reverse: true });
-
-                $('#modelTag_SaldoARecargar').mask("#,##0.00", { reverse: true });
-                $('#modelTag_ConfSaldoARecargar').mask("#,##0.00", { reverse: true });
-
-                $("#modelTags_SaldoTag").mask("#,##0.00", { reverse: true });
-                $("#modelTags_CobroTag").mask("#,##0.00", { reverse: true });
             });
         });
     </script>
@@ -1268,19 +1234,6 @@
                 text: ''
             },
         });
-
-        // you can invoke methods in JavaScript too
-        //example2.greet() // => 'Hello Vue.js!'
-
-      //var res = Vue.compile('<div><span>{{ msg }}</span></div>')
-
-      //  new Vue({
-      //      data: {
-      //          msg: 'hello'
-      //      },
-      //      render: res.render,
-      //      staticRenderFns: res.staticRenderFns
-      //  });
 
     </script>
 

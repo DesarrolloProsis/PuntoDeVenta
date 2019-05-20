@@ -49,8 +49,8 @@
             </button>
         </div>
     </div>
+    <div id="ejemplo"></div>
 </div>
-
 
 
 @if (ViewData["Success"] != null)
@@ -186,7 +186,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="ModalCuentaRecaTitle">Recargar cuenta</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" id="closemodalcuenta" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -202,12 +202,13 @@
                     </div>
                     <div class="form-group">
                         <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" /> @Html.LabelFor(model => modelCuenta.SaldoARecargar, htmlAttributes: new { @class = "control-label" })
-                        @Html.TextBoxFor(model => modelCuenta.SaldoARecargar, new { @class = "form-control formulario1" })
+                        @*Html.TextBoxFor(model => modelCuenta.SaldoARecargar, new { @class = "form-control formulario1" })*@
+                        @Html.DropDownListFor(model => modelCuenta.SaldoARecargar, (SelectList)ViewBag.Amounts, htmlAttributes: new { @class = "form-control formulario2" })
                         @Html.ValidationMessageFor(model => modelCuenta.SaldoARecargar, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group">
                         <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" /> @Html.LabelFor(model => modelCuenta.ConfSaldoARecargar, htmlAttributes: new { @class = "control-label" })
-                        @Html.TextBoxFor(model => modelCuenta.ConfSaldoARecargar, new { @class = "form-control formulario1" })
+                        @Html.DropDownListFor(model => modelCuenta.ConfSaldoARecargar, (SelectList)ViewBag.Amounts, htmlAttributes: new { @class = "form-control formulario2" })
                         @Html.ValidationMessageFor(model => modelCuenta.ConfSaldoARecargar, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -269,12 +270,13 @@
                     </div>
                     <div class="form-group">
                         <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" />@Html.LabelFor(m => modelTag.SaldoARecargar, htmlAttributes: new { @class = "control-label" })
-                        @Html.EditorFor(m => modelTag.SaldoARecargar, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                        @*Html.EditorFor(m => modelTag.SaldoARecargar, new { htmlAttributes = new { @class = "form-control formulario1" } })*@
+                        @Html.DropDownListFor(m => modelTag.SaldoARecargar, (SelectList)ViewBag.Amounts, htmlAttributes: new { @class = "form-control formulario2" })
                         @Html.ValidationMessageFor(m => modelTag.SaldoARecargar, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group">
                         <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" />@Html.LabelFor(m => modelTag.ConfSaldoARecargar, htmlAttributes: new { @class = "control-label" })
-                        @Html.EditorFor(m => modelTag.ConfSaldoARecargar, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                        @Html.DropDownListFor(m => modelTag.ConfSaldoARecargar, (SelectList)ViewBag.Amounts, htmlAttributes: new { @class = "form-control formulario2" })
                         @Html.ValidationMessageFor(m => modelTag.ConfSaldoARecargar, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -318,7 +320,7 @@
 
 @section Scripts
 {
-    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/bundle/indexHome.js"></script>
 
     <script>
         $(document).ready(function () {
@@ -377,94 +379,9 @@
                 //console.log($("#FormRecargarTag").serialize());
                 //console.log($("#FormRecargarTag").serializeArray());
             });
-
-
-            $(function () {
-                $('#modelCuenta_SaldoARecargar').mask("#,##0.00", { reverse: true });
-                $('#modelCuenta_ConfSaldoARecargar').mask("#,##0.00", { reverse: true });
-                $('#modelCuenta_SaldoTag').mask("#,##0.00", { reverse: true });
-                $("#modelCuenta_CobroTag").mask("#,##0.00", { reverse: true });
-                $("#modelCuenta_OldSaldo").mask("#,##0.00", { reverse: true });
-
-                $('#modelTag_SaldoARecargar').mask("#,##0.00", { reverse: true });
-                $('#modelTag_ConfSaldoARecargar').mask("#,##0.00", { reverse: true });
-            });
         });
     </script>
 
-    <script>
+    @Scripts.Render("~/bundles/jqueryval")
 
-        var table1 = new Vue({
-            el: "#table1",
-            data: {
-                fields: ['first_name', 'last_name', 'show_details'],
-                items: [
-                    {
-                        isActive: false,
-                        age: 89,
-                        first_name: 'Geneva',
-                        last_name: 'Wilson',
-                        _showDetails: true
-                    },
-                ]
-            }
-        });
-    </script>
 }
-
-@*
-
-        <div class="py-2">
-        <div class="card shadow">
-            <div class="card-header">
-                <div class=" row justify-content-center">
-                    <div class="col-md-6">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#">Tag</a>
-                                    <a class="dropdown-item" href="#">Cuenta</a>
-
-                                </div>
-                            </div>
-                            <input type="text" class="form-control" aria-label="Text input with dropdown button">
-                            <div class="input-group-append">
-                                <button class="btn btn-buscar" type="button" id="button-addon2"><i class="fas fa-search"></i> Buscar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card-body">
-                    <div id="table1">
-                        <div>
-                            <b-table :items="items" :fields="fields" striped>
-                                <template slot="show_details" slot-scope="row">
-
-                                    <!-- As `row.showDetails` is one-way, we call the toggleDetails function on @@change -->
-                                    <b-form-checkbox v-model="row.detailsShowing" @@change="row.toggleDetails">
-                                        Details via check
-                                    </b-form-checkbox>
-                                </template>
-
-                                <template slot="row-details" slot-scope="row">
-                                    <b-card>
-                                        <b-row class="mb-2">
-                                            <b-col sm="3" class="text-sm-right"><b>Age:</b></b-col>
-                                            <b-col>{{ row.item.age }}</b-col>
-                                        </b-row>
-
-                                        <b-row class="mb-2">
-                                            <b-col sm="3" class="text-sm-right"><b>Is Active:</b></b-col>
-                                            <b-col>{{ row.item.isActive }}</b-col>
-                                        </b-row>
-                                    </b-card>
-                                </template>
-                            </b-table>
-                        </div>
-                    </div>
-                </div>*@

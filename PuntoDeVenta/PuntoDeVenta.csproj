@@ -110,7 +110,8 @@
       <HintPath>..\packages\Microsoft.Owin.Security.Twitter.4.0.1\lib\net45\Microsoft.Owin.Security.Twitter.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -372,8 +373,13 @@
     <Compile Include="Migrations\201904121407350_addnumcuenta.Designer.cs">
       <DependentUpon>201904121407350_addnumcuenta.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201905151641075_amountsettings.cs" />
+    <Compile Include="Migrations\201905151641075_amountsettings.Designer.cs">
+      <DependentUpon>201905151641075_amountsettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AmountSettings.cs" />
     <Compile Include="Models\AppDbContext.cs" />
     <Compile Include="Models\Clientes.cs" />
     <Compile Include="Models\CortesCajero.cs" />
@@ -683,10 +689,12 @@
     </Content>
     <Content Include="ReportViewer\js\telerikReportViewer-12.1.18.620.min.js" />
     <Content Include="ReportViewer\js\telerikReportViewer.kendo-12.1.18.620.min.js" />
+    <Content Include="Scripts\app\indexHome\index.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\bundle\indexHome.js" />
     <Content Include="Scripts\date.format.js" />
     <Content Include="Scripts\esm\popper-utils.js" />
     <Content Include="Scripts\esm\popper-utils.min.js" />
@@ -742,6 +750,15 @@
     <Content Include="bin\roslyn\vbc.exe.config" />
     <Content Include="bin\roslyn\vbc.rsp" />
     <Content Include="bin\roslyn\VBCSCompiler.exe.config" />
+    <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.4.1.js" />
+    <Content Include="Scripts\jquery-3.4.1.min.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
+    <Content Include="webpack.config.js" />
+    <Content Include=".babelrc" />
+    <Content Include="package-lock.json" />
+    <Content Include="package.json" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml">
       <SubType>Designer</SubType>
     </None>
@@ -749,7 +766,9 @@
     <Content Include="Scripts\bootstrap.js.map" />
     <Content Include="Scripts\bootstrap.bundle.min.js.map" />
     <Content Include="Scripts\bootstrap.bundle.js.map" />
-    <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\app\indexHome\App.vue" />
+    <Content Include="Scripts\app\indexHome\components\TableInfo.vue" />
+    <Content Include="Scripts\bundle\indexHome.js.map" />
     <Content Include="Scripts\intlTelInput-jquery.js" />
     <Content Include="Scripts\intlTelInput-jquery.min.js" />
     <Content Include="Scripts\intlTelInput.js" />
@@ -883,10 +902,6 @@
     <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\qunit\webpack.config.js" />
     <Content Include="Scripts\RobinHerbots-Inputmask-8d0c60f\webpack.config.js" />
     <Content Include="Scripts\utils.js" />
-    <Content Include="Scripts\jquery-3.3.1.js" />
-    <Content Include="Scripts\jquery-3.3.1.min.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <Content Include="Scripts\jQuery-Mask-Plugin-master\.jshintrc" />
     <Content Include="Scripts\jQuery-Mask-Plugin-master\.ruby-version" />
     <Content Include="Scripts\jQuery-Mask-Plugin-master\.travis.yml" />
@@ -907,6 +922,8 @@
     <Content Include="Scripts\jquery-number-master\df-number-format.jquery.json" />
     <Content Include="Scripts\jquery-number-master\jquery.number.min.js.map" />
     <Content Include="Scripts\jquery-number-master\README.markdown" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.4.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -1013,16 +1030,13 @@
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Shared\_AddTagsColectivos.cshtml" />
     <Content Include="Views\Home\MovimientoCajero.cshtml" />
-    <Content Include="Views\Home\Administrador.cshtml" />
+    <Content Include="Views\Home\GeneralSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Scripts\vuejs\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
-    <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
@@ -1097,6 +1111,9 @@
     <EmbeddedResource Include="Migrations\201904121407350_addnumcuenta.resx">
       <DependentUpon>201904121407350_addnumcuenta.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905151641075_amountsettings.resx">
+      <DependentUpon>201905151641075_amountsettings.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -1125,6 +1142,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
+      <UserProperties _1babelrc__JSONSchema="" />
     </VisualStudio>
   </ProjectExtensions>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -316,7 +316,7 @@ namespace PuntoDeVenta.Controllers
                                         break;
                                     case "Individual":
                                         detalle.Monto = double.Parse(tags.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," });
-                                        var SaldoSend = tags.SaldoTag;
+                                        var SaldoSend = double.Parse(tags.SaldoTag).ToString("F2");
                                         SaldoSend = SaldoSend.Replace(",", string.Empty);
                                         tags.SaldoTag = SaldoSend.Replace(".", string.Empty);
                                         break;

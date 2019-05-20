@@ -85,25 +85,47 @@
         </div>
     }
 
-</div>
-
-@{
-    if (User.Identity.IsAuthenticated)
-    {
-        using (ApplicationDbContext app = new ApplicationDbContext())
+    @{
+        if (User.Identity.IsAuthenticated)
         {
-            var IdUser = User.Identity.GetUserId();
-            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
-
-            if (userManager.IsInRole(IdUser, "GenerarReporte"))
+            using (ApplicationDbContext app = new ApplicationDbContext())
             {
-                <button class="hacia-arriba icon-ctrl" onclick="location.href='@Url.Action("LogOffWithoutCorte", "Account")'"><img class="signout" src="~/Content/css-yisus/img/sign-out-alt-solid.svg"/> Cerrar Sesión</button>
+                var IdUser = User.Identity.GetUserId();
+                var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
+
+                if (userManager.IsInRole(IdUser, "GenerarReporte"))
+                {
+                    <div class="col-md-12" style="margin-top: 10px !important;">
+                        <div class="row justify-content-center">
+                            <div class="col-md-4" style="margin-top: 2% !important;">
+                                <button class="btn boton-inicio" onclick="location.href='@Url.Action("Index", "Historico")'">
+                                    <div class="row">
+                                        <div class="col-md-12"><img src="~/Content/css-yisus/img/cruces.svg" class="tamano" /></div>
+                                    </div>
+                                    Historial de cruces clientes
+                                </button>
+                            </div>
+                            <div class="col-md-4" style="margin-top: 2% !important;">
+                                <button class="btn boton-inicio" onclick="location.href='@Url.Action("ListaNegraIndex", "Home")'">
+                                    <div class="row">
+                                        <div class="col-md-12"><img src="~/Content/css-yisus/img/list-ul-solid.svg" class="tamano" /></div>
+                                    </div>
+                                    Lista Negra
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="hacia-arriba icon-ctrl" onclick="location.href='@Url.Action("LogOffWithoutCorte", "Account")'"><img class="signout" src="~/Content/css-yisus/img/sign-out-alt-solid.svg" /> Cerrar Sesión</button>
+                }
             }
         }
     }
-}
+
+</div>
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 
     <script>
         $(document).ready(function () {
@@ -150,7 +172,7 @@
                 }
             }
         });
-                                                                            // puedes invocar métodos en JavaScript tamibién
-                                                                            //example2.greet() // -> 'Hello Vue.js!'
+                                                                                                // puedes invocar métodos en JavaScript tamibién
+                                                                                                //example2.greet() // -> 'Hello Vue.js!'
     </script>
 }

@@ -12,7 +12,6 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 
 namespace PuntoDeVenta.Controllers
@@ -22,12 +21,6 @@ namespace PuntoDeVenta.Controllers
     {
         private AppDbContext db = new AppDbContext();
         private ApplicationDbContext app = new ApplicationDbContext();
-
-        [Authorize(Roles = "Cajero, SuperUsuario")]
-        public ActionResult Administrador()
-        {
-            return View();
-        }
 
         [Authorize(Roles = "Cajero, SuperUsuario")]
         public async Task<ActionResult> Index(string verfiAction)
@@ -57,7 +50,7 @@ namespace PuntoDeVenta.Controllers
                                                            .Where(x => x.IdCajero == UserId && DbFunctions.TruncateTime(x.DateTApertura) >= todaycorte)
                                                            .OrderByDescending(x => x.DateTApertura).ToListAsync();
 
-                                if (lastCorteUser != null)
+                                if (lastCorteUser.Count > 0)
                                 {
                                     for (int i = 0; i < lastCorteUser.Count; i++)
                                     {
@@ -104,6 +97,7 @@ namespace PuntoDeVenta.Controllers
                                     db.CortesCajeros.Add(corte);
                                     await db.SaveChangesAsync();
                                 }
+                                return RedirectToAction("Index");
                             }
                             else
                             {
@@ -114,7 +108,7 @@ namespace PuntoDeVenta.Controllers
                                                            .Where(x => x.IdCajero == UserId && DbFunctions.TruncateTime(x.DateTApertura) >= todaycorte)
                                                            .OrderByDescending(x => x.DateTApertura).ToListAsync();
 
-                                if (lastCorteUser != null)
+                                if (lastCorteUser.Count > 0)
                                 {
                                     for (int i = 0; i < lastCorteUser.Count; i++)
                                     {
@@ -132,8 +126,9 @@ namespace PuntoDeVenta.Controllers
 
                                 db.CortesCajeros.Add(corte);
                                 await db.SaveChangesAsync();
+
+                                return RedirectToAction("Index");
                             }
-                            break;
                         default:
                             //if ((System.Web.HttpContext.Current.User != null) && System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
                             //    return RedirectToAction("LogOff", "Account");
@@ -176,6 +171,7 @@ namespace PuntoDeVenta.Controllers
                 ViewBag.ModelTag = new Tags();
                 ViewBag.NombreUsuario = User.Identity.Name;
                 ViewBag.Cajero = User.Identity.Name;
+                ViewBag.Amounts = new SelectList(db.AmountSettings.Where(x => x.Concept == "RECARGAS").AsEnumerable(), "Amount", "Amount");
             }
             catch (Exception ex)
             {
@@ -185,29 +181,107 @@ namespace PuntoDeVenta.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "Cajero, SuperUsuario")]
         [HttpPost]
-        public async Task<ActionResult> Index(double? id, string type)
+        public async Task<ActionResult> GetInfo(string Numero, string Type)
         {
-            if (id == null)
+            var model = new List<object>();
+
+            if (Numero == null || Numero == string.Empty)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                model = null;
+                return Json(model, JsonRequestBehavior.AllowGet);
             }
 
-            switch (type)
+            try
             {
-                case "Cliente":
-                    
-                    break;
-                default:
-                    break;
+                switch (Type)
+                {
+                    case "Cuenta":
+                        var listCuentas = await (from cuentas in db.CuentasTelepeajes
+                                                 join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
+                                                 where cuentas.NumCuenta.Contains(Numero)
+                                                 select new
+                                                 {
+                                                     cliente.Nombre,
+                                                     cliente.Apellidos,
+                                                     cuentas.NumCuenta,
+                                                     cuentas.SaldoCuenta,
+                                                     cuentas.TypeCuenta,
+                                                     cuentas.DateTCuenta,
+                                                     cuentas.StatusCuenta,
+                                                     tags = (from t in cuentas.Tags
+                                                             select new { t.NumTag, t.SaldoTag, t.StatusTag }).ToList()
+                                                 }).ToListAsync();
+
+
+                        listCuentas.ForEach(x =>
+                        {
+                            var listTags = new List<object>();
+                            x.tags.ForEach(m =>
+                            {
+                                listTags.Add(new
+                                {
+                                    NumTag = m.NumTag,
+                                    SaldoTag = string.IsNullOrEmpty(m.SaldoTag) ? default(double) : double.Parse(m.SaldoTag) / 100,
+                                    StatusTag = m.StatusTag == true ? "Válido" : "Inválido"
+                                });
+                            });
+
+                            model.Add(new
+                            {
+                                NombreCompleto = $"{x.Nombre} {x.Apellidos}",
+                                NumCuenta = x.NumCuenta,
+                                SaldoCuenta = string.IsNullOrEmpty(x.SaldoCuenta) ? default(double) : double.Parse(x.SaldoCuenta) / 100,
+                                TypeCuenta = x.TypeCuenta,
+                                DateTCuenta = x.DateTCuenta,
+                                StatusCuenta = x.StatusCuenta == true ? "Válido" : "Inválido",
+                                Tags = listTags
+                            });
+                        });
+                        break;
+                    case "Tag":
+                        var listTag = await (from tag in db.Tags
+                                             join cuenta in db.CuentasTelepeajes on tag.CuentaId equals cuenta.Id
+                                             join cliente in db.Clientes on cuenta.ClienteId equals cliente.Id
+                                             where tag.NumTag.Contains(Numero)
+                                             select new
+                                             {
+                                                 cliente.Nombre,
+                                                 cliente.Apellidos,
+                                                 cuenta.NumCuenta,
+                                                 cuenta.TypeCuenta,
+                                                 tag.NumTag,
+                                                 tag.SaldoTag,
+                                                 tag.StatusTag,
+                                             }).ToListAsync();
+
+                        listTag.ForEach(x =>
+                        {
+                            model.Add(new
+                            {
+                                NombreCompleto = $"{x.Nombre} {x.Apellidos}",
+                                NumCuenta = x.NumCuenta,
+                                TypeCuenta = x.TypeCuenta,
+                                NumTag = x.NumTag,
+                                SaldoTag = double.Parse(x.SaldoTag) / 100,
+                                StatusTag = x.StatusTag == true ? "Válido" : "Inválido",
+                            });
+                        });
+                        break;
+                    default:
+                        model = null;
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
 
-
-            return View();
+            return Json(model, JsonRequestBehavior.AllowGet);
         }
 
-        [Authorize(Roles = "Cajero, SuperUsuario")]
+        [Authorize(Roles = "GenerarReporte, Cajero, SuperUsuario")]
         public async Task<ActionResult> ListaNegraIndex()
         {
             return View(await db.ListaNegras.ToListAsync());
@@ -482,7 +556,7 @@ namespace PuntoDeVenta.Controllers
                 {
                     string json = JsonConvert.SerializeObject(model);
                     HttpContent postContent = new StringContent(json, Encoding.UTF8, "application/json");
-                    var response = await client.PostAsync(new Uri("http://192.168.1.65:56342/api/cajero?authenticationToken=abcxyz"), postContent);
+                    var response = await client.PostAsync(new Uri("http://192.168.1.179:56342/api/cajero?authenticationToken=abcxyz"), postContent);
                     var message = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
                 }
 
@@ -523,6 +597,7 @@ namespace PuntoDeVenta.Controllers
                 return View("Error");
             }
         }
+
         /// <summary>
         /// Método para cancelar operaciones
         /// </summary>
@@ -659,6 +734,7 @@ namespace PuntoDeVenta.Controllers
             }
             return RedirectToAction("MovimientoCajero", new { CorteId = corteid, Concepto = Filtro });
         }
+
         /// <summary>
         /// Método POST para el filtrado de movimientos
         /// </summary>
@@ -692,6 +768,7 @@ namespace PuntoDeVenta.Controllers
                 return View("MovimientoCajero", model);
             }
         }
+
         public OperacionesCajero NewOperacion(long NewId, string NewConcepto, string NewTipoPago, double? NewMonto, DateTime NewDate, long NewCorteId, string NewNumero, string NewTipo, double? NewCobroTag, string NewNoReferencia, bool NewStatus)
         {
             return new OperacionesCajero
@@ -709,6 +786,27 @@ namespace PuntoDeVenta.Controllers
                 StatusCancelacion = NewStatus
             };
         }
+
+        [HttpGet]
+        public ActionResult GeneralSettings()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult GeneralSettings(AmountSettings model)
+        {
+            if (ModelState.IsValid)
+            {
+                db.AmountSettings.Add(model);
+                db.SaveChanges();
+
+                return View();
+            }
+
+            return HttpNotFound();
+        }
+
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";

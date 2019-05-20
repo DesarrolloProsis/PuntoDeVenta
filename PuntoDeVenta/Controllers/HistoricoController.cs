@@ -15,24 +15,28 @@ using System.Collections;
 
 namespace PuntoDeVenta.Controllers
 {
-    [Authorize(Roles = "SuperUsuario, Cajero")]
+    [Authorize]
     public class HistoricoController : Controller
     {
 
         public static DataTable dtstatic = new DataTable();
         public static List<Cruces> ListPDFCruces = new List<Cruces>();
         public static List<Movimientos> ListPDFMovimientos = new List<Movimientos>();
+        public static List<CruceMovimiento> ListPDFCrucesMovimientos = new List<CruceMovimiento>();
+        public static bool ClienteAdmin;
+        public static string cliente;
+        public static string eventos;
+        public static string cuenta;
         public static string Fecha1;
         public static string Fecha2;
         public static string Plaza;
-        public static string cuenta;
-        public static string cliente;
-        public static string saldo;        
-        public static string eventos;
+        public static string saldo;
         public static object Info;
-        public static bool ClienteAdmin;
+
         // GET: Historico
+
         [HttpGet]
+        [Authorize(Roles = "GenerarReporte, Cajero, SuperUsuario")]
         public ActionResult Index()
         {
             var model = new TableHistorico();
@@ -53,6 +57,12 @@ namespace PuntoDeVenta.Controllers
         public JsonResult GetMovimientos()
         {
             List<SelectListItem> Items = new List<SelectListItem>();
+
+            Items.Add(new SelectListItem
+            {
+                Text = "Movimientos y Cruces",
+                Value = "00"
+            });
 
             Items.Add(new SelectListItem
             {
@@ -81,9 +91,9 @@ namespace PuntoDeVenta.Controllers
             string Fecha_Fin = model.Fecha_Fin.ToString("dd/MM/yyyy");
             string Tag = model.Tag;
             string Cuenta = model.Cuenta;
-            string TypeMovimiento = model.TypeMovimiento;  
+            string TypeMovimiento = model.TypeMovimiento;
             string Tipo = "";
-            AppDbContext db = new AppDbContext();            
+            AppDbContext db = new AppDbContext();
             List<Cruces> ListCruces = new List<Cruces>();
             List<Movimientos> ListMovimiento = new List<Movimientos>();
             DataTable dt = new DataTable();
@@ -95,18 +105,62 @@ namespace PuntoDeVenta.Controllers
                     if (model.Fecha_Fin == DateTime.Now.Date)
                     {
                         DateTime DateAyuda = DateTime.Now;
+                        if (TypeMovimiento == "00")
+                        {
 
-                        if (TypeMovimiento == "01")
+
+                            ListMovimiento = Movimientos(Tag, model.Fecha_Inicio, DateAyuda, 1, true);
+                            ListCruces = Cruces(Tag, model.Fecha_Inicio, DateAyuda, 1, true);
+
+
+
+
+                            if (ListMovimiento.Any() || ListCruces.Any())
+                            {
+
+                                if (ListMovimiento.Count != 0)
+                                {
+                                    Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Tag, Tipo };
+                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                    model.ListaMovimientos = null;
+                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                    model.ListaCruces = null;
+                                    ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, false);
+                                    model.ListCruceMovimientos = ListPDFCrucesMovimientos;
+                                    ClienteAdmin = false;
+                                    model.Info = Info;
+                                    return View("Tabla_Historico", model);
+                                }
+                                if (ListCruces.Count != 0)
+                                {
+                                    Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo };
+                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListCruces.Count);
+                                    model.ListaMovimientos = null;
+                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListCruces.Count);
+                                    model.ListaCruces = null;
+                                    ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, false);
+                                    model.ListCruceMovimientos = ListPDFCrucesMovimientos;
+                                    ClienteAdmin = false;
+                                    model.Info = Info;
+                                    return View("Tabla_Historico", model);
+                                }
+
+                            }
+
+
+                        }
+                        else if (TypeMovimiento == "01")
                         {
                             ListMovimiento = Movimientos(Tag, model.Fecha_Inicio, DateAyuda, 1, true);
 
                             if (ListMovimiento.Any())
                             {
-                                Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListMovimiento.Count, ListMovimiento[0].SaldoActual, TagCuenta = Tag,Tipo };
+                                Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListMovimiento.Count, ListMovimiento[0].SaldoActual, TagCuenta = Tag, Tipo };
                                 Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = ListMovimiento.Count.ToString();
                                 model.ListaMovimientos = ListMovimiento;
                                 Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = ListMovimiento.Count.ToString();
                                 model.ListaCruces = null;
+                                model.ListCruceMovimientos = null;
                                 ListPDFMovimientos = ListMovimiento;
                                 ClienteAdmin = false;
                                 model.Info = Info;
@@ -115,15 +169,16 @@ namespace PuntoDeVenta.Controllers
                             }
                         }
                         else
-                        {                         
+                        {
                             ListCruces = Cruces(Tag, model.Fecha_Inicio, DateAyuda, 1, true);
 
                             if (ListCruces.Any())
                             {
-                                Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo };                                
+                                Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo };
                                 model.ListaCruces = ListCruces;
                                 Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = ListCruces.Count.ToString();
                                 model.ListaMovimientos = null;
+                                model.ListCruceMovimientos = null;
                                 ListPDFCruces = ListCruces;
                                 ClienteAdmin = false;
                                 model.Info = Info;
@@ -131,15 +186,58 @@ namespace PuntoDeVenta.Controllers
 
                             }
                         }
-                 
-                 
+
+
                     }
                     else if (Fecha_Inicio == Fecha_Fin)
                     {
                         DateTime DateAyuda = model.Fecha_Inicio.AddDays(1);
+                        if (TypeMovimiento == "00")
+                        {
 
 
-                        if (TypeMovimiento == "01")
+                            ListMovimiento = Movimientos(Tag, model.Fecha_Inicio, DateAyuda, 1, false);
+                            ListCruces = Cruces(Tag, model.Fecha_Inicio, DateAyuda, 1, false);
+
+
+
+
+                            if (ListMovimiento.Any() || ListCruces.Any())
+                            {
+
+                                if (ListMovimiento.Count != 0)
+                                {
+                                    Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Tag, Tipo };
+                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                    model.ListaMovimientos = null;
+                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                    model.ListaCruces = null;
+                                    ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, false);
+                                    model.ListCruceMovimientos = ListPDFCrucesMovimientos;
+                                    ClienteAdmin = false;
+                                    model.Info = Info;
+                                    return View("Tabla_Historico", model);
+                                }
+                                else if (ListCruces.Count != 0)
+                                {
+                                    Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo };
+                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListCruces.Count);
+                                    model.ListaMovimientos = null;
+                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListCruces.Count);
+                                    model.ListaCruces = null;
+                                    ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, false);
+                                    model.ListCruceMovimientos = ListPDFCrucesMovimientos;
+                                    ClienteAdmin = false;
+                                    model.Info = Info;
+                                    return View("Tabla_Historico", model);
+                                }
+
+                            }
+
+
+                        }
+
+                        else if (TypeMovimiento == "01")
                         {
                             ListMovimiento = Movimientos(Tag, model.Fecha_Inicio, DateAyuda, 1, false);
 
@@ -150,6 +248,7 @@ namespace PuntoDeVenta.Controllers
                                 Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = ListMovimiento.Count.ToString();
                                 model.ListaMovimientos = ListMovimiento;
                                 model.ListaCruces = null;
+                                model.ListCruceMovimientos = null;
                                 ListPDFMovimientos = ListMovimiento;
                                 ClienteAdmin = false;
                                 model.Info = Info;
@@ -168,6 +267,7 @@ namespace PuntoDeVenta.Controllers
                                 Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = ListCruces.Count.ToString();
                                 model.ListaCruces = ListCruces;
                                 model.ListaMovimientos = null;
+                                model.ListCruceMovimientos = null;
                                 ListPDFCruces = ListCruces;
                                 ClienteAdmin = false;
                                 model.Info = Info;
@@ -181,7 +281,51 @@ namespace PuntoDeVenta.Controllers
                     else
                     {
 
-                        if (TypeMovimiento == "01")
+                        if (TypeMovimiento == "00")
+                        {
+
+
+                            ListMovimiento = Movimientos(Tag, model.Fecha_Inicio, model.Fecha_Fin, 1, false);
+                            ListCruces = Cruces(Tag, model.Fecha_Inicio, model.Fecha_Fin, 1, false);
+
+
+
+
+                            if (ListMovimiento.Any() || ListCruces.Any())
+                            {
+
+                                if (ListMovimiento.Count != 0)
+                                {
+                                    Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Tag, Tipo };
+                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                    model.ListaMovimientos = null;
+                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                    model.ListaCruces = null;
+                                    ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, false);
+                                    model.ListCruceMovimientos = ListPDFCrucesMovimientos;
+                                    ClienteAdmin = false;
+                                    model.Info = Info;
+                                    return View("Tabla_Historico", model);
+                                }
+                                if (ListCruces.Count != 0)
+                                {
+                                    Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo };
+                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                    model.ListaMovimientos = null;
+                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                    model.ListaCruces = null;
+                                    ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, false);
+                                    model.ListCruceMovimientos = ListPDFCrucesMovimientos;
+                                    ClienteAdmin = false;
+                                    model.Info = Info;
+                                    return View("Tabla_Historico", model);
+                                }
+
+                            }
+
+
+                        }
+                        else if (TypeMovimiento == "01")
                         {
                             ListMovimiento = Movimientos(Tag, model.Fecha_Inicio, model.Fecha_Fin, 1, false);
 
@@ -192,6 +336,7 @@ namespace PuntoDeVenta.Controllers
                                 Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = ListMovimiento.Count.ToString();
                                 model.ListaMovimientos = ListMovimiento;
                                 model.ListaCruces = null;
+                                model.ListCruceMovimientos = null;
                                 ListPDFMovimientos = ListMovimiento;
                                 ClienteAdmin = false;
                                 model.Info = Info;
@@ -210,6 +355,7 @@ namespace PuntoDeVenta.Controllers
                                 Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = ListCruces.Count.ToString();
                                 model.ListaCruces = ListCruces;
                                 model.ListaMovimientos = null;
+                                model.ListCruceMovimientos = null;
                                 ListPDFCruces = ListCruces;
                                 ClienteAdmin = false;
                                 model.Info = Info;
@@ -230,9 +376,51 @@ namespace PuntoDeVenta.Controllers
                 if (model.Fecha_Fin == DateTime.Now.Date)
                 {
                     DateTime DateAyuda = DateTime.Now;
+                    if (TypeMovimiento == "00")
+                    {
 
 
-                    if (TypeMovimiento == "01")
+                        ListMovimiento = Movimientos(Cuenta, model.Fecha_Inicio, DateAyuda, 2, true);
+                        ListCruces = Cruces(Cuenta, model.Fecha_Inicio, DateAyuda, 2, true);
+
+
+
+
+                        if (ListMovimiento.Any() || ListCruces.Any())
+                        {
+
+                            if (ListMovimiento.Count != 0)
+                            {
+                                Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Cuenta, Tipo };
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                model.ListaMovimientos = null;
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                model.ListaCruces = null;
+                                ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, true);
+                                model.ListCruceMovimientos = ListPDFCrucesMovimientos;
+                                ClienteAdmin = false;
+                                model.Info = Info;
+                                return View("Tabla_Historico", model);
+                            }
+                            if (ListCruces.Count != 0)
+                            {
+                                Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Cuenta, Tipo };
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                model.ListaMovimientos = null;
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                model.ListaCruces = null;
+                                ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, true);
+                                model.ListCruceMovimientos = ListPDFCrucesMovimientos;
+                                ClienteAdmin = false;
+                                model.Info = Info;
+                                return View("Tabla_Historico", model);
+                            }
+
+                        }
+
+
+                    }
+                    else if (TypeMovimiento == "01")
                     {
                         ListMovimiento = Movimientos(Cuenta, model.Fecha_Inicio, DateAyuda, 2, true);
 
@@ -243,6 +431,7 @@ namespace PuntoDeVenta.Controllers
                             Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = ListMovimiento.Count.ToString();
                             model.ListaMovimientos = ListMovimiento;
                             model.ListaCruces = null;
+                            model.ListCruceMovimientos = null;
                             ListPDFMovimientos = ListMovimiento;
                             ClienteAdmin = false;
                             model.Info = Info;
@@ -261,6 +450,7 @@ namespace PuntoDeVenta.Controllers
                             Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = ListCruces.Count.ToString();
                             model.ListaCruces = ListCruces;
                             model.ListaMovimientos = null;
+                            model.ListCruceMovimientos = null;
                             ListPDFCruces = ListCruces;
                             ClienteAdmin = false;
                             model.Info = Info;
@@ -272,9 +462,53 @@ namespace PuntoDeVenta.Controllers
                 }
                 else if (Fecha_Inicio == Fecha_Fin)
                 {
-                    DateTime DateAyuda = model.Fecha_Inicio.AddDays(1);                    
+                    DateTime DateAyuda = model.Fecha_Inicio.AddDays(1);
+                    if (TypeMovimiento == "00")
+                    {
 
-                    if (TypeMovimiento == "01")
+
+                        ListMovimiento = Movimientos(Cuenta, model.Fecha_Inicio, DateAyuda, 2, false);
+                        ListCruces = Cruces(Cuenta, model.Fecha_Inicio, DateAyuda, 2, false);
+
+
+
+
+                        if (ListMovimiento.Any() || ListCruces.Any())
+                        {
+
+                            if (ListMovimiento.Count != 0)
+                            {
+                                Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Cuenta, Tipo };
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                model.ListaMovimientos = null;
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                model.ListaCruces = null;
+                                ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, true);
+                                model.ListCruceMovimientos = ListPDFCrucesMovimientos;
+                                ClienteAdmin = false;
+                                model.Info = Info;
+                                return View("Tabla_Historico", model);
+                            }
+                            if (ListCruces.Count != 0)
+                            {
+                                Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Cuenta, Tipo };
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                model.ListaMovimientos = null;
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                model.ListaCruces = null;
+                                ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, true);
+                                model.ListCruceMovimientos = ListPDFCrucesMovimientos;
+                                ClienteAdmin = false;
+                                model.Info = Info;
+                                return View("Tabla_Historico", model);
+                            }
+
+                        }
+
+
+                    }
+
+                    else if (TypeMovimiento == "01")
                     {
                         ListMovimiento = Movimientos(Cuenta, model.Fecha_Inicio, DateAyuda, 2, false);
 
@@ -285,6 +519,7 @@ namespace PuntoDeVenta.Controllers
                             Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = ListMovimiento.Count.ToString();
                             model.ListaMovimientos = ListMovimiento;
                             model.ListaCruces = null;
+                            model.ListCruceMovimientos = null;
                             ListPDFMovimientos = ListMovimiento;
                             ClienteAdmin = false;
                             model.Info = Info;
@@ -303,6 +538,7 @@ namespace PuntoDeVenta.Controllers
                             Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = ListCruces.Count.ToString();
                             model.ListaCruces = ListCruces;
                             model.ListaMovimientos = null;
+                            model.ListCruceMovimientos = null;
                             ListPDFCruces = ListCruces;
                             ClienteAdmin = false;
                             model.Info = Info;
@@ -315,7 +551,50 @@ namespace PuntoDeVenta.Controllers
                 }
                 else
                 {
-                    if (TypeMovimiento == "01")
+                    if (TypeMovimiento == "00")
+                    {
+
+
+                        ListMovimiento = Movimientos(Cuenta, model.Fecha_Inicio, model.Fecha_Fin, 2, true);
+                        ListCruces = Cruces(Cuenta, model.Fecha_Inicio, model.Fecha_Fin, 2, true);
+
+
+
+
+                        if (ListMovimiento.Any() && ListCruces.Any())
+                        {
+                            if (ListMovimiento.Count != 0)
+                            {
+                                Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Cuenta, Tipo };
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                model.ListaMovimientos = null;
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                model.ListaCruces = null;
+                                ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, true);
+                                model.ListCruceMovimientos = ListPDFCrucesMovimientos;
+                                ClienteAdmin = false;
+                                model.Info = Info;
+                                return View("Tabla_Historico", model);
+                            }
+                            if (ListCruces.Count != 0)
+                            {
+                                Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Cuenta, Tipo };
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                model.ListaMovimientos = null;
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                model.ListaCruces = null;
+                                ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, true);
+                                model.ListCruceMovimientos = ListPDFCrucesMovimientos;
+                                ClienteAdmin = false;
+                                model.Info = Info;
+                                return View("Tabla_Historico", model);
+                            }
+
+                        }
+
+
+                    }
+                    else if (TypeMovimiento == "01")
                     {
                         ListMovimiento = Movimientos(Cuenta, model.Fecha_Inicio, model.Fecha_Fin, 2, true);
 
@@ -326,6 +605,7 @@ namespace PuntoDeVenta.Controllers
                             Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = ListMovimiento.Count.ToString();
                             model.ListaMovimientos = ListMovimiento;
                             model.ListaCruces = null;
+                            model.ListCruceMovimientos = null;
                             ListPDFMovimientos = ListMovimiento;
                             ClienteAdmin = false;
                             model.Info = Info;
@@ -344,6 +624,7 @@ namespace PuntoDeVenta.Controllers
                             Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = ListCruces.Count.ToString();
                             model.ListaCruces = ListCruces;
                             model.ListaMovimientos = null;
+                            model.ListCruceMovimientos = null;
                             ListPDFCruces = ListCruces;
                             ClienteAdmin = false;
                             model.Info = Info;
@@ -359,9 +640,9 @@ namespace PuntoDeVenta.Controllers
                 //Terminar
             }
 
-                model.Mensaje = true;
-                return View("Tabla_Historico", model);
-            
+            model.Mensaje = true;
+            return View("Tabla_Historico", model);
+
         }
 
         public ActionResult GenerarXFecha(TableHistorico model)
@@ -398,7 +679,7 @@ namespace PuntoDeVenta.Controllers
 
                         if (ListMovimiento.Any())
                         {
-                            Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListMovimiento.Count, ListMovimiento[0].SaldoActual, Tipo};
+                            Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListMovimiento.Count, ListMovimiento[0].SaldoActual, Tipo };
                             model.Info = Info;
                             Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = ListMovimiento.Count.ToString();
                             model.ListaMovimientos = ListMovimiento;
@@ -415,7 +696,7 @@ namespace PuntoDeVenta.Controllers
 
                         if (ListCruces.Any())
                         {
-                            Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListCruces.Count, ListCruces[0].SaldoActual, Tipo };
+                            Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, DateAyuda, ListCruces.Count, ListCruces[0].SaldoActual, Tipo };
                             model.Info = Info;
                             Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = ListCruces.Count.ToString();
                             model.ListaCruces = ListCruces;
@@ -471,7 +752,7 @@ namespace PuntoDeVenta.Controllers
                 }
                 else
                 {
-          
+
                     if (TypeMovimiento == "01")
                     {
                         ListMovimiento = Movimientos(Tag, model.Fecha_Inicio, model.Fecha_Fin, 3, false);
@@ -518,10 +799,9 @@ namespace PuntoDeVenta.Controllers
 
         }
 
-        
         public List<Cruces> Cruces(string TagCuenta, DateTime Fecha_Inicio, DateTime Fecha_Fin, int Tipo, bool Rango)
         {
-            
+
             AppDbContext db = new AppDbContext();
             //Tag
             if (Tipo == (int)DecisionesMetodos.Tag)
@@ -576,9 +856,9 @@ namespace PuntoDeVenta.Controllers
                             SaldoAntes = "Q" + item._SaldoAntes,
                             Saldo = "Q" + item._Saldo,
                             SaldoDespues = "Q" + item._SaldoNuevo,
-                            SaldoActual = "Q" + Convert.ToString(Convert.ToInt32(item._SaldoActual)/100),
+                            SaldoActual = "Q" + Convert.ToString(Convert.ToDouble(item._SaldoActual) / 100),
                             Operador = item._Operadora
-                            
+
 
                         });
                         id++;
@@ -605,7 +885,7 @@ namespace PuntoDeVenta.Controllers
                                              _TypeCuenta = cuentas.TypeCuenta,
                                              _Plaza = historico.Delegacion,
                                              _Cuerpo = historico.Cuerpo,
-                                             _Carril = historico.Carril,                                             
+                                             _Carril = historico.Carril,
                                              _Fecha = historico.Fecha,
                                              _Clase = historico.Clase,
                                              _SaldoAntes = historico.SaldoAnterior,
@@ -634,7 +914,7 @@ namespace PuntoDeVenta.Controllers
                             SaldoAntes = "Q" + item._SaldoAntes,
                             Saldo = "Q" + item._Saldo,
                             SaldoDespues = "Q" + item._SaldoNuevo,
-                            SaldoActual = "Q" + Convert.ToString(Convert.ToInt32(item._SaldoActual) / 100),
+                            SaldoActual = "Q" + Convert.ToString(Convert.ToDouble(item._SaldoActual) / 100),
                             Operador = item._Operadora
 
                         });
@@ -647,7 +927,7 @@ namespace PuntoDeVenta.Controllers
             //Cuenta
             else if (Tipo == (int)DecisionesMetodos.Cuenta)
             {
-                
+
 
                 if (Rango)
                 {
@@ -699,7 +979,7 @@ namespace PuntoDeVenta.Controllers
                         {
                             List.Add(new Cruces
                             {
-                                Id = id, 
+                                Id = id,
                                 NomCliente = item2._Nombre,
                                 TypeCuenta = item2._TypeCuenta,
                                 Tag = item._Tag,
@@ -711,7 +991,7 @@ namespace PuntoDeVenta.Controllers
                                 SaldoAntes = "Q" + item2._SaldoAntes,
                                 Saldo = "Q" + item2._Saldo,
                                 SaldoDespues = "Q" + item2._SaldoNuevo,
-                                SaldoActual = "Q" + Convert.ToString(Convert.ToInt32(item2._SaldoActual)/100),
+                                SaldoActual = "Q" + Convert.ToString(Convert.ToDouble(item2._SaldoActual) / 100),
                                 Operador = item2._Operadora
 
                             });
@@ -743,8 +1023,8 @@ namespace PuntoDeVenta.Controllers
                                              join tags in db.Tags on historico.Tag equals tags.NumTag
                                              join cuentas in db.CuentasTelepeajes on tags.CuentaId equals cuentas.Id
                                              join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
-                                             where (historico.Fecha >= Fecha_Inicio && historico.Fecha <= Fecha_Fin)
-                                             where (historico.Tag == TagCuenta)
+                                             where (historico.Fecha >= Fecha_Inicio && historico.Fecha < Fecha_Fin)
+                                             where (historico.Tag == item._Tag)
                                              orderby (historico.Fecha) descending
                                              select new
                                              {
@@ -767,7 +1047,7 @@ namespace PuntoDeVenta.Controllers
 
                                              }).ToList();
 
-                        
+
 
                         foreach (var item2 in ListaCompleta)
                         {
@@ -785,7 +1065,7 @@ namespace PuntoDeVenta.Controllers
                                 SaldoAntes = "Q" + item2._SaldoAntes,
                                 Saldo = "Q" + item2._Saldo,
                                 SaldoDespues = "Q" + item2._SaldoNuevo,
-                                SaldoActual = "Q" + Convert.ToString(Convert.ToInt32(item2._SaldoActual)/100),
+                                SaldoActual = "Q" + Convert.ToString(Convert.ToDouble(item2._SaldoActual) / 100),
                                 Operador = item2._Operadora
 
                             });
@@ -796,6 +1076,7 @@ namespace PuntoDeVenta.Controllers
                     return List;
                 }
             }
+            //RangoFecha
             else if (Tipo == (int)DecisionesMetodos.RangoFecha)
             {
                 if (Rango)
@@ -804,13 +1085,13 @@ namespace PuntoDeVenta.Controllers
                                          join tags in db.Tags on historico.Tag equals tags.NumTag
                                          join cuentas in db.CuentasTelepeajes on tags.CuentaId equals cuentas.Id
                                          join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
-                                         where (historico.Fecha >= Fecha_Inicio && historico.Fecha <= Fecha_Fin)                                         
+                                         where (historico.Fecha >= Fecha_Inicio && historico.Fecha <= Fecha_Fin)
                                          orderby (historico.Fecha) descending
                                          select new
                                          {
                                              _Tag = tags.NumTag,
                                              _CuentaID = tags.CuentaId,
-                                             _ClienteID = cliente.NumCliente,                                              
+                                             _ClienteID = cliente.NumCliente,
                                              _Nombre = cliente.Nombre + cliente.Apellidos,
                                              _TypeCuenta = cuentas.TypeCuenta,
                                              _Plaza = historico.Delegacion,
@@ -862,7 +1143,7 @@ namespace PuntoDeVenta.Controllers
                                          join tags in db.Tags on historico.Tag equals tags.NumTag
                                          join cuentas in db.CuentasTelepeajes on tags.CuentaId equals cuentas.Id
                                          join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
-                                         where (historico.Fecha >= Fecha_Inicio && historico.Fecha < Fecha_Fin)                                         
+                                         where (historico.Fecha >= Fecha_Inicio && historico.Fecha < Fecha_Fin)
                                          orderby (historico.Fecha) descending
                                          select new
                                          {
@@ -893,7 +1174,7 @@ namespace PuntoDeVenta.Controllers
                     {
                         List.Add(new Cruces
                         {
-                            Id= id,
+                            Id = id,
                             Tag = item._Tag,
                             NumCliente = item._ClienteID,
                             NomCliente = item._Nombre,
@@ -919,7 +1200,7 @@ namespace PuntoDeVenta.Controllers
             }
             return null;
         }
-        
+
         public List<Movimientos> Movimientos(string TagCuenta, DateTime Fecha_Inicio, DateTime Fecha_Fin, int Tipo, bool Rango)
         {
             AppDbContext db = new AppDbContext();
@@ -935,7 +1216,8 @@ namespace PuntoDeVenta.Controllers
                                          join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
                                          where (operaciones.DateTOperacion >= Fecha_Inicio && operaciones.DateTOperacion <= Fecha_Fin)
                                          where (operaciones.Numero == TagCuenta)
-                                         where (operaciones.Concepto == "TAG RECARGA")
+                                         where (operaciones.Concepto == "TAG RECARGA" || operaciones.Concepto == "TAG ACTIVADO")
+                                         where (operaciones.StatusCancelacion == false)
                                          orderby (operaciones.DateTOperacion) descending
                                          select new
                                          {
@@ -943,8 +1225,8 @@ namespace PuntoDeVenta.Controllers
                                              _CuentaID = tags.CuentaId,
                                              _ClienteID = cliente.NumCliente,
                                              _Nombre = cliente.Nombre + cliente.Apellidos,
-                                             _TypeCuenta = cuentas.TypeCuenta,                                                                                                                                      
-                                             _Fecha = operaciones.DateTOperacion,  
+                                             _TypeCuenta = cuentas.TypeCuenta,
+                                             _Fecha = operaciones.DateTOperacion,
                                              _Concepto = operaciones.Concepto,
                                              _TipoPago = operaciones.TipoPago,
                                              _Monto = operaciones.Monto,
@@ -976,7 +1258,7 @@ namespace PuntoDeVenta.Controllers
                             TypeCuenta = item._TypeCuenta,
                             CobroTag = "Q" + Convert.ToString(item._CobroTag),
                             Referencia = item._Referencia,
-                            SaldoActual = "Q" + item._SaldoActual
+                            SaldoActual = "Q" + Convert.ToString(Convert.ToDouble(item._SaldoActual) / 100)
 
 
                         });
@@ -996,7 +1278,8 @@ namespace PuntoDeVenta.Controllers
                                          join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
                                          where (operaciones.DateTOperacion >= Fecha_Inicio && operaciones.DateTOperacion < Fecha_Fin)
                                          where (operaciones.Numero == TagCuenta)
-                                         where (operaciones.Concepto == "TAG RECARGA")
+                                         where (operaciones.Concepto == "TAG RECARGA" || operaciones.Concepto == "TAG ACTIVADO")
+                                         where (operaciones.StatusCancelacion == false)
                                          orderby (operaciones.DateTOperacion) descending
                                          select new
                                          {
@@ -1037,6 +1320,7 @@ namespace PuntoDeVenta.Controllers
                             TypeCuenta = item._TypeCuenta,
                             CobroTag = "Q" + Convert.ToString(item._CobroTag),
                             Referencia = item._Referencia,
+                            SaldoActual = "Q" + Convert.ToString(Convert.ToDouble(item._SaldoActual) / 100)
 
 
                         });
@@ -1046,7 +1330,7 @@ namespace PuntoDeVenta.Controllers
                     return List;
                 }
             }
-            else if(Tipo == (int)DecisionesMetodos.Cuenta)
+            else if (Tipo == (int)DecisionesMetodos.Cuenta)
             {
                 if (Rango)
                 {
@@ -1058,12 +1342,13 @@ namespace PuntoDeVenta.Controllers
                                          join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
                                          where (operaciones.DateTOperacion >= Fecha_Inicio && operaciones.DateTOperacion <= Fecha_Fin)
                                          where (operaciones.Numero == TagCuenta)
-                                         where (operaciones.Concepto == "CUENTA RECARGA")
+                                         where (operaciones.Concepto == "CUENTA RECARGA" || operaciones.Concepto == "CUENTA ACTIVADA")
+                                         where (operaciones.StatusCancelacion == false)
                                          orderby (operaciones.DateTOperacion) descending
                                          select new
                                          {
                                              //_Tag = tags.NumTag,
-//                                             _CuentaID = tags.CuentaId,
+                                             //                                             _CuentaID = tags.CuentaId,
                                              _ClienteID = cliente.NumCliente,
                                              _Nombre = cliente.Nombre + cliente.Apellidos,
                                              _TypeCuenta = cuentas.TypeCuenta,
@@ -1071,9 +1356,9 @@ namespace PuntoDeVenta.Controllers
                                              _Concepto = operaciones.Concepto,
                                              _TipoPago = operaciones.TipoPago,
                                              _Monto = operaciones.Monto,
-                                             //_SaldoActual = tags.SaldoTag,
+                                             _SaldoActual = cuentas.SaldoCuenta,
                                              _TipoCuenta = operaciones.Tipo,
-                                             _CobroTag = operaciones.CobroTag,                                             
+                                             _CobroTag = operaciones.CobroTag,
                                              _Referencia = operaciones.NoReferencia,
                                              _TagCuenta = operaciones.Numero
 
@@ -1099,6 +1384,7 @@ namespace PuntoDeVenta.Controllers
                             TypeCuenta = item._TypeCuenta,
                             CobroTag = "Q" + Convert.ToString(item._CobroTag),
                             Referencia = item._Referencia,
+                            SaldoActual = Convert.ToString(Convert.ToDouble(item._SaldoActual) / 100)
                             //SaldoActual = "Q" + item._SaldoActual
 
                         });
@@ -1119,7 +1405,8 @@ namespace PuntoDeVenta.Controllers
                                          join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
                                          where (operaciones.DateTOperacion >= Fecha_Inicio && operaciones.DateTOperacion < Fecha_Fin)
                                          where (operaciones.Numero == TagCuenta)
-                                         where (operaciones.Concepto == "CUENTA RECARGA")
+                                         where (operaciones.Concepto == "CUENTA RECARGA" || operaciones.Concepto == "CUENTA ACTIVADA")
+                                         where (operaciones.StatusCancelacion == false)
                                          orderby (operaciones.DateTOperacion) descending
                                          select new
                                          {
@@ -1132,7 +1419,7 @@ namespace PuntoDeVenta.Controllers
                                              _Concepto = operaciones.Concepto,
                                              _TipoPago = operaciones.TipoPago,
                                              _Monto = operaciones.Monto,
-                                             //_SaldoActual = tags.SaldoTag,
+                                             _SaldoActual = cuentas.SaldoCuenta,
                                              _TipoCuenta = operaciones.Tipo,
                                              _CobroTag = operaciones.CobroTag,
                                              _Referencia = operaciones.NoReferencia,
@@ -1160,7 +1447,7 @@ namespace PuntoDeVenta.Controllers
                             TypeCuenta = item._TypeCuenta,
                             CobroTag = "Q" + Convert.ToString(item._CobroTag),
                             Referencia = item._Referencia,
-                            //SaldoActual = "Q" + item._SaldoActual
+                            SaldoActual = Convert.ToString(Convert.ToDouble(item._SaldoActual) / 100)
 
                         });
                         id++;
@@ -1170,7 +1457,7 @@ namespace PuntoDeVenta.Controllers
                     return List;
                 }
             }
-            else if(Tipo == (int)DecisionesMetodos.RangoFecha)
+            else if (Tipo == (int)DecisionesMetodos.RangoFecha)
             {
                 if (Rango)
                 {
@@ -1182,7 +1469,8 @@ namespace PuntoDeVenta.Controllers
                                          join tags in db.Tags on operaciones.Numero equals tags.NumTag
                                          join cuentas in db.CuentasTelepeajes on tags.CuentaId equals cuentas.Id
                                          join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
-                                         where (operaciones.DateTOperacion >= Fecha_Inicio && operaciones.DateTOperacion <= Fecha_Fin)                                         
+                                         where (operaciones.DateTOperacion >= Fecha_Inicio && operaciones.DateTOperacion <= Fecha_Fin)
+                                         where (operaciones.StatusCancelacion == false)
                                          orderby (operaciones.DateTOperacion) descending
                                          select new
                                          {
@@ -1238,7 +1526,8 @@ namespace PuntoDeVenta.Controllers
                                          join tags in db.Tags on operaciones.Numero equals tags.NumTag
                                          join cuentas in db.CuentasTelepeajes on tags.CuentaId equals cuentas.Id
                                          join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
-                                         where (operaciones.DateTOperacion >= Fecha_Inicio && operaciones.DateTOperacion < Fecha_Fin)                                                                                  
+                                         where (operaciones.DateTOperacion >= Fecha_Inicio && operaciones.DateTOperacion < Fecha_Fin)
+                                         where (operaciones.StatusCancelacion == false)
                                          orderby (operaciones.DateTOperacion) descending
                                          select new
                                          {
@@ -1291,7 +1580,65 @@ namespace PuntoDeVenta.Controllers
 
             return null;
         }
-        
+
+        public List<CruceMovimiento> FusionarListas(List<Cruces> ListCruces, List<Movimientos> ListMovimientos, bool TagOCuenta)
+        {
+
+            List<CruceMovimiento> Lista = new List<CruceMovimiento>();
+
+            if (TagOCuenta)
+            {
+
+                foreach (var item in ListCruces)
+                {
+                    Lista.Add(new CruceMovimiento
+                    {
+
+
+                        Concepto = "CRUCE" + "   " + "#TAG:  " + item.Tag,
+                        Fecha = item.Fecha,
+                        CobroTag = "-" + item.Saldo,
+                        Referencia = "-----------",
+
+
+                    });
+                }
+            }
+            else
+            {
+                foreach (var item in ListCruces)
+                {
+                    Lista.Add(new CruceMovimiento
+                    {
+
+
+                        Concepto = "CRUCE",
+                        Fecha = item.Fecha,
+                        CobroTag = "-" + item.Saldo,
+                        Referencia = "-----------",
+
+
+                    });
+                }
+            }
+
+            foreach (var item in ListMovimientos)
+            {
+                Lista.Add(new CruceMovimiento
+                {
+
+                    Concepto = item.Concepto,
+                    Fecha = item.Fecha,
+                    CobroTag = "Q" + item.Monto,
+                    Referencia = item.Referencia
+
+                });
+            }
+
+            Lista.OrderBy(x => x.Fecha);
+
+            return Lista;
+        }
         public string BuscaTramo(string IdGare)
         {
             if (IdGare == "21")
@@ -1302,7 +1649,7 @@ namespace PuntoDeVenta.Controllers
         }
         public ActionResult Pdf()
         {
-            
+
             MemoryStream ms = new MemoryStream();
             Document PdfHistorico = new Document(iTextSharp.text.PageSize.A4.Rotate());
             PdfWriter pw = PdfWriter.GetInstance(PdfHistorico, ms);
@@ -1310,13 +1657,13 @@ namespace PuntoDeVenta.Controllers
             PdfHistorico.Open();
             PdfHistorico.GetTop(600f);
 
-            
 
-      
 
-            string rutaLogo = Server.MapPath("..\\Content\\css-yisus\\img\\SIVAREPORT.png");            
 
-            iTextSharp.text.Image Logo = iTextSharp.text.Image.GetInstance(rutaLogo);            
+
+            string rutaLogo = Server.MapPath("..\\Content\\css-yisus\\img\\SIVAREPORT.png");
+
+            iTextSharp.text.Image Logo = iTextSharp.text.Image.GetInstance(rutaLogo);
             Logo.SetAbsolutePosition(650, 400);
             PdfHistorico.Add(Logo);
 
@@ -1327,7 +1674,7 @@ namespace PuntoDeVenta.Controllers
 
                 if (Fecha1 == Fecha2)
                 {
-                    
+
 
 
                     Paragraph titulo = new Paragraph("REPORTE DEL HISTORICO\n", new Font(Font.FontFamily.HELVETICA, 22));
@@ -1380,7 +1727,7 @@ namespace PuntoDeVenta.Controllers
                     Saldo.Alignment = Element.PTABLE;
                     PdfHistorico.Add(Saldo);
 
-                    Paragraph fecha = new Paragraph("Fecha: " + Fecha1 + "al" +Fecha2+ "", new Font(Font.FontFamily.HELVETICA, 12));
+                    Paragraph fecha = new Paragraph("Fecha: " + Fecha1 + "al" + Fecha2 + "", new Font(Font.FontFamily.HELVETICA, 12));
                     fecha.Alignment = Element.PTABLE;
                     PdfHistorico.Add(fecha);
 
@@ -1417,7 +1764,7 @@ namespace PuntoDeVenta.Controllers
                     PdfHistorico.Add(fecha);
 
 
-                    Paragraph Event = new Paragraph("Movimientos: "+ eventos + "", new Font(Font.FontFamily.HELVETICA, 12));
+                    Paragraph Event = new Paragraph("Movimientos: " + eventos + "", new Font(Font.FontFamily.HELVETICA, 12));
                     Event.Alignment = Element.PTABLE;
                     PdfHistorico.Add(Event);
 
@@ -1466,21 +1813,21 @@ namespace PuntoDeVenta.Controllers
                     PdfHistorico.Add(saldo_);
 
 
-         
+
 
                     PdfHistorico.Add(Chunk.NEWLINE);
 
                 }
             }
 
-            
-      
+
+
 
 
             if (ListPDFCruces.Count > 0)
             {
                 //Reporte Willy
-                if(ClienteAdmin)
+                if (ClienteAdmin)
                 {
                     PdfPTable table = new PdfPTable(9);
                     table.WidthPercentage = 100f;
@@ -1645,9 +1992,9 @@ namespace PuntoDeVenta.Controllers
                 //Reporte Cliente
                 else
                 {
-                    PdfPTable table = new PdfPTable(6);
+                    PdfPTable table = new PdfPTable(7);
                     table.WidthPercentage = 100f;
-                    var coldWidthPorcentagesCliente = new[] { 2f, 3f, 3f, 1f, 1f, 1f };
+                    var coldWidthPorcentagesCliente = new[] { 2f, 3f, 3f, 1f, 2f, 1f, 1f };
                     table.SetWidths(coldWidthPorcentagesCliente);
 
                     PdfPCell _cellIni = new PdfPCell();
@@ -1675,6 +2022,11 @@ namespace PuntoDeVenta.Controllers
 
 
                     _cellIni = new PdfPCell(new Paragraph("Tramo"));
+                    _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                    _cellIni.FixedHeight = 10f;
+                    table.AddCell(_cellIni);
+
+                    _cellIni = new PdfPCell(new Paragraph("Cobro del Cruce"));
                     _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
                     _cellIni.FixedHeight = 10f;
                     table.AddCell(_cellIni);
@@ -1725,6 +2077,12 @@ namespace PuntoDeVenta.Controllers
                         _cell.FixedHeight = 10f;
                         table.AddCell(_cell);
 
+                        _cell = new PdfPCell(new Paragraph(item.Saldo.ToString()));
+                        _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                        _cell.FixedHeight = 10f;
+                        table.AddCell(_cell);
+
+
 
                         _cell = new PdfPCell(new Paragraph(item.Carril.ToString()));
                         _cell.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -1737,7 +2095,7 @@ namespace PuntoDeVenta.Controllers
                         _cell.FixedHeight = 10f;
                         table.AddCell(_cell);
 
-                 
+
 
                     }
                     PdfHistorico.Add(table);
@@ -1750,7 +2108,7 @@ namespace PuntoDeVenta.Controllers
                 {
                     PdfPTable table = new PdfPTable(8);
                     table.WidthPercentage = 100f;
-                    var coldWidthPorcentagesCliente = new[] { 2f, 1f, 1f, 2f, 1f, 1f, 1f,  1f };
+                    var coldWidthPorcentagesCliente = new[] { 2f, 1f, 1f, 2f, 1f, 1f, 1f, 1f };
                     table.SetWidths(coldWidthPorcentagesCliente);
 
                     PdfPCell _cellIni = new PdfPCell();
@@ -2006,8 +2364,81 @@ namespace PuntoDeVenta.Controllers
                     PdfHistorico.Add(table);
                 }
             }
+            else if (ListPDFCrucesMovimientos.Count > 0)
+            {
+                PdfPTable table = new PdfPTable(4);
+                table.WidthPercentage = 100f;
+                var coldWidthPorcentagesCliente = new[] { 4f, 4f, 3f, 3f };
+                table.SetWidths(coldWidthPorcentagesCliente);
 
-            
+                PdfPCell _cellIni = new PdfPCell();
+                PdfHistorico.GetLeft(40f);
+                PdfHistorico.GetRight(40f);
+
+
+                _cellIni = new PdfPCell(new Paragraph("Concepto"));
+                _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                _cellIni.FixedHeight = 10f;
+                table.AddCell(_cellIni);
+
+
+                _cellIni = new PdfPCell(new Paragraph("Fecha"));
+                _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                table.AddCell(_cellIni);
+
+
+
+                _cellIni = new PdfPCell(new Paragraph("Monto"));
+                _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                _cellIni.FixedHeight = 10f;
+                table.AddCell(_cellIni);
+
+
+
+                _cellIni = new PdfPCell(new Paragraph("Referencia"));
+                _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                _cellIni.FixedHeight = 10f;
+                table.AddCell(_cellIni);
+
+
+                foreach (var item in ListPDFCrucesMovimientos)
+                {
+
+                    PdfPCell _cell = new PdfPCell();
+                    PdfHistorico.GetLeft(40f);
+                    PdfHistorico.GetRight(40f);
+
+
+                    _cell = new PdfPCell(new Paragraph(item.Concepto.ToString()));
+                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    _cell.FixedHeight = 10f;
+                    table.AddCell(_cell);
+
+
+                    _cell = new PdfPCell(new Paragraph(item.Fecha.ToString()));
+                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    table.AddCell(_cell);
+
+
+
+                    _cell = new PdfPCell(new Paragraph(item.CobroTag.ToString()));
+                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    _cell.FixedHeight = 10f;
+                    table.AddCell(_cell);
+
+
+
+                    _cell = new PdfPCell(new Paragraph(item.Referencia));
+                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    _cell.FixedHeight = 10f;
+                    table.AddCell(_cell);
+
+
+                }
+                PdfHistorico.Add(table);
+            }
+
+
 
             PdfHistorico.Close();
 
@@ -2017,7 +2448,7 @@ namespace PuntoDeVenta.Controllers
             ms.Write(bytesStream, 0, bytesStream.Length);
             ms.Position = 0;
 
-            return new FileStreamResult(ms, "application/pdf");            
+            return new FileStreamResult(ms, "application/pdf");
         }
 
         enum DecisionesMetodos

@@ -11,8 +11,6 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
-
-
     <!-- Custom styles for this template -->
     <style type="text/css">
         /* Pestaña Inicio */
@@ -24,16 +22,11 @@
 
     @RenderSection("styles", required: false)
 
-    <!-- Add this to <head> -->
-    <link type="text/css"
-          rel="stylesheet"
-          href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark navstyle fixed-top">
         <div class="container-fluid">
             <img class="logonav" src="~/Content/css-yisus/img/SiVAwhite.png" />
-            @*@Html.ActionLink("", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -86,10 +79,6 @@
             <p id="footerstyle"><img class="imgfooterstyle" src="~/Content/css-yisus/img/Logo.png" /></p>
         </footer>
     </div>
-
-    <script src="//unpkg.com/@("@babel")/polyfill@latest/dist/polyfill.min.js"></script>
-    <script src="//unpkg.com/vue@latest/dist/vue.min.js"></script>
-    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
 
     <!-- Use as a Vanilla JS plugin -->
     @Scripts.Render("~/bundles/intlTelInput")

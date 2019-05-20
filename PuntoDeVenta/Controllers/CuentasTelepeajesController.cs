@@ -28,71 +28,6 @@ namespace PuntoDeVenta.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpGet]
-        public async Task<ActionResult> GetDataCuentas()
-        {
-            List<CuentasTelepeaje> model = new List<CuentasTelepeaje>();
-
-            if (keyCliente != 0)
-            {
-                var lista = await db.CuentasTelepeajes.Join(
-                    db.Clientes,
-                    cue => cue.ClienteId,
-                    cli => cli.Id,
-                    (cue, cli) => new { cue, cli })
-                    .Where(x => x.cli.Id == keyCliente)
-                    .ToListAsync();
-
-                lista.ForEach(x =>
-                {
-                    model.Add(new CuentasTelepeaje
-                    {
-                        Id = x.cue.Id,
-                        NombreCliente = $"{x.cli.Nombre} {x.cli.Apellidos}",
-                        NumCliente = x.cli.NumCliente,
-                        ClienteId = x.cli.Id,
-                        DateTCuenta = x.cue.DateTCuenta,
-                        SaldoCuenta = x.cue.SaldoCuenta != null ? (double.Parse(x.cue.SaldoCuenta) / 100).ToString("F2") : "Sin saldo",
-                        NumCuenta = x.cue.NumCuenta,
-                        IdCajero = x.cue.IdCajero,
-                        TypeCuenta = x.cue.TypeCuenta,
-                        StatusCuenta = x.cue.StatusCuenta,
-                        StatusResidenteCuenta = x.cue.StatusResidenteCuenta,
-                    });
-                });
-            }
-            else
-            {
-                var lista = await db.CuentasTelepeajes.Join(
-                    db.Clientes,
-                    cue => cue.ClienteId,
-                    cli => cli.Id,
-                    (cue, cli) => new { cue, cli })
-                    .ToListAsync();
-
-                lista.ForEach(x =>
-                {
-                    model.Add(new CuentasTelepeaje
-                    {
-                        Id = x.cue.Id,
-                        NombreCliente = $"{x.cli.Nombre} {x.cli.Apellidos}",
-                        NumCliente = x.cli.NumCliente,
-                        ClienteId = x.cli.Id,
-                        DateTCuenta = x.cue.DateTCuenta,
-                        SaldoCuenta = x.cue.SaldoCuenta != null ? (double.Parse(x.cue.SaldoCuenta) / 100).ToString("F2") : "Sin saldo",
-                        NumCuenta = x.cue.NumCuenta,
-                        IdCajero = x.cue.IdCajero,
-                        TypeCuenta = x.cue.TypeCuenta,
-                        StatusCuenta = x.cue.StatusCuenta,
-                        StatusResidenteCuenta = x.cue.StatusResidenteCuenta,
-                    });
-                });
-            }
-
-            keyCliente = 0;
-            return Json(model, JsonRequestBehavior.AllowGet);
-        }
-
         [HttpPost]
         public async Task<ActionResult> RecargarSaldo(CuentasTelepeaje modelCuenta, string ReturnController)
         {
@@ -308,7 +243,7 @@ namespace PuntoDeVenta.Controllers
                                 detalle.TipoPago = "EFE";
                                 detalle.Monto = double.Parse(cuentasTelepeaje.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," });
 
-                                var SaldoSend = cuentasTelepeaje.SaldoCuenta;
+                                var SaldoSend = double.Parse(cuentasTelepeaje.SaldoCuenta).ToString("F2");
                                 SaldoSend = SaldoSend.Replace(",", string.Empty);
                                 cuentasTelepeaje.SaldoCuenta = SaldoSend.Replace(".", string.Empty);
                             }

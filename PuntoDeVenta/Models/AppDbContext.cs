@@ -23,6 +23,7 @@ namespace PuntoDeVenta.Models
         public DbSet<Parametrizable> Parametrizables { get; set; }
         public DbSet<Historico> Historicos { get; set; }
         public DbSet<ListaNegra> ListaNegras { get; set; }
+        public DbSet<AmountSettings> AmountSettings { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

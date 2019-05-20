@@ -46,15 +46,8 @@
                         </div>
                         <div class="form-group">
                             <img class="img-modal" src="~/Content/css-yisus/img/hand-holding-usd-solid.svg" />@Html.LabelFor(model => modelTags.CobroTag, htmlAttributes: new { @class = "control-label" })
-                            @Html.EditorFor(model => modelTags.CobroTag, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                            @Html.DropDownListFor(model => modelTags.CobroTag, (SelectList)ViewBag.AmountsCobroTag, htmlAttributes: new { @class = "form-control formulario2" })
                             @Html.ValidationMessageFor(model => modelTags.CobroTag, "", new { @class = "text-danger" })
-                        </div>
-                        <div id="fromTo2">
-                            <div class="form-group">
-                                <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" />@Html.LabelFor(model => modelTags.SaldoTag, htmlAttributes: new { @class = "control-label" })
-                                @Html.EditorFor(model => modelTags.SaldoTag, new { htmlAttributes = new { @class = "form-control formulario1" } })
-                                @Html.ValidationMessageFor(model => modelTags.SaldoTag, "", new { @class = "text-danger" })
-                            </div>
                         </div>
                         <div v-show="checked">
                             <hr />
@@ -62,12 +55,6 @@
                                 <img class="img-modal" src="~/Content/css-yisus/img/slack-hash-brands.svg" /><label for="OldTag" class="col-form-label">Antigüo número de tag:</label>
                                 @Html.EditorFor(x => modelTags.OldTag, new { htmlAttributes = new { @class = "form-control formulario1" } })
                                 @Html.ValidationMessageFor(x => modelTags.OldTag, "", new { @class = "text-danger" })
-                            </div>
-                            <div id="fromTo12">
-                                <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" />
-                                <label for="OldTag" class="col-form-label">Saldo antigüo del tag:</label>
-                                @Html.EditorFor(model => modelTags.OldSaldo, new { htmlAttributes = new { @class = "form-control formulario1" } })
-                                @Html.ValidationMessageFor(model => modelTags.OldSaldo, "", new { @class = "text-danger" })
                             </div>
                             <div class="form-group">
                                 <label for="Observacion" class="col-form-label">Observación:</label>
