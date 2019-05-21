@@ -222,7 +222,7 @@ namespace PuntoDeVenta.Controllers
                                 listTags.Add(new
                                 {
                                     NumTag = m.NumTag,
-                                    SaldoTag = string.IsNullOrEmpty(m.SaldoTag) ? default(double) : double.Parse(m.SaldoTag) / 100,
+                                    SaldoTag = string.IsNullOrEmpty(m.SaldoTag) ? "0.00" : (double.Parse(m.SaldoTag) / 100).ToString("F2"),
                                     StatusTag = m.StatusTag == true ? "Válido" : "Inválido"
                                 });
                             });
@@ -231,7 +231,7 @@ namespace PuntoDeVenta.Controllers
                             {
                                 NombreCompleto = $"{x.Nombre} {x.Apellidos}",
                                 NumCuenta = x.NumCuenta,
-                                SaldoCuenta = string.IsNullOrEmpty(x.SaldoCuenta) ? default(double) : double.Parse(x.SaldoCuenta) / 100,
+                                SaldoCuenta = string.IsNullOrEmpty(x.SaldoCuenta) ? "0.00" : (double.Parse(x.SaldoCuenta) / 100).ToString("F2"),
                                 TypeCuenta = x.TypeCuenta,
                                 DateTCuenta = x.DateTCuenta,
                                 StatusCuenta = x.StatusCuenta == true ? "Válido" : "Inválido",

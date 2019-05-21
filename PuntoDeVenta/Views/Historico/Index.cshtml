@@ -166,18 +166,31 @@
                  data: "{}",
                  cache: false,
                  success: function (data) {
-                     $.each(data, function (i, row) {
-                         var $option = $('<option>');
-                         $option.val(row.Value);
-                         $option.html(row.Text);
-                         $('#TypeMovimiento').append($option);
-                     });
+                
                      $.each(data, function (i, row) {
                          var $option = $('<option>');
                          $option.val(row.Value);
                          $option.html(row.Text);
                          $('#TypeMovimiento2').append($option);
                      });
+
+                 },
+                 error: function (ex) {
+                        alert("Error!!!" + ex);
+                 },
+            });
+             $.ajax({
+                 url: '@Url.Action("GetMovimientos2", "Historico")',
+                 type: "GET",
+                 data: "{}",
+                 cache: false,
+                 success: function (data) {
+                     $.each(data, function (i, row) {
+                         var $option = $('<option>');
+                         $option.val(row.Value);
+                         $option.html(row.Text);
+                         $('#TypeMovimiento').append($option);
+                     });           
 
                  },
                  error: function (ex) {

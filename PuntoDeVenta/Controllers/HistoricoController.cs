@@ -54,7 +54,7 @@ namespace PuntoDeVenta.Controllers
             return View("Index", model);
         }
 
-        public JsonResult GetMovimientos()
+        public JsonResult GetMovimientos2()
         {
             List<SelectListItem> Items = new List<SelectListItem>();
 
@@ -63,6 +63,25 @@ namespace PuntoDeVenta.Controllers
                 Text = "Movimientos y Cruces",
                 Value = "00"
             });
+
+            Items.Add(new SelectListItem
+            {
+                Text = "Recargas",
+                Value = "01"
+            });
+
+            Items.Add(new SelectListItem
+            {
+                Text = "Cruces",
+                Value = "02"
+            });
+
+            return Json(Items, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult GetMovimientos()
+        {
+            List<SelectListItem> Items = new List<SelectListItem>();
+      
 
             Items.Add(new SelectListItem
             {
@@ -696,7 +715,7 @@ namespace PuntoDeVenta.Controllers
 
                         if (ListCruces.Any())
                         {
-                            Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, DateAyuda, ListCruces.Count, ListCruces[0].SaldoActual, Tipo };
+                            Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListCruces.Count, ListCruces[0].SaldoActual, Tipo };
                             model.Info = Info;
                             Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = ListCruces.Count.ToString();
                             model.ListaCruces = ListCruces;
@@ -822,7 +841,7 @@ namespace PuntoDeVenta.Controllers
                                              _CuentaID = tags.CuentaId,
                                              _ClienteID = cliente.NumCliente,
                                              _Nombre = cliente.Nombre + cliente.Apellidos,
-                                             _TypeCuenta = cuentas.TypeCuenta,
+                                             _TypeCuenta = cuentas.TypeCuenta,                                             
                                              _Plaza = historico.Delegacion,
                                              _Cuerpo = historico.Cuerpo,
                                              _Carril = historico.Carril,
@@ -851,7 +870,7 @@ namespace PuntoDeVenta.Controllers
                             Plaza = item._Plaza,
                             Fecha = Convert.ToString(item._Fecha),
                             Cuerpo = item._Cuerpo,
-                            Carril = item._Carril,
+                            Carril = item._Carril,                           
                             Clase = item._Clase,
                             SaldoAntes = "Q" + item._SaldoAntes,
                             Saldo = "Q" + item._Saldo,
@@ -883,6 +902,7 @@ namespace PuntoDeVenta.Controllers
                                              _ClienteID = cliente.NumCliente,
                                              _Nombre = cliente.Nombre + cliente.Apellidos,
                                              _TypeCuenta = cuentas.TypeCuenta,
+                                             _Tag = tags.NumTag,
                                              _Plaza = historico.Delegacion,
                                              _Cuerpo = historico.Cuerpo,
                                              _Carril = historico.Carril,
@@ -906,6 +926,7 @@ namespace PuntoDeVenta.Controllers
                             Id = id,
                             NomCliente = item._Nombre,
                             TypeCuenta = item._TypeCuenta,
+                            Tag = item._Tag,
                             Plaza = item._Plaza,
                             Fecha = Convert.ToString(item._Fecha),
                             Cuerpo = item._Cuerpo,

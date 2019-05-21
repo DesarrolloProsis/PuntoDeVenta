@@ -1,2 +1,2 @@
 # PuntoDeVenta
-Punto de venta para MARHNOS by @glucasc@outlook.com
+Punto de venta (backoffice) para Marhnos
