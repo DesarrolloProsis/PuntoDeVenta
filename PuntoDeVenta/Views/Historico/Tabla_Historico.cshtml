@@ -40,7 +40,7 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        
                         <th>Tag</th>
                         <th>Cliente</th>
                         <th>Plaza</th>
@@ -56,7 +56,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="item in items">
-                        <td>{{item.Id}}</td>
+                        
                         <td>{{item.Tag}}</td>
                         <td>{{item.NumCliente}}</td>
                         <td>{{item.Plaza}}</td>
@@ -83,7 +83,7 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        
                         <th>Tag</th>
                         <th>Plaza</th>
                         <th>Fecha del Cruce</th>
@@ -95,7 +95,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="item in items">
-                        <td>{{item.Id}}</td>
+                        
                         <td>{{item.Tag}}</td>
                         <td>{{item.Plaza}}</td>
                         <td>{{item.Fecha}}</td>
@@ -118,7 +118,7 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        
                         <th>Concepto</th>
                         <th>Tipo de Pago</th>
                         <th>Monto de Recarga</th>
@@ -131,7 +131,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="item in items">
-                        <td>{{item.Id}}</td>
+                        
                         <td>{{item.Concepto}}</td>
                         <td>{{item.TipoPago}}</td>
                         <td>{{item.Monto}}</td>
@@ -154,7 +154,7 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        
                         <th>Concepto</th>
                         <th>Tipo de Pago</th>
                         <th>Monto de Recarga</th>
@@ -168,7 +168,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="item in items">
-                        <td>{{item.Id}}</td>
+                        
                         <td>{{item.Concepto}}</td>
                         <td>{{item.TipoPago}}</td>
                         <td>{{item.Monto}}</td>
@@ -226,14 +226,24 @@
         $(document).ready(function () {
 
 
-            var Cruces = @Html.Raw(Json.Encode(Model.ListaCruces));
-            var Movimientos = @Html.Raw(Json.Encode(Model.ListaMovimientos));
-            var CrucesMovimientos = @Html.Raw(Json.Encode(Model.ListCruceMovimientos));
+          @{
+                var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+                serializer.MaxJsonLength =  Int32.MaxValue;
+                var jsonModel = serializer.Serialize(Model.ListaCruces);
+                var serializer2 = new System.Web.Script.Serialization.JavaScriptSerializer();
+                serializer2.MaxJsonLength = Int32.MaxValue;
+                var jsonModel2 = serializer.Serialize(Model.ListaMovimientos);
+                var serializer3 = new System.Web.Script.Serialization.JavaScriptSerializer();
+                serializer3.MaxJsonLength = Int32.MaxValue;
+                var jsonModel3 = serializer.Serialize(Model.ListCruceMovimientos);
+            } 
+            var Cruces = @Html.Raw(jsonModel);
+            var Movimientos = @Html.Raw(jsonModel2);
+            var CrucesMovimientos = @Html.Raw(jsonModel3);
             var info = @Html.Raw(Json.Encode(Model.Info));
           console.log(JSON.stringify(Cruces))
           console.log(JSON.stringify(Movimientos))
           console.log(JSON.stringify(CrucesMovimientos))
-            //console.log(JSON.stringify(info))
 
 
           if (Cruces == null && Movimientos == null && CrucesMovimientos == null) {
