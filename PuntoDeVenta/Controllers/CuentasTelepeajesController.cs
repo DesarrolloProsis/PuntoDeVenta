@@ -64,7 +64,7 @@ namespace PuntoDeVenta.Controllers
 
                             var SaldoNuevo = (double.Parse(Saldo) + double.Parse(modelCuenta.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }));
 
-                            var SaldoSend = SaldoNuevo.ToString("F2");
+                            var SaldoSend = Math.Round(SaldoNuevo, 2).ToString("F2");
 
                             SaldoSend = SaldoSend.Replace(",", string.Empty);
                             FoundCuenta.cue.SaldoCuenta = SaldoSend.Replace(".", string.Empty);
@@ -243,7 +243,7 @@ namespace PuntoDeVenta.Controllers
                                 detalle.TipoPago = "EFE";
                                 detalle.Monto = double.Parse(cuentasTelepeaje.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," });
 
-                                var SaldoSend = double.Parse(cuentasTelepeaje.SaldoCuenta).ToString("F2");
+                                var SaldoSend = double.Parse(cuentasTelepeaje.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }).ToString("F2");
                                 SaldoSend = SaldoSend.Replace(",", string.Empty);
                                 cuentasTelepeaje.SaldoCuenta = SaldoSend.Replace(".", string.Empty);
                             }

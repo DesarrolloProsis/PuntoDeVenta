@@ -153,7 +153,7 @@ namespace PuntoDeVenta.Controllers
 
                             var SaldoNuevo = (Convert.ToDouble(Saldo) + double.Parse(modelTag.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }));
 
-                            var SaldoSend = SaldoNuevo.ToString("F2");
+                            var SaldoSend = Math.Round(SaldoNuevo, 2).ToString("F2");
 
                             SaldoSend = SaldoSend.Replace(",", string.Empty);
                             FoundTag.tag.SaldoTag = SaldoSend.Replace(".", string.Empty);
@@ -315,7 +315,7 @@ namespace PuntoDeVenta.Controllers
                                         break;
                                     case "Individual":
                                         detalle.Monto = double.Parse(tags.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," });
-                                        var SaldoSend = double.Parse(tags.SaldoTag).ToString("F2");
+                                        var SaldoSend = double.Parse(tags.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }).ToString("F2");
                                         SaldoSend = SaldoSend.Replace(",", string.Empty);
                                         tags.SaldoTag = SaldoSend.Replace(".", string.Empty);
                                         break;
@@ -646,133 +646,140 @@ namespace PuntoDeVenta.Controllers
         [HttpPost]
         public async Task<ActionResult> DeleteTraspaso(TagsViewModel model)
         {
-            db.Configuration.ValidateOnSaveEnabled = false;
-
-            if (model.IdOldTag == null)
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+                db.Configuration.ValidateOnSaveEnabled = false;
 
-            Tags tagOld = await db.Tags.FindAsync(model.IdOldTag);
-
-            if (tagOld == null)
-            {
-                return HttpNotFound();
-            }
-
-            var cuenta = await db.CuentasTelepeajes.Join(db.Clientes,
-                                                             cue => cue.ClienteId,
-                                                             cli => cli.Id,
-                                                             (cue, cli) => new { cue, cli })
-                                                             .Where(x => x.cue.Id == tagOld.CuentaId)
-                                                             .FirstOrDefaultAsync();
-
-            if (cuenta == null)
-            {
-                return HttpNotFound();
-            }
-
-            var UserId = User.Identity.GetUserId();
-
-            var lastCorteUser = await db.CortesCajeros
-                                            .Where(x => x.IdCajero == UserId)
-                                            .OrderByDescending(x => x.DateTApertura).ToListAsync();
-            if (lastCorteUser.Count > 0)
-            {
-
-                if (model.Checked == true)
+                if (model.IdOldTag == null)
                 {
-                    var tagNew = new Tags
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+
+                Tags tagOld = await db.Tags.FindAsync(model.IdOldTag);
+
+                if (tagOld == null)
+                {
+                    return HttpNotFound();
+                }
+
+                var cuenta = await db.CuentasTelepeajes.Join(db.Clientes,
+                                                                 cue => cue.ClienteId,
+                                                                 cli => cli.Id,
+                                                                 (cue, cli) => new { cue, cli })
+                                                                 .Where(x => x.cue.Id == tagOld.CuentaId)
+                                                                 .FirstOrDefaultAsync();
+
+                if (cuenta == null)
+                {
+                    return HttpNotFound();
+                }
+
+                var UserId = User.Identity.GetUserId();
+
+                var lastCorteUser = await db.CortesCajeros
+                                                .Where(x => x.IdCajero == UserId)
+                                                .OrderByDescending(x => x.DateTApertura).ToListAsync();
+                if (lastCorteUser.Count > 0)
+                {
+
+                    if (model.Checked == true)
                     {
-                        StatusResidente = false,
-                        StatusTag = true,
-                        DateTTag = DateTime.Now,
-                        IdCajero = User.Identity.GetUserId(),
-                        NumTag = model.NumNewTag,
-                        CobroTag = model.CobroTag,
-                        CuentaId = cuenta.cue.Id,
-                    };
-                    var detalle = new OperacionesCajero
+                        var tagNew = new Tags
+                        {
+                            StatusResidente = false,
+                            StatusTag = true,
+                            DateTTag = DateTime.Now,
+                            IdCajero = User.Identity.GetUserId(),
+                            NumTag = model.NumNewTag,
+                            CobroTag = model.CobroTag,
+                            CuentaId = cuenta.cue.Id,
+                        };
+                        var detalle = new OperacionesCajero
+                        {
+                            Concepto = "TAG TRASPASO",
+                            DateTOperacion = DateTime.Now,
+                            Numero = tagNew.NumTag,
+                            Tipo = "TAG",
+                            TipoPago = "TRA",
+                            CorteId = lastCorteUser.FirstOrDefault().Id,
+                            CobroTag = Convert.ToDouble(tagNew.CobroTag),
+                            NoReferencia = await methods.RandomNumReferencia(),
+                        };
+
+                        switch (cuenta.cue.TypeCuenta)
+                        {
+                            case "Colectiva":
+                                tagNew.SaldoTag = cuenta.cue.SaldoCuenta;
+                                detalle.Monto = double.Parse(tagNew.SaldoTag);
+                                break;
+                            case "Individual":
+                                var SaldoSend = model.SaldoTag;
+                                SaldoSend = SaldoSend.Replace(",", string.Empty);
+                                tagNew.SaldoTag = SaldoSend.Replace(".", string.Empty);
+                                detalle.Monto = double.Parse(model.SaldoTag);
+                                break;
+                            default:
+                                break;
+                        }
+
+                        db.Tags.Add(tagNew);
+                        db.OperacionesCajeros.Add(detalle);
+
+                    }
+                    else
                     {
-                        Concepto = "TAG TRASPASO",
-                        DateTOperacion = DateTime.Now,
-                        Numero = tagNew.NumTag,
+                        var detalle = new OperacionesCajero
+                        {
+                            Concepto = "TAG ELIMINADO",
+                            DateTOperacion = DateTime.Now,
+                            Numero = tagOld.NumTag,
+                            Tipo = "TAG",
+                            TipoPago = null,
+                            CorteId = lastCorteUser.FirstOrDefault().Id,
+                            CobroTag = null,
+                            Monto = null,
+                            NoReferencia = await methods.RandomNumReferencia(),
+                        };
+
+                        db.OperacionesCajeros.Add(detalle);
+                    }
+
+                    var listNegra = new ListaNegra
+                    {
                         Tipo = "TAG",
-                        TipoPago = "TRA",
-                        CorteId = lastCorteUser.FirstOrDefault().Id,
-                        CobroTag = Convert.ToDouble(tagNew.CobroTag),
-                        NoReferencia = await methods.RandomNumReferencia(),
+                        Numero = tagOld.NumTag,
+                        Observacion = model.Observacion,
+                        Date = DateTime.Now,
+                        IdCajero = User.Identity.GetUserId(),
+                        Clase = cuenta.cue.TypeCuenta,
+                        NumCliente = cuenta.cli.NumCliente,
+                        NumCuenta = cuenta.cue.NumCuenta,
                     };
 
                     switch (cuenta.cue.TypeCuenta)
                     {
-                        case "Colectiva":
-                            tagNew.SaldoTag = cuenta.cue.SaldoCuenta;
-                            detalle.Monto = Convert.ToDouble(tagNew.SaldoTag);
-                            break;
                         case "Individual":
-                            var SaldoSend = model.SaldoTag;
-                            SaldoSend = SaldoSend.Replace(",", string.Empty);
-                            tagNew.SaldoTag = SaldoSend.Replace(".", string.Empty);
-                            detalle.Monto = Convert.ToDouble(model.SaldoTag);
+                            listNegra.SaldoAnterior = double.Parse(model.SaldoTag);
                             break;
                         default:
                             break;
                     }
 
-                    db.Tags.Add(tagNew);
-                    db.OperacionesCajeros.Add(detalle);
+                    db.ListaNegras.Add(listNegra);
+                    db.Tags.Remove(tagOld);
+                    await db.SaveChangesAsync();
 
-                }
-                else
-                {
-                    var detalle = new OperacionesCajero
-                    {
-                        Concepto = "TAG ELIMINADO",
-                        DateTOperacion = DateTime.Now,
-                        Numero = tagOld.NumTag,
-                        Tipo = "TAG",
-                        TipoPago = null,
-                        CorteId = lastCorteUser.FirstOrDefault().Id,
-                        CobroTag = null,
-                        Monto = null,
-                        NoReferencia = await methods.RandomNumReferencia(),
-                    };
-
-                    db.OperacionesCajeros.Add(detalle);
+                    TempData["SDelete"] = $"Se eliminó correctamente el tag: {tagOld.NumTag}.";
+                    return RedirectToAction("Index", "Clientes");
                 }
 
-                var listNegra = new ListaNegra
-                {
-                    Tipo = "TAG",
-                    Numero = tagOld.NumTag,
-                    Observacion = model.Observacion,
-                    Date = DateTime.Now,
-                    IdCajero = User.Identity.GetUserId(),
-                    Clase = cuenta.cue.TypeCuenta,
-                    NumCliente = cuenta.cli.NumCliente,
-                    NumCuenta = cuenta.cue.NumCuenta,
-                };
-
-                switch (cuenta.cue.TypeCuenta)
-                {
-                    case "Individual":
-                        listNegra.SaldoAnterior = Convert.ToDouble(model.SaldoTag);
-                        break;
-                    default:
-                        break;
-                }
-
-                db.ListaNegras.Add(listNegra);
-                db.Tags.Remove(tagOld);
-                await db.SaveChangesAsync();
-
-                TempData["SDelete"] = $"Se eliminó correctamente el tag: {tagOld.NumTag}.";
+                TempData["EDelete"] = $"¡Ups! ha ocurrido un error inesperado.";
                 return RedirectToAction("Index", "Clientes");
             }
-
-            TempData["EDelete"] = $"¡Ups! ha ocurrido un error inesperado.";
-            return RedirectToAction("Index", "Clientes");
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         protected override void Dispose(bool disposing)

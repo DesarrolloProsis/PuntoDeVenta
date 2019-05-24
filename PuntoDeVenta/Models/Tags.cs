@@ -84,6 +84,7 @@ namespace PuntoDeVenta.Models
 
         [NotMapped]
         [Display(Name = "Observación")]
+        [Required]
         public string Observacion { get; set; }
 
         [NotMapped]
