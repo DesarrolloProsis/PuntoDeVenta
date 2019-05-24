@@ -46,7 +46,8 @@
                         </div>
                         <div class="form-group">
                             <img class="img-modal" src="~/Content/css-yisus/img/hand-holding-usd-solid.svg" />@Html.LabelFor(model => modelTags.CobroTag, htmlAttributes: new { @class = "control-label" })
-                            @Html.DropDownListFor(model => modelTags.CobroTag, new SelectList(ViewBag.AmountsCobroTag, "Value", "Text"), htmlAttributes: new { @class = "form-control formulario2" })
+                            @Html.TextBoxFor(model => modelTags.CobroTag, new { @class = "form-control formulario1" })
+                            @*@Html.DropDownListFor(model => modelTags.CobroTag, new SelectList(ViewBag.AmountsCobroTag, "Value", "Text"), htmlAttributes: new { @class = "form-control formulario2" })*@
                             @Html.ValidationMessageFor(model => modelTags.CobroTag, "", new { @class = "text-danger" })
                         </div>
                         <div v-show="checked">

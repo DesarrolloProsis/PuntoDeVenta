@@ -97,8 +97,16 @@
                         @Html.Hidden("IdOldTag", Model.Id)
                         <div v-show="checked">
                             <div class="form-group">
-                                <label for="modelTag_NumNewTag" class="col-form-label">Nuevo número de tag:</label>
-                                @Html.Editor("NumNewTag", new { htmlAttributes = new { @class = "form-control formulario1" } })
+                                <img class="img-modal" src="~/Content/css-yisus/img/slack-hash-brands.svg" /><label for="modelTag_NumNewTag" class="col-form-label">Nuevo número de tag:</label>
+                                @{
+                                    IDictionary<string, object> dicNumTag = new Dictionary<string, object>() { { "placeholder", "Ej. 501000000000" }, { ":maxlength", "max" }, { @"class", "form-control formulario1" }, { "v-model", "text" } };
+                                }
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text" v-text="(max - text.length)"></div>
+                                    </div>
+                                    @Html.Editor("NumNewTag", new { htmlAttributes = dicNumTag })
+                                </div>
                                 @Html.ValidationMessage("NumNewTag", "", new { @class = "text-danger" })
                             </div>
                             <div class="form-group">
@@ -111,7 +119,8 @@
                             </div>
                             <div class="form-group">
                                 <img class="img-modal" src="~/Content/css-yisus/img/hand-holding-usd-solid.svg" />@Html.LabelFor(model => model.CobroTag, htmlAttributes: new { @class = "control-label" })
-                                @Html.DropDownList("CobroTag", (SelectList)ViewBag.AmountsCobroTag, htmlAttributes: new { @class = "form-control formulario2" })
+                                @Html.Editor("CobroTag", new { htmlAttributes = new { @class = "form-control formulario1" } })
+                                @*@Html.DropDownList("CobroTag", (SelectList)ViewBag.AmountsCobroTag, htmlAttributes: new { @class = "form-control formulario2" })*@
                                 @Html.ValidationMessage("CobroTag", "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -151,6 +160,8 @@
                 mostrar: "@Model.TipoTag" == "Colectiva" ? false : true,
                 checked: false,
                 data_source: "@Model.SaldoTag",
+                max: 11,
+                text: ''
             },
         });
     </script>
@@ -159,6 +170,11 @@
             $("#submit").on("click", function (e) {
                 $("#exampleModal").modal("show");
                 e.preventDefault();
+            });
+
+            $(function () {
+                $("#CobroTag").val("77.00");
+                $("#CobroTag").mask("#,##0.00", { reverse: true });
             });
         });
     </script>
