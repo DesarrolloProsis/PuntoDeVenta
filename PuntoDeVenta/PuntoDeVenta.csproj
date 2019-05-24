@@ -699,11 +699,13 @@
     <Content Include="ReportViewer\js\telerikReportViewer-12.1.18.620.min.js" />
     <Content Include="ReportViewer\js\telerikReportViewer.kendo-12.1.18.620.min.js" />
     <Content Include="Scripts\app\indexHome\index.js" />
+    <Content Include="Scripts\app\settings\index.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\bundle\indexHome.js" />
+    <Content Include="Scripts\bundle\settings.js" />
     <Content Include="Scripts\date.format.js" />
     <Content Include="Scripts\esm\popper-utils.js" />
     <Content Include="Scripts\esm\popper-utils.min.js" />
@@ -759,6 +761,11 @@
     <Content Include="bin\roslyn\vbc.exe.config" />
     <Content Include="bin\roslyn\vbc.rsp" />
     <Content Include="bin\roslyn\VBCSCompiler.exe.config" />
+    <Content Include="Scripts\app\settings\Home.vue" />
+    <Content Include="Scripts\app\settings\components\configs\ajusteuno.vue" />
+    <Content Include="Scripts\app\settings\components\configs.vue" />
+    <Content Include="Scripts\app\settings\components\render.vue" />
+    <Content Include="Scripts\bundle\settings.js.map" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -1039,6 +1046,7 @@
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Shared\_AddTagsColectivos.cshtml" />
     <Content Include="Views\Home\MovimientoCajero.cshtml" />
+    <Content Include="Views\Home\Configuracion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

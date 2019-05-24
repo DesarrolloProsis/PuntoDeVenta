@@ -819,5 +819,14 @@ namespace PuntoDeVenta.Controllers
 
             return View();
         }
+        //PRUEBA DE CONFIGURACION VIEW
+       
+        public ActionResult Configuracion()
+        {
+            ViewBag.Message = "Your application description page.";
+
+
+            return View();
+        }
     }
 }
