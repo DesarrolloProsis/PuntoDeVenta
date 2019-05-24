@@ -244,7 +244,6 @@ namespace PuntoDeVenta.Controllers
         public async Task<ActionResult> Create(Tags tags)
         {
             try
-
             {
                 //ViewBag.CuentaId = new SelectList(db.CuentasTelepeajes, "Id", "NumCuenta", tags.CuentaId);
                 db.Configuration.ValidateOnSaveEnabled = false;
@@ -525,6 +524,7 @@ namespace PuntoDeVenta.Controllers
             tags.TipoTag = cuenta.TypeCuenta;
             tags.SaldoTag = (Convert.ToInt64(tags.SaldoTag) / 100).ToString("F2");
             ViewBag.TagsModelTras = new Tags();
+            ViewBag.AmountsCobroTag = new SelectList(db.AmountConfigurations.Where(x => x.Concept == "COBROTAG").AsEnumerable(), "Amount", "Amount");
 
             if (tags == null)
             {

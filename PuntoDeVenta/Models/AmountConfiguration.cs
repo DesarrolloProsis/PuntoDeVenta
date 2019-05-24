@@ -9,12 +9,13 @@ namespace PuntoDeVenta.Models
 {
     public class AmountConfiguration
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        public long Id { get; set; }
+        [Column(Order = 0)]
         [StringLength(20)]
         public string Concept { get; set; }
-        public short Type { get; set; }
+        [Key]
+        [Column(Order = 1)]
         public double Amount { get; set; }
+        public short Type { get; set; }
     }
 }

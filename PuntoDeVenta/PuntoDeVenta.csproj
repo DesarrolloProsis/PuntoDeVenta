@@ -381,6 +381,10 @@
     <Compile Include="Migrations\201905201910026_amount.Designer.cs">
       <DependentUpon>201905201910026_amount.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201905240016516_keycompoamount.cs" />
+    <Compile Include="Migrations\201905240016516_keycompoamount.Designer.cs">
+      <DependentUpon>201905240016516_keycompoamount.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AmountConfiguration.cs" />
@@ -1035,7 +1039,6 @@
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Shared\_AddTagsColectivos.cshtml" />
     <Content Include="Views\Home\MovimientoCajero.cshtml" />
-    <Content Include="Views\Home\GeneralSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1121,6 +1124,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905201910026_amount.resx">
       <DependentUpon>201905201910026_amount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905240016516_keycompoamount.resx">
+      <DependentUpon>201905240016516_keycompoamount.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

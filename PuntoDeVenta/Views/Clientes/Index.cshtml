@@ -157,7 +157,7 @@
                     <div id="fromTocreate">
                         <div class="form-group">
                             <img class="img-modal2" src="~/Content/css-yisus/img/file-invoice-dollar-solid.svg" /> @Html.LabelFor(model => model.SaldoCuenta, htmlAttributes: new { @class = "control-label" })
-                            @Html.DropDownListFor(model => model.SaldoCuenta, (SelectList)ViewBag.Amounts, htmlAttributes: new { @class = "form-control formulario2" })
+                            @Html.DropDownListFor(model => model.SaldoCuenta, new SelectList(ViewBag.Amounts, "Value", "Text"), htmlAttributes: new { @class = "form-control formulario2" })
                             @Html.ValidationMessageFor(model => model.SaldoCuenta, "", new { @class = "text-danger" })
 
                         </div>
@@ -301,12 +301,12 @@
                     <div class="form-group">
                         <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" /> @Html.LabelFor(model => modelCuenta.SaldoARecargar, htmlAttributes: new { @class = "control-label" })
                         @*Html.TextBoxFor(model => modelCuenta.SaldoARecargar, new { @class = "form-control formulario1" })*@
-                        @Html.DropDownListFor(model => modelCuenta.SaldoARecargar, (SelectList)ViewBag.Amounts, htmlAttributes: new { @class = "form-control formulario2" })
+                        @Html.DropDownListFor(model => modelCuenta.SaldoARecargar, new SelectList(ViewBag.Amounts, "Value", "Text"), htmlAttributes: new { @class = "form-control formulario2" })
                         @Html.ValidationMessageFor(model => modelCuenta.SaldoARecargar, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group">
                         <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" /> @Html.LabelFor(model => modelCuenta.ConfSaldoARecargar, htmlAttributes: new { @class = "control-label" })
-                        @Html.DropDownListFor(model => modelCuenta.ConfSaldoARecargar, (SelectList)ViewBag.Amounts, htmlAttributes: new { @class = "form-control formulario2" })
+                        @Html.DropDownListFor(model => modelCuenta.ConfSaldoARecargar, new SelectList(ViewBag.Amounts, "Value", "Text"), htmlAttributes: new { @class = "form-control formulario2" })
                         @Html.ValidationMessageFor(model => modelCuenta.ConfSaldoARecargar, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -369,12 +369,12 @@
                     <div class="form-group">
                         <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" />@Html.LabelFor(m => modelTag.SaldoARecargar, htmlAttributes: new { @class = "control-label" })
                         @*Html.EditorFor(m => modelTag.SaldoARecargar, new { htmlAttributes = new { @class = "form-control formulario1" } })*@
-                        @Html.DropDownListFor(m => modelTag.SaldoARecargar, (SelectList)ViewBag.Amounts, htmlAttributes: new { @class = "form-control formulario2" })
+                        @Html.DropDownListFor(m => modelTag.SaldoARecargar, new SelectList(ViewBag.Amounts, "Value", "Text"), htmlAttributes: new { @class = "form-control formulario2" })
                         @Html.ValidationMessageFor(m => modelTag.SaldoARecargar, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group">
                         <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" />@Html.LabelFor(m => modelTag.ConfSaldoARecargar, htmlAttributes: new { @class = "control-label" })
-                        @Html.DropDownListFor(m => modelTag.ConfSaldoARecargar, (SelectList)ViewBag.Amounts, htmlAttributes: new { @class = "form-control formulario2" })
+                        @Html.DropDownListFor(m => modelTag.ConfSaldoARecargar, new SelectList(ViewBag.Amounts, "Value", "Text"), htmlAttributes: new { @class = "form-control formulario2" })
                         @Html.ValidationMessageFor(m => modelTag.ConfSaldoARecargar, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -708,7 +708,6 @@
                     $("#numclienteVal").text($("#numcliente").val());
                     $("#nomclienteVal").text($("#nomcliente").val());
 
-
                     $('#exampleModalCenter1').modal('show');
                 }
             });
@@ -848,19 +847,12 @@
                 $("#modelTags_CuentaId").val(data.Id);
                 $("#modelTags_tipocuenta").val(data.TypeCuenta);
 
-
-
                 if (data.TypeCuenta == "Colectiva") {
-                    $("#fromTo").hide();
-                    $("#fromTo1").hide();
                     $('#AddTags2').modal('show');
                 } else if (data.TypeCuenta == "Individual") {
-                    $("#fromTo").show();
-                    $("#fromTo1").show();
                     $('#exampleModalCenter2').modal('show');
                 }
 
-                //console.log(dataItem);
             });
 
             $("#example_table tbody").on('click', 'td.ndeshabilitarcue', function (e) {
@@ -916,9 +908,6 @@
 
                 e.preventDefault();
                 $("#FormRecargarCuenta").submit();
-
-                //console.log($("#FormRecargarCuenta").serialize());
-                //console.log($("#FormRecargarCuenta").serializeArray());
             });
 
             /**** Fin Recargar saldo cuenta ****/
@@ -991,53 +980,47 @@
                 var form = $("#FormAddTags").validate();
 
                 if (form.valid() && $("#NumTag").val() != "") {
+                    $('#exampleModalCenter2').modal('hide');
 
-                    if ($("#tipocuenta").val() == "Colectiva" && $("#SaldoTag").val() == "") {
-                        $('#exampleModalCenter2').modal('hide');
+                    var saldoTag = 0;
 
-                        $("#fromtotag").hide();
-                        saldoTag = 0;
-
-                        var costotag = $("#CobroTag").val();
-                        var total = parseFloat(costotag) + parseFloat(saldoTag);
-
-                        $("#Tagnumcuenta").text($("#numcuenta").val());
-                        $("#Tagnum").text($("#NumTag").val());
-                        $("#TagCosto").text(costotag);
-                        $("#TagSaldo").text(saldoTag);
-                        $("#total").text(total);
-
-                        $('#exampleModalCenter3').modal('show');
-                    }
-                    else if ($("#tipocuenta").val() == "Individual" && $("#SaldoTag").val() != "") {
-                        $('#exampleModalCenter2').modal('hide');
-
-                        var saldoTag = 0;
-
-                        $("#fromtotag").show();
+                    if ($("#OldTag").val() == "") {
                         saldoTag = $("#SaldoTag").val();
-
-                        var costotag = $("#CobroTag").val();
-                        var total = parseFloat(costotag) + parseFloat(saldoTag);
-
-                        $("#Tagnumcuenta").text($("#numcuenta").val());
-                        $("#Tagnum").text($("#NumTag").val());
-                        $("#TagCosto").text(costotag);
-                        $("#TagSaldo").text(saldoTag);
-                        $("#total").text(total);
-
-                        $('#exampleModalCenter3').modal('show');
                     }
+                    else
+                        saldoTag = $("#SaldoTagMov").val();
+
+                    var costotag = $("#CobroTag").val();
+                    var total = parseFloat(costotag) + parseFloat(saldoTag);
+
+                    $("#Tagnumcuenta").text($("#numcuenta").val());
+                    $("#Tagnum").text($("#NumTag").val());
+                    $("#TagCosto").text(costotag);
+                    $("#TagSaldo").text(saldoTag);
+                    $("#total").text(total);
+
+                    $('#exampleModalCenter3').modal('show');
                 }
             });
 
             $("#submitFormAddTag").on("click", function (e) {
 
+                e.preventDefault();
+
                 $('#submitFormAddTag').attr("disabled", true);
 
-                e.preventDefault();
-                $("#FormAddTags").submit();
+                resetForm($('#FormAddTags'));
+
+                console.log($("#FormAddTags").submit());
             });
+
+            function resetForm($form) {
+                if ($form.find('input:checkbox[name="Checked"]').is(":checked")) {
+                    // it is checked
+                    var newValue = $form.find('input:text[name="SaldoTagMov"]').val();
+                    $form.find('select[name="SaldoTag"]').find("option").attr("selected", "selected").val(newValue);
+                }
+            }
 
             $('#closemodalcuenta').on('click', function (e) {
                 e.preventDefault();
@@ -1048,6 +1031,7 @@
 
             $(function () {
                 $("#OldSaldo").mask("#,##0.00", { reverse: true });
+                $("#SaldoTagMov").mask("#,##0.00", { reverse: true });
             });
 
             /******************* TAGS ***************************/
@@ -1195,8 +1179,6 @@
                 e.preventDefault();
                 $("#FormRecargarTag").submit();
 
-                //console.log($("#FormRecargarTag").serialize());
-                //console.log($("#FormRecargarTag").serializeArray());
             });
 
             $('#closemodaltag').on('click', function (e) {
@@ -1253,19 +1235,18 @@
     //        alert(ex.responseText);
     //    }
     //});
-                    //$.ajax({
-                //    type: "POST",
-                //    url: "/Clientes/CuentasTags",
-                //    data: { IdCliente: datos.Id },
-                //}).done(function (result) {
-                //    //console.log(result);
-                //    $("#clientename").text(datos.NombreCompleto);
-                //    $("#modalcuentastags").modal('show');
-                //}).fail(function (jqXHR, textStatus, errorThrown) {
-                //    // needs to implement if it fails
-                //    alert(jqXHR.responseText)
-                //});
 
-    <div id="app"></div>
+    //$.ajax({
+    //    type: "POST",
+    //    url: "/Clientes/CuentasTags",
+    //    data: { IdCliente: datos.Id },
+    //}).done(function (result) {
+    //    //console.log(result);
+    //    $("#clientename").text(datos.NombreCompleto);
+    //    $("#modalcuentastags").modal('show');
+    //}).fail(function (jqXHR, textStatus, errorThrown) {
+    //    // needs to implement if it fails
+    //    alert(jqXHR.responseText)
+    //});
 
 *@

@@ -15,8 +15,8 @@ namespace PuntoDeVenta.Models
         [Key]
         public long Id { get; set; }
 
-        [Display(Name = "Número de tag")]
         //[RegularExpression("^[0-9]*$", ErrorMessage = "{0} sólo acepta números.")]
+        [Display(Name = "Número de tag")]
         [StringLength(50)]
         [Required]
         public string NumTag { get; set; }
@@ -87,6 +87,7 @@ namespace PuntoDeVenta.Models
         public string Observacion { get; set; }
 
         [NotMapped]
+        //[Compare("SaldoTag", ErrorMessage = "El saldo de tag y el antiguo saldo no coninciden.")]
         public string OldSaldo { get; set; }
     }
 

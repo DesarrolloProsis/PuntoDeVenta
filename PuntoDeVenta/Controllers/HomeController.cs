@@ -171,7 +171,13 @@ namespace PuntoDeVenta.Controllers
                 ViewBag.ModelTag = new Tags();
                 ViewBag.NombreUsuario = User.Identity.Name;
                 ViewBag.Cajero = User.Identity.Name;
-                ViewBag.Amounts = new SelectList(db.AmountConfigurations.Where(x => x.Concept == "RECARGAS").AsEnumerable(), "Amount", "Amount");
+
+                var listAmount = new List<SelectListItem>();
+
+                db.AmountConfigurations.Where(x => x.Concept == "RECARGAS").ToListAsync().Result.ForEach(x => listAmount.Add(new SelectListItem { Value = x.Amount.ToString("F2"), Text = x.Amount.ToString("F2") }));
+
+                ViewBag.Amounts = listAmount;
+                //ViewBag.Amounts = new SelectList(db.AmountConfigurations.Where(x => x.Concept == "RECARGAS").AsEnumerable(), "Amount", "Amount");
             }
             catch (Exception ex)
             {
@@ -787,25 +793,25 @@ namespace PuntoDeVenta.Controllers
             };
         }
 
-        [HttpGet]
-        public ActionResult GeneralSettings()
-        {
-            return View();
-        }
+        //[HttpGet]
+        //public ActionResult GeneralSettings()
+        //{
+        //    return View();
+        //}
 
-        [HttpPost]
-        public ActionResult GeneralSettings(AmountConfiguration model)
-        {
-            if (ModelState.IsValid)
-            {
-                db.AmountConfigurations.Add(model);
-                db.SaveChanges();
+        //[HttpPost]
+        //public ActionResult GeneralSettings(AmountConfiguration model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.AmountConfigurations.Add(model);
+        //        db.SaveChanges();
 
-                return View();
-            }
+        //        return View();
+        //    }
 
-            return HttpNotFound();
-        }
+        //    return HttpNotFound();
+        //}
 
         public ActionResult Contact()
         {

@@ -202,12 +202,12 @@
                     <div class="form-group">
                         <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" /> @Html.LabelFor(model => modelCuenta.SaldoARecargar, htmlAttributes: new { @class = "control-label" })
                         @*Html.TextBoxFor(model => modelCuenta.SaldoARecargar, new { @class = "form-control formulario1" })*@
-                        @Html.DropDownListFor(model => modelCuenta.SaldoARecargar, (SelectList)ViewBag.Amounts, htmlAttributes: new { @class = "form-control formulario2" })
+                        @Html.DropDownListFor(model => modelCuenta.SaldoARecargar, new SelectList(ViewBag.Amounts, "Value", "Text"), htmlAttributes: new { @class = "form-control formulario2" })
                         @Html.ValidationMessageFor(model => modelCuenta.SaldoARecargar, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group">
                         <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" /> @Html.LabelFor(model => modelCuenta.ConfSaldoARecargar, htmlAttributes: new { @class = "control-label" })
-                        @Html.DropDownListFor(model => modelCuenta.ConfSaldoARecargar, (SelectList)ViewBag.Amounts, htmlAttributes: new { @class = "form-control formulario2" })
+                        @Html.DropDownListFor(model => modelCuenta.ConfSaldoARecargar, new SelectList(ViewBag.Amounts, "Value", "Text"), htmlAttributes: new { @class = "form-control formulario2" })
                         @Html.ValidationMessageFor(model => modelCuenta.ConfSaldoARecargar, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -270,12 +270,12 @@
                     <div class="form-group">
                         <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" />@Html.LabelFor(m => modelTag.SaldoARecargar, htmlAttributes: new { @class = "control-label" })
                         @*Html.EditorFor(m => modelTag.SaldoARecargar, new { htmlAttributes = new { @class = "form-control formulario1" } })*@
-                        @Html.DropDownListFor(m => modelTag.SaldoARecargar, (SelectList)ViewBag.Amounts, htmlAttributes: new { @class = "form-control formulario2" })
+                        @Html.DropDownListFor(m => modelTag.SaldoARecargar, new SelectList(ViewBag.Amounts, "Value", "Text"), htmlAttributes: new { @class = "form-control formulario2" })
                         @Html.ValidationMessageFor(m => modelTag.SaldoARecargar, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group">
                         <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" />@Html.LabelFor(m => modelTag.ConfSaldoARecargar, htmlAttributes: new { @class = "control-label" })
-                        @Html.DropDownListFor(m => modelTag.ConfSaldoARecargar, (SelectList)ViewBag.Amounts, htmlAttributes: new { @class = "form-control formulario2" })
+                        @Html.DropDownListFor(m => modelTag.ConfSaldoARecargar, new SelectList(ViewBag.Amounts, "Value", "Text"), htmlAttributes: new { @class = "form-control formulario2" })
                         @Html.ValidationMessageFor(m => modelTag.ConfSaldoARecargar, "", new { @class = "text-danger" })
                     </div>
                 </div>

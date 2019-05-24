@@ -110,8 +110,8 @@
                                 @Html.ValidationMessage("SaldoTag", "", new { @class = "text-danger" })
                             </div>
                             <div class="form-group">
-                                <label for="modelTag_CobroTag" class="col-form-label">Cobro de tag:</label>
-                                @Html.Editor("CobroTag", new { htmlAttributes = new { @class = "form-control formulario1" } })
+                                <img class="img-modal" src="~/Content/css-yisus/img/hand-holding-usd-solid.svg" />@Html.LabelFor(model => model.CobroTag, htmlAttributes: new { @class = "control-label" })
+                                @Html.DropDownList("CobroTag", (SelectList)ViewBag.AmountsCobroTag, htmlAttributes: new { @class = "form-control formulario2" })
                                 @Html.ValidationMessage("CobroTag", "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -159,11 +159,6 @@
             $("#submit").on("click", function (e) {
                 $("#exampleModal").modal("show");
                 e.preventDefault();
-            });
-
-            $(function () {
-                $('#CobroTag').val("10000");
-                $('#CobroTag').mask("#,##0.00", { reverse: true });
             });
         });
     </script>
