@@ -568,7 +568,7 @@ namespace PuntoDeVenta.Controllers
                 {
                     string json = JsonConvert.SerializeObject(model);
                     HttpContent postContent = new StringContent(json, Encoding.UTF8, "application/json");
-                    var response = await client.PostAsync(new Uri("http://192.168.1.179:56342/api/cajero?authenticationToken=abcxyz"), postContent);
+                    var response = await client.PostAsync(new Uri("http://10.1.10.109:56342/api/cajero?authenticationToken=abcxyz"), postContent);
                     var message = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
                 }
 

@@ -694,7 +694,7 @@ namespace PuntoDeVenta.Controllers
 
                     if (TypeMovimiento == "01")
                     {
-                        ListMovimiento = Movimientos(Tag, model.Fecha_Inicio, model.Fecha_Fin, 3, true);
+                        ListMovimiento = Movimientos(Tag, model.Fecha_Inicio, DateAyuda, 3, true);
 
                         if (ListMovimiento.Any())
                         {
@@ -711,7 +711,7 @@ namespace PuntoDeVenta.Controllers
                     }
                     else
                     {
-                        ListCruces = Cruces(Tag, model.Fecha_Inicio, model.Fecha_Fin, 3, true);
+                        ListCruces = Cruces(Tag, model.Fecha_Inicio, DateAyuda, 3, true);
 
                         if (ListCruces.Any())
                         {
