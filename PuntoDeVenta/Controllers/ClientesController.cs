@@ -158,16 +158,16 @@ namespace PuntoDeVenta.Controllers
             ViewBag.TipoCuentas = new SelectList(listItemsCuentas.AsEnumerable(), "Value", "Text");
             ViewBag.TagsColectivos = new Tags();
 
-            var listAmount = new List<SelectListItem>();
-            var listAmountCobroTag = new List<SelectListItem>();
+            //var listAmount = new List<SelectListItem>();
+            //var listAmountCobroTag = new List<SelectListItem>();
 
-            db.AmountConfigurations.Where(x => x.Concept == "RECARGAS").ToListAsync().Result.ForEach(x => listAmount.Add(new SelectListItem { Value = x.Amount.ToString("F2"), Text = x.Amount.ToString("F2") }));
+            //db.AmountConfigurations.Where(x => x.Concept == "RECARGAS").ToListAsync().Result.ForEach(x => listAmount.Add(new SelectListItem { Value = x.Amount.ToString("F2"), Text = x.Amount.ToString("F2") }));
 
-            ViewBag.Amounts = listAmount;
+            //ViewBag.Amounts = listAmount;
 
-            db.AmountConfigurations.Where(x => x.Concept == "COBROTAG").ToListAsync().Result.ForEach(x => listAmountCobroTag.Add(new SelectListItem { Value = x.Amount.ToString("F2"), Text = x.Amount.ToString("F2") }));
+            //db.AmountConfigurations.Where(x => x.Concept == "COBROTAG").ToListAsync().Result.ForEach(x => listAmountCobroTag.Add(new SelectListItem { Value = x.Amount.ToString("F2"), Text = x.Amount.ToString("F2") }));
 
-            ViewBag.AmountsCobroTag = listAmountCobroTag;
+            //ViewBag.AmountsCobroTag = listAmountCobroTag;
 
             //ViewBag.ClienteId = new SelectList(db.Clientes, "Id", "NumCliente", cuentasTelepeaje.ClienteId);
 

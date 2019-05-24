@@ -157,7 +157,8 @@
                     <div id="fromTocreate">
                         <div class="form-group">
                             <img class="img-modal2" src="~/Content/css-yisus/img/file-invoice-dollar-solid.svg" /> @Html.LabelFor(model => model.SaldoCuenta, htmlAttributes: new { @class = "control-label" })
-                            @Html.DropDownListFor(model => model.SaldoCuenta, new SelectList(ViewBag.Amounts, "Value", "Text"), htmlAttributes: new { @class = "form-control formulario2" })
+                            @Html.TextBoxFor(model => model.SaldoCuenta, new { @class = "form-control formulario1" })
+                            @*@Html.DropDownListFor(model => model.SaldoCuenta, new SelectList(ViewBag.Amounts, "Value", "Text"), htmlAttributes: new { @class = "form-control formulario2" })*@
                             @Html.ValidationMessageFor(model => model.SaldoCuenta, "", new { @class = "text-danger" })
 
                         </div>
@@ -300,13 +301,14 @@
                     </div>
                     <div class="form-group">
                         <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" /> @Html.LabelFor(model => modelCuenta.SaldoARecargar, htmlAttributes: new { @class = "control-label" })
-                        @*Html.TextBoxFor(model => modelCuenta.SaldoARecargar, new { @class = "form-control formulario1" })*@
-                        @Html.DropDownListFor(model => modelCuenta.SaldoARecargar, new SelectList(ViewBag.Amounts, "Value", "Text"), htmlAttributes: new { @class = "form-control formulario2" })
+                        @Html.TextBoxFor(model => modelCuenta.SaldoARecargar, new { @class = "form-control formulario1" })
+                        @*@Html.DropDownListFor(model => modelCuenta.SaldoARecargar, new SelectList(ViewBag.Amounts, "Value", "Text"), htmlAttributes: new { @class = "form-control formulario2" })*@
                         @Html.ValidationMessageFor(model => modelCuenta.SaldoARecargar, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group">
                         <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" /> @Html.LabelFor(model => modelCuenta.ConfSaldoARecargar, htmlAttributes: new { @class = "control-label" })
-                        @Html.DropDownListFor(model => modelCuenta.ConfSaldoARecargar, new SelectList(ViewBag.Amounts, "Value", "Text"), htmlAttributes: new { @class = "form-control formulario2" })
+                        @Html.TextBoxFor(model => modelCuenta.ConfSaldoARecargar, new { @class = "form-control formulario1" })
+                        @*@Html.DropDownListFor(model => modelCuenta.ConfSaldoARecargar, new SelectList(ViewBag.Amounts, "Value", "Text"), htmlAttributes: new { @class = "form-control formulario2" })*@
                         @Html.ValidationMessageFor(model => modelCuenta.ConfSaldoARecargar, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -368,13 +370,14 @@
                     </div>
                     <div class="form-group">
                         <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" />@Html.LabelFor(m => modelTag.SaldoARecargar, htmlAttributes: new { @class = "control-label" })
-                        @*Html.EditorFor(m => modelTag.SaldoARecargar, new { htmlAttributes = new { @class = "form-control formulario1" } })*@
-                        @Html.DropDownListFor(m => modelTag.SaldoARecargar, new SelectList(ViewBag.Amounts, "Value", "Text"), htmlAttributes: new { @class = "form-control formulario2" })
+                        @Html.EditorFor(m => modelTag.SaldoARecargar, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                        @*@Html.DropDownListFor(m => modelTag.SaldoARecargar, new SelectList(ViewBag.Amounts, "Value", "Text"), htmlAttributes: new { @class = "form-control formulario2" })*@
                         @Html.ValidationMessageFor(m => modelTag.SaldoARecargar, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group">
                         <img class="img-modal" src="~/Content/css-yisus/img/money-bill-solid.svg" />@Html.LabelFor(m => modelTag.ConfSaldoARecargar, htmlAttributes: new { @class = "control-label" })
-                        @Html.DropDownListFor(m => modelTag.ConfSaldoARecargar, new SelectList(ViewBag.Amounts, "Value", "Text"), htmlAttributes: new { @class = "form-control formulario2" })
+                        @Html.EditorFor(m => modelTag.ConfSaldoARecargar, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                        @*@Html.DropDownListFor(m => modelTag.ConfSaldoARecargar, new SelectList(ViewBag.Amounts, "Value", "Text"), htmlAttributes: new { @class = "form-control formulario2" })*@
                         @Html.ValidationMessageFor(m => modelTag.ConfSaldoARecargar, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -831,6 +834,8 @@
                 $("#CuentaId").val("");
                 $("#tipocuenta").val("");
                 $("#NumTag").val("");
+                $("#SaldoTag").val("");
+                $("#CobroTag").val("77.00");
 
                 $("#numcuenta").val(data.NumCuenta);
                 $("#CuentaId").val(data.Id);
@@ -842,6 +847,7 @@
                 $("#modelTags_CuentaId").val("");
                 $("#modelTags_tipocuenta").val("");
                 $("#modelTags_NumTag").val("");
+                $("#modelTags_CobroTag").val("77.00");
 
                 $("#modelTags_numcuenta").val(data.NumCuenta);
                 $("#modelTags_CuentaId").val(data.Id);
@@ -956,8 +962,8 @@
                                 alert(result.Message);
                                 $("#modelTags_NumTag").val("");
                                 $("#modelTags_OldTag").val("");
-                                $("#modelTags_OldSaldo").val("");
                                 $("#modelTags_Observacion").val("");
+                                $("#modelTags_CobroTag").val("77.00");
                                 $('#CrearTagAjax').removeAttr("disabled");
                             },
                             failure: function (response) {
@@ -984,11 +990,11 @@
 
                     var saldoTag = 0;
 
-                    if ($("#OldTag").val() == "") {
-                        saldoTag = $("#SaldoTag").val();
-                    }
-                    else
-                        saldoTag = $("#SaldoTagMov").val();
+                    //if ($("#OldTag").val() == "") {
+                    saldoTag = $("#SaldoTag").val();
+                    //}
+                    //else
+                    //    saldoTag = $("#SaldoTagMov").val();
 
                     var costotag = $("#CobroTag").val();
                     var total = parseFloat(costotag) + parseFloat(saldoTag);
@@ -1008,19 +1014,20 @@
                 e.preventDefault();
 
                 $('#submitFormAddTag').attr("disabled", true);
+                $("#FormAddTags").submit();
 
-                resetForm($('#FormAddTags'));
+                //resetForm($('#FormAddTags'));
 
-                console.log($("#FormAddTags").submit());
+                //console.log($("#FormAddTags").submit());
             });
 
-            function resetForm($form) {
-                if ($form.find('input:checkbox[name="Checked"]').is(":checked")) {
-                    // it is checked
-                    var newValue = $form.find('input:text[name="SaldoTagMov"]').val();
-                    $form.find('select[name="SaldoTag"]').find("option").attr("selected", "selected").val(newValue);
-                }
-            }
+            //function resetForm($form) {
+            //    if ($form.find('input:checkbox[name="Checked"]').is(":checked")) {
+            //        // it is checked
+            //        var newValue = $form.find('input:text[name="SaldoTagMov"]').val();
+            //        $form.find('select[name="SaldoTag"]').find("option").attr("selected", "selected").val(newValue);
+            //    }
+            //}
 
             $('#closemodalcuenta').on('click', function (e) {
                 e.preventDefault();
@@ -1031,7 +1038,16 @@
 
             $(function () {
                 $("#OldSaldo").mask("#,##0.00", { reverse: true });
-                $("#SaldoTagMov").mask("#,##0.00", { reverse: true });
+                $("#SaldoTag").mask("#,##0.00", { reverse: true });
+                $("#CobroTag").mask("#,##0.00", { reverse: true });
+
+                $("#modelTags_CobroTag").mask("#,##0.00", { reverse: true });
+                $("#SaldoCuenta").mask("#,##0.00", { reverse: true });
+                $("#modelCuenta_SaldoARecargar").mask("#,##0.00", { reverse: true });
+                $("#modelCuenta_ConfSaldoARecargar").mask("#,##0.00", { reverse: true });
+                $("#modelTag_SaldoARecargar").mask("#,##0.00", { reverse: true });
+                $("#modelTag_ConfSaldoARecargar").mask("#,##0.00", { reverse: true });
+                $("#modelCuenta_OldSaldo").mask("#,##0.00", { reverse: true });
             });
 
             /******************* TAGS ***************************/
@@ -1189,12 +1205,6 @@
             });
 
             /**** Fin Recargar saldo tags ****/
-
-            /******************** Otras cosas ************************/
-
-            $(function () {
-                $("#modelCuenta_OldSaldo").mask("#,##0.00", { reverse: true });
-            });
         });
     </script>
 

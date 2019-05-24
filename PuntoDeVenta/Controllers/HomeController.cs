@@ -172,11 +172,11 @@ namespace PuntoDeVenta.Controllers
                 ViewBag.NombreUsuario = User.Identity.Name;
                 ViewBag.Cajero = User.Identity.Name;
 
-                var listAmount = new List<SelectListItem>();
+                //var listAmount = new List<SelectListItem>();
 
-                db.AmountConfigurations.Where(x => x.Concept == "RECARGAS").ToListAsync().Result.ForEach(x => listAmount.Add(new SelectListItem { Value = x.Amount.ToString("F2"), Text = x.Amount.ToString("F2") }));
+                //db.AmountConfigurations.Where(x => x.Concept == "RECARGAS").ToListAsync().Result.ForEach(x => listAmount.Add(new SelectListItem { Value = x.Amount.ToString("F2"), Text = x.Amount.ToString("F2") }));
 
-                ViewBag.Amounts = listAmount;
+                //ViewBag.Amounts = listAmount;
                 //ViewBag.Amounts = new SelectList(db.AmountConfigurations.Where(x => x.Concept == "RECARGAS").AsEnumerable(), "Amount", "Amount");
             }
             catch (Exception ex)
@@ -194,9 +194,12 @@ namespace PuntoDeVenta.Controllers
 
             if (Numero == null || Numero == string.Empty)
             {
-                model = null;
+                model = new List<object>();
                 return Json(model, JsonRequestBehavior.AllowGet);
             }
+
+            if (model.Any() || model.Count > 0)
+                model = new List<object>();
 
             try
             {
@@ -269,13 +272,13 @@ namespace PuntoDeVenta.Controllers
                                 NumCuenta = x.NumCuenta,
                                 TypeCuenta = x.TypeCuenta,
                                 NumTag = x.NumTag,
-                                SaldoTag = double.Parse(x.SaldoTag) / 100,
+                                SaldoTag = string.IsNullOrEmpty(x.SaldoTag) ? "0.00" : (double.Parse(x.SaldoTag) / 100).ToString("F2"),
                                 StatusTag = x.StatusTag == true ? "Válido" : "Inválido",
                             });
                         });
                         break;
                     default:
-                        model = null;
+                        model = new List<object>();
                         break;
                 }
             }
@@ -283,6 +286,9 @@ namespace PuntoDeVenta.Controllers
             {
                 throw;
             }
+
+            Numero = string.Empty;
+            Type = string.Empty;
 
             return Json(model, JsonRequestBehavior.AllowGet);
         }
