@@ -2,6 +2,37 @@
     font-family: fjalla;
     src: url(FjallaOne-Regular.ttf);
 }
+.btn-historico{
+    margin-top: 5px !important;
+}
+.historico-desc {
+    padding-right: 8px;
+    font-size: 15px;
+    color: white !important;
+    cursor: default;
+    background-color: #00a73c !important;
+}
+.historico-desc2 {
+    padding-right: 8px;
+    font-size: 15px;
+    color: white !important;
+    cursor: default;
+
+}
+.historico-data{
+    font-size: 14px;
+    
+}
+.historico-text {
+    font-size: 40px;
+    text-align: center;
+}
+@media screen and (max-width: 600px) {
+    .historico-text {
+        font-size: 28px;
+        text-align: center;
+    }
+}
 .signout{
     width:20px;
     height: auto;
