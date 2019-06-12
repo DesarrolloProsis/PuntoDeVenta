@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
 namespace PuntoDeVenta.Models
 {
     public class TableHistorico
@@ -22,6 +21,8 @@ namespace PuntoDeVenta.Models
         public List<CruceMovimiento> ListCruceMovimientos { get; set; }
 
     }
+
+
 
     public class CruceMovimiento
     {
