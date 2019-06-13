@@ -579,7 +579,6 @@ namespace PuntoDeVenta.Controllers
                 throw;
             }
         }
-
         public ActionResult MovimientoCajero(string corte, long? CorteId)
         {
             try
@@ -600,7 +599,7 @@ namespace PuntoDeVenta.Controllers
                 var ListaOperaciones = new List<OperacionesCajero>();
                 foreach (var item in MovimientoDeCorte)
                 {
-                    ListaOperaciones.Add(NewOperacion(item.Id, item.Concepto, item.TipoPago, item.Monto, item.DateTOperacion, item.CorteId, item.Numero, item.Tipo, item.CobroTag, item.NoReferencia, item.StatusCancelacion));
+                    ListaOperaciones.Add(AddOperacion(item.Id, item.Concepto, item.TipoPago, item.Monto, item.DateTOperacion, item.CorteId, item.Numero, item.Tipo, item.CobroTag, item.NoReferencia, item.StatusCancelacion));
                 }
                 return View("MovimientoCajero", ListaOperaciones.AsEnumerable());
             }
@@ -609,150 +608,6 @@ namespace PuntoDeVenta.Controllers
                 return View("Error");
             }
         }
-
-        /// <summary>
-        /// Método para cancelar operaciones
-        /// </summary>
-        /// <param name="id">Id de la operación a eliminar</param>
-        /// <param name="corteid">Corte actual</param>
-        /// <param name="Filtro">Concepto que se cancelará</param>
-        /// <returns></returns>
-        public ActionResult CancelarOperacion(int id, long corteid, string Filtro)
-        {
-            MethodsGlb method = new MethodsGlb();
-            var SelectedOperacion = db.OperacionesCajeros.Where(x => x.Id == id).FirstOrDefault();
-            if (SelectedOperacion.StatusCancelacion == false)                       //Se verifica si el movimiento ya fue cancelado
-            {
-                db.OperacionesCajeros.Add(new OperacionesCajero                     //Se agrega un movimiento para notificar la cancelación de este movimiento
-                {
-                    Concepto = SelectedOperacion.Concepto.Contains("RECARGA") ? "CANCELACION RECARGA" : "CANCELACION ACTIVACION",
-                    TipoPago = "CAN",
-                    Monto = 0 - SelectedOperacion.Monto,
-                    DateTOperacion = DateTime.Now,
-                    CorteId = SelectedOperacion.CorteId,
-                    Numero = SelectedOperacion.NoReferencia,
-                    Tipo = SelectedOperacion.Tipo + " CAN",
-                    CobroTag = 0 - SelectedOperacion.CobroTag,
-                    NoReferencia = method.RandomNumReferencia2().ToString(),
-                    StatusCancelacion = false
-                });
-                if (SelectedOperacion.Concepto.Contains("RECARGA"))                     //Si el movimiento fue una RECARGA
-                {
-                    if (SelectedOperacion.Tipo == "TAG")                                //Si el movimiento cancelado en una recarga de Tag:
-                    {
-                        var UpdatedTag = db.Tags.Where(x => x.NumTag == SelectedOperacion.Numero).FirstOrDefault();
-                        UpdatedTag.SaldoTag = (Convert.ToDouble(UpdatedTag.SaldoTag) - (Convert.ToDouble(SelectedOperacion.Monto) * 100)).ToString();
-                        if (Convert.ToDouble(UpdatedTag.SaldoTag) < 1525)               //Si el saldo es menor a 15.25 Quetzales, se convierte en tag inválido
-                            UpdatedTag.StatusTag = false;
-                    }
-                    else //Si el movimiento cancelado era una recarga de Cuenta:
-                    {
-                        var UpdatedCuenta = db.CuentasTelepeajes.Where(x => x.NumCuenta == SelectedOperacion.Numero).FirstOrDefault();
-                        var UpdatedTags = db.Tags.Where(x => x.CuentaId == UpdatedCuenta.Id).ToList();
-                        UpdatedCuenta.SaldoCuenta = (Convert.ToDouble(UpdatedCuenta.SaldoCuenta) - (Convert.ToDouble(SelectedOperacion.Monto)) * 100).ToString();
-                        if (Convert.ToDouble(UpdatedCuenta.SaldoCuenta) < 5000)         //Si el saldo es menor a 50 Quetzales, se convierte en cuenta invalida
-                            UpdatedCuenta.StatusCuenta = false;
-                        foreach (var item in UpdatedTags)
-                        {
-                            item.SaldoTag = (Convert.ToDouble(item.SaldoTag) - (Convert.ToDouble(SelectedOperacion.Monto)) * 100).ToString(); //Se le resta el monto cancelado a cada tag relacionado con la cuenta
-                            if (!UpdatedCuenta.StatusCuenta)                            //Si la cuenta es invalida, por ende los Tags relacionados a ella también son inválidos.
-                                item.StatusTag = false;
-                        }
-                    }
-                }
-                else //Si el movimiento fue una ACTIVACIÓN
-                {
-                    var OpeAfterActivacion = db.OperacionesCajeros.Where(x => x.Id > SelectedOperacion.Id).ToList();    //Para no evaluar todas las operaciones, descartamos las que hayan sido antes de la activación de la cuenta
-                    if (SelectedOperacion.Tipo == "TAG")        //En caso de que se haya cancelado la Activación de un TAG:
-                    {
-                        var CreatedTag = db.Tags.Where(x => x.NumTag == SelectedOperacion.Numero).FirstOrDefault();     //Se identifica el Tag cancelado
-                        int i = 1;
-                        foreach (var item in OpeAfterActivacion)    //Se evalúa cada operación después de la activación para cancelar posibles recargas a ese TAG
-                        {
-                            if (item.Numero == CreatedTag.NumTag)   //Si el Número de la operacaión coíncide con el NumTag del TAG, significa que se realizó una recarga al TAG que se quiere cancelar
-                            {
-                                db.OperacionesCajeros.Add(new OperacionesCajero     //Se crea un movimiento para notificar que esa recarga ya no será valida debido a la cancelación de la cuenta
-                                {
-                                    Concepto = "CANCELACION RECARGA",
-                                    TipoPago = "CAN",
-                                    Monto = 0 - item.Monto,
-                                    DateTOperacion = DateTime.Now,
-                                    CorteId = SelectedOperacion.CorteId,
-                                    Numero = item.NoReferencia,
-                                    Tipo = "TAG CAN",
-                                    CobroTag = 0 - item.CobroTag,
-                                    NoReferencia = string.Format("{0}", (Convert.ToInt32(method.RandomNumReferencia2()) + i).ToString("D7")), //Se le suma 'i' ya que el método 'RandomNumReferencia2()' evalúa el último registro de la BD y en este punto aún no se suben los cambios a la BD
-                                    StatusCancelacion = false
-                                });
-                                item.StatusCancelacion = true;      //Se notifica este movimiento como cancelado
-                                i++;
-                            }
-                        }
-                        db.Tags.Remove(CreatedTag);     //Se elimina el Tag cancelado
-                    }
-                    else    //En caso de que se haya cancelado la Activación de una CUENTA
-                    {
-                        var CreatedCuenta = db.CuentasTelepeajes.Where(x => x.NumCuenta == SelectedOperacion.Numero).FirstOrDefault();      //Se identifica la Cuenta a cancelar
-                        var RelatedTags = db.Tags.Where(x => x.CuentaId == CreatedCuenta.Id).ToList();          //Se identifican los Tags relacionados a la Cuenta a cancelar
-                        for (int i = 0; i < RelatedTags.Count; i++)     //Se buscará si hay movimientos con cada Tag relacionado
-                        {
-                            foreach (var item in OpeAfterActivacion)    //Se buscará en los movimientos después de la activación
-                            {
-                                if ((RelatedTags[i].NumTag == item.Numero) && (item.StatusCancelacion == false))        //Si el Numero del movimiento coíncide con el del Tag relacionado y además no ha sido cancelado, se generá un movimiento de cancelación
-                                {
-                                    db.OperacionesCajeros.Add(new OperacionesCajero
-                                    {
-                                        Concepto = "CANCELACION RECARGA",
-                                        TipoPago = "CAN",
-                                        Monto = 0 - item.Monto,
-                                        DateTOperacion = DateTime.Now,
-                                        CorteId = SelectedOperacion.CorteId,
-                                        Numero = item.NoReferencia,
-                                        Tipo = "TAG CAN",
-                                        CobroTag = 0 - item.CobroTag,
-                                        NoReferencia = string.Format("{0}", (Convert.ToInt32(method.RandomNumReferencia2()) + (i + 1)).ToString("D7")),
-                                        StatusCancelacion = false
-                                    });
-                                    item.StatusCancelacion = true;      //Se cancelará el movimiento
-                                }
-                            }
-                        }
-                        foreach (var item in OpeAfterActivacion)        //Se buscará en los movimientos después de la activación si ha habido recargas a la Cuenta
-                        {
-                            int i = 1;
-                            if (item.Numero == CreatedCuenta.NumCuenta) //Si el número de movimiento corresponde al Número de Cuenta, se agregará un movimiento de cancelación de operación
-                            {
-                                db.OperacionesCajeros.Add(new OperacionesCajero
-                                {
-                                    Concepto = "CANCELACION RECARGA",
-                                    TipoPago = SelectedOperacion.TipoPago != null ? "CAN" : null,
-                                    Monto = 0 - item.Monto,
-                                    DateTOperacion = DateTime.Now,
-                                    CorteId = SelectedOperacion.CorteId,
-                                    Numero = item.NoReferencia,
-                                    Tipo = "CUENTA CAN",
-                                    CobroTag = null,
-                                    NoReferencia = string.Format("{0}", (Convert.ToInt32(method.RandomNumReferencia2()) + (RelatedTags.Count + 1 + i)).ToString("D7")),
-                                    StatusCancelacion = false
-                                });
-                                item.StatusCancelacion = true;      //Cambia el status a cancelado
-                            }
-                        }
-                        db.CuentasTelepeajes.Remove(CreatedCuenta);     //Se elminará la Cuenta, junto con sus Tags
-                    }
-                }
-                SelectedOperacion.StatusCancelacion = true;     //La operación principal se cancela
-                db.SaveChanges();
-            }
-            return RedirectToAction("MovimientoCajero", new { CorteId = corteid, Concepto = Filtro });
-        }
-
-        /// <summary>
-        /// Método POST para el filtrado de movimientos
-        /// </summary>
-        /// <param name="Concepto">Parametro por el cual se filtran los movimientos</param>
-        /// <param name="CorteId">Parametro por el cual se identifica el corte actual</param>
-        /// <returns></returns>
         [HttpPost]
         public ActionResult MovimientoCajero(string Concepto, long CorteId)
         {
@@ -763,7 +618,7 @@ namespace PuntoDeVenta.Controllers
                 List<OperacionesCajero> model = new List<OperacionesCajero>();
                 foreach (var item in MovimientosdeCorte)
                 {
-                    model.Add(NewOperacion(item.Id, item.Concepto, item.TipoPago, item.Monto, item.DateTOperacion, item.CorteId, item.Numero, item.Tipo, item.CobroTag, item.NoReferencia, item.StatusCancelacion));
+                    model.Add(AddOperacion(item.Id, item.Concepto, item.TipoPago, item.Monto, item.DateTOperacion, item.CorteId, item.Numero, item.Tipo, item.CobroTag, item.NoReferencia, item.StatusCancelacion));
                 }
                 ViewBag.Corte = CorteId.ToString();
                 return View("MovimientoCajero", model);
@@ -774,14 +629,178 @@ namespace PuntoDeVenta.Controllers
                 List<OperacionesCajero> model = new List<OperacionesCajero>();
                 foreach (var item in MovimientosdeCorte)
                 {
-                    model.Add(NewOperacion(item.Id, item.Concepto, item.TipoPago, item.Monto, item.DateTOperacion, item.CorteId, item.Numero, item.Tipo, item.CobroTag, item.NoReferencia, item.StatusCancelacion));
+                    model.Add(AddOperacion(item.Id, item.Concepto, item.TipoPago, item.Monto, item.DateTOperacion, item.CorteId, item.Numero, item.Tipo, item.CobroTag, item.NoReferencia, item.StatusCancelacion));
                 }
                 ViewBag.Corte = CorteId.ToString();
                 return View("MovimientoCajero", model);
             }
         }
 
-        public OperacionesCajero NewOperacion(long NewId, string NewConcepto, string NewTipoPago, double? NewMonto, DateTime NewDate, long NewCorteId, string NewNumero, string NewTipo, double? NewCobroTag, string NewNoReferencia, bool NewStatus)
+
+        //public ActionResult CancelarOperacion(int id, long corteid, string Filtro)
+        //{
+        //    MethodsGlb method = new MethodsGlb();
+        //    var SelectedOperacion = db.OperacionesCajeros.Where(x => x.Id == id).FirstOrDefault();
+        //    if (SelectedOperacion.StatusCancelacion == false)                       //Se verifica si el movimiento ya fue cancelado
+        //    {
+        //        db.OperacionesCajeros.Add(new OperacionesCajero                     //Se agrega un movimiento para notificar la cancelación de este movimiento
+        //        {
+        //            Concepto = SelectedOperacion.Concepto.Contains("RECARGA") ? "CANCELACION RECARGA" : "CANCELACION ACTIVACION",
+        //            TipoPago = "CAN",
+        //            Monto = 0 - SelectedOperacion.Monto,
+        //            DateTOperacion = DateTime.Now,
+        //            CorteId = SelectedOperacion.CorteId,
+        //            Numero = SelectedOperacion.NoReferencia,
+        //            Tipo = SelectedOperacion.Tipo + " CAN",
+        //            CobroTag = 0 - SelectedOperacion.CobroTag,
+        //            NoReferencia = method.RandomNumReferencia2().ToString(),
+        //            StatusCancelacion = false
+        //        });
+        //        if (SelectedOperacion.Concepto.Contains("RECARGA"))                     //Si el movimiento fue una RECARGA
+        //        {
+        //            if (SelectedOperacion.Tipo == "TAG")                                //Si el movimiento cancelado en una recarga de Tag:
+        //            {
+        //                var UpdatedTag = db.Tags.Where(x => x.NumTag == SelectedOperacion.Numero).FirstOrDefault();
+        //                UpdatedTag.SaldoTag = (Convert.ToDouble(UpdatedTag.SaldoTag) - (Convert.ToDouble(SelectedOperacion.Monto) * 100)).ToString();
+        //                if (Convert.ToDouble(UpdatedTag.SaldoTag) < 1525)               //Si el saldo es menor a 15.25 Quetzales, se convierte en tag inválido
+        //                    UpdatedTag.StatusTag = false;
+        //            }
+        //            else //Si el movimiento cancelado era una recarga de Cuenta:
+        //            {
+        //                var UpdatedCuenta = db.CuentasTelepeajes.Where(x => x.NumCuenta == SelectedOperacion.Numero).FirstOrDefault();
+        //                var UpdatedTags = db.Tags.Where(x => x.CuentaId == UpdatedCuenta.Id).ToList();
+        //                UpdatedCuenta.SaldoCuenta = (Convert.ToDouble(UpdatedCuenta.SaldoCuenta) - (Convert.ToDouble(SelectedOperacion.Monto)) * 100).ToString();
+        //                if (Convert.ToDouble(UpdatedCuenta.SaldoCuenta) < 5000)         //Si el saldo es menor a 50 Quetzales, se convierte en cuenta invalida
+        //                    UpdatedCuenta.StatusCuenta = false;
+        //                foreach (var item in UpdatedTags)
+        //                {
+        //                    item.SaldoTag = (Convert.ToDouble(item.SaldoTag) - (Convert.ToDouble(SelectedOperacion.Monto)) * 100).ToString(); //Se le resta el monto cancelado a cada tag relacionado con la cuenta
+        //                    if (!UpdatedCuenta.StatusCuenta)                            //Si la cuenta es invalida, por ende los Tags relacionados a ella también son inválidos.
+        //                        item.StatusTag = false;
+        //                }
+        //            }
+        //        }
+        //        else //Si el movimiento fue una ACTIVACIÓN
+        //        {
+        //            var OpeAfterActivacion = db.OperacionesCajeros.Where(x => x.Id > SelectedOperacion.Id).ToList();    //Para no evaluar todas las operaciones, descartamos las que hayan sido antes de la activación de la cuenta
+        //            if (SelectedOperacion.Tipo == "TAG")        //En caso de que se haya cancelado la Activación de un TAG:
+        //            {
+        //                var CreatedTag = db.Tags.Where(x => x.NumTag == SelectedOperacion.Numero).FirstOrDefault();     //Se identifica el Tag cancelado
+        //                int i = 1;
+        //                foreach (var item in OpeAfterActivacion)    //Se evalúa cada operación después de la activación para cancelar posibles recargas a ese TAG
+        //                {
+        //                    if (item.Numero == CreatedTag.NumTag)   //Si el Número de la operacaión coíncide con el NumTag del TAG, significa que se realizó una recarga al TAG que se quiere cancelar
+        //                    {
+        //                        db.OperacionesCajeros.Add(new OperacionesCajero     //Se crea un movimiento para notificar que esa recarga ya no será valida debido a la cancelación de la cuenta
+        //                        {
+        //                            Concepto = "CANCELACION RECARGA",
+        //                            TipoPago = "CAN",
+        //                            Monto = 0 - item.Monto,
+        //                            DateTOperacion = DateTime.Now,
+        //                            CorteId = SelectedOperacion.CorteId,
+        //                            Numero = item.NoReferencia,
+        //                            Tipo = "TAG CAN",
+        //                            CobroTag = 0 - item.CobroTag,
+        //                            NoReferencia = string.Format("{0}", (Convert.ToInt32(method.RandomNumReferencia2()) + i).ToString("D7")), //Se le suma 'i' ya que el método 'RandomNumReferencia2()' evalúa el último registro de la BD y en este punto aún no se suben los cambios a la BD
+        //                            StatusCancelacion = false
+        //                        });
+        //                        item.StatusCancelacion = true;      //Se notifica este movimiento como cancelado
+        //                        i++;
+        //                    }
+        //                }
+        //                db.Tags.Remove(CreatedTag);     //Se elimina el Tag cancelado
+        //            }
+        //            else    //En caso de que se haya cancelado la Activación de una CUENTA
+        //            {
+        //                var CreatedCuenta = db.CuentasTelepeajes.Where(x => x.NumCuenta == SelectedOperacion.Numero).FirstOrDefault();      //Se identifica la Cuenta a cancelar
+        //                var RelatedTags = db.Tags.Where(x => x.CuentaId == CreatedCuenta.Id).ToList();          //Se identifican los Tags relacionados a la Cuenta a cancelar
+        //                for (int i = 0; i < RelatedTags.Count; i++)     //Se buscará si hay movimientos con cada Tag relacionado
+        //                {
+        //                    foreach (var item in OpeAfterActivacion)    //Se buscará en los movimientos después de la activación
+        //                    {
+        //                        if ((RelatedTags[i].NumTag == item.Numero) && (item.StatusCancelacion == false))        //Si el Numero del movimiento coíncide con el del Tag relacionado y además no ha sido cancelado, se generá un movimiento de cancelación
+        //                        {
+        //                            db.OperacionesCajeros.Add(new OperacionesCajero
+        //                            {
+        //                                Concepto = "CANCELACION RECARGA",
+        //                                TipoPago = "CAN",
+        //                                Monto = 0 - item.Monto,
+        //                                DateTOperacion = DateTime.Now,
+        //                                CorteId = SelectedOperacion.CorteId,
+        //                                Numero = item.NoReferencia,
+        //                                Tipo = "TAG CAN",
+        //                                CobroTag = 0 - item.CobroTag,
+        //                                NoReferencia = string.Format("{0}", (Convert.ToInt32(method.RandomNumReferencia2()) + (i + 1)).ToString("D7")),
+        //                                StatusCancelacion = false
+        //                            });
+        //                            item.StatusCancelacion = true;      //Se cancelará el movimiento
+        //                        }
+        //                    }
+        //                }
+        //                foreach (var item in OpeAfterActivacion)        //Se buscará en los movimientos después de la activación si ha habido recargas a la Cuenta
+        //                {
+        //                    int i = 1;
+        //                    if (item.Numero == CreatedCuenta.NumCuenta) //Si el número de movimiento corresponde al Número de Cuenta, se agregará un movimiento de cancelación de operación
+        //                    {
+        //                        db.OperacionesCajeros.Add(new OperacionesCajero
+        //                        {
+        //                            Concepto = "CANCELACION RECARGA",
+        //                            TipoPago = SelectedOperacion.TipoPago != null ? "CAN" : null,
+        //                            Monto = 0 - item.Monto,
+        //                            DateTOperacion = DateTime.Now,
+        //                            CorteId = SelectedOperacion.CorteId,
+        //                            Numero = item.NoReferencia,
+        //                            Tipo = "CUENTA CAN",
+        //                            CobroTag = null,
+        //                            NoReferencia = string.Format("{0}", (Convert.ToInt32(method.RandomNumReferencia2()) + (RelatedTags.Count + 1 + i)).ToString("D7")),
+        //                            StatusCancelacion = false
+        //                        });
+        //                        item.StatusCancelacion = true;      //Cambia el status a cancelado
+        //                    }
+        //                }
+        //                db.CuentasTelepeajes.Remove(CreatedCuenta);     //Se elminará la Cuenta, junto con sus Tags
+        //            }
+        //        }
+        //        SelectedOperacion.StatusCancelacion = true;     //La operación principal se cancela
+        //        db.SaveChanges();
+        //    }
+        //    return RedirectToAction("MovimientoCajero", new { CorteId = corteid, Concepto = Filtro });
+        //}
+
+        public ActionResult CancelarOperacion(int id, long corteid, string Filtro)
+        {
+            MethodsGlb method = new MethodsGlb();
+            var SelectedOperacion = db.OperacionesCajeros.Where(x => x.Id == id).FirstOrDefault();
+            if (SelectedOperacion.StatusCancelacion == false)                       //Se verifica si el movimiento ya fue cancelado
+            {
+                if (SelectedOperacion.Concepto.Contains("RECARGA"))
+                {
+                    db.OperacionesCajeros.Add(NewOperacion("CANCELACION RECARGA", "CAN", 0 - SelectedOperacion.Monto, DateTime.Now, SelectedOperacion.CorteId,
+                                              SelectedOperacion.NoReferencia, SelectedOperacion.Tipo + "CAN", SelectedOperacion.CobroTag, method.RandomNumReferencia2(), false));
+                    CancelarRecarga(SelectedOperacion);
+                }
+                else if (SelectedOperacion.Concepto.Contains("ELIMINADO"))
+                {
+                    db.OperacionesCajeros.Add(NewOperacion("CANCELACION ELIMINADO", "CAN", 0 - SelectedOperacion.Monto, DateTime.Now, SelectedOperacion.CorteId,
+                                              SelectedOperacion.NoReferencia, SelectedOperacion.Tipo + "CAN", SelectedOperacion.CobroTag, method.RandomNumReferencia2(), false));
+                    CancelarEliminacion(SelectedOperacion);
+                }
+                else
+                {
+                    db.OperacionesCajeros.Add(NewOperacion("CANCELACION ACTIVACIÓN", "CAN", 0 - SelectedOperacion.Monto, DateTime.Now, SelectedOperacion.CorteId,
+                                              SelectedOperacion.NoReferencia, SelectedOperacion.Tipo + "CAN", SelectedOperacion.CobroTag, method.RandomNumReferencia2(), false));
+                    CancelarActivacion(SelectedOperacion, method);
+                }
+
+                SelectedOperacion.StatusCancelacion = true;     //La operación principal se cancela
+                db.SaveChanges();
+            }
+            return RedirectToAction("MovimientoCajero", new { CorteId = corteid, Concepto = Filtro });
+        }
+
+
+
+        public OperacionesCajero AddOperacion(long NewId, string NewConcepto, string NewTipoPago, double? NewMonto, DateTime NewDate, long NewCorteId, string NewNumero, string NewTipo, double? NewCobroTag, string NewNoReferencia, bool NewStatus)
         {
             return new OperacionesCajero
             {
@@ -799,25 +818,144 @@ namespace PuntoDeVenta.Controllers
             };
         }
 
-        //[HttpGet]
-        //public ActionResult GeneralSettings()
-        //{
-        //    return View();
-        //}
+        public OperacionesCajero NewOperacion(string NewConcepto, string NewTipoPago, double? NewMonto, DateTime NewDate, long NewCorteId, string NewNumero, string NewTipo, double? NewCobroTag, string NewNoReferencia, bool NewStatus)
+        {
+            return new OperacionesCajero
+            {
+                Concepto = NewConcepto,
+                TipoPago = NewTipoPago,
+                Monto = NewMonto,
+                DateTOperacion = NewDate,
+                CorteId = NewCorteId,
+                Numero = NewNumero,
+                Tipo = NewTipo,
+                CobroTag = NewCobroTag,
+                NoReferencia = NewNoReferencia,
+                StatusCancelacion = NewStatus
+            };
+        }
 
-        //[HttpPost]
-        //public ActionResult GeneralSettings(AmountConfiguration model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.AmountConfigurations.Add(model);
-        //        db.SaveChanges();
+        public void CancelarRecarga(OperacionesCajero SelectedOperacion)
+        {
+            if (SelectedOperacion.Tipo == "TAG")
+            {
+                var UpdatedTag = db.Tags.Where(x => x.NumTag == SelectedOperacion.Numero).FirstOrDefault();
+                UpdatedTag.SaldoTag = (Convert.ToDouble(UpdatedTag.SaldoTag) - (Convert.ToDouble(SelectedOperacion.Monto) * 100)).ToString();
+                if (Convert.ToDouble(UpdatedTag.SaldoTag) < 1525)               //Si el saldo es menor a 15.25 Quetzales, se convierte en tag inválido
+                    UpdatedTag.StatusTag = false;
+            }
+            else //Si el movimiento cancelado era una recarga de Cuenta:
+            {
+                var UpdatedCuenta = db.CuentasTelepeajes.Where(x => x.NumCuenta == SelectedOperacion.Numero).FirstOrDefault();
+                var UpdatedTags = db.Tags.Where(x => x.CuentaId == UpdatedCuenta.Id).ToList();
+                UpdatedCuenta.SaldoCuenta = (Convert.ToDouble(UpdatedCuenta.SaldoCuenta) - (Convert.ToDouble(SelectedOperacion.Monto)) * 100).ToString();
+                if (Convert.ToDouble(UpdatedCuenta.SaldoCuenta) < 5000)         //Si el saldo es menor a 50 Quetzales, se convierte en cuenta invalida
+                    UpdatedCuenta.StatusCuenta = false;
+                foreach (var item in UpdatedTags)
+                {
+                    item.SaldoTag = (Convert.ToDouble(item.SaldoTag) - (Convert.ToDouble(SelectedOperacion.Monto)) * 100).ToString();
+                    if (!UpdatedCuenta.StatusCuenta)
+                        item.StatusTag = false;
+                }
+            }
+        }
+        public void CancelarActivacion(OperacionesCajero SelectedOperacion, MethodsGlb method)
+        {
+            var OpeAfterActivacion = db.OperacionesCajeros.Where(x => x.Id > SelectedOperacion.Id).ToList();
+            if (SelectedOperacion.Tipo == "TAG")        //En caso de que se haya cancelado la Activación de un TAG:
+            {
+                var CreatedTag = db.Tags.Where(x => x.NumTag == SelectedOperacion.Numero).FirstOrDefault();
+                int i = 1;
+                foreach (var item in OpeAfterActivacion)
+                {
+                    if (item.Numero == CreatedTag.NumTag)
+                    {
+                        db.OperacionesCajeros.Add(new OperacionesCajero
+                        {
+                            Concepto = "CANCELACION RECARGA",
+                            TipoPago = "CAN",
+                            Monto = 0 - item.Monto,
+                            DateTOperacion = DateTime.Now,
+                            CorteId = SelectedOperacion.CorteId,
+                            Numero = item.NoReferencia,
+                            Tipo = "TAG CAN",
+                            CobroTag = 0 - item.CobroTag,
+                            NoReferencia = string.Format("{0}", (Convert.ToInt32(method.RandomNumReferencia2()) + i).ToString("D7")), //Se le suma 'i' ya que el método 'RandomNumReferencia2()' evalúa el último registro de la BD y en este punto aún no se suben los cambios a la BD
+                            StatusCancelacion = false
+                        });
+                        item.StatusCancelacion = true;
+                        i++;
+                    }
+                }
+                db.Tags.Remove(CreatedTag);
+            }
+            else    //En caso de que se haya cancelado la Activación de una CUENTA
+            {
+                var CreatedCuenta = db.CuentasTelepeajes.Where(x => x.NumCuenta == SelectedOperacion.Numero).FirstOrDefault();
+                var RelatedTags = db.Tags.Where(x => x.CuentaId == CreatedCuenta.Id).ToList();
+                for (int i = 0; i < RelatedTags.Count; i++)
+                {
+                    foreach (var item in OpeAfterActivacion)
+                    {
+                        if ((RelatedTags[i].NumTag == item.Numero) && (item.StatusCancelacion == false))
+                        {
+                            db.OperacionesCajeros.Add(new OperacionesCajero
+                            {
+                                Concepto = "CANCELACION RECARGA",
+                                TipoPago = "CAN",
+                                Monto = 0 - item.Monto,
+                                DateTOperacion = DateTime.Now,
+                                CorteId = SelectedOperacion.CorteId,
+                                Numero = item.NoReferencia,
+                                Tipo = "TAG CAN",
+                                CobroTag = 0 - item.CobroTag,
+                                NoReferencia = string.Format("{0}", (Convert.ToInt32(method.RandomNumReferencia2()) + (i + 1)).ToString("D7")),
+                                StatusCancelacion = false
+                            });
+                            item.StatusCancelacion = true;
+                        }
+                    }
+                }
+                foreach (var item in OpeAfterActivacion)
+                {
+                    int i = 1;
+                    if (item.Numero == CreatedCuenta.NumCuenta)
+                    {
+                        db.OperacionesCajeros.Add(new OperacionesCajero
+                        {
+                            Concepto = "CANCELACION RECARGA",
+                            TipoPago = SelectedOperacion.TipoPago != null ? "CAN" : null,
+                            Monto = 0 - item.Monto,
+                            DateTOperacion = DateTime.Now,
+                            CorteId = SelectedOperacion.CorteId,
+                            Numero = item.NoReferencia,
+                            Tipo = "CUENTA CAN",
+                            CobroTag = null,
+                            NoReferencia = string.Format("{0}", (Convert.ToInt32(method.RandomNumReferencia2()) + (RelatedTags.Count + 1 + i)).ToString("D7")),
+                            StatusCancelacion = false
+                        });
+                        item.StatusCancelacion = true;
+                    }
+                }
+                db.CuentasTelepeajes.Remove(CreatedCuenta);
+            }
 
-        //        return View();
-        //    }
-
-        //    return HttpNotFound();
-        //}
+        }
+        public void CancelarEliminacion(OperacionesCajero SelectedOperacion)
+        {
+            var DeletedTag = db.ListaNegras.Where(x => x.Numero == SelectedOperacion.Numero).FirstOrDefault();
+            db.Tags.Add(new Tags
+            {
+                NumTag = DeletedTag.Numero,
+                SaldoTag = DeletedTag.SaldoAnterior.ToString(),
+                StatusTag = DeletedTag.SaldoAnterior > 1525 ? true : false,
+                StatusResidente = false,
+                DateTTag = DeletedTag.Date,
+                IdCajero = DeletedTag.IdCajero,
+                CuentaId = db.CuentasTelepeajes.Where(x => x.NumCuenta == DeletedTag.NumCuenta).FirstOrDefault().Id
+            });
+            db.ListaNegras.Remove(DeletedTag);
+        }
 
         public ActionResult Contact()
         {
