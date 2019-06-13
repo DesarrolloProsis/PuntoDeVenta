@@ -503,7 +503,8 @@ namespace PuntoDeVenta.Controllers
                             {
                                 total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
                             }
-                            var totalfinal = (total / 100).ToString("C2", culture).Replace("$", "Q");
+                            //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
+                            var totalfinal = Convercion(total.ToString().Replace(".", ","));
 
                             //if (ListMovimiento.Count != 0)
                             //{
@@ -555,7 +556,8 @@ namespace PuntoDeVenta.Controllers
                                 {
                                     total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
                                 }
-                                var totalfinal = (total / 100).ToString("C2", culture).Replace("$", "Q");
+                                //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
+                                var totalfinal = Convercion(total.ToString().Replace(".", ","));
 
                                 Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo, TotalMonetarioCruces = totalfinal };
                                 Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListCruces.Count); saldoCru = totalfinal;
@@ -603,7 +605,8 @@ namespace PuntoDeVenta.Controllers
                             {
                                 total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
                             }
-                            var totalfinal = (total / 100).ToString("C2", culture).Replace("$", "Q");
+                            //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
+                            var totalfinal = Convercion(total.ToString().Replace(".", ","));
 
                             Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Cuenta, Tipo, TotalMonetarioCruces = totalfinal };
                             model.Info = Info;
@@ -639,8 +642,8 @@ namespace PuntoDeVenta.Controllers
                             {
                                 total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
                             }
-                            var totalfinal = (total / 100).ToString("C2", culture).Replace("$", "Q");
-
+                            //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
+                            var totalfinal = Convercion(total.ToString().Replace(".", ","));
                             //if (ListMovimiento.Count != 0)
                             //{
                             Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Cuenta, Tipo, ListMovimiento[0].TotalMonetarioMovimientos, TotalMonetarioCruces = totalfinal };
@@ -690,7 +693,8 @@ namespace PuntoDeVenta.Controllers
                                 {
                                     total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
                                 }
-                                var totalfinal = (total / 100).ToString("C2", culture).Replace("$", "Q");
+                                //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
+                                var totalfinal = Convercion(total.ToString().Replace(".", ","));
 
                                 Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo, TotalMonetarioCruces = totalfinal };
                                 Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListCruces.Count); saldoCru = totalfinal;
@@ -737,7 +741,8 @@ namespace PuntoDeVenta.Controllers
                             {
                                 total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
                             }
-                            var totalfinal = (total / 100).ToString("C2", culture).Replace("$", "Q");
+                            //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
+                            var totalfinal = Convercion(total.ToString().Replace(".", ","));
 
                             Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Cuenta, Tipo, TotalMonetarioCruces = totalfinal };
                             model.Info = Info;
@@ -775,7 +780,8 @@ namespace PuntoDeVenta.Controllers
                             {
                                 total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
                             }
-                            var totalfinal = (total / 100).ToString("C2", culture).Replace("$", "Q");
+                            //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
+                            var totalfinal = Convercion(total.ToString().Replace(".", ","));
                             Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Cuenta, Tipo, ListMovimiento[0].TotalMonetarioMovimientos, TotalMonetarioCruces = totalfinal };
                             Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count); saldoMov = ListMovimiento[0].TotalMonetarioMovimientos; saldoCru = totalfinal;
                             model.ListaMovimientos = null;
@@ -823,7 +829,8 @@ namespace PuntoDeVenta.Controllers
                                 {
                                     total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
                                 }
-                                var totalfinal = (total / 100).ToString("C2", culture).Replace("$", "Q");
+                                //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
+                                var totalfinal = Convercion(total.ToString().Replace(".", ","));
                                 Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo, TotalMonetarioCruces = totalfinal };
                                 Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListCruces.Count); saldoCru = totalfinal;
                                 model.ListaMovimientos = null;
@@ -867,7 +874,8 @@ namespace PuntoDeVenta.Controllers
                             {
                                 total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
                             }
-                            var totalfinal = (total / 100).ToString("C2", culture).Replace("$", "Q");
+                            //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
+                            var totalfinal = Convercion(total.ToString().Replace(".", ","));
                             Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Cuenta, Tipo, TotalMonetarioCruces = totalfinal };
                             model.Info = Info;
                             Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = ListCruces.Count.ToString(); saldoCru = totalfinal;
@@ -1388,7 +1396,7 @@ namespace PuntoDeVenta.Controllers
                             Carril = item._Carril,
                             Clase = item._Clase,
                             SaldoAntes = Convercion(item._SaldoAntes),
-                            Saldo = Convercion(Convert.ToString(item._Saldo)),
+                            Saldo = Convercion(item._Saldo.ToString().Replace(".", ",")),
                             SaldoDespues = Convercion(item._SaldoNuevo),
                             SaldoActual = (Convert.ToDouble(item._SaldoActual) / 100).ToString("C", culture).Replace("$", "Q"),
                             Operador = item._Operadora,
@@ -1450,7 +1458,7 @@ namespace PuntoDeVenta.Controllers
                             Carril = item._Carril,
                             Clase = item._Clase,
                             SaldoAntes = Convercion(item._SaldoAntes),
-                            Saldo = Convercion(Convert.ToString(item._Saldo)),
+                            Saldo = Convercion(item._Saldo.ToString().Replace(".",",")),
                             SaldoDespues = Convercion(item._SaldoNuevo),
                             SaldoActual = (Convert.ToDouble(item._SaldoActual) / 100).ToString("C", culture).Replace("$", "Q"),
                             Operador = item._Operadora,
@@ -2777,25 +2785,160 @@ namespace PuntoDeVenta.Controllers
             string[] tipo;
             string Mandar = string.Empty;
             tipo = saldo.Split(',');
+            int contar = 0;
             CultureInfo culture = new CultureInfo("es-MX", false);
             if (tipo.Count() == 2)
             {
-                if (tipo[1].Length == 2)
+                if (tipo[0].Length > 3)
                 {
-                    Mandar = Convert.ToDouble(saldo).ToString("C2", culture).Replace("$", "Q");
+                    var numeroDigitos = tipo[0].Length;
+                    var modulo = numeroDigitos % 3;
+
+                    if (modulo > 0)
+                    {
+                        var array = tipo[0].ToCharArray();
+                        for (int i = 0; i < modulo; i++)
+                        {
+                            Mandar = Mandar + array[i];
+                        }
+                        Mandar = Mandar + ",";
+                        var sigue = array.Length - modulo;
+                        for (int i = modulo; i < array.Length; i++)
+                        {
+                            if (contar == 3)
+                            {
+                                Mandar = Mandar + "," + array[i];
+                                contar = 1;
+                            }
+                            else
+                            {
+                                Mandar = Mandar + array[i];
+                                contar++;
+                            }
+
+
+
+                        }
+                        Mandar = Mandar.TrimEnd(',');
+                        Mandar = Mandar + '.' + tipo[1];
+                    }
+                    else
+                    {
+                        var array = tipo[0].ToCharArray();
+
+                        for (int i = 0; i < array.Length ; i++)
+                        {
+                            if (contar == 3)
+                            {
+                                Mandar = Mandar + "," + array[i];
+                                contar = 0;
+                            }
+                            else
+                            {
+                                Mandar = Mandar + array[i];
+                                contar++;
+                            }
+
+
+                        }
+                        Mandar = Mandar.TrimEnd(',');
+                        if (tipo[1].Length == 1)
+                        {
+                            Mandar = Mandar + '.' + tipo[1] + '0';
+                        }
+                        else
+                        {
+                            Mandar = Mandar + '.' + tipo[1];
+                        }
+                    }
+
+                    //if (tipo[1].Length == 2)
+                    //{
+                    //    Mandar = Convert.ToDouble(saldo).ToString("C2", culture).Replace("$", "Q");
+                    //}
+                    //else
+                    //{
+                    //    Mandar = Convert.ToDouble(saldo).ToString("C1", culture).Replace("$", "Q");
+                    //}
                 }
                 else
                 {
-                    Mandar = Convert.ToDouble(saldo).ToString("C1", culture).Replace("$", "Q");
+                    if (tipo[1].Length == 1)
+                    {
+                        Mandar = tipo[0] + '.' + tipo[1] + '0';
+                    }
+                    else
+                    {
+                        Mandar = tipo[0] + '.' + tipo[1];
+                    }
+                    
                 }
 
             }
             else
             {
-                Mandar = Convert.ToDouble(saldo).ToString("C2", culture).Replace("$", "Q");
+               if(tipo[0].Length >3)
+                {
+                    var numeroDigitos = tipo[0].Length;
+                    var modulo = numeroDigitos % 3;
+
+                    if (modulo > 0)
+                    {
+                        var array = tipo[0].ToCharArray();
+                        for (int i = 0; i < modulo; i++)
+                        {
+                            Mandar = Mandar + array[i];
+                        }
+                        Mandar = Mandar + ",";
+                        var sigue = array.Length - modulo;
+                        for (int i = modulo; i < array.Length; i++)
+                        {
+                            if (contar == 3)
+                            {
+                                Mandar = Mandar + "," + array[i];
+                                contar = 1;
+                            }
+                            else
+                            {
+                                Mandar = Mandar + array[i];
+                                contar++;
+                            }
+
+
+
+                        }
+                        Mandar = Mandar.TrimEnd(',');
+                        Mandar = Mandar + ".00";
+                    }
+                    else
+                    {
+                        var array = tipo[0].ToCharArray();
+
+                        for (int i = 0; i < array.Length; i++)
+                        {
+                            if (contar == 3)
+                            {
+                                Mandar = Mandar + "," + array[i];
+                                contar = 0;
+                            }
+                            else
+                            {
+                                Mandar = Mandar + array[i];
+                                contar++;
+                            }
+
+
+                        }
+                        Mandar = Mandar.TrimEnd(',');
+                        Mandar = Mandar + ".00";
+                    }
+                }
+               else
+                
+                Mandar = tipo[0] + ".00";
             }
 
-            return Mandar;
+            return 'Q' + Mandar;
         }
 
     }
