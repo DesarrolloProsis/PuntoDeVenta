@@ -271,6 +271,95 @@ namespace PuntoDeVenta.Controllers
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CreateAjax(CuentasTelepeaje cuentasTelepeaje)
+        {
+            try
+            {
+                //ViewBag.ClienteId = new SelectList(db.Clientes, "Id", "NumCliente", cuentasTelepeaje.ClienteId);
+                db.Configuration.ValidateOnSaveEnabled = false;
+
+                Clientes cliente = await db.Clientes.FindAsync(cuentasTelepeaje.ClienteId);
+
+                if (cliente.StatusCliente == true)
+                {
+                    var UserId = User.Identity.GetUserId();
+
+                    var lastCorteUser = await db.CortesCajeros
+                                                    .Where(x => x.IdCajero == UserId)
+                                                    .OrderByDescending(x => x.DateTApertura).FirstOrDefaultAsync();
+
+                    if (lastCorteUser != null)
+                    {
+                        if (cuentasTelepeaje.TypeCuenta == "Individual")
+                            cuentasTelepeaje.SaldoCuenta = null;
+
+                        cuentasTelepeaje.StatusCuenta = true;
+                        cuentasTelepeaje.StatusResidenteCuenta = false;
+                        cuentasTelepeaje.DateTCuenta = DateTime.Now;
+                        cuentasTelepeaje.IdCajero = User.Identity.GetUserId();
+
+                        ModelState.Remove("NumCuenta");
+                        ModelState.Remove("IdCajero");
+                        ModelState.Remove("SaldoARecargar");
+                        ModelState.Remove("ConfSaldoARecargar");
+
+                        cuentasTelepeaje.NumCuenta = RandomNumCuenta();
+
+                        if (ModelState.IsValid)
+                        {
+                            var query = await db.CuentasTelepeajes.Where(x => x.NumCuenta == cuentasTelepeaje.NumCuenta).ToListAsync();
+
+                            if (query.Count != 0)
+                            {
+                                while (query.Count != 0)
+                                {
+                                    cuentasTelepeaje.NumCuenta = RandomNumCuenta();
+                                    query = await db.CuentasTelepeajes.Where(x => x.NumCuenta == cuentasTelepeaje.NumCuenta).ToListAsync();
+                                }
+                            }
+
+                            var detalle = new OperacionesCajero
+                            {
+                                Concepto = "CUENTA ACTIVADA",
+                                DateTOperacion = DateTime.Now,
+                                Numero = cuentasTelepeaje.NumCuenta,
+                                Tipo = "CUENTA",
+                                CorteId = lastCorteUser.Id,
+                                NoReferencia = await methods.RandomNumReferencia(),
+                            };
+
+                            if (cuentasTelepeaje.TypeCuenta == "Colectiva")
+                            {
+                                detalle.TipoPago = "EFE";
+                                detalle.Monto = double.Parse(cuentasTelepeaje.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," });
+
+                                var SaldoSend = double.Parse(cuentasTelepeaje.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }).ToString("F2");
+                                SaldoSend = SaldoSend.Replace(",", string.Empty);
+                                cuentasTelepeaje.SaldoCuenta = SaldoSend.Replace(".", string.Empty);
+                            }
+
+                            db.OperacionesCajeros.Add(detalle);
+
+                            db.CuentasTelepeajes.Add(cuentasTelepeaje);
+                            await db.SaveChangesAsync();
+
+                            return Json(new { idCuenta = cuentasTelepeaje.Id, numcuenta = cuentasTelepeaje.NumCuenta, typecuenta = cuentasTelepeaje.TypeCuenta, success = "Se registró correctamente la cuenta: " + cuentasTelepeaje.NumCuenta + " para el cliente: " + cliente.NumCliente + " " + cliente.Nombre + " " + cliente.Apellidos + ".", error = "", });
+                        }
+                    }
+
+                    return Json(new { success = "", error = $"¡Ups! ocurrio un error inesperado.", });
+                }
+
+                return Json(new { success = "", error = "El cliente no puede crear una cuenta porque esta dado de baja.", });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = "", error = $"¡Ups! ocurrio un error inesperado, {ex.Message}", });
+            }
+        }
+
         private string RandomNumCuenta()
         {
             Random random = new Random();

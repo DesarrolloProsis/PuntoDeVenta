@@ -254,7 +254,7 @@ namespace PuntoDeVenta.Controllers
 
                 tags.NumTag.Trim();
 
-                var cuenta = await db.CuentasTelepeajes.FindAsync(tags.CuentaId);
+                var cuenta = await db.CuentasTelepeajes.Include(m => m.Tags).Where(x => x.Id == tags.CuentaId).FirstOrDefaultAsync();
 
                 if (cuenta == null)
                 {
@@ -278,7 +278,8 @@ namespace PuntoDeVenta.Controllers
                 if (cuenta.StatusCuenta == true)
                 {
                     var query = await db.Tags.Where(x => x.NumTag == tags.NumTag).ToListAsync();
-                    if (query.Count == 0)
+                    var query_listnegra = await db.ListaNegras.Where(x => x.Numero == tags.NumTag).ToListAsync();
+                    if (query.Count == 0 && query_listnegra.Count == 0)
                     {
                         tags.StatusResidente = false;
                         tags.StatusTag = true;
@@ -346,7 +347,7 @@ namespace PuntoDeVenta.Controllers
                     }
                     else
                     {
-                        TempData["ECreate"] = "El tag: " + tags.NumTag + " ya esta activado.";
+                        TempData["ECreate"] = "El tag: " + tags.NumTag + " ya esta activado o en lista negra.";
                         return RedirectToAction("Index", "Clientes");
                     }
                 }
@@ -382,7 +383,7 @@ namespace PuntoDeVenta.Controllers
 
                 tags.NumTag.Trim();
 
-                var cuenta = await db.CuentasTelepeajes.FindAsync(tags.CuentaId);
+                var cuenta = await db.CuentasTelepeajes.Include(m => m.Tags).Where(x => x.Id == tags.CuentaId).FirstOrDefaultAsync();
 
                 if (cuenta == null)
                 {
@@ -392,7 +393,8 @@ namespace PuntoDeVenta.Controllers
                 if (cuenta.StatusCuenta == true)
                 {
                     var query = await db.Tags.Where(x => x.NumTag == tags.NumTag).ToListAsync();
-                    if (query.Count == 0)
+                    var query_listnegra = await db.ListaNegras.Where(x => x.Numero == tags.NumTag).ToListAsync();
+                    if (query.Count == 0 && query_listnegra.Count == 0)
                     {
                         tags.StatusResidente = false;
                         tags.StatusTag = true;
@@ -450,7 +452,11 @@ namespace PuntoDeVenta.Controllers
 
                                 await db.SaveChangesAsync();
                                 message = "Se activó correctamente el tag: " + tags.NumTag + " para la cuenta: " + cuenta.NumCuenta + ".";
-                                return Json(new { Message = message, JsonRequestBehavior.AllowGet });
+
+                                var count_tags = $"# de Tags activados: {cuenta.Tags.Count}";
+
+
+                                return Json(new { Message = message, count_tags, JsonRequestBehavior.AllowGet });
                             }
                         }
 
@@ -459,7 +465,7 @@ namespace PuntoDeVenta.Controllers
                     }
                     else
                     {
-                        message = "El tag: " + tags.NumTag + " ya esta activado.";
+                        message = "El tag: " + tags.NumTag + " ya esta activado o en lista negra.";
                         return Json(new { Message = message, JsonRequestBehavior.AllowGet });
                     }
                 }

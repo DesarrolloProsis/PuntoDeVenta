@@ -2,11 +2,12 @@
 
 @{
     ViewBag.Title = "Crear";
+    var modelCuenta = (PuntoDeVenta.Models.CuentasTelepeaje)ViewBag.ModelCuenta;
 }
 
 
 
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Get, new { name = "frmClient", id = "frmClient" }))
 {
     @Html.AntiForgeryToken()
     <div class="col-md-12 text-align-center">
@@ -14,209 +15,526 @@
         <p class="lead">
             Registra los datos para crear un nuevo cliente.
         </p>
-        </div>
-        <hr />
-        <div class="container">
-            <div class="row justify-content-md-center">
-                <div class="col-md-8">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="form-horizontal">
+    </div>
+    <hr />
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" id="alert-error">
+                            <strong>Ups!</strong> <label id="errorforajax"></label>
+                            <button type="button" class="close" id="close-error" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
 
-                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                                <div class="form-group">
-                                   
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label" })
-                                        @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control formulario1" } })
-                                        @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
-                                    </div>
-                                </div>
+                        <div class="form-horizontal">
 
-                                <div class="form-group">
-                                   
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.Apellidos, htmlAttributes: new { @class = "control-label" })
-                                        @Html.EditorFor(model => model.Apellidos, new { htmlAttributes = new { @class = "form-control formulario1" } })
-                                        @Html.ValidationMessageFor(model => model.Apellidos, "", new { @class = "text-danger" })
-                                    </div>
-                                </div>
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="form-group">
 
-                                <div class="form-group">
-                                   
-                                    <div class="col-md-12">
-                                         @Html.LabelFor(model => model.Empresa, htmlAttributes: new { @class = "control-label" })
-                                        @Html.EditorFor(model => model.Empresa, new { htmlAttributes = new { @class = "form-control formulario1" } })
-                                        @Html.ValidationMessageFor(model => model.Empresa, "", new { @class = "text-danger" })
-                                    </div>
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label" })
+                                    @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                                    @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
                                 </div>
-                                <div class="form-group">
-                                  
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.EmailCliente, htmlAttributes: new { @class = "control-label" })
-                                        @Html.EditorFor(model => model.EmailCliente, new { htmlAttributes = new { @class = "form-control formulario1" } })
-                                        @Html.ValidationMessageFor(model => model.EmailCliente, "", new { @class = "text-danger" })
-                                    </div>
-                                </div>
+                            </div>
 
-                                <div class="form-group">
-                                   
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.Departamento, htmlAttributes: new { @class = "control-label" })
-                                        @Html.EditorFor(model => model.Departamento, new { htmlAttributes = new { @class = "form-control formulario1" } })
-                                        @Html.ValidationMessageFor(model => model.Departamento, "", new { @class = "text-danger" })
-                                    </div>
-                                </div>
+                            <div class="form-group">
 
-                                <div class="form-group">
-                                    
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.AddressCliente, htmlAttributes: new { @class = "control-label" })
-                                        @Html.EditorFor(model => model.AddressCliente, new { htmlAttributes = new { @class = "form-control formulario1" } })
-                                        @Html.ValidationMessageFor(model => model.AddressCliente, "", new { @class = "text-danger" })
-                                    </div>
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.Apellidos, htmlAttributes: new { @class = "control-label" })
+                                    @Html.EditorFor(model => model.Apellidos, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                                    @Html.ValidationMessageFor(model => model.Apellidos, "", new { @class = "text-danger" })
                                 </div>
+                            </div>
 
-                                <div class="form-group">
-                                   
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.Pais, htmlAttributes: new { @class = "control-label" })
-                                        @Html.EditorFor(model => model.Pais, new { htmlAttributes = new { @class = "form-control formulario1" } })
-                                        @Html.ValidationMessageFor(model => model.Pais, "", new { @class = "text-danger" })
-                                    </div>
+                            <div class="form-group">
+
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.Empresa, htmlAttributes: new { @class = "control-label" })
+                                    @Html.EditorFor(model => model.Empresa, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                                    @Html.ValidationMessageFor(model => model.Empresa, "", new { @class = "text-danger" })
                                 </div>
-                                <div class="form-group">
-                                   
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label" })
-                                        @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control formulario1" } })
-                                        @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
-                                    </div>
+                            </div>
+                            <div class="form-group">
+
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.EmailCliente, htmlAttributes: new { @class = "control-label" })
+                                    @Html.EditorFor(model => model.EmailCliente, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                                    @Html.ValidationMessageFor(model => model.EmailCliente, "", new { @class = "text-danger" })
                                 </div>
-                                <div class="form-group">
-                                  
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.CP, htmlAttributes: new { @class = "control-label" })
-                                        @Html.EditorFor(model => model.CP, new { htmlAttributes = new { @class = "form-control formulario1" } })
-                                        @Html.ValidationMessageFor(model => model.CP, "", new { @class = "text-danger" })
-                                    </div>
+                            </div>
+
+                            <div class="form-group">
+
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.Departamento, htmlAttributes: new { @class = "control-label" })
+                                    @Html.EditorFor(model => model.Departamento, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                                    @Html.ValidationMessageFor(model => model.Departamento, "", new { @class = "text-danger" })
                                 </div>
-                                <div class="form-group">
-                                   
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.PhoneOffice, htmlAttributes: new { @class = "control-label" })
-                                        @Html.EditorFor(model => model.PhoneOffice, new { htmlAttributes = new { @class = "form-control formulario1" } })
-                                        @Html.ValidationMessageFor(model => model.PhoneOffice, "", new { @class = "text-danger" })
-                                    </div>
+                            </div>
+
+                            <div class="form-group">
+
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.AddressCliente, htmlAttributes: new { @class = "control-label" })
+                                    @Html.EditorFor(model => model.AddressCliente, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                                    @Html.ValidationMessageFor(model => model.AddressCliente, "", new { @class = "text-danger" })
                                 </div>
-                                <div class="form-group">
-                                   
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.NIT, htmlAttributes: new { @class = "control-label" })
-                                        @Html.EditorFor(model => model.NIT, new { htmlAttributes = new { @class = "form-control formulario1" } })
-                                        @Html.ValidationMessageFor(model => model.NIT, "", new { @class = "text-danger" })
-                                    </div>
+                            </div>
+
+                            <div class="form-group">
+
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.Pais, htmlAttributes: new { @class = "control-label" })
+                                    @Html.EditorFor(model => model.Pais, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                                    @Html.ValidationMessageFor(model => model.Pais, "", new { @class = "text-danger" })
                                 </div>
+                            </div>
+                            <div class="form-group">
+
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label" })
+                                    @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                                    @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.CP, htmlAttributes: new { @class = "control-label" })
+                                    @Html.EditorFor(model => model.CP, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                                    @Html.ValidationMessageFor(model => model.CP, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.PhoneOffice, htmlAttributes: new { @class = "control-label" })
+                                    @Html.EditorFor(model => model.PhoneOffice, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                                    @Html.ValidationMessageFor(model => model.PhoneOffice, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.NIT, htmlAttributes: new { @class = "control-label" })
+                                    @Html.EditorFor(model => model.NIT, new { htmlAttributes = new { @class = "form-control formulario1" } })
+                                    @Html.ValidationMessageFor(model => model.NIT, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
 
 
-                                <div class="form-group">
-                                  
-                                    <div class="col-md-12">
-                                        @Html.LabelFor(model => model.PhoneCliente, htmlAttributes: new { @class = "control-label" })
-                                        @Html.EditorFor(model => model.PhoneCliente, new { htmlAttributes = new { @class = "form-control formulario1", type = "tel" } })
-                                        @Html.ValidationMessageFor(model => model.PhoneCliente, "", new { @class = "text-danger" })
-                                    </div>
-                                </div>
+                            <div class="form-group">
 
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        <input type="submit" value="Crear" class="btn btn-success botonaceptar" />
-                                    </div>
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.PhoneCliente, htmlAttributes: new { @class = "control-label" })
+                                    @Html.EditorFor(model => model.PhoneCliente, new { htmlAttributes = new { @class = "form-control formulario1", type = "tel" } })
+                                    @Html.ValidationMessageFor(model => model.PhoneCliente, "", new { @class = "text-danger" })
                                 </div>
-                                <div>
-                                    @Html.ActionLink("Regresar a la lista", "Index", routeValues: null, htmlAttributes: new { @Class = "link1" })
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <input type="submit" value="Crear" class="btn btn-success botonaceptar" />
                                 </div>
+                            </div>
+                            <div>
+                                @Html.ActionLink("Regresar a la lista", "Index", routeValues: null, htmlAttributes: new { @Class = "link1" })
                             </div>
                         </div>
                     </div>
                 </div>
-                </div>
             </div>
-            
+        </div>
+    </div>
+
+}
+
+<!-- Modal Create Cuenta -->
+<div class="modal fade" id="ModalNuevaCuenta" tabindex="-1" role="dialog" aria-labelledby="ModalNuevaCuentaTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="ModalNuevaCuentaTitle">Crear cuenta</h5>
+                <button type="button" class="close" aria-label="Close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("Create", "CuentasTelepeajes", FormMethod.Post, htmlAttributes: new { @id = "FormCreateCuenta" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>Éxito!</strong> <label id="nomclienteAlert"></label>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        <label for="numcliente">
+                            <img class="img-modal" src="~/Content/css-yisus/img/slack-hash-brands.svg" /> Número de cliente
+                        </label>
+                        <input id="numcliente" class="form-control formulario1" type="text" placeholder="Readonly input here…" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="nomcliente"><img class="img-modal" src="~/Content/css-yisus/img/user-circle-solid.svg" /> Nombre</label>
+                        <input id="nomcliente" class="form-control formulario1" type="text" placeholder="Readonly input here…" readonly>
+                    </div>
+                    <div class="form-group">
+                        <img class="img-modal" src="~/Content/css-yisus/img/columns-solid.svg" /> @Html.LabelFor(model => modelCuenta.TypeCuenta, htmlAttributes: new { @for = "TypeCuenta" })
+                        @Html.DropDownListFor(model => modelCuenta.TypeCuenta, (SelectList)ViewBag.TipoCuentas, htmlAttributes: new { @class = "form-control formulario2", id = "TypeCuenta", Name = "TypeCuenta" })
+                        @Html.ValidationMessageFor(model => modelCuenta.TypeCuenta, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div id="fromTocreate">
+                        <div class="form-group">
+                            <img class="img-modal2" src="~/Content/css-yisus/img/file-invoice-dollar-solid.svg" /> @Html.LabelFor(model => modelCuenta.SaldoCuenta, htmlAttributes: new { @class = "control-label" })
+                            @Html.TextBoxFor(model => modelCuenta.SaldoCuenta, new { @class = "form-control formulario1", id = "SaldoCuenta", Name = "SaldoCuenta" })
+                            @*@Html.DropDownListFor(model => model.SaldoCuenta, new SelectList(ViewBag.Amounts, "Value", "Text"), htmlAttributes: new { @class = "form-control formulario2" })*@
+                            @Html.ValidationMessageFor(model => modelCuenta.SaldoCuenta, "", new { @class = "text-danger" })
+
+                        </div>
+                    </div>
+                    @Html.Hidden("ClienteId")
+                </div>
+                <div class="modal-footer">
+
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-success botonaceptar" id="CreateCuenta">Crear</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_AddTags")
+
+@Html.Partial("_AddTagsColectivos")
+
+
+@section Scripts {
+
+    <!-- production version, optimized for size and speed -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+
+        $(document).ready(() => {
+            $("#alert-error").hide();
+
+            $("#CobroTag").val("77.00");
+            $("#modelTags_CobroTag").val("77.00");
+
+            $('#CreateCuenta').removeAttr("disabled");
+            $('#Crear').removeAttr("disabled");
+            $('#CrearTagAjax').removeAttr("disabled");
+            $('#submitFormAddTag').removeAttr("disabled");
+            $('#submitFormCuentaReca').removeAttr("disabled");
+            $('#submitFormTagReca').removeAttr("disabled");
+
+            $("#SaldoCuenta").mask("#,##0.00", { reverse: true });
+            $("#CobroTag").mask("#,##0.00", { reverse: true });
+            $("#SaldoTag").mask("#,##0.00", { reverse: true });
+            $("#OldSaldo").mask("#,##0.00", { reverse: true });
+            $("#modelTags_CobroTag").mask("#,##0.00", { reverse: true });
+
+            const $formClient = $('#frmClient');
+
+            $formClient.submit(e => {
+                e.preventDefault();
+                $("#Crear").attr("disabled", true);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Clientes/Create",
+                    data: $formClient.serialize(),
+                    success: (data) => {
+
+                        if (data.success != "") {
+                            $('#numcliente').val(data.numcliente);
+                            $('#nomcliente').val(data.nombre);
+                            $('#ClienteId').val(data.id);
+                            $('#nomclienteAlert').text(data.success);
+                            $('#ModalNuevaCuenta').modal('show');
+                        }
+                        else {
+                            $("#alert-error").show();
+                            $('#errorforajax').text(data.error);
+                        }
+                        $("#Crear").attr("disabled", true);
+                    },
+                    error: function (ex) {
+                        alert(ex.responseText);
+                        $("#Crear").attr("disabled", true);
+                    }
+                });
+            });
+
+            $('#CreateCuenta').on('click', (e) => {
+                e.preventDefault();
+                $("#CreateCuenta").attr("disabled", true);
+
+                //var dataArray = $("#FormCreateCuenta").serializeArray(),
+                //    model = {};
+
+                //$(dataArray).each((i, field) => {
+                //    model[field.name.substring(12)] = field.value;
+                //});
+
+                console.log($("#FormCreateCuenta").serializeArray());
+
+                $.ajax({
+                    type: "POST",
+                    url: "/CuentasTelepeajes/CreateAjax",
+                    data: $("#FormCreateCuenta").serialize(),
+                    success: (data) => {
+                        if (data.success != "") {
+                            if (data.typecuenta == "Individual") {
+                                $('#ModalNuevaCuenta').modal('hide');
+                                $('#numcuenta').val(data.numcuenta);
+                                $('#tipocuenta').val(data.typecuenta);
+                                $('#CuentaId').val(data.idCuenta);
+                                $('#success-addtag').show();
+                                $('#nomcuentaAlertIndi').text(data.success);
+                                $('#exampleModalCenter2').modal('show');
+                            } else {
+                                $('#ModalNuevaCuenta').modal('hide');
+                                $('#modelTags_numcuenta').val(data.numcuenta);
+                                $('#modelTags_tipocuenta').val(data.typecuenta);
+                                $('#modelTags_CuentaId').val(data.idCuenta);
+                                $('#success-addtagcolec').show();
+                                $('#nomcuentaAlertColec').text(data.success);
+                                $('#AddTags2').modal('show');
+                            }
+
+                            $('#CreateCuenta').removeAttr("disabled");
+                        }
+                        else {
+                            $("#alert-error").show();
+                            $('#errorforajax').text(data.error);
+                            $('#CreateCuenta').removeAttr("disabled");
+                        }
+                    },
+                    error: function (ex) {
+                        alert(ex.responseText);
+                        $('#CreateCuenta').removeAttr("disabled");
+                    }
+                });
+            });
+
+            $('#close-error').on('click', (e) => {
+                e.preventDefault();
+                $("#alert-error").hide();
+            });
+
+            $('#TypeCuenta').change(function (e) {
+
+                e.preventDefault();
+                var ddlValue = $(this).val();
+
+                if (ddlValue == "Colectiva") {
+                    $('#fromTocreate').show();
                 }
-
-
-
-                @section Scripts {
-                    @Scripts.Render("~/bundles/jqueryval")
-
-                    <script>
-                        // Vanilla Javascript
-                        var input = document.querySelector("#PhoneCliente");
-                        window.intlTelInput(input, ({
-                            // options here
-                            // whether or not to allow the dropdown
-                            allowDropdown: true,
-
-                            // if there is just a dial code in the input: remove it on blur, and re-add it on focus
-                            autoHideDialCode: true,
-
-                            // add a placeholder in the input with an example number for the selected country
-                            autoPlaceholder: "polite",
-
-                            // modify the auto placeholder
-                            customPlaceholder: null,
-
-                            // append menu to specified element
-                            dropdownContainer: null,
-
-                            // don't display these countries
-                            excludeCountries: [],
-
-                            // format the input value during initialisation and on setNumber
-                            formatOnDisplay: true,
-
-                            // geoIp lookup function
-                            geoIpLookup: null,
-
-                            // inject a hidden input with this name, and on submit, populate it with the result of getNumber
-                            hiddenInput: "",
-
-                            // initial country
-                            initialCountry: "",
-
-                            // localized country names e.g. { 'de': 'Deutschland' }
-                            localizedCountries: null,
-
-                            // don't insert international dial codes
-                            nationalMode: true,
-
-                            // display only these countries
-                            onlyCountries: [],
-
-                            // number type to use for placeholders
-                            placeholderNumberType: "MOBILE",
-
-                            // the countries at the top of the list. defaults to united states and united kingdom
-                            preferredCountries: ["gt"],
-
-                            // display the country dial code next to the selected flag so it's not part of the typed number
-                            separateDialCode: true,
-
-                            // specify the path to the libphonenumber script to enable validation/formatting
-                            utilsScript: ""
-                        }));
-
-                        input.addEventListener("countrychange", function () {
-                            // do something with iti.getSelectedCountryData()
-                        });
-
-                        input.addEventListener("open:countrydropdown", function () {
-                            // triggered when the user opens the dropdown
-                        });
-
-                        input.addEventListener("close:countrydropdown", function () {
-                            // triggered when the user closes the dropdown
-                        });
-                    </script>
+                else if (ddlValue == "Individual") {
+                    // show fromTo div, hide time div
+                    $('#fromTocreate').hide();
                 }
+            });
+
+
+            $('#CrearTag').on('click', function (e) {
+                e.preventDefault();
+                var form = $("#FormAddTags").validate();
+
+                if (form.valid() && $("#NumTag").val() != "") {
+                    $('#exampleModalCenter2').modal('hide');
+
+                    var saldoTag = 0;
+
+                    //if ($("#OldTag").val() == "") {
+                    saldoTag = $("#SaldoTag").val();
+                    //}
+                    //else
+                    //    saldoTag = $("#SaldoTagMov").val();
+
+                    var costotag = $("#CobroTag").val();
+                    var total = parseFloat(costotag.replace(/,/g, '')) + parseFloat(saldoTag.replace(/,/g, ''));
+
+                    $("#Tagnumcuenta").text($("#numcuenta").val());
+                    $("#Tagnum").text($("#NumTag").val());
+                    $("#TagCosto").text(costotag);
+                    $("#TagSaldo").text(saldoTag);
+                    $("#total").text(total);
+
+                    $('#exampleModalCenter3').modal('show');
+                }
+            });
+
+            $("#submitFormAddTag").on("click", function (e) {
+
+                e.preventDefault();
+
+                $('#submitFormAddTag').attr("disabled", true);
+                $("#FormAddTags").submit();
+
+                //resetForm($('#FormAddTags'));
+
+                //console.log($("#FormAddTags").submit());
+            });
+
+             $('#CrearTagAjax').on('click', function (e) {
+
+                e.preventDefault();
+
+                if ($("#modelTags_NumTag").val() != "") {
+
+                    if ($("#modelTags_tipocuenta").val() == "Colectiva") {
+
+                        $("#CrearTagAjax").attr("disabled", true);
+
+                        saldoTag = 0;
+
+                        var costotag = $("#modelTags_CobroTag").val();
+
+                        var tags = {};
+
+                        tags.NumTag = $("#modelTags_NumTag").val();
+                        tags.CobroTag = costotag;
+                        tags.CuentaId = $("#modelTags_CuentaId").val();
+                        tags.OldTag = $("#modelTags_OldTag").val();
+                        tags.Observacion = $("#modelTags_Observacion").val();
+
+                        let currChecked = $("#customControlInline2").prop("checked");
+
+                        tags.Checked = currChecked;
+
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("CreateTagsAjax", "Tags")',
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            data: JSON.stringify(tags),
+                            success: function (result) {
+                                alert(result.Message);
+                                $("#modelTags_NumTag").val("");
+                                $("#modelTags_OldTag").val("");
+                                $("#modelTags_Observacion").val("");
+                                $("#modelTags_CobroTag").val("77.00");
+                                $('#nomcuentaAlertColec').text(result.count_tags);
+                                $('#CrearTagAjax').removeAttr("disabled");
+                            },
+                            failure: function (response) {
+                                console.log(response.responseText);
+                                $('#CrearTagAjax').removeAttr("disabled");
+                            },
+                            error: function (response) {
+                                console.log(response.responseText);
+                                $('#CrearTagAjax').removeAttr("disabled");
+                            }
+                        });
+                    }
+                }
+            });
+
+            /*****************************************/
+        });
+
+    </script>
+
+    <script>
+        // Vanilla Javascript
+        var input = document.querySelector("#PhoneCliente");
+        window.intlTelInput(input, ({
+            // options here
+            // whether or not to allow the dropdown
+            allowDropdown: true,
+
+            // if there is just a dial code in the input: remove it on blur, and re-add it on focus
+            autoHideDialCode: true,
+
+            // add a placeholder in the input with an example number for the selected country
+            autoPlaceholder: "polite",
+
+            // modify the auto placeholder
+            customPlaceholder: null,
+
+            // append menu to specified element
+            dropdownContainer: null,
+
+            // don't display these countries
+            excludeCountries: [],
+
+            // format the input value during initialisation and on setNumber
+            formatOnDisplay: true,
+
+            // geoIp lookup function
+            geoIpLookup: null,
+
+            // inject a hidden input with this name, and on submit, populate it with the result of getNumber
+            hiddenInput: "",
+
+            // initial country
+            initialCountry: "",
+
+            // localized country names e.g. { 'de': 'Deutschland' }
+            localizedCountries: null,
+
+            // don't insert international dial codes
+            nationalMode: true,
+
+            // display only these countries
+            onlyCountries: [],
+
+            // number type to use for placeholders
+            placeholderNumberType: "MOBILE",
+
+            // the countries at the top of the list. defaults to united states and united kingdom
+            preferredCountries: ["gt"],
+
+            // display the country dial code next to the selected flag so it's not part of the typed number
+            separateDialCode: true,
+
+            // specify the path to the libphonenumber script to enable validation/formatting
+            utilsScript: ""
+        }));
+
+        input.addEventListener("countrychange", function () {
+            // do something with iti.getSelectedCountryData()
+        });
+
+        input.addEventListener("open:countrydropdown", function () {
+            // triggered when the user opens the dropdown
+        });
+
+        input.addEventListener("close:countrydropdown", function () {
+            // triggered when the user closes the dropdown
+        });
+    </script>
+
+    <script>
+        let datos = new Vue({
+            el: '#datos',
+            data: {
+                checked: false,
+                max: 11,
+                text: ''
+            },
+        });
+
+        let datos2 = new Vue({
+            el: '#datos2',
+            data: {
+                checked: false,
+                max: 11,
+                text: ''
+            },
+        });
+
+    </script>
+}

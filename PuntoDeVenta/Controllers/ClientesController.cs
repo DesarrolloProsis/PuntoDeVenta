@@ -192,6 +192,23 @@ namespace PuntoDeVenta.Controllers
         // GET: Clientes/Create
         public ActionResult Create()
         {
+            List<SelectListItem> listItemsCuentas = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = "Colectiva",
+                    Value = "Colectiva"
+                },
+
+                new SelectListItem
+                {
+                    Text = "Individual",
+                    Value = "Individual"
+                }
+            };
+
+            ViewBag.TipoCuentas = new SelectList(listItemsCuentas.AsEnumerable(), "Value", "Text");
+            ViewBag.TagsColectivos = new Tags();
             return View();
         }
 
@@ -216,24 +233,24 @@ namespace PuntoDeVenta.Controllers
             {
                 var nameclientes = clientes.Nombre + " " + clientes.Apellidos;
 
-                var query = await db.Clientes.Where(x => x.NumCliente + " " + x.Apellidos == nameclientes || x.NumCliente == clientes.NumCliente /*|| x.EmailCliente == clientes.EmailCliente || x.PhoneCliente == clientes.PhoneCliente*/).ToListAsync();
+                var query = await db.Clientes.Where(x => x.Nombre + " " + x.Apellidos == nameclientes || x.NumCliente == clientes.NumCliente /*|| x.EmailCliente == clientes.EmailCliente || x.PhoneCliente == clientes.PhoneCliente*/).ToListAsync();
 
                 if (query.Count <= 0)
                 {
                     db.Clientes.Add(clientes);
                     await db.SaveChangesAsync();
-                    TempData["SCreate"] = $"Se registró el contrato correctamente el cliente: {clientes.NumCliente} {clientes.Nombre} {clientes.Apellidos}.";
-                    return RedirectToAction("Index");
+
+                    long id = clientes.Id;
+
+                    return Json(new { id, numcliente = clientes.NumCliente, nombre = nameclientes, success = $"Se registró correctamente el cliente: {clientes.NumCliente} {clientes.Nombre} {clientes.Apellidos}.", error = "" });
                 }
                 else
                 {
-                    TempData["ECreate"] = "El cliente ya existe, verifique los datos.";
-                    return RedirectToAction("Index");
+                    return Json(new { success = "", error = "El cliente ya existe, verifique los datos.", });
                 }
             }
 
-            TempData["ECreate"] = "¡Ups! Hubo un error inesperado.";
-            return RedirectToAction("Index");
+            return Json(new { success = "", error = "¡Ups! Hubo un error inesperado.", });
         }
 
         // Método para crar num cliente
