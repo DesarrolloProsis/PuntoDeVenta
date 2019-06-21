@@ -799,25 +799,6 @@ namespace PuntoDeVenta.Controllers
             };
         }
 
-        //[HttpGet]
-        //public ActionResult GeneralSettings()
-        //{
-        //    return View();
-        //}
-
-        //[HttpPost]
-        //public ActionResult GeneralSettings(AmountConfiguration model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.AmountConfigurations.Add(model);
-        //        db.SaveChanges();
-
-        //        return View();
-        //    }
-
-        //    return HttpNotFound();
-        //}
 
         public ActionResult Contact()
         {
