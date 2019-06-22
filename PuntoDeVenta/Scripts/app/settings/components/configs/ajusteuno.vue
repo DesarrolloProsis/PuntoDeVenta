@@ -1,76 +1,91 @@
 ﻿<template>
-    <div class="container">
-        <b-form @submit="onSubmit" @reset="onReset" v-if="show">
-            <b-form-group id="input-group-1"
-                          label="Email address:"
-                          label-for="input-1"
-                          description="We'll never share your email with anyone else.">
-                <b-form-input id="input-1"
-                              v-model="form.email"
-                              type="email"
-                              required
-                              placeholder="Enter email"></b-form-input>
-            </b-form-group>
+    <b-container fluid>
+        <h3>Eliminar usuarios del punto de venta</h3>
+        <b-alert variant="danger" show><strong>Ojo!</strong> Verificar correctamente el usuario a eliminar.</b-alert>
+        <b-table :items="myProvider" :busy="isBusy" class="mt-3" :fields="fields">
+            <div slot="table-busy" class="text-center text-danger my-2">
+                <b-spinner class="align-middle"></b-spinner>
+                <strong>Loading...</strong>
+            </div>
+            <template slot="actions" slot-scope="row">
+                <b-button size="sm" ref="btnShow" @click="info(row.item)" class="mr-1">
+                    Eliminar
+                </b-button>
+            </template>
+        </b-table>
 
-            <b-form-group id="input-group-2" label="Your Name:" label-for="input-2">
-                <b-form-input id="input-2" v-model="form.name" required placeholder="Enter name"></b-form-input>
-            </b-form-group>
-
-            <b-form-group id="input-group-3" label="Food:" label-for="input-3">
-                <b-form-select id="input-3" v-model="form.food" :options="foods" required></b-form-select>
-            </b-form-group>
-
-            <b-form-group id="input-group-4">
-                <b-form-checkbox-group v-model="form.checked" id="checkboxes-4">
-                    <b-form-checkbox value="me">Check me out</b-form-checkbox>
-                    <b-form-checkbox value="that">Check that out</b-form-checkbox>
-                </b-form-checkbox-group>
-            </b-form-group>
-
-            <b-button type="submit" variant="primary">Submit</b-button>
-            <b-button type="reset" variant="danger">Reset</b-button>
-        </b-form>
-    </div>
+        <b-modal :id="infoModal.id" :title="infoModal.title" hide-footer @hide="resetInfoModal">
+            <pre>{{infoModal.content}}</pre>
+            <b-button class="mt-3" @click="deleteUser(infoModal.idUser)" block>Eliminar</b-button>
+        </b-modal>
+    </b-container>
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      form: {
-        email: "",
-        name: "",
-        food: null,
-        checked: []
-      },
-      foods: [
-        { text: "Select One", value: null },
-        "Carrots",
-        "Beans",
-        "Tomatoes",
-        "Corn"
-      ],
-      show: true
-    };
-  },
-  methods: {
-    onSubmit(evt) {
-      evt.preventDefault();
-      alert(JSON.stringify(this.form));
-    },
-    onReset(evt) {
-      evt.preventDefault();
-      // Reset our form values
-      this.form.email = "";
-      this.form.name = "";
-      this.form.food = null;
-      this.form.checked = [];
-      // Trick to reset/clear native browser form validation state
-      this.show = false;
-      this.$nextTick(() => {
-        this.show = true;
-      });
+    import axios from 'axios'
+
+    export default {
+        computed: {
+            fields() {
+                let fields = [{ key: 'Email', label: 'Email' }, { key: 'Role', label: 'Role' }, { key: 'actions', label: 'Actions' }]
+                return fields
+            }
+        },
+        data() {
+            return {
+                isBusy: false,
+                infoModal: {
+                    id: 'info-modal',
+                    title: '',
+                    content: '',
+                    idUser: ''
+                }
+            }
+        },
+        methods: {
+            myProvider() {
+                // Here we don't set isBusy prop, so busy state will be
+                // handled by table itself
+                this.isBusy = true
+                let promise = axios.get('/Home/GetAllUsers')
+
+                return promise.then((x) => {
+                    const items = x.data
+                    // Here we could override the busy state, setting isBusy to false
+                    this.isBusy = false
+                    return (items)
+                }).catch(error => {
+                    // Here we could override the busy state, setting isBusy to false
+                    this.isBusy = false
+                    // Returning an empty array, allows table to correctly handle
+                    // internal busy state in case of error
+                    console.log(error);
+                    return []
+                })
+            },
+            info(item) {
+                this.infoModal.content = JSON.stringify(item, null, 2)
+                this.infoModal.idUser = item.Id
+                this.infoModal.title = `Usuario: ${item.Email}`
+                this.$root.$emit('bv::show::modal', this.infoModal.id, '#btnShow')
+            },
+            resetInfoModal() {
+                this.infoModal.title = ''
+                this.infoModal.content = ''
+            },
+            deleteUser(id) {
+                axios.post('/Home/DeleteUser', {
+                    "uid": id
+                }).then((x) => {
+                    const items = x.data
+                    if (items.success != "") {
+                        this.$root.$emit('bv::hide::modal', this.infoModal.id, null)
+                    }
+                }).catch(error => {
+                    console.log(error);
+                    return []
+                })
+            }
+        }
     }
-  }
-};
 </script>

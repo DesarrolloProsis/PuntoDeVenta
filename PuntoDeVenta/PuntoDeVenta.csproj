@@ -16033,6 +16033,11 @@
     <Content Include="node_modules\yargs\node_modules\camelcase\readme.md" />
     <Content Include="node_modules\yargs\package.json" />
     <Content Include="node_modules\yargs\README.md" />
+    <Content Include="Scripts\app\settings\components\configs.vue" />
+    <Content Include="Scripts\app\settings\components\configs\ajusteuno.vue" />
+    <Content Include="Scripts\app\settings\components\render.vue" />
+    <Content Include="Scripts\app\settings\Home.vue" />
+    <Content Include="Scripts\bundle\settings.js.map" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />

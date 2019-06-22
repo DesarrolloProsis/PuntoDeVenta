@@ -806,14 +806,80 @@ namespace PuntoDeVenta.Controllers
 
             return View();
         }
+
         //PRUEBA DE CONFIGURACION VIEW
-       
+        [HttpGet]
         public ActionResult Configuracion()
         {
-            ViewBag.Message = "Your application description page.";
-
-
             return View();
+        }
+
+        [HttpGet]
+        public ActionResult GetAllUsers()
+        {
+            var usersWithRoles = (from user in app.Users
+                                  select new
+                                  {
+                                      UserId = user.Id,
+                                      Username = user.UserName,
+                                      Email = user.Email,
+                                      RoleNames = (from userRole in user.Roles
+                                                   join role in app.Roles on userRole.RoleId
+                                                   equals role.Id
+                                                   select role.Name).ToList()
+                                  }).AsEnumerable().Select(p => new
+                                  {
+                                      Id = p.UserId,
+                                      Email = p.Email,
+                                      Role = string.Join(",", p.RoleNames)
+                                  });
+
+            return Json(usersWithRoles, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteUser(string uid)
+        {
+            if (uid == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            UserStore<ApplicationUser> store = new UserStore<ApplicationUser>(app);
+            UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(store);
+
+            //get User Data from Userid
+            var user = await UserManager.FindByIdAsync(uid);
+
+            //List Logins associated with user
+            var logins = user.Logins;
+
+            //Gets list of Roles associated with current user
+            var rolesForUser = await UserManager.GetRolesAsync(uid);
+
+            using (var transaction = app.Database.BeginTransaction())
+            {
+                foreach (var login in logins.ToList())
+                {
+                    await UserManager.RemoveLoginAsync(login.UserId, new UserLoginInfo(login.LoginProvider, login.ProviderKey));
+                }
+
+                if (rolesForUser.Count() > 0)
+                {
+                    foreach (var item in rolesForUser.ToList())
+                    {
+                        // item should be the name of the role
+                        var result = await UserManager.RemoveFromRoleAsync(user.Id, item);
+                    }
+                }
+
+                //Delete User
+                await UserManager.DeleteAsync(user);
+
+                transaction.Commit();
+
+                return Json(new { success = "Usuario eliminado correctamente." });
+            }
         }
     }
 }
