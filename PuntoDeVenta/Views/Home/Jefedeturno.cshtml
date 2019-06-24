@@ -1,0 +1,48 @@
+﻿
+@model PuntoDeVenta.Models.CortesCajero
+@{
+    ViewBag.Title = "Jefedeturno";
+    var modelCuenta = (PuntoDeVenta.Models.CuentasTelepeaje)ViewBag.ModelCuenta;
+    var modelTag = (PuntoDeVenta.Models.Tags)ViewBag.ModelTag;
+}
+
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-md-4">
+            <div class="margin-section shadow">
+                <div class="msj-binevenida">
+                    <h1 class="rojo">BIENVENIDO</h1>
+                    <h6><strong>Nombre de Usuario:</strong> @Html.Raw(ViewBag.NombreUsuario)</h6>
+                    <h6><strong># Cajero:</strong> @Html.Raw(ViewBag.Cajero)</h6>
+                    <h6><strong># Corte:</strong> @Html.Raw(ViewBag.Corte)</h6>
+                    <h6><strong>Fecha de inicio:</strong> @Html.Raw(ViewBag.FechaInicio)</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <button class="btn boton-inicio" style="margin-top: 0px !important; " onclick="location.href='@Url.Action("ListaNegraIndex", "Home")'">
+                <div class="row">
+                    <div class="col-md-12"><img src="~/Content/css-yisus/img/list-ul-solid.svg" class="tamano" /></div>
+                </div>
+                Lista Negra
+            </button>
+        </div>
+    </div>
+
+    <div id="ejemplo"></div>
+    @*<div class="col-md-12" style="margin-top: 10px !important; margin-left: 0px !important;">
+            <div class="row">
+                <div class="col-md-4" >
+                    <button class="btn boton-inicio" onclick="location.href='@Url.Action("ListaNegraIndex", "Home")'">
+                        <div class="row">
+                            <div class="col-md-12"><img src="~/Content/css-yisus/img/list-ul-solid.svg" class="tamano" /></div>
+                        </div>
+                        Lista Negra
+                    </button>
+                </div>
+            </div>
+        </div>*@
+</div>
+<script src="~/Scripts/bundle/indexHome.js"></script>
+<button class="hacia-arriba icon-ctrl" onclick="location.href='@Url.Action("LogOffWithoutCorte", "Account")'"><img class="signout" src="~/Content/css-yisus/img/sign-out-alt-solid.svg" /> Cerrar Sesión</button>
+

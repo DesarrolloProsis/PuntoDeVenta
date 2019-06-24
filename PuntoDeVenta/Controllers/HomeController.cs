@@ -5,7 +5,9 @@ using PuntoDeVenta.Models;
 using PuntoDeVenta.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data.Entity;
+using System.Dynamic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -293,10 +295,47 @@ namespace PuntoDeVenta.Controllers
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
-        [Authorize(Roles = "GenerarReporte, Cajero, SuperUsuario")]
+        [Authorize(Roles = "GenerarReporte, Cajero, SuperUsuario, JefeTurno")]
         public async Task<ActionResult> ListaNegraIndex()
         {
-            return View(await db.ListaNegras.ToListAsync());
+            var x = await db.ListaNegras.ToListAsync();
+
+            var data = new List<object>();
+
+            x.ForEach(listanegra =>
+            {
+                data.Add(new
+                {
+                    listanegra.Id,
+                    listanegra.Tipo,
+                    listanegra.Numero,
+                    listanegra.Observacion,
+                    SaldoAnterior = listanegra.SaldoAnterior.HasValue == true ? listanegra.SaldoAnterior.Value.ToString("F2") : "",
+                    listanegra.Date,
+                    listanegra.NumCuenta,
+                    listanegra.NumCliente,
+                    listanegra.Clase
+                });
+            });
+
+            dynamic model = new ExpandoObject();
+            List<ExpandoObject> joinData = new List<ExpandoObject>();
+
+            foreach (var item in data)
+            {
+                IDictionary<string, object> itemExpando = new ExpandoObject();
+                foreach (PropertyDescriptor property
+                         in
+                         TypeDescriptor.GetProperties(item.GetType()))
+                {
+                    itemExpando.Add(property.Name, property.GetValue(item));
+                }
+                joinData.Add(itemExpando as ExpandoObject);
+            }
+
+            model.JoinData = joinData;
+
+            return View(model);
         }
 
         [AllowAnonymous]
@@ -310,7 +349,7 @@ namespace PuntoDeVenta.Controllers
                 var _roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(app));
                 var _UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
 
-                //var result = _roleManager.Create(new IdentityRole("SuperUsuario"));
+                //var result = _roleManager.Create(new IdentityRole("JefeTurno"));
                 //var result = _roleManager.Create(new IdentityRole("Cajero"));
                 //result = _roleManager.Create(new IdentityRole("GenerarReporte"));
                 //var user = _UserManager.AddToRole(idUser, "SuperUsuario");
@@ -799,21 +838,105 @@ namespace PuntoDeVenta.Controllers
             };
         }
 
-
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
 
             return View();
         }
+
         //PRUEBA DE CONFIGURACION VIEW
-       
+        [HttpGet]
         public ActionResult Configuracion()
         {
-            ViewBag.Message = "Your application description page.";
+            return View();
+        }
+        //PRUEBA DE JEFE DE TURN0 VIEW
 
+        [Authorize(Roles = "JefeTurno")]
+        [HttpGet]
+        public ActionResult Jefedeturno()
+        {
+            ViewBag.ModelCuenta = new CuentasTelepeaje();
+            ViewBag.ModelTag = new Tags();
+            ViewBag.NombreUsuario = User.Identity.Name;
+            ViewBag.Cajero = User.Identity.Name;
 
             return View();
+        }
+
+        [HttpGet]
+        public ActionResult GetAllUsers()
+        {
+            var usersWithRoles = (from user in app.Users
+                                  select new
+                                  {
+                                      UserId = user.Id,
+                                      Username = user.UserName,
+                                      Email = user.Email,
+                                      RoleNames = (from userRole in user.Roles
+                                                   join role in app.Roles on userRole.RoleId
+                                                   equals role.Id
+                                                   select role.Name).ToList()
+                                  }).AsEnumerable().Select(p => new
+                                  {
+                                      Id = p.UserId,
+                                      Email = p.Email,
+                                      Role = string.Join(",", p.RoleNames)
+                                  });
+
+            return Json(usersWithRoles, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteUser(string uid)
+        {
+            if (uid == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            try
+            {
+                UserStore<ApplicationUser> store = new UserStore<ApplicationUser>(app);
+                UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(store);
+
+                //get User Data from Userid
+                var user = await UserManager.FindByIdAsync(uid);
+
+                //List Logins associated with user
+                var logins = user.Logins;
+
+                //Gets list of Roles associated with current user
+                var rolesForUser = await UserManager.GetRolesAsync(uid);
+
+                using (var transaction = app.Database.BeginTransaction())
+                {
+                    foreach (var login in logins.ToList())
+                    {
+                        await UserManager.RemoveLoginAsync(login.UserId, new UserLoginInfo(login.LoginProvider, login.ProviderKey));
+                    }
+
+                    if (rolesForUser.Count() > 0)
+                    {
+                        foreach (var item in rolesForUser.ToList())
+                        {
+                            // item should be the name of the role
+                            var result = await UserManager.RemoveFromRoleAsync(user.Id, item);
+                        }
+                    }
+
+                    //Delete User
+                    await UserManager.DeleteAsync(user);
+
+                    transaction.Commit();
+
+                    return Json(new { success = $"Usuario: {user.Email} eliminado correctamente." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message, success = "" });
+            }
         }
     }
 }

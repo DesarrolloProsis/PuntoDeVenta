@@ -104,8 +104,6 @@
                                 <th scope="col">Fecha registro tag</th>
                                 <th scope="col"></th>
                                 <th scope="col"></th>
-                                <th scope="col"></th>
-                                <th scope="col"></th>
                             </tr>
                         </thead>
                     </table>
@@ -455,6 +453,8 @@
             $('#submitFormAddTag').removeAttr("disabled");
             $('#submitFormCuentaReca').removeAttr("disabled");
             $('#submitFormTagReca').removeAttr("disabled");
+            $('#success-addtagcolec').hide();
+            $('#success-addtag').hide();
 
             /***************************** CLIENTES *****************************/
 
@@ -1097,22 +1097,10 @@
                         "defaultContent": '<button type="button" class="btn btn-info">Recargar saldo</button>'
                     },
                     {
-                        "className": "thabilitartag",
-                        "orderable": false,
-                        "data": null,
-                        "defaultContent": '<button type="button" class="btn btn-success">Habilitar tag</button>'
-                    },
-                    {
-                        "className": "tdeshabilitartag",
-                        "orderable": false,
-                        "data": null,
-                        "defaultContent": '<button type="button" class="btn btn-warning">Deshabilitar tag</button>'
-                    },
-                    {
                         "className": "teliminartag",
                         "orderable": false,
                         "data": null,
-                        "defaultContent": '<button type="button" class="btn btn-tabla">Eliminar tag</button>'
+                        "defaultContent": '<button type="button" class="btn btn-tabla">Mandar a lista negra</button>'
                     }
                 ],
                 order: [[1, 'desc']]

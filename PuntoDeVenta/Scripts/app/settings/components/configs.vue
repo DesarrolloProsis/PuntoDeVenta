@@ -5,7 +5,7 @@
                 <div class="space">
                     <b-list-group class="shadow">
                         <b-list-group-item button class="title-list" disabled>Configuración</b-list-group-item>
-                        <b-list-group-item @click="seleccion = '1'" button>Cantidades</b-list-group-item>
+                        <b-list-group-item @click="seleccion = '1'" button>Eliminar usuario</b-list-group-item>
                         <!--DESCOMENTAR PARA AGREGAR CONGIFURACIONES-->
                         <!--
                         <b-list-group-item @click="seleccion = '2'" button>Administrar 2</b-list-group-item>

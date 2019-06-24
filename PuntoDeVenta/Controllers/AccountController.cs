@@ -97,6 +97,8 @@ namespace PuntoDeVenta.Controllers
 
                         if (userManager.IsInRole(IdUser.Id, "GenerarReporte"))
                             return RedirectToAction("GenerarReportes", "Home");
+                        else if (userManager.IsInRole(IdUser.Id, "JefeTurno"))
+                            return RedirectToAction("Jefedeturno", "Home");
                     }
 
                     return RedirectToAction("Index", "Home", new { verfiAction = "NewLogin" });
@@ -203,7 +205,8 @@ namespace PuntoDeVenta.Controllers
             var items = new List<SelectListItem> {
                 new SelectListItem { Text = "Administrador", Value = "SuperUsuario" },
                 new SelectListItem { Text = "Cajero", Value = "Cajero"},
-                new SelectListItem { Text = "Supervisor", Value = "GenerarReporte"}
+                new SelectListItem { Text = "Supervisor", Value = "GenerarReporte"},
+                new SelectListItem { Text = "Jefe de turno", Value = "JefeTurno"}
             };
 
             ViewBag.Roles = items;
@@ -245,7 +248,12 @@ namespace PuntoDeVenta.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirmar cuenta", "Para confirmar la cuenta, haga clic <a href=\"" + callbackUrl + "\">aquí</a>");
 
-                    return RedirectToAction("Index", "Home", new { verfiAction = "NewLogin" });
+                    if (model.Rol == "SuperUsuario" || model.Rol == "Cajero")
+                        return RedirectToAction("Index", "Home", new { verfiAction = "NewLogin" });
+                    else if (model.Rol == "GenerarReporte")
+                        return RedirectToAction("GenerarReportes", "Home");
+                    else if (model.Rol == "JefeTurno")
+                        return RedirectToAction("Jefedeturno", "Home");
                 }
                 AddErrors(result);
             }
@@ -253,7 +261,9 @@ namespace PuntoDeVenta.Controllers
             // Si llegamos a este punto, es que se ha producido un error y volvemos a mostrar el formulario
             var items = new List<SelectListItem> {
                 new SelectListItem { Text = "Administrador", Value = "SuperUsuario" },
-                new SelectListItem { Text = "Cajero", Value = "Cajero"}
+                new SelectListItem { Text = "Cajero", Value = "Cajero"},
+                new SelectListItem { Text = "Supervisor", Value = "GenerarReporte"},
+                new SelectListItem { Text = "Jefe de turno", Value = "JefeTurno"}
             };
 
             ViewBag.Roles = items;
@@ -292,18 +302,19 @@ namespace PuntoDeVenta.Controllers
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                //if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                if (user == null)
                 {
                     // No revelar que el usuario no existe o que no está confirmado
                     return View("ForgotPasswordConfirmation");
                 }
 
-                // Para obtener más información sobre cómo habilitar la confirmación de cuentas y el restablecimiento de contraseña, visite https://go.microsoft.com/fwlink/?LinkID=320771
-                // Enviar correo electrónico con este vínculo
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                // await UserManager.SendEmailAsync(user.Id, "Restablecer contraseña", "Para restablecer la contraseña, haga clic <a href=\"" + callbackUrl + "\">aquí</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                //Para obtener más información sobre cómo habilitar la confirmación de cuentas y el restablecimiento de contraseña, visite https://go.microsoft.com/fwlink/?LinkID=320771
+                //Enviar correo electrónico con este vínculo
+                string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                await UserManager.SendEmailAsync(user.Id, "Restablecer contraseña", "Para restablecer la contraseña, haga clic <a href=\"" + callbackUrl + "\">aquí</a>");
+                return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
             // Si llegamos a este punto, es que se ha producido un error y volvemos a mostrar el formulario
