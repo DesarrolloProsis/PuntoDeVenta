@@ -8,7 +8,7 @@
 
 <div class="container-fluid">
     <div class="row ">
-        <div class="col-md-5 col-center">
+        <div class="col-md-4">
             <div class="margin-section shadow">
                 <div class="msj-binevenida">
                     <h1 class="rojo">BIENVENIDO</h1>
@@ -19,8 +19,29 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-2">
+            <button class="btn boton-inicio" style="margin-top: 0px !important; " onclick="location.href='@Url.Action("ListaNegraIndex", "Home")'">
+                <div class="row">
+                    <div class="col-md-12"><img src="~/Content/css-yisus/img/list-ul-solid.svg" class="tamano" /></div>
+                </div>
+                Lista Negra
+            </button>
+        </div>
     </div>
+
     <div id="ejemplo"></div>
+    @*<div class="col-md-12" style="margin-top: 10px !important; margin-left: 0px !important;">
+        <div class="row">
+            <div class="col-md-4" >
+                <button class="btn boton-inicio" onclick="location.href='@Url.Action("ListaNegraIndex", "Home")'">
+                    <div class="row">
+                        <div class="col-md-12"><img src="~/Content/css-yisus/img/list-ul-solid.svg" class="tamano" /></div>
+                    </div>
+                    Lista Negra
+                </button>
+            </div>
+        </div>
+    </div>*@
 </div>
-<script src="~/Scripts/bundle/indexHome.js"></script>
+        <script src="~/Scripts/bundle/indexHome.js"></script>
 

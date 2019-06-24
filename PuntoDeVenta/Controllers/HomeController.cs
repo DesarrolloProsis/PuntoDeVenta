@@ -817,7 +817,10 @@ namespace PuntoDeVenta.Controllers
         [HttpGet]
         public ActionResult Jefedeturno()
         {
-           
+            ViewBag.ModelCuenta = new CuentasTelepeaje();
+            ViewBag.ModelTag = new Tags();
+            ViewBag.NombreUsuario = User.Identity.Name;
+            ViewBag.Cajero = User.Identity.Name;
 
             return View();
         }
