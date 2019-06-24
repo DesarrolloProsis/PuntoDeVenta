@@ -539,115 +539,68 @@ namespace PuntoDeVenta.Controllers
             return View(tags);
         }
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(long id)
+        [HttpPost]
+        public async Task<ActionResult> DeleteConfirmed(string numtag)
         {
-            db.Configuration.ValidateOnSaveEnabled = false;
-            Tags tag = await db.Tags.FindAsync(id);
-
-            if (tag.StatusTag == false)
+            try
             {
-                Tags tags = await db.Tags.FindAsync(id);
-                db.Tags.Remove(tags);
+                db.Configuration.ValidateOnSaveEnabled = false;
+                ListaNegra tag = await db.ListaNegras.Where(x => x.Numero == numtag).FirstOrDefaultAsync();
+
+                db.ListaNegras.Remove(tag);
                 await db.SaveChangesAsync();
 
-                TempData["SDelete"] = $"Se eliminó correctamente el tag: {tag.NumTag}.";
-                return RedirectToAction("Index", "Clientes");
+                return Json(new { success = $"Se eliminó correctamente el tag: {tag.Numero}." });
             }
-
-            TempData["EDelete"] = "Primero debe deshabilitar el tag.";
-            return RedirectToAction("Index", "Clientes");
-
+            catch (Exception ex)
+            {
+                return Json(new { success = "", error = ex.Message });
+            }
         }
 
-
-        // deshabilitar
-        public async Task<ActionResult> Deshabilitar(long? id)
+        public async Task<ActionResult> RegresarListaBlanca(string numtag, string numcuenta)
         {
-            if (id == null)
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Tags tags = await db.Tags.FindAsync(id);
-            if (tags == null)
-            {
-                return HttpNotFound();
-            }
-            return View(tags);
-        }
+                db.Configuration.ValidateOnSaveEnabled = false;
+                ListaNegra tag = await db.ListaNegras.Where(x => x.Numero == numtag).FirstOrDefaultAsync();
+                CuentasTelepeaje cuenta = await db.CuentasTelepeajes.Where(x => x.NumCuenta == numcuenta).FirstOrDefaultAsync();
 
-        [HttpPost, ActionName("Deshabilitar")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeshabilitarConfirmed(long id)
-        {
-            db.Configuration.ValidateOnSaveEnabled = false;
-            Tags tag = await db.Tags.FindAsync(id);
+                var tagNew = new Tags
+                {
+                    StatusResidente = false,
+                    StatusTag = true,
+                    DateTTag = DateTime.Now,
+                    IdCajero = User.Identity.GetUserId(),
+                    NumTag = numtag,
+                    CuentaId = cuenta.Id,
+                };
 
-            if (tag.StatusTag == true)
-            {
-                tag.StatusTag = false;
-                db.Tags.Attach(tag);
-                db.Entry(tag).State = EntityState.Modified;
-
+                switch (cuenta.TypeCuenta)
+                {
+                    case "Colectiva":
+                        tagNew.SaldoTag = cuenta.SaldoCuenta;
+                        break;
+                    case "Individual":
+                        var SaldoSend = tag.SaldoAnterior.Value.ToString("F2");
+                        SaldoSend = SaldoSend.Replace(",", string.Empty);
+                        tagNew.SaldoTag = SaldoSend.Replace(".", string.Empty);
+                        break;
+                    default:
+                        break;
+                }
+                db.Tags.Add(tagNew);
+                db.ListaNegras.Remove(tag);
                 await db.SaveChangesAsync();
 
-                TempData["SDelete"] = $"Se dio de baja correctamente el tag: {tag.NumTag}.";
-                return RedirectToAction("Index", "Clientes");
+                return Json(new { success = $"Se agregó correctamente el tag: {numtag} a la cuenta: {numcuenta}." });
             }
-
-            TempData["EDelete"] = $"El tag: {tag.NumTag} ya está dado de baja.";
-            return RedirectToAction("Index", "Clientes");
-        }
-
-        // POST: Tags/Activate/5
-        public async Task<ActionResult> Activate(long? id)
-        {
-            db.Configuration.ValidateOnSaveEnabled = false;
-            Tags tag = await db.Tags.Include(t => t.CuentasTelepeaje).SingleOrDefaultAsync(x => x.Id == id);
-
-            if (tag.StatusTag == false)
+            catch (Exception ex)
             {
-
-                var FoundCliente = await db.CuentasTelepeajes.Join(
-                                            db.Clientes,
-                                            cue => cue.ClienteId,
-                                            cli => cli.Id,
-                                            (cue, cli) => new { cue, cli })
-                                            .Where(x => x.cli.Id == tag.CuentasTelepeaje.ClienteId)
-                                            .FirstOrDefaultAsync();
-
-                if (FoundCliente.cli.StatusCliente == false)
-                {
-                    TempData["ECreate"] = "No se puede activar el tag: " + tag.NumTag + " porque el cliente al que pertenece está dado de baja.";
-                    return RedirectToAction("Index", "Clientes");
-                }
-
-                if (tag.CuentasTelepeaje.StatusCuenta == false)
-                {
-                    TempData["EDelete"] = $"No es posible habilitar el tag: {tag.NumTag} porque a la cuenta que pertence ({tag.CuentasTelepeaje.NumCuenta}) está dada de baja.";
-                    return RedirectToAction("Index", "Clientes");
-                }
-
-                if (((double.Parse(tag.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }) / 100) >= 20))
-                {
-                    tag.StatusTag = true;
-                    db.Tags.Attach(tag);
-                    db.Entry(tag).State = EntityState.Modified;
-
-                    await db.SaveChangesAsync();
-
-                    TempData["SDelete"] = $"Se dio de alta correctamente el tag: {tag.NumTag}.";
-                    return RedirectToAction("Index", "Clientes");
-                }
-
-                TempData["EDelete"] = $"El tag: {tag.NumTag} no tiene saldo válido.";
-                return RedirectToAction("Index", "Clientes");
+                return Json(new { success = "", error = ex.Message });
             }
-
-            TempData["EDelete"] = $"El tag: {tag.NumTag} ya está dado de alta.";
-            return RedirectToAction("Index", "Clientes");
         }
+
 
         [HttpPost]
         public async Task<ActionResult> DeleteTraspaso(TagsViewModel model)

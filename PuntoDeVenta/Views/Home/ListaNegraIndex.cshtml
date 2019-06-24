@@ -1,5 +1,4 @@
-﻿@model IEnumerable<PuntoDeVenta.Models.ListaNegra>
-
+﻿@model dynamic
 @{
     /**/
 
@@ -23,63 +22,112 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.NumCliente)
+                @Html.DisplayName("NumCliente")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NumCuenta)
+                @Html.DisplayName("NumCuenta")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Tipo)
+                @Html.DisplayName("Tipo")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Clase)
+                @Html.DisplayName("Clase")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Numero)
+                @Html.DisplayName("Numero")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Observacion)
+                @Html.DisplayName("Observacion")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SaldoAnterior)
+                @Html.DisplayName("SaldoAnterior")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Date)
+                @Html.DisplayName("Date")
             </th>
+            <th>Regresar</th>
+            <th>Eliminar</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.JoinData)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.NumCliente)
+                    @item.NumCliente
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.NumCuenta)
+                    @item.NumCuenta
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Tipo)
+                    @item.Tipo
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Clase)
+                    @item.Clase
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Numero)
+                    @item.Numero
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Observacion)
+                    @item.Observacion
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SaldoAnterior)
+                    @item.SaldoAnterior
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Date)
+                    @item.Date
                 </td>
+                <td>
+                    @if (item.NumCuenta != "" && item.NumCuenta != null)
+                    {
+                        <button type="button" class="btn btn-warning" onclick="RegresarFunc(@item.Numero, @item.NumCuenta)">Regresar a lista blanca</button>
+                    }
+                </td>
+                <td><button type="button" class="btn btn-danger" onclick="DeleteFunc(@item.Numero)">Eliminar definitivamente</button></td>
             </tr>
         }
     </tbody>
 </table>
+
+<div class="modal" tabindex="-1" role="dialog" id="ConfEliminar">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Eliminar definitivamente</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Seguro de eliminar definitivamente el tag: <label id="deletetag"></label>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="ConfDeleteFunc()">Eliminar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="ConfRegresar">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Regresar a cuenta: <label id="numcuenta"></label></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Seguro de regresar el tag: <label id="numtag"></label> a la cuenta: <label id="numcuentabody"></label>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="ConfRegresarFunc()">Regresar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts
 {
@@ -105,5 +153,57 @@
                 }
             });
         });
+
+        function RegresarFunc(numtag, numcuenta) {
+            $('#numcuenta').text(numcuenta);
+            $('#numcuentabody').text(numcuenta);
+            $('#numtag').text(numtag);
+            $('#ConfRegresar').modal("show");
+        }
+
+        function DeleteFunc(numtag) {
+            $("#deletetag").text(numtag);
+            $('#ConfEliminar').modal('show');
+        }
+
+        function ConfDeleteFunc() {
+            //código de la función
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("DeleteConfirmed", "Tags")',
+                data: { numtag: $('#deletetag').text() },
+                success: (data) => {
+                    alert(data.success);
+                    var url = '@Url.Action("ListaNegraIndex", "Home")';
+                    window.location.href = url;
+                },
+                failure: function (response) {
+                    console.log(response.responseText);
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        }
+
+        function ConfRegresarFunc() {
+            //código de la función
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("RegresarListaBlanca", "Tags")',
+                data: { numtag: $('#numtag').text(), numcuenta: $('#numcuenta').text() },
+                success: (data) => {
+                    alert(data.success);
+                    var url = '@Url.Action("ListaNegraIndex", "Home")';
+                    window.location.href = url;
+                },
+                failure: function (response) {
+                    console.log(response.responseText);
+                },
+                error: function (response) {
+                    console.log(response.responseText);
+                }
+            });
+        }
     </script>
 }

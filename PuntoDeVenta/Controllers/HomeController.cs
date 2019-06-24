@@ -5,7 +5,9 @@ using PuntoDeVenta.Models;
 using PuntoDeVenta.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data.Entity;
+using System.Dynamic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -296,7 +298,44 @@ namespace PuntoDeVenta.Controllers
         [Authorize(Roles = "GenerarReporte, Cajero, SuperUsuario")]
         public async Task<ActionResult> ListaNegraIndex()
         {
-            return View(await db.ListaNegras.ToListAsync());
+            var x = await db.ListaNegras.ToListAsync();
+
+            var data = new List<object>();
+
+            x.ForEach(listanegra =>
+            {
+                data.Add(new
+                {
+                    listanegra.Id,
+                    listanegra.Tipo,
+                    listanegra.Numero,
+                    listanegra.Observacion,
+                    SaldoAnterior = listanegra.SaldoAnterior.HasValue == true ? listanegra.SaldoAnterior.Value.ToString("F2") : "",
+                    listanegra.Date,
+                    listanegra.NumCuenta,
+                    listanegra.NumCliente,
+                    listanegra.Clase
+                });
+            });
+
+            dynamic model = new ExpandoObject();
+            List<ExpandoObject> joinData = new List<ExpandoObject>();
+
+            foreach (var item in data)
+            {
+                IDictionary<string, object> itemExpando = new ExpandoObject();
+                foreach (PropertyDescriptor property
+                         in
+                         TypeDescriptor.GetProperties(item.GetType()))
+                {
+                    itemExpando.Add(property.Name, property.GetValue(item));
+                }
+                joinData.Add(itemExpando as ExpandoObject);
+            }
+
+            model.JoinData = joinData;
+
+            return View(model);
         }
 
         [AllowAnonymous]
