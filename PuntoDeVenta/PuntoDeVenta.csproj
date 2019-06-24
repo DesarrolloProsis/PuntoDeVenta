@@ -573,6 +573,7 @@
     <Content Include="Content\css-yisus\img\money-check-alt-solid.svg" />
     <Content Include="Content\css-yisus\img\pluma.svg" />
     <Content Include="Content\css-yisus\img\search-solid.svg" />
+    <Content Include="Content\css-yisus\img\settings.svg" />
     <Content Include="Content\css-yisus\img\sign-out-alt-solid.svg" />
     <Content Include="Content\css-yisus\img\siva.jpeg" />
     <Content Include="Content\css-yisus\img\SIVAREPORT.png" />
@@ -16321,6 +16322,7 @@
     <Content Include="Views\Shared\_AddTagsColectivos.cshtml" />
     <Content Include="Views\Home\MovimientoCajero.cshtml" />
     <Content Include="Views\Home\Configuracion.cshtml" />
+    <Content Include="Views\Home\Jefedeturno.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
