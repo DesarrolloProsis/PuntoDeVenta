@@ -566,6 +566,11 @@ namespace PuntoDeVenta.Controllers
                 ListaNegra tag = await db.ListaNegras.Where(x => x.Numero == numtag).FirstOrDefaultAsync();
                 CuentasTelepeaje cuenta = await db.CuentasTelepeajes.Where(x => x.NumCuenta == numcuenta).FirstOrDefaultAsync();
 
+                if (cuenta == null)
+                {
+                    return Json(new { success = "", error = "No existe la cuenta." });
+                }
+
                 var tagNew = new Tags
                 {
                     StatusResidente = false,

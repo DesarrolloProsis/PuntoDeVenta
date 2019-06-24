@@ -47,6 +47,14 @@
                                     </li>
                                 </ul>
                             }
+                            else if (userManager.IsInRole(IdUser, "JefeTurno"))
+                            {
+                                <ul class="navbar-nav">
+                                    <li class="nav-item @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">
+                                        @Html.ActionLink("Inicio", "Jefedeturno", "Home", routeValues: null, htmlAttributes: new { @class = "nav-link" })
+                                    </li>
+                                </ul>
+                            }
                             else
                             {
                                 <ul class="navbar-nav">

@@ -1,4 +1,7 @@
-﻿@model dynamic
+﻿@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.EntityFramework;
+@using PuntoDeVenta.Models;
+@model dynamic
 @{
     /**/
 
@@ -45,8 +48,22 @@
             <th>
                 @Html.DisplayName("Date")
             </th>
-            <th>Regresar</th>
-            <th>Eliminar</th>
+            @{
+                if (User.Identity.IsAuthenticated)
+                {
+                    using (ApplicationDbContext app = new ApplicationDbContext())
+                    {
+                        var IdUser = User.Identity.GetUserId();
+                        var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
+
+                        if (userManager.IsInRole(IdUser, "GenerarReporte") || userManager.IsInRole(IdUser, "SuperUsuario") || userManager.IsInRole(IdUser, "Cajero"))
+                        {
+                            <th>Regresar</th>
+                            <th>Eliminar</th>
+                        }
+                    }
+                }
+            }
         </tr>
     </thead>
     <tbody>
@@ -77,13 +94,27 @@
                 <td>
                     @item.Date
                 </td>
-                <td>
-                    @if (item.NumCuenta != "" && item.NumCuenta != null)
+                @{
+                    if (User.Identity.IsAuthenticated)
                     {
-                        <button type="button" class="btn btn-warning" onclick="RegresarFunc(@item.Numero, @item.NumCuenta)">Regresar a lista blanca</button>
+                        using (ApplicationDbContext app = new ApplicationDbContext())
+                        {
+                            var IdUser = User.Identity.GetUserId();
+                            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
+
+                            if (userManager.IsInRole(IdUser, "GenerarReporte") || userManager.IsInRole(IdUser, "SuperUsuario") || userManager.IsInRole(IdUser, "Cajero"))
+                            {
+                                <td>
+                                    @if (item.NumCuenta != "" && item.NumCuenta != null)
+                                    {
+                                        <button type="button" class="btn btn-warning" onclick="RegresarFunc(@item.Numero, @item.NumCuenta)">Regresar a lista blanca</button>
+                                    }
+                                </td>
+                                <td><button type="button" class="btn btn-danger" onclick="DeleteFunc(@item.Numero)">Eliminar definitivamente</button></td>
+                            }
+                        }
                     }
-                </td>
-                <td><button type="button" class="btn btn-danger" onclick="DeleteFunc(@item.Numero)">Eliminar definitivamente</button></td>
+                }
             </tr>
         }
     </tbody>
@@ -173,9 +204,14 @@
                 url: '@Url.Action("DeleteConfirmed", "Tags")',
                 data: { numtag: $('#deletetag').text() },
                 success: (data) => {
-                    alert(data.success);
-                    var url = '@Url.Action("ListaNegraIndex", "Home")';
-                    window.location.href = url;
+                    if (data.success != "") {
+                        alert(data.success);
+                        var url = '@Url.Action("ListaNegraIndex", "Home")';
+                        window.location.href = url;
+                    }
+                    else {
+                        alert(data.error);
+                    }
                 },
                 failure: function (response) {
                     console.log(response.responseText);
@@ -193,9 +229,14 @@
                 url: '@Url.Action("RegresarListaBlanca", "Tags")',
                 data: { numtag: $('#numtag').text(), numcuenta: $('#numcuenta').text() },
                 success: (data) => {
-                    alert(data.success);
-                    var url = '@Url.Action("ListaNegraIndex", "Home")';
-                    window.location.href = url;
+                    if (data.success != "") {
+                        alert(data.success);
+                        var url = '@Url.Action("ListaNegraIndex", "Home")';
+                        window.location.href = url;
+                    }
+                    else {
+                        alert(data.error);
+                    }
                 },
                 failure: function (response) {
                     console.log(response.responseText);

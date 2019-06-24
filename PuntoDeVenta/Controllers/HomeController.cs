@@ -295,7 +295,7 @@ namespace PuntoDeVenta.Controllers
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
-        [Authorize(Roles = "GenerarReporte, Cajero, SuperUsuario")]
+        [Authorize(Roles = "GenerarReporte, Cajero, SuperUsuario, JefeTurno")]
         public async Task<ActionResult> ListaNegraIndex()
         {
             var x = await db.ListaNegras.ToListAsync();
@@ -349,7 +349,7 @@ namespace PuntoDeVenta.Controllers
                 var _roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(app));
                 var _UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
 
-                //var result = _roleManager.Create(new IdentityRole("SuperUsuario"));
+                //var result = _roleManager.Create(new IdentityRole("JefeTurno"));
                 //var result = _roleManager.Create(new IdentityRole("Cajero"));
                 //result = _roleManager.Create(new IdentityRole("GenerarReporte"));
                 //var user = _UserManager.AddToRole(idUser, "SuperUsuario");
@@ -838,7 +838,6 @@ namespace PuntoDeVenta.Controllers
             };
         }
 
-
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
@@ -853,6 +852,8 @@ namespace PuntoDeVenta.Controllers
             return View();
         }
         //PRUEBA DE JEFE DE TURN0 VIEW
+
+        [Authorize(Roles = "JefeTurno")]
         [HttpGet]
         public ActionResult Jefedeturno()
         {
