@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Net.Mail;
+using System.Net.Mime;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -18,6 +20,26 @@ namespace PuntoDeVenta
     {
         public Task SendAsync(IdentityMessage message)
         {
+
+            MailMessage msg = new MailMessage();
+            msg.From = new MailAddress("glucasc@outlook.com");
+            msg.To.Add(new MailAddress(message.Destination));
+            msg.Subject = message.Subject;
+            msg.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(message.Body, null, MediaTypeNames.Text.Html));
+
+            //SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", Convert.ToInt32(587));
+            //System.Net.NetworkCredential credentials = new System.Net.NetworkCredential("soreclucas74@gmail.com", "lucerde1");
+            //smtpClient.Credentials = credentials;
+            //smtpClient.EnableSsl = false;
+            //smtpClient.Send(msg);
+            SmtpClient client = new SmtpClient("smtp-mail.outlook.com", Convert.ToInt32(587));
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.UseDefaultCredentials = false;
+            System.Net.NetworkCredential credentials = new System.Net.NetworkCredential("glucasc@outlook.com", "Lucerde1@");
+            client.EnableSsl = true;
+            client.Credentials = credentials;
+            client.Send(msg);
+
             // Conecte su servicio de correo electrónico aquí para enviar correo electrónico.
             return Task.FromResult(0);
         }
@@ -40,7 +62,7 @@ namespace PuntoDeVenta
         {
         }
 
-        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
+        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)
         {
             var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
             // Configure la lógica de validación de nombres de usuario
@@ -81,7 +103,7 @@ namespace PuntoDeVenta
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
-                manager.UserTokenProvider = 
+                manager.UserTokenProvider =
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;

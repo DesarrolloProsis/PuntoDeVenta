@@ -22,6 +22,9 @@
                     @Html.PasswordFor(m => m.Password, new { @class = "form-control textboxstyle", placeholder = "Contraseña" })
                     @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
                 </div>
+                <p>
+                    @Html.ActionLink("¿Ha olvidado su contraseña?", "ForgotPassword")
+                </p>
                 <div class="form-group">
                     <div class="col-md-12">
                         <input type="submit" value="Iniciar sesión" class="btn botonstyle2 btn-lg btn-block" />

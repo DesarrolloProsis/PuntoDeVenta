@@ -844,41 +844,47 @@ namespace PuntoDeVenta.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-
-            UserStore<ApplicationUser> store = new UserStore<ApplicationUser>(app);
-            UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(store);
-
-            //get User Data from Userid
-            var user = await UserManager.FindByIdAsync(uid);
-
-            //List Logins associated with user
-            var logins = user.Logins;
-
-            //Gets list of Roles associated with current user
-            var rolesForUser = await UserManager.GetRolesAsync(uid);
-
-            using (var transaction = app.Database.BeginTransaction())
+            try
             {
-                foreach (var login in logins.ToList())
-                {
-                    await UserManager.RemoveLoginAsync(login.UserId, new UserLoginInfo(login.LoginProvider, login.ProviderKey));
-                }
+                UserStore<ApplicationUser> store = new UserStore<ApplicationUser>(app);
+                UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(store);
 
-                if (rolesForUser.Count() > 0)
+                //get User Data from Userid
+                var user = await UserManager.FindByIdAsync(uid);
+
+                //List Logins associated with user
+                var logins = user.Logins;
+
+                //Gets list of Roles associated with current user
+                var rolesForUser = await UserManager.GetRolesAsync(uid);
+
+                using (var transaction = app.Database.BeginTransaction())
                 {
-                    foreach (var item in rolesForUser.ToList())
+                    foreach (var login in logins.ToList())
                     {
-                        // item should be the name of the role
-                        var result = await UserManager.RemoveFromRoleAsync(user.Id, item);
+                        await UserManager.RemoveLoginAsync(login.UserId, new UserLoginInfo(login.LoginProvider, login.ProviderKey));
                     }
+
+                    if (rolesForUser.Count() > 0)
+                    {
+                        foreach (var item in rolesForUser.ToList())
+                        {
+                            // item should be the name of the role
+                            var result = await UserManager.RemoveFromRoleAsync(user.Id, item);
+                        }
+                    }
+
+                    //Delete User
+                    await UserManager.DeleteAsync(user);
+
+                    transaction.Commit();
+
+                    return Json(new { success = $"Usuario: {user.Email} eliminado correctamente." });
                 }
-
-                //Delete User
-                await UserManager.DeleteAsync(user);
-
-                transaction.Commit();
-
-                return Json(new { success = "Usuario eliminado correctamente." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message, success = "" });
             }
         }
     }
