@@ -813,6 +813,14 @@ namespace PuntoDeVenta.Controllers
         {
             return View();
         }
+        //PRUEBA DE JEFE DE TURN0 VIEW
+        [HttpGet]
+        public ActionResult Jefedeturno()
+        {
+           
+
+            return View();
+        }
 
         [HttpGet]
         public ActionResult GetAllUsers()

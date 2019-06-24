@@ -1,0 +1,26 @@
+﻿
+@model PuntoDeVenta.Models.CortesCajero
+@{
+    ViewBag.Title = "Jefedeturno";
+    var modelCuenta = (PuntoDeVenta.Models.CuentasTelepeaje)ViewBag.ModelCuenta;
+    var modelTag = (PuntoDeVenta.Models.Tags)ViewBag.ModelTag;
+}
+
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-md-5 col-center">
+            <div class="margin-section shadow">
+                <div class="msj-binevenida">
+                    <h1 class="rojo">BIENVENIDO</h1>
+                    <h6><strong>Nombre de Usuario:</strong> @Html.Raw(ViewBag.NombreUsuario)</h6>
+                    <h6><strong># Cajero:</strong> @Html.Raw(ViewBag.Cajero)</h6>
+                    <h6><strong># Corte:</strong> @Html.Raw(ViewBag.Corte)</h6>
+                    <h6><strong>Fecha de inicio:</strong> @Html.Raw(ViewBag.FechaInicio)</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="ejemplo"></div>
+</div>
+<script src="~/Scripts/bundle/indexHome.js"></script>
+
