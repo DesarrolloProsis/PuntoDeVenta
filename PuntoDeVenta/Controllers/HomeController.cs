@@ -349,7 +349,7 @@ namespace PuntoDeVenta.Controllers
                 var _roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(app));
                 var _UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
 
-                //var result = _roleManager.Create(new IdentityRole("JefeTurno"));
+                var result = _roleManager.Create(new IdentityRole("JefeTurno"));
                 //var result = _roleManager.Create(new IdentityRole("Cajero"));
                 //result = _roleManager.Create(new IdentityRole("GenerarReporte"));
                 //var user = _UserManager.AddToRole(idUser, "SuperUsuario");
@@ -857,8 +857,6 @@ namespace PuntoDeVenta.Controllers
         [HttpGet]
         public ActionResult Jefedeturno()
         {
-            ViewBag.ModelCuenta = new CuentasTelepeaje();
-            ViewBag.ModelTag = new Tags();
             ViewBag.NombreUsuario = User.Identity.Name;
             ViewBag.Cajero = User.Identity.Name;
 
