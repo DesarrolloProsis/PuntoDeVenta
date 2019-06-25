@@ -12,6 +12,7 @@ using iTextSharp.text.pdf;
 using iTextSharp.testutils;
 using System.IO;
 using System.Collections;
+using System.Globalization;
 
 namespace PuntoDeVenta.Controllers
 {
@@ -31,6 +32,8 @@ namespace PuntoDeVenta.Controllers
         public static string Fecha2;
         public static string Plaza;
         public static string saldo;
+        public static string saldoMov;
+        public static string saldoCru;
         public static object Info;
 
         // GET: Historico
@@ -81,7 +84,7 @@ namespace PuntoDeVenta.Controllers
         public JsonResult GetMovimientos()
         {
             List<SelectListItem> Items = new List<SelectListItem>();
-      
+
 
             Items.Add(new SelectListItem
             {
@@ -112,13 +115,17 @@ namespace PuntoDeVenta.Controllers
             string Cuenta = model.Cuenta;
             string TypeMovimiento = model.TypeMovimiento;
             string Tipo = "";
+            saldoCru = string.Empty;
+            saldoMov = string.Empty;
             AppDbContext db = new AppDbContext();
             List<Cruces> ListCruces = new List<Cruces>();
             List<Movimientos> ListMovimiento = new List<Movimientos>();
             DataTable dt = new DataTable();
+            CultureInfo culture = new CultureInfo("es-MX", false);
 
             if (Tag != null && Tag != "")
             {
+
                 if (model.Fecha_Fin > model.Fecha_Inicio || Fecha_Inicio != "01/01/0001" && Fecha_Fin != "01/01/0001")
                 {
                     if (model.Fecha_Fin == DateTime.Now.Date)
@@ -131,16 +138,43 @@ namespace PuntoDeVenta.Controllers
                             ListMovimiento = Movimientos(Tag, model.Fecha_Inicio, DateAyuda, 1, true);
                             ListCruces = Cruces(Tag, model.Fecha_Inicio, DateAyuda, 1, true);
 
-
-
-
-                            if (ListMovimiento.Any() || ListCruces.Any())
+                            if (ListMovimiento.Count != 0 && ListCruces.Count != 0)
                             {
 
+                                //if (ListMovimiento.Count != 0)
+                                //{
+                                Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Tag, Tipo, ListMovimiento[0].TotalMonetarioMovimientos, ListCruces[0].TotalMonetarioCruces };
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count); saldoMov = ListMovimiento[0].TotalMonetarioMovimientos; saldoCru = ListCruces[0].TotalMonetarioCruces;
+                                model.ListaMovimientos = null;
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                model.ListaCruces = null;
+                                ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, false);
+                                model.ListCruceMovimientos = ListPDFCrucesMovimientos;
+                                ClienteAdmin = false;
+                                model.Info = Info;
+                                return View("Tabla_Historico", model);
+                                //}
+                                //if (ListCruces.Count != 0)
+                                //{
+                                //    Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo, ListMovimiento[0].TotalMonetarioMovimientos, ListCruces[0].TotalMonetarioCruces };
+                                //    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListCruces.Count); saldoMov = ListMovimiento[0].TotalMonetarioMovimientos; saldoCru = ListCruces[0].TotalMonetarioCruces;
+                                //    model.ListaMovimientos = null;
+                                //    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListCruces.Count);
+                                //    model.ListaCruces = null;
+                                //    ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, false);
+                                //    model.ListCruceMovimientos = ListPDFCrucesMovimientos;
+                                //    ClienteAdmin = false;
+                                //    model.Info = Info;
+                                //    return View("Tabla_Historico", model);
+                                //}
+
+                            }
+                            else
+                            {
                                 if (ListMovimiento.Count != 0)
                                 {
-                                    Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Tag, Tipo };
-                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                    Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Tag, Tipo, ListMovimiento[0].TotalMonetarioMovimientos };
+                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count); saldoMov = ListMovimiento[0].TotalMonetarioMovimientos;
                                     model.ListaMovimientos = null;
                                     Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
                                     model.ListaCruces = null;
@@ -152,8 +186,8 @@ namespace PuntoDeVenta.Controllers
                                 }
                                 if (ListCruces.Count != 0)
                                 {
-                                    Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo };
-                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListCruces.Count);
+                                    Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo, ListCruces[0].TotalMonetarioCruces };
+                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListCruces.Count); saldoCru = ListCruces[0].TotalMonetarioCruces;
                                     model.ListaMovimientos = null;
                                     Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListCruces.Count);
                                     model.ListaCruces = null;
@@ -163,9 +197,7 @@ namespace PuntoDeVenta.Controllers
                                     model.Info = Info;
                                     return View("Tabla_Historico", model);
                                 }
-
                             }
-
 
                         }
                         else if (TypeMovimiento == "01")
@@ -174,8 +206,8 @@ namespace PuntoDeVenta.Controllers
 
                             if (ListMovimiento.Any())
                             {
-                                Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListMovimiento.Count, ListMovimiento[0].SaldoActual, TagCuenta = Tag, Tipo };
-                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = ListMovimiento.Count.ToString();
+                                Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListMovimiento.Count, ListMovimiento[0].SaldoActual, TagCuenta = Tag, Tipo, ListMovimiento[0].TotalMonetarioMovimientos };
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = ListMovimiento.Count.ToString(); saldoMov = ListMovimiento[0].TotalMonetarioMovimientos;
                                 model.ListaMovimientos = ListMovimiento;
                                 Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = ListMovimiento.Count.ToString();
                                 model.ListaCruces = null;
@@ -193,9 +225,9 @@ namespace PuntoDeVenta.Controllers
 
                             if (ListCruces.Any())
                             {
-                                Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo };
+                                Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo, ListCruces[0].TotalMonetarioCruces };
                                 model.ListaCruces = ListCruces;
-                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = ListCruces.Count.ToString();
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = ListCruces.Count.ToString(); ; saldoCru = ListCruces[0].TotalMonetarioCruces;
                                 model.ListaMovimientos = null;
                                 model.ListCruceMovimientos = null;
                                 ListPDFCruces = ListCruces;
@@ -221,13 +253,43 @@ namespace PuntoDeVenta.Controllers
 
 
 
-                            if (ListMovimiento.Any() || ListCruces.Any())
+                            if (ListMovimiento.Count != 0 && ListCruces.Count != 0)
                             {
 
+                                //if (ListMovimiento.Count != 0)
+                                //{
+                                Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Tag, Tipo, ListMovimiento[0].TotalMonetarioMovimientos, ListCruces[0].TotalMonetarioCruces };
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count); saldoMov = ListMovimiento[0].TotalMonetarioMovimientos; saldoCru = ListCruces[0].TotalMonetarioCruces;
+                                model.ListaMovimientos = null;
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                model.ListaCruces = null;
+                                ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, false);
+                                model.ListCruceMovimientos = ListPDFCrucesMovimientos;
+                                ClienteAdmin = false;
+                                model.Info = Info;
+                                return View("Tabla_Historico", model);
+                                //}
+                                //else if (ListCruces.Count != 0)
+                                //{
+                                //    Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo, ListMovimiento[0].TotalMonetarioMovimientos, ListCruces[0].TotalMonetarioCruces };
+                                //    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListCruces.Count); saldoMov = ListMovimiento[0].TotalMonetarioMovimientos; saldoCru = ListCruces[0].TotalMonetarioCruces;
+                                //    model.ListaMovimientos = null;
+                                //    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListCruces.Count);
+                                //    model.ListaCruces = null;
+                                //    ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, false);
+                                //    model.ListCruceMovimientos = ListPDFCrucesMovimientos;
+                                //    ClienteAdmin = false;
+                                //    model.Info = Info;
+                                //    return View("Tabla_Historico", model);
+                                //}
+
+                            }
+                            else
+                            {
                                 if (ListMovimiento.Count != 0)
                                 {
-                                    Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Tag, Tipo };
-                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                    Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Tag, Tipo, ListMovimiento[0].TotalMonetarioMovimientos };
+                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count); saldoMov = ListMovimiento[0].TotalMonetarioMovimientos;
                                     model.ListaMovimientos = null;
                                     Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
                                     model.ListaCruces = null;
@@ -237,10 +299,10 @@ namespace PuntoDeVenta.Controllers
                                     model.Info = Info;
                                     return View("Tabla_Historico", model);
                                 }
-                                else if (ListCruces.Count != 0)
+                                if (ListCruces.Count != 0)
                                 {
-                                    Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo };
-                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListCruces.Count);
+                                    Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo, ListCruces[0].TotalMonetarioCruces };
+                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListCruces.Count); saldoCru = ListCruces[0].TotalMonetarioCruces;
                                     model.ListaMovimientos = null;
                                     Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListCruces.Count);
                                     model.ListaCruces = null;
@@ -250,7 +312,6 @@ namespace PuntoDeVenta.Controllers
                                     model.Info = Info;
                                     return View("Tabla_Historico", model);
                                 }
-
                             }
 
 
@@ -262,9 +323,9 @@ namespace PuntoDeVenta.Controllers
 
                             if (ListMovimiento.Any())
                             {
-                                Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListMovimiento.Count, ListMovimiento[0].SaldoActual, TagCuenta = Tag, Tipo };
+                                Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListMovimiento.Count, ListMovimiento[0].SaldoActual, TagCuenta = Tag, Tipo, ListMovimiento[0].TotalMonetarioMovimientos };
                                 model.Info = Info;
-                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = ListMovimiento.Count.ToString();
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = ListMovimiento.Count.ToString(); saldoMov = ListMovimiento[0].TotalMonetarioMovimientos;
                                 model.ListaMovimientos = ListMovimiento;
                                 model.ListaCruces = null;
                                 model.ListCruceMovimientos = null;
@@ -281,9 +342,9 @@ namespace PuntoDeVenta.Controllers
 
                             if (ListCruces.Any())
                             {
-                                Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo };
+                                Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo, ListCruces[0].TotalMonetarioCruces };
                                 model.Info = Info;
-                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = ListCruces.Count.ToString();
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = ListCruces.Count.ToString(); saldoCru = ListCruces[0].TotalMonetarioCruces;
                                 model.ListaCruces = ListCruces;
                                 model.ListaMovimientos = null;
                                 model.ListCruceMovimientos = null;
@@ -310,13 +371,43 @@ namespace PuntoDeVenta.Controllers
 
 
 
-                            if (ListMovimiento.Any() || ListCruces.Any())
+                            if (ListMovimiento.Count != 0 && ListCruces.Count != 0)
                             {
 
+                                //if (ListMovimiento.Count != 0)
+                                //{
+                                Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Tag, Tipo, ListMovimiento[0].TotalMonetarioMovimientos, ListCruces[0].TotalMonetarioCruces };
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count); saldoMov = ListMovimiento[0].TotalMonetarioMovimientos; saldoCru = ListCruces[0].TotalMonetarioCruces;
+                                model.ListaMovimientos = null;
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                model.ListaCruces = null;
+                                ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, false);
+                                model.ListCruceMovimientos = ListPDFCrucesMovimientos;
+                                ClienteAdmin = false;
+                                model.Info = Info;
+                                return View("Tabla_Historico", model);
+                                //}
+                                //if (ListCruces.Count != 0)
+                                //{
+                                //    Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo, ListMovimiento[0].TotalMonetarioMovimientos, ListCruces[0].TotalMonetarioCruces };
+                                //    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count); saldoMov = ListMovimiento[0].TotalMonetarioMovimientos; saldoCru = ListCruces[0].TotalMonetarioCruces;
+                                //    model.ListaMovimientos = null;
+                                //    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                //    model.ListaCruces = null;
+                                //    ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, false);
+                                //    model.ListCruceMovimientos = ListPDFCrucesMovimientos;
+                                //    ClienteAdmin = false;
+                                //    model.Info = Info;
+                                //    return View("Tabla_Historico", model);
+                                //}
+
+                            }
+                            else
+                            {
                                 if (ListMovimiento.Count != 0)
                                 {
-                                    Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Tag, Tipo };
-                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                    Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Tag, Tipo, ListMovimiento[0].TotalMonetarioMovimientos };
+                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count); saldoMov = ListMovimiento[0].TotalMonetarioMovimientos;
                                     model.ListaMovimientos = null;
                                     Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
                                     model.ListaCruces = null;
@@ -328,10 +419,10 @@ namespace PuntoDeVenta.Controllers
                                 }
                                 if (ListCruces.Count != 0)
                                 {
-                                    Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo };
-                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                    Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo, ListCruces[0].TotalMonetarioCruces };
+                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListCruces.Count); saldoCru = ListCruces[0].TotalMonetarioCruces;
                                     model.ListaMovimientos = null;
-                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListCruces.Count);
                                     model.ListaCruces = null;
                                     ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, false);
                                     model.ListCruceMovimientos = ListPDFCrucesMovimientos;
@@ -339,7 +430,6 @@ namespace PuntoDeVenta.Controllers
                                     model.Info = Info;
                                     return View("Tabla_Historico", model);
                                 }
-
                             }
 
 
@@ -350,9 +440,9 @@ namespace PuntoDeVenta.Controllers
 
                             if (ListMovimiento.Any())
                             {
-                                Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListMovimiento.Count, ListMovimiento[0].SaldoActual, TagCuenta = Tag, Tipo };
+                                Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListMovimiento.Count, ListMovimiento[0].SaldoActual, TagCuenta = Tag, Tipo, ListMovimiento[0].TotalMonetarioMovimientos };
                                 model.Info = Info;
-                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = ListMovimiento.Count.ToString();
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = ListMovimiento.Count.ToString(); saldoMov = ListMovimiento[0].TotalMonetarioMovimientos;
                                 model.ListaMovimientos = ListMovimiento;
                                 model.ListaCruces = null;
                                 model.ListCruceMovimientos = null;
@@ -369,9 +459,9 @@ namespace PuntoDeVenta.Controllers
 
                             if (ListCruces.Any())
                             {
-                                Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo };
+                                Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo, ListCruces[0].TotalMonetarioCruces };
                                 model.Info = Info;
-                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = ListCruces.Count.ToString();
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = ListCruces.Count.ToString(); saldoCru = ListCruces[0].TotalMonetarioCruces;
                                 model.ListaCruces = ListCruces;
                                 model.ListaMovimientos = null;
                                 model.ListCruceMovimientos = null;
@@ -391,6 +481,7 @@ namespace PuntoDeVenta.Controllers
             }
             else if (Cuenta != null && Cuenta != "")
             {
+                double total = 0;
 
                 if (model.Fecha_Fin == DateTime.Now.Date)
                 {
@@ -405,17 +496,54 @@ namespace PuntoDeVenta.Controllers
 
 
 
-                        if (ListMovimiento.Any() || ListCruces.Any())
+                        if (ListMovimiento.Count != 0 && ListCruces.Count != 0)
                         {
 
+                            foreach (var item in ListCruces)
+                            {
+                                total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
+                            }
+                            //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
+                            var totalfinal = Convercion(total.ToString().Replace(".", ","));
+
+                            //if (ListMovimiento.Count != 0)
+                            //{
+                            Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Cuenta, Tipo, ListMovimiento[0].TotalMonetarioMovimientos, TotalMonetarioCruces = totalfinal };
+                            Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count); saldoMov = ListMovimiento[0].TotalMonetarioMovimientos; saldoCru = totalfinal;
+                            model.ListaMovimientos = null;
+                            Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                            model.ListaCruces = null;
+                            ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, true);
+                            model.ListCruceMovimientos = ListPDFCrucesMovimientos;
+                            ClienteAdmin = false;
+                            model.Info = Info;
+                            return View("Tabla_Historico", model);
+                            //}
+                            //if (ListCruces.Count != 0)
+                            //{
+                            //    Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Cuenta, Tipo, ListMovimiento[0].TotalMonetarioMovimientos, ListCruces[0].TotalMonetarioCruces };
+                            //    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count); saldoMov = ListMovimiento[0].TotalMonetarioMovimientos; saldoCru = ListCruces[0].TotalMonetarioCruces;
+                            //    model.ListaMovimientos = null;
+                            //    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                            //    model.ListaCruces = null;
+                            //    ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, true);
+                            //    model.ListCruceMovimientos = ListPDFCrucesMovimientos;
+                            //    ClienteAdmin = false;
+                            //    model.Info = Info;
+                            //    return View("Tabla_Historico", model);
+                            //}
+
+                        }
+                        else
+                        {
                             if (ListMovimiento.Count != 0)
                             {
-                                Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Cuenta, Tipo };
-                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Tag, Tipo, ListMovimiento[0].TotalMonetarioMovimientos };
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count); saldoMov = ListMovimiento[0].TotalMonetarioMovimientos;
                                 model.ListaMovimientos = null;
-                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
                                 model.ListaCruces = null;
-                                ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, true);
+                                ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, false);
                                 model.ListCruceMovimientos = ListPDFCrucesMovimientos;
                                 ClienteAdmin = false;
                                 model.Info = Info;
@@ -423,18 +551,25 @@ namespace PuntoDeVenta.Controllers
                             }
                             if (ListCruces.Count != 0)
                             {
-                                Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Cuenta, Tipo };
-                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+
+                                foreach (var item in ListCruces)
+                                {
+                                    total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
+                                }
+                                //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
+                                var totalfinal = Convercion(total.ToString().Replace(".", ","));
+
+                                Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo, TotalMonetarioCruces = totalfinal };
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListCruces.Count); saldoCru = totalfinal;
                                 model.ListaMovimientos = null;
-                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListCruces.Count);
                                 model.ListaCruces = null;
-                                ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, true);
+                                ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, false);
                                 model.ListCruceMovimientos = ListPDFCrucesMovimientos;
                                 ClienteAdmin = false;
                                 model.Info = Info;
                                 return View("Tabla_Historico", model);
                             }
-
                         }
 
 
@@ -445,9 +580,9 @@ namespace PuntoDeVenta.Controllers
 
                         if (ListMovimiento.Any())
                         {
-                            Info = new { ListMovimiento[0].NomCliente, Cuenta, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListMovimiento.Count, ListMovimiento[0].SaldoActual, TagCuenta = Cuenta, Tipo };
+                            Info = new { ListMovimiento[0].NomCliente, Cuenta, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListMovimiento.Count, ListMovimiento[0].SaldoActual, TagCuenta = Cuenta, Tipo, ListMovimiento[0].TotalMonetarioMovimientos };
                             model.Info = Info;
-                            Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = ListMovimiento.Count.ToString();
+                            Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = ListMovimiento.Count.ToString(); saldoMov = ListMovimiento[0].TotalMonetarioMovimientos;
                             model.ListaMovimientos = ListMovimiento;
                             model.ListaCruces = null;
                             model.ListCruceMovimientos = null;
@@ -464,9 +599,18 @@ namespace PuntoDeVenta.Controllers
 
                         if (ListCruces.Any())
                         {
-                            Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Cuenta, Tipo };
+
+
+                            foreach (var item in ListCruces)
+                            {
+                                total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
+                            }
+                            //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
+                            var totalfinal = Convercion(total.ToString().Replace(".", ","));
+
+                            Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Cuenta, Tipo, TotalMonetarioCruces = totalfinal };
                             model.Info = Info;
-                            Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = ListCruces.Count.ToString();
+                            Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = ListCruces.Count.ToString(); saldoCru = totalfinal;
                             model.ListaCruces = ListCruces;
                             model.ListaMovimientos = null;
                             model.ListCruceMovimientos = null;
@@ -492,17 +636,52 @@ namespace PuntoDeVenta.Controllers
 
 
 
-                        if (ListMovimiento.Any() || ListCruces.Any())
+                        if (ListMovimiento.Count != 0 && ListCruces.Count != 0)
                         {
+                            foreach (var item in ListCruces)
+                            {
+                                total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
+                            }
+                            //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
+                            var totalfinal = Convercion(total.ToString().Replace(".", ","));
+                            //if (ListMovimiento.Count != 0)
+                            //{
+                            Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Cuenta, Tipo, ListMovimiento[0].TotalMonetarioMovimientos, TotalMonetarioCruces = totalfinal };
+                            Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count); saldoMov = ListMovimiento[0].TotalMonetarioMovimientos; saldoCru = totalfinal;
+                            model.ListaMovimientos = null;
+                            Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                            model.ListaCruces = null;
+                            ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, true);
+                            model.ListCruceMovimientos = ListPDFCrucesMovimientos;
+                            ClienteAdmin = false;
+                            model.Info = Info;
+                            //    return View("Tabla_Historico", model);
+                            //}
+                            //if (ListCruces.Count != 0)
+                            //{
+                            //    Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Cuenta, Tipo, ListMovimiento[0].TotalMonetarioMovimientos, ListCruces[0].TotalMonetarioCruces };
+                            //    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count); saldoMov = ListMovimiento[0].TotalMonetarioMovimientos; saldoCru = ListCruces[0].TotalMonetarioCruces;
+                            //    model.ListaMovimientos = null;
+                            //    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                            //    model.ListaCruces = null;
+                            //    ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, true);
+                            //    model.ListCruceMovimientos = ListPDFCrucesMovimientos;
+                            //    ClienteAdmin = false;
+                            //    model.Info = Info;
+                            //    return View("Tabla_Historico", model);
+                            //}
 
+                        }
+                        else
+                        {
                             if (ListMovimiento.Count != 0)
                             {
-                                Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Cuenta, Tipo };
-                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Tag, Tipo, ListMovimiento[0].TotalMonetarioMovimientos };
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count); saldoMov = ListMovimiento[0].TotalMonetarioMovimientos;
                                 model.ListaMovimientos = null;
-                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
                                 model.ListaCruces = null;
-                                ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, true);
+                                ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, false);
                                 model.ListCruceMovimientos = ListPDFCrucesMovimientos;
                                 ClienteAdmin = false;
                                 model.Info = Info;
@@ -510,18 +689,24 @@ namespace PuntoDeVenta.Controllers
                             }
                             if (ListCruces.Count != 0)
                             {
-                                Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Cuenta, Tipo };
-                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                foreach (var item in ListCruces)
+                                {
+                                    total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
+                                }
+                                //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
+                                var totalfinal = Convercion(total.ToString().Replace(".", ","));
+
+                                Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo, TotalMonetarioCruces = totalfinal };
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListCruces.Count); saldoCru = totalfinal;
                                 model.ListaMovimientos = null;
-                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListCruces.Count);
                                 model.ListaCruces = null;
-                                ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, true);
+                                ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, false);
                                 model.ListCruceMovimientos = ListPDFCrucesMovimientos;
                                 ClienteAdmin = false;
                                 model.Info = Info;
                                 return View("Tabla_Historico", model);
                             }
-
                         }
 
 
@@ -533,9 +718,9 @@ namespace PuntoDeVenta.Controllers
 
                         if (ListMovimiento.Any())
                         {
-                            Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListMovimiento.Count, ListMovimiento[0].SaldoActual, TagCuenta = Cuenta, Tipo };
+                            Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListMovimiento.Count, ListMovimiento[0].SaldoActual, TagCuenta = Cuenta, Tipo, ListMovimiento[0].TotalMonetarioMovimientos };
                             model.Info = Info;
-                            Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = ListMovimiento.Count.ToString();
+                            Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = ListMovimiento.Count.ToString(); saldoMov = ListMovimiento[0].TotalMonetarioMovimientos;
                             model.ListaMovimientos = ListMovimiento;
                             model.ListaCruces = null;
                             model.ListCruceMovimientos = null;
@@ -552,9 +737,16 @@ namespace PuntoDeVenta.Controllers
 
                         if (ListCruces.Any())
                         {
-                            Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Cuenta, Tipo };
+                            foreach (var item in ListCruces)
+                            {
+                                total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
+                            }
+                            //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
+                            var totalfinal = Convercion(total.ToString().Replace(".", ","));
+
+                            Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Cuenta, Tipo, TotalMonetarioCruces = totalfinal };
                             model.Info = Info;
-                            Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = ListCruces.Count.ToString();
+                            Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = ListCruces.Count.ToString(); saldoCru = totalfinal;
                             model.ListaCruces = ListCruces;
                             model.ListaMovimientos = null;
                             model.ListCruceMovimientos = null;
@@ -580,16 +772,52 @@ namespace PuntoDeVenta.Controllers
 
 
 
-                        if (ListMovimiento.Any() && ListCruces.Any())
+                        if (ListMovimiento.Count != 0 && ListCruces.Count != 0)
+                        {
+                            //if (ListMovimiento.Count != 0)
+                            //{
+                            foreach (var item in ListCruces)
+                            {
+                                total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
+                            }
+                            //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
+                            var totalfinal = Convercion(total.ToString().Replace(".", ","));
+                            Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Cuenta, Tipo, ListMovimiento[0].TotalMonetarioMovimientos, TotalMonetarioCruces = totalfinal };
+                            Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count); saldoMov = ListMovimiento[0].TotalMonetarioMovimientos; saldoCru = totalfinal;
+                            model.ListaMovimientos = null;
+                            Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                            model.ListaCruces = null;
+                            ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, true);
+                            model.ListCruceMovimientos = ListPDFCrucesMovimientos;
+                            ClienteAdmin = false;
+                            model.Info = Info;
+                            return View("Tabla_Historico", model);
+                            //}
+                            //if (ListCruces.Count != 0)
+                            //{
+                            //    Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Cuenta, Tipo, ListMovimiento[0].TotalMonetarioMovimientos, ListCruces[0].TotalMonetarioCruces };
+                            //    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count); saldoMov = ListMovimiento[0].TotalMonetarioMovimientos; saldoCru = ListCruces[0].TotalMonetarioCruces;
+                            //    model.ListaMovimientos = null;
+                            //    Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                            //    model.ListaCruces = null;
+                            //    ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, true);
+                            //    model.ListCruceMovimientos = ListPDFCrucesMovimientos;
+                            //    ClienteAdmin = false;
+                            //    model.Info = Info;
+                            //    return View("Tabla_Historico", model);
+                            //}
+
+                        }
+                        else
                         {
                             if (ListMovimiento.Count != 0)
                             {
-                                Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Cuenta, Tipo };
-                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListMovimiento[0].SaldoActual, TagCuenta = Tag, Tipo, ListMovimiento[0].TotalMonetarioMovimientos };
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count); saldoMov = ListMovimiento[0].TotalMonetarioMovimientos;
                                 model.ListaMovimientos = null;
-                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
                                 model.ListaCruces = null;
-                                ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, true);
+                                ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, false);
                                 model.ListCruceMovimientos = ListPDFCrucesMovimientos;
                                 ClienteAdmin = false;
                                 model.Info = Info;
@@ -597,18 +825,23 @@ namespace PuntoDeVenta.Controllers
                             }
                             if (ListCruces.Count != 0)
                             {
-                                Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListMovimiento.Count + ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Cuenta, Tipo };
-                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                foreach (var item in ListCruces)
+                                {
+                                    total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
+                                }
+                                //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
+                                var totalfinal = Convercion(total.ToString().Replace(".", ","));
+                                Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, Count = ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Tag, Tipo, TotalMonetarioCruces = totalfinal };
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListCruces.Count); saldoCru = totalfinal;
                                 model.ListaMovimientos = null;
-                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListMovimiento.Count + ListCruces.Count);
+                                Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = Convert.ToString(ListCruces.Count);
                                 model.ListaCruces = null;
-                                ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, true);
+                                ListPDFCrucesMovimientos = FusionarListas(ListCruces, ListMovimiento, false);
                                 model.ListCruceMovimientos = ListPDFCrucesMovimientos;
                                 ClienteAdmin = false;
                                 model.Info = Info;
                                 return View("Tabla_Historico", model);
                             }
-
                         }
 
 
@@ -619,9 +852,8 @@ namespace PuntoDeVenta.Controllers
 
                         if (ListMovimiento.Any())
                         {
-                            Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListMovimiento.Count, ListMovimiento[0].SaldoActual, TagCuenta = Cuenta, Tipo };
-                            model.Info = Info;
-                            Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = ListMovimiento.Count.ToString();
+                            Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListMovimiento.Count, ListMovimiento[0].SaldoActual, TagCuenta = Cuenta, Tipo, ListMovimiento[0].TotalMonetarioMovimientos };
+                            Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = ListMovimiento.Count.ToString(); saldoMov = ListMovimiento[0].TotalMonetarioMovimientos;
                             model.ListaMovimientos = ListMovimiento;
                             model.ListaCruces = null;
                             model.ListCruceMovimientos = null;
@@ -638,9 +870,15 @@ namespace PuntoDeVenta.Controllers
 
                         if (ListCruces.Any())
                         {
-                            Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Cuenta, Tipo };
+                            foreach (var item in ListCruces)
+                            {
+                                total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
+                            }
+                            //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
+                            var totalfinal = Convercion(total.ToString().Replace(".", ","));
+                            Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListCruces.Count, ListCruces[0].SaldoActual, TagCuenta = Cuenta, Tipo, TotalMonetarioCruces = totalfinal };
                             model.Info = Info;
-                            Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = ListCruces.Count.ToString();
+                            Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = ListCruces.Count.ToString(); saldoCru = totalfinal;
                             model.ListaCruces = ListCruces;
                             model.ListaMovimientos = null;
                             model.ListCruceMovimientos = null;
@@ -820,7 +1058,7 @@ namespace PuntoDeVenta.Controllers
 
         public List<Cruces> Cruces(string TagCuenta, DateTime Fecha_Inicio, DateTime Fecha_Fin, int Tipo, bool Rango)
         {
-
+            CultureInfo culture = new CultureInfo("es-MX", false);
             AppDbContext db = new AppDbContext();
             //Tag
             if (Tipo == (int)DecisionesMetodos.Tag)
@@ -841,7 +1079,7 @@ namespace PuntoDeVenta.Controllers
                                              _CuentaID = tags.CuentaId,
                                              _ClienteID = cliente.NumCliente,
                                              _Nombre = cliente.Nombre + cliente.Apellidos,
-                                             _TypeCuenta = cuentas.TypeCuenta,                                             
+                                             _TypeCuenta = cuentas.TypeCuenta,
                                              _Plaza = historico.Delegacion,
                                              _Cuerpo = historico.Cuerpo,
                                              _Carril = historico.Carril,
@@ -854,6 +1092,8 @@ namespace PuntoDeVenta.Controllers
                                              _SaldoActual = tags.SaldoTag
 
                                          }).ToList();
+
+                    var total = ListaCompleta.Sum(x => x._Saldo);
 
                     List<Cruces> List = new List<Cruces>();
 
@@ -870,13 +1110,14 @@ namespace PuntoDeVenta.Controllers
                             Plaza = item._Plaza,
                             Fecha = Convert.ToString(item._Fecha),
                             Cuerpo = item._Cuerpo,
-                            Carril = item._Carril,                           
+                            Carril = item._Carril,
                             Clase = item._Clase,
-                            SaldoAntes = "Q" + item._SaldoAntes,
-                            Saldo = "Q" + item._Saldo,
-                            SaldoDespues = "Q" + item._SaldoNuevo,
-                            SaldoActual = "Q" + Convert.ToString(Convert.ToDouble(item._SaldoActual) / 100),
-                            Operador = item._Operadora
+                            SaldoAntes = Convert.ToDouble(item._SaldoAntes.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                            Saldo = Convert.ToDouble(Convert.ToString(item._Saldo).Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                            SaldoDespues = Convert.ToDouble(item._SaldoNuevo.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                            SaldoActual = (Convert.ToDouble(item._SaldoActual) / 100).ToString("C2", culture).Replace("$", "Q"),
+                            Operador = item._Operadora,
+                            TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
 
 
                         });
@@ -915,6 +1156,7 @@ namespace PuntoDeVenta.Controllers
                                              _SaldoActual = tags.SaldoTag
                                          }).ToList();
 
+                    var total = ListaCompleta.Sum(x => x._Saldo);
                     List<Cruces> List = new List<Cruces>();
 
                     int id = 1;
@@ -932,11 +1174,12 @@ namespace PuntoDeVenta.Controllers
                             Cuerpo = item._Cuerpo,
                             Carril = item._Carril,
                             Clase = item._Clase,
-                            SaldoAntes = "Q" + item._SaldoAntes,
-                            Saldo = "Q" + item._Saldo,
-                            SaldoDespues = "Q" + item._SaldoNuevo,
-                            SaldoActual = "Q" + Convert.ToString(Convert.ToDouble(item._SaldoActual) / 100),
-                            Operador = item._Operadora
+                            SaldoAntes = Convert.ToDouble(item._SaldoAntes.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                            Saldo = Convert.ToDouble(Convert.ToString(item._Saldo).Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                            SaldoDespues = Convert.ToDouble(item._SaldoNuevo.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                            SaldoActual = (Convert.ToDouble(item._SaldoActual) / 100).ToString("C2", culture).Replace("$", "Q"),
+                            Operador = item._Operadora,
+                            TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
 
                         });
                         id++;
@@ -995,6 +1238,7 @@ namespace PuntoDeVenta.Controllers
                                              }).ToList();
 
 
+                        //var total = ListaCompleta.Sum(x => x._Saldo);
 
                         foreach (var item2 in ListaCompleta)
                         {
@@ -1009,11 +1253,12 @@ namespace PuntoDeVenta.Controllers
                                 Cuerpo = item2._Cuerpo,
                                 Carril = item2._Carril,
                                 Clase = item2._Clase,
-                                SaldoAntes = "Q" + item2._SaldoAntes,
-                                Saldo = "Q" + item2._Saldo,
-                                SaldoDespues = "Q" + item2._SaldoNuevo,
-                                SaldoActual = "Q" + Convert.ToString(Convert.ToDouble(item2._SaldoActual) / 100),
-                                Operador = item2._Operadora
+                                SaldoAntes = Convert.ToDouble(item2._SaldoAntes.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                                Saldo = Convert.ToDouble(Convert.ToString(item2._Saldo).Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                                SaldoDespues = Convert.ToDouble(item2._SaldoNuevo.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                                SaldoActual = (Convert.ToDouble(item2._SaldoActual) / 100).ToString("C2", culture).Replace("$", "Q"),
+                                Operador = item2._Operadora,
+                                //TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
 
                             });
                             id++;
@@ -1068,7 +1313,7 @@ namespace PuntoDeVenta.Controllers
 
                                              }).ToList();
 
-
+                        //var total = ListaCompleta.Sum(x => x._Saldo);
 
                         foreach (var item2 in ListaCompleta)
                         {
@@ -1083,11 +1328,12 @@ namespace PuntoDeVenta.Controllers
                                 Cuerpo = item2._Cuerpo,
                                 Carril = item2._Carril,
                                 Clase = item2._Clase,
-                                SaldoAntes = "Q" + item2._SaldoAntes,
-                                Saldo = "Q" + item2._Saldo,
-                                SaldoDespues = "Q" + item2._SaldoNuevo,
-                                SaldoActual = "Q" + Convert.ToString(Convert.ToDouble(item2._SaldoActual) / 100),
-                                Operador = item2._Operadora
+                                SaldoAntes = Convert.ToDouble(item2._SaldoAntes.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                                Saldo = Convert.ToDouble(Convert.ToString(item2._Saldo).Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                                SaldoDespues = Convert.ToDouble(item2._SaldoNuevo.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                                SaldoActual = (Convert.ToDouble(item2._SaldoActual) / 100).ToString("C2", culture).Replace("$", "Q"),
+                                Operador = item2._Operadora,
+                                //TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
 
                             });
                             id++;
@@ -1128,12 +1374,15 @@ namespace PuntoDeVenta.Controllers
 
                                          }).ToList();
 
+                    var total = ListaCompleta.Sum(x => x._Saldo);
+
                     List<Cruces> List = new List<Cruces>();
 
                     int id = 1;
 
                     foreach (var item in ListaCompleta)
                     {
+
                         List.Add(new Cruces
                         {
                             Id = id,
@@ -1146,11 +1395,12 @@ namespace PuntoDeVenta.Controllers
                             Cuerpo = item._Cuerpo,
                             Carril = item._Carril,
                             Clase = item._Clase,
-                            SaldoAntes = "Q" + item._SaldoAntes,
-                            Saldo = "Q" + item._Saldo,
-                            SaldoDespues = "Q" + item._SaldoNuevo,
-                            SaldoActual = "Q" + item._SaldoActual,
-                            Operador = item._Operadora
+                            SaldoAntes = Convercion(item._SaldoAntes),
+                            Saldo = Convercion(item._Saldo.ToString().Replace(".", ",")),
+                            SaldoDespues = Convercion(item._SaldoNuevo),
+                            SaldoActual = (Convert.ToDouble(item._SaldoActual) / 100).ToString("C", culture).Replace("$", "Q"),
+                            Operador = item._Operadora,
+                            TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
 
                         });
                         id++;
@@ -1187,6 +1437,8 @@ namespace PuntoDeVenta.Controllers
 
                                          }).ToList();
 
+                    var total = ListaCompleta.Sum(x => x._Saldo);
+
                     List<Cruces> List = new List<Cruces>();
 
                     int id = 1;
@@ -1205,11 +1457,12 @@ namespace PuntoDeVenta.Controllers
                             Cuerpo = item._Cuerpo,
                             Carril = item._Carril,
                             Clase = item._Clase,
-                            SaldoAntes = "Q" + item._SaldoAntes,
-                            Saldo = "Q" + item._Saldo,
-                            SaldoDespues = "Q" + item._SaldoNuevo,
-                            SaldoActual = "Q" + item._SaldoActual,
-                            Operador = item._Operadora
+                            SaldoAntes = Convercion(item._SaldoAntes),
+                            Saldo = Convercion(item._Saldo.ToString().Replace(".",",")),
+                            SaldoDespues = Convercion(item._SaldoNuevo),
+                            SaldoActual = (Convert.ToDouble(item._SaldoActual) / 100).ToString("C", culture).Replace("$", "Q"),
+                            Operador = item._Operadora,
+                            TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
 
                         });
                         id++;
@@ -1225,7 +1478,7 @@ namespace PuntoDeVenta.Controllers
         public List<Movimientos> Movimientos(string TagCuenta, DateTime Fecha_Inicio, DateTime Fecha_Fin, int Tipo, bool Rango)
         {
             AppDbContext db = new AppDbContext();
-
+            CultureInfo culture = new CultureInfo("es-MX", false);
             if (Tipo == (int)DecisionesMetodos.Tag)
             {
                 if (Rango)
@@ -1259,6 +1512,8 @@ namespace PuntoDeVenta.Controllers
 
                                          }).ToList();
 
+                    var total = ListaCompleta.Sum(x => x._Monto);
+
                     List<Movimientos> List = new List<Movimientos>();
 
                     int id = 1;
@@ -1270,16 +1525,17 @@ namespace PuntoDeVenta.Controllers
                             Id = id,
                             Concepto = item._Concepto,
                             TipoPago = item._TipoPago,
-                            Monto = Convert.ToString(item._Monto),
+                            Monto = Convert.ToDouble(item._Monto).ToString("C2", culture).Replace("$", "Q"),
                             Fecha = Convert.ToString(item._Fecha),
                             Tag = item._Tag,
                             TagCuenta = item._TagCuenta,
                             Cuenta = Convert.ToString(item._CuentaID),
                             NomCliente = item._Nombre,
                             TypeCuenta = item._TypeCuenta,
-                            CobroTag = "Q" + Convert.ToString(item._CobroTag),
+                            CobroTag = Convert.ToDouble(item._CobroTag).ToString("C2", culture).Replace("$", "Q"),
                             Referencia = item._Referencia,
-                            SaldoActual = "Q" + Convert.ToString(Convert.ToDouble(item._SaldoActual) / 100)
+                            SaldoActual = (Convert.ToDouble(item._SaldoActual) / 100).ToString("C2", culture).Replace("$", "Q"),
+                            TotalMonetarioMovimientos = Convert.ToDouble(total).ToString("C2", culture).Replace("$", "Q")
 
 
                         });
@@ -1321,6 +1577,8 @@ namespace PuntoDeVenta.Controllers
 
                                          }).ToList();
 
+                    var total = ListaCompleta.Sum(x => x._Monto);
+
                     List<Movimientos> List = new List<Movimientos>();
 
                     int id = 1;
@@ -1332,16 +1590,17 @@ namespace PuntoDeVenta.Controllers
                             Id = id,
                             Concepto = item._Concepto,
                             TipoPago = item._TipoPago,
-                            Monto = Convert.ToString(item._Monto),
+                            Monto = Convert.ToDouble(item._Monto).ToString("C2", culture).Replace("$", "Q"),
                             Fecha = Convert.ToString(item._Fecha),
                             Tag = item._Tag,
                             TagCuenta = item._TagCuenta,
                             Cuenta = Convert.ToString(item._CuentaID),
                             NomCliente = item._Nombre,
                             TypeCuenta = item._TypeCuenta,
-                            CobroTag = "Q" + Convert.ToString(item._CobroTag),
+                            CobroTag = Convert.ToDouble(item._CobroTag).ToString("C2", culture).Replace("$", "Q"),
                             Referencia = item._Referencia,
-                            SaldoActual = "Q" + Convert.ToString(Convert.ToDouble(item._SaldoActual) / 100)
+                            SaldoActual = (Convert.ToDouble(item._SaldoActual) / 100).ToString("C2", culture).Replace("$", "Q"),
+                            TotalMonetarioMovimientos = Convert.ToDouble(total).ToString("C2", culture).Replace("$", "Q")
 
 
                         });
@@ -1385,6 +1644,8 @@ namespace PuntoDeVenta.Controllers
 
                                          }).ToList();
 
+                    var total = ListaCompleta.Sum(x => x._Monto);
+
                     List<Movimientos> List = new List<Movimientos>();
 
                     int id = 1;
@@ -1396,16 +1657,17 @@ namespace PuntoDeVenta.Controllers
                             Id = id,
                             Concepto = item._Concepto,
                             TipoPago = item._TipoPago,
-                            Monto = Convert.ToString(item._Monto),
+                            Monto = Convert.ToDouble(item._Monto).ToString("C2", culture).Replace("$", "Q"),
                             Fecha = Convert.ToString(item._Fecha),
                             //Tag = item._Tag,
                             TagCuenta = item._TagCuenta,
                             //Cuenta = Convert.ToString(item._CuentaID),
                             NomCliente = item._Nombre,
                             TypeCuenta = item._TypeCuenta,
-                            CobroTag = "Q" + Convert.ToString(item._CobroTag),
+                            CobroTag = Convert.ToDouble(item._CobroTag).ToString("C2", culture).Replace("$", "Q"),
                             Referencia = item._Referencia,
-                            SaldoActual = Convert.ToString(Convert.ToDouble(item._SaldoActual) / 100)
+                            SaldoActual = (Convert.ToDouble(item._SaldoActual) / 100).ToString("C2", culture).Replace("$", "Q"),
+                            TotalMonetarioMovimientos = Convert.ToDouble(total).ToString("C2", culture).Replace("$", "Q")
                             //SaldoActual = "Q" + item._SaldoActual
 
                         });
@@ -1448,6 +1710,8 @@ namespace PuntoDeVenta.Controllers
 
                                          }).ToList();
 
+
+                    var total = ListaCompleta.Sum(x => x._Monto);
                     List<Movimientos> List = new List<Movimientos>();
 
                     int id = 1;
@@ -1459,16 +1723,17 @@ namespace PuntoDeVenta.Controllers
                             Id = id,
                             Concepto = item._Concepto,
                             TipoPago = item._TipoPago,
-                            Monto = Convert.ToString(item._Monto),
+                            Monto = Convert.ToDouble(item._Monto).ToString("C2", culture).Replace("$", "Q"),
                             Fecha = Convert.ToString(item._Fecha),
                             //Tag = item._Tag,
                             TagCuenta = item._TagCuenta,
                             //Cuenta = Convert.ToString(item._CuentaID),
                             NomCliente = item._Nombre,
                             TypeCuenta = item._TypeCuenta,
-                            CobroTag = "Q" + Convert.ToString(item._CobroTag),
+                            CobroTag = Convert.ToDouble(item._CobroTag).ToString("C2", culture).Replace("$", "Q"),
                             Referencia = item._Referencia,
-                            SaldoActual = Convert.ToString(Convert.ToDouble(item._SaldoActual) / 100)
+                            SaldoActual = (Convert.ToDouble(item._SaldoActual) / 100).ToString("C2", culture).Replace("$", "Q"),
+                            TotalMonetarioMovimientos = Convert.ToDouble(total).ToString("C2", culture).Replace("$", "Q")
 
                         });
                         id++;
@@ -1512,6 +1777,8 @@ namespace PuntoDeVenta.Controllers
 
                                          }).ToList();
 
+
+                    var total = ListaCompleta.Sum(x => x._Monto);
                     List<Movimientos> List = new List<Movimientos>();
 
                     int id = 1;
@@ -1523,15 +1790,16 @@ namespace PuntoDeVenta.Controllers
                             Id = id,
                             Concepto = item._Concepto,
                             TipoPago = item._TipoPago,
-                            Monto = "Q" + Convert.ToString(item._Monto),
+                            Monto = Convert.ToDouble(item._Monto).ToString("C2", culture).Replace("$", "Q"),
                             Fecha = Convert.ToString(item._Fecha),
                             Tag = item._Tag,
                             TagCuenta = item._TagCuenta,
                             Cuenta = Convert.ToString(item._CuentaID),
                             NomCliente = item._Nombre,
                             TypeCuenta = item._TypeCuenta,
-                            CobroTag = "Q" + Convert.ToString(item._CobroTag),
+                            CobroTag = Convert.ToDouble(item._CobroTag).ToString("C2", culture).Replace("$", "Q"),
                             Referencia = item._Referencia,
+                            TotalMonetarioMovimientos = Convert.ToDouble(total).ToString("C2", culture).Replace("$", "Q")
 
 
                         });
@@ -1569,6 +1837,8 @@ namespace PuntoDeVenta.Controllers
 
                                          }).ToList();
 
+
+                    var total = ListaCompleta.Sum(x => x._Monto);
                     List<Movimientos> List = new List<Movimientos>();
 
                     int id = 1;
@@ -1580,15 +1850,16 @@ namespace PuntoDeVenta.Controllers
                             Id = id,
                             Concepto = item._Concepto,
                             TipoPago = item._TipoPago,
-                            Monto = "Q" + Convert.ToString(item._Monto),
+                            Monto = Convert.ToDouble(item._Monto).ToString("C2", culture).Replace("$", "Q"),
                             Fecha = Convert.ToString(item._Fecha),
                             Tag = item._Tag,
                             TagCuenta = item._TagCuenta,
                             Cuenta = Convert.ToString(item._CuentaID),
                             NomCliente = item._Nombre,
                             TypeCuenta = item._TypeCuenta,
-                            CobroTag = "Q" + Convert.ToString(item._CobroTag),
+                            CobroTag = Convert.ToDouble(item._CobroTag).ToString("C2", culture).Replace("$", "Q"),
                             Referencia = item._Referencia,
+                            TotalMonetarioMovimientos = Convert.ToDouble(total).ToString("C2", culture).Replace("$", "Q")
 
 
                         });
@@ -1619,6 +1890,7 @@ namespace PuntoDeVenta.Controllers
                         Concepto = "CRUCE" + "   " + "#TAG:  " + item.Tag,
                         Fecha = item.Fecha,
                         CobroTag = "-" + item.Saldo,
+                        Carril = item.Carril,
                         Referencia = "-----------",
 
 
@@ -1636,6 +1908,7 @@ namespace PuntoDeVenta.Controllers
                         Concepto = "CRUCE",
                         Fecha = item.Fecha,
                         CobroTag = "-" + item.Saldo,
+                        Carril = item.Carril,
                         Referencia = "-----------",
 
 
@@ -1650,7 +1923,8 @@ namespace PuntoDeVenta.Controllers
 
                     Concepto = item.Concepto,
                     Fecha = item.Fecha,
-                    CobroTag = "Q" + item.Monto,
+                    CobroTag = item.Monto,
+                    Carril = "-------------",
                     Referencia = item.Referencia
 
                 });
@@ -1660,6 +1934,8 @@ namespace PuntoDeVenta.Controllers
 
             return Lista;
         }
+
+
         public string BuscaTramo(string IdGare)
         {
             if (IdGare == "21")
@@ -1726,6 +2002,14 @@ namespace PuntoDeVenta.Controllers
                     saldo_.Alignment = Element.PTABLE;
                     PdfHistorico.Add(saldo_);
 
+                    Paragraph saldoRecargas_ = new Paragraph("Saldo: " + saldoMov + "", new Font(Font.FontFamily.HELVETICA, 12));
+                    saldoRecargas_.Alignment = Element.PTABLE;
+                    PdfHistorico.Add(saldoRecargas_);
+
+                    Paragraph saldoCruces_ = new Paragraph("Saldo: " + saldoCru + "", new Font(Font.FontFamily.HELVETICA, 12));
+                    saldoCruces_.Alignment = Element.PTABLE;
+                    PdfHistorico.Add(saldoCruces_);
+
 
                     PdfHistorico.Add(Chunk.NEWLINE);
 
@@ -1760,6 +2044,13 @@ namespace PuntoDeVenta.Controllers
                     saldo_.Alignment = Element.PTABLE;
                     PdfHistorico.Add(saldo_);
 
+                    Paragraph saldoRecargas_ = new Paragraph("Total de Recargas: " + saldoMov + "", new Font(Font.FontFamily.HELVETICA, 12));
+                    saldoRecargas_.Alignment = Element.PTABLE;
+                    PdfHistorico.Add(saldoRecargas_);
+
+                    Paragraph saldoCruces_ = new Paragraph("Total de Cruces: " + saldoCru + "", new Font(Font.FontFamily.HELVETICA, 12));
+                    saldoCruces_.Alignment = Element.PTABLE;
+                    PdfHistorico.Add(saldoCruces_);
 
 
                     PdfHistorico.Add(Chunk.NEWLINE);
@@ -2387,9 +2678,9 @@ namespace PuntoDeVenta.Controllers
             }
             else if (ListPDFCrucesMovimientos.Count > 0)
             {
-                PdfPTable table = new PdfPTable(4);
+                PdfPTable table = new PdfPTable(5);
                 table.WidthPercentage = 100f;
-                var coldWidthPorcentagesCliente = new[] { 4f, 4f, 3f, 3f };
+                var coldWidthPorcentagesCliente = new[] { 4f, 4f, 3f, 3f, 3f };
                 table.SetWidths(coldWidthPorcentagesCliente);
 
                 PdfPCell _cellIni = new PdfPCell();
@@ -2413,6 +2704,12 @@ namespace PuntoDeVenta.Controllers
                 _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
                 _cellIni.FixedHeight = 10f;
                 table.AddCell(_cellIni);
+
+                _cellIni = new PdfPCell(new Paragraph("Carril"));
+                _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                _cellIni.FixedHeight = 10f;
+                table.AddCell(_cellIni);
+
 
 
 
@@ -2447,6 +2744,11 @@ namespace PuntoDeVenta.Controllers
                     _cell.FixedHeight = 10f;
                     table.AddCell(_cell);
 
+                    _cell = new PdfPCell(new Paragraph(item.Carril.ToString()));
+                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    _cell.FixedHeight = 10f;
+                    table.AddCell(_cell);
+
 
 
                     _cell = new PdfPCell(new Paragraph(item.Referencia));
@@ -2477,6 +2779,166 @@ namespace PuntoDeVenta.Controllers
             Tag = 1,
             Cuenta = 2,
             RangoFecha = 3
+        }
+        public string Convercion(string saldo)
+        {
+            string[] tipo;
+            string Mandar = string.Empty;
+            tipo = saldo.Split(',');
+            int contar = 0;
+            CultureInfo culture = new CultureInfo("es-MX", false);
+            if (tipo.Count() == 2)
+            {
+                if (tipo[0].Length > 3)
+                {
+                    var numeroDigitos = tipo[0].Length;
+                    var modulo = numeroDigitos % 3;
+
+                    if (modulo > 0)
+                    {
+                        var array = tipo[0].ToCharArray();
+                        for (int i = 0; i < modulo; i++)
+                        {
+                            Mandar = Mandar + array[i];
+                        }
+                        Mandar = Mandar + ",";
+                        var sigue = array.Length - modulo;
+                        for (int i = modulo; i < array.Length; i++)
+                        {
+                            if (contar == 3)
+                            {
+                                Mandar = Mandar + "," + array[i];
+                                contar = 1;
+                            }
+                            else
+                            {
+                                Mandar = Mandar + array[i];
+                                contar++;
+                            }
+
+
+
+                        }
+                        Mandar = Mandar.TrimEnd(',');
+                        Mandar = Mandar + '.' + tipo[1];
+                    }
+                    else
+                    {
+                        var array = tipo[0].ToCharArray();
+
+                        for (int i = 0; i < array.Length ; i++)
+                        {
+                            if (contar == 3)
+                            {
+                                Mandar = Mandar + "," + array[i];
+                                contar = 0;
+                            }
+                            else
+                            {
+                                Mandar = Mandar + array[i];
+                                contar++;
+                            }
+
+
+                        }
+                        Mandar = Mandar.TrimEnd(',');
+                        if (tipo[1].Length == 1)
+                        {
+                            Mandar = Mandar + '.' + tipo[1] + '0';
+                        }
+                        else
+                        {
+                            Mandar = Mandar + '.' + tipo[1];
+                        }
+                    }
+
+                    //if (tipo[1].Length == 2)
+                    //{
+                    //    Mandar = Convert.ToDouble(saldo).ToString("C2", culture).Replace("$", "Q");
+                    //}
+                    //else
+                    //{
+                    //    Mandar = Convert.ToDouble(saldo).ToString("C1", culture).Replace("$", "Q");
+                    //}
+                }
+                else
+                {
+                    if (tipo[1].Length == 1)
+                    {
+                        Mandar = tipo[0] + '.' + tipo[1] + '0';
+                    }
+                    else
+                    {
+                        Mandar = tipo[0] + '.' + tipo[1];
+                    }
+                    
+                }
+
+            }
+            else
+            {
+               if(tipo[0].Length >3)
+                {
+                    var numeroDigitos = tipo[0].Length;
+                    var modulo = numeroDigitos % 3;
+
+                    if (modulo > 0)
+                    {
+                        var array = tipo[0].ToCharArray();
+                        for (int i = 0; i < modulo; i++)
+                        {
+                            Mandar = Mandar + array[i];
+                        }
+                        Mandar = Mandar + ",";
+                        var sigue = array.Length - modulo;
+                        for (int i = modulo; i < array.Length; i++)
+                        {
+                            if (contar == 3)
+                            {
+                                Mandar = Mandar + "," + array[i];
+                                contar = 1;
+                            }
+                            else
+                            {
+                                Mandar = Mandar + array[i];
+                                contar++;
+                            }
+
+
+
+                        }
+                        Mandar = Mandar.TrimEnd(',');
+                        Mandar = Mandar + ".00";
+                    }
+                    else
+                    {
+                        var array = tipo[0].ToCharArray();
+
+                        for (int i = 0; i < array.Length; i++)
+                        {
+                            if (contar == 3)
+                            {
+                                Mandar = Mandar + "," + array[i];
+                                contar = 0;
+                            }
+                            else
+                            {
+                                Mandar = Mandar + array[i];
+                                contar++;
+                            }
+
+
+                        }
+                        Mandar = Mandar.TrimEnd(',');
+                        Mandar = Mandar + ".00";
+                    }
+                }
+               else
+                
+                Mandar = tipo[0] + ".00";
+            }
+
+            return 'Q' + Mandar;
         }
 
     }

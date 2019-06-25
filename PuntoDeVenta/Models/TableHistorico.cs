@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
 namespace PuntoDeVenta.Models
 {
     public class TableHistorico
@@ -23,12 +22,15 @@ namespace PuntoDeVenta.Models
 
     }
 
+
+
     public class CruceMovimiento
     {
         public string Concepto { get; set; }
         public string TagCuenta { get; set; }
         public string Fecha { get; set; }
         public string CobroTag { get; set; }
+        public string Carril { get; set; }
         public string Referencia { get; set; }
 
     }
@@ -52,6 +54,7 @@ namespace PuntoDeVenta.Models
         public string SaldoDespues { get; set; }
         public string SaldoActual { get; set; }
         public string Operador { get; set; }
+        public string TotalMonetarioCruces { get; set; }
     }
 
     public class Movimientos
@@ -70,5 +73,6 @@ namespace PuntoDeVenta.Models
         public string CobroTag { get; set; }
         public string Referencia { get; set; }
         public string SaldoActual { get; set; }
+        public string TotalMonetarioMovimientos { get; set; }
     }
 }
