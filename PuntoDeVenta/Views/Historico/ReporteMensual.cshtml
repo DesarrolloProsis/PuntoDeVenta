@@ -1,0 +1,155 @@
+﻿@model PuntoDeVenta.Models.TableHistorico
+@{
+    ViewBag.Title = "TablaHistorico";
+}
+
+<div class="col-md-12 text-align-center" style="padding-top:20px;">
+
+    <h4 class="titulo1">Tabla Historico</h4>
+    <p class="lead">
+        Consulte el registro historico de cruces.
+    </p>
+</div>
+<hr />
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card text-center ">
+                <div class="card-header">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+                        <li class="nav-item">
+                            <a class="nav-link" id="ReporMes" data-toggle="tab" href="#repoMes" role="tab" aria-controls="repoMes" aria-selected="false">Reporte Mensual</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+
+                        <div class="tab-pane fade" id="repoMes" role="tabpanel" aria-labelledby="Buscar Solo Por Fecha">
+                            <div>
+                                @using (Html.BeginForm("ReporteMes", "Historico", FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+
+
+                                    <div class="row justify-content-md-center">
+                                        <div class="col-md-12">
+
+                                            <div class="card">
+                                                <div class="card-body">
+
+                                                    <div class="col-md-12">
+                                                        <label style="float:left !important">Mes</label>
+                                                        @Html.DropDownListFor(x => x.Mes, new SelectList(string.Empty, "Value", "Text"), htmlAttributes: new { @class = "form-control espacio", placeholder = "Seleccione.." })
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <label style="float:left !important">Año</label>
+                                                        @Html.DropDownListFor(x => x.Anyo, new SelectList(string.Empty, "Value", "Text"), htmlAttributes: new { @class = "form-control espacio", placeholder = "Seleccione.." })
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <button type="submit" class="btn btn-primary botonbuscar">
+                                                            <img class="search" src="~/Content/css-yisus/img/search-solid.svg" />Buscar
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+
+    <script>
+        $(document).ready(function () {
+
+            LoadMovimientos();
+            $('#Tag').val('');
+            $('#Cuenta').val('');
+
+        });
+
+    </script>
+
+    <script>
+        function LoadMovimientos() {
+
+       
+
+             $.ajax({
+                 url: '@Url.Action("GetMesAnyo", "Historico")',
+                 type: "GET",
+                 data: "{}",
+                 cache: false,
+                 success: function (data) {
+                     $.each(data.mes, function (i, row) {
+                         var $option = $('<option>');
+                         $option.val(row.Value);
+                         $option.html(row.Text);
+                         $('#Mes').append($option);
+                     });
+                     $.each(data.anyo, function (i, row) {
+                         var $option = $('<option>');
+                         $option.val(row.Value);
+                         $option.html(row.Text);
+                         $('#Anyo').append($option);
+                     });
+
+                 },
+                 error: function (ex) {
+                        alert("Error!!!" + ex);
+                 },
+            });
+        }
+
+    </script>
+
+
+    <script>
+
+        $("#Tag").change(function () {
+
+            var Mensaje = $("#Tag").val()
+
+
+            if (Mensaje != null && Mensaje != "") {
+                $("#Cuenta").prop("disabled", true)
+            }
+            else {
+                $("#Cuenta").prop("disabled", false)
+            }
+
+        });
+
+        $("#Cuenta").change(function () {
+
+
+            var Mensaje = $("#Cuenta").val()
+            if (Mensaje != null && Mensaje != "") {
+                $("#Tag").prop("disabled", true)
+            }
+            else {
+                $("#Tag").prop("disabled", false)
+            }
+        });
+
+    </script>
+
+}

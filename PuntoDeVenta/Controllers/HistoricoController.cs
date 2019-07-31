@@ -56,6 +56,124 @@ namespace PuntoDeVenta.Controllers
             model.Fecha_Fin = DateTime.Now;
             return View("Index", model);
         }
+        public ActionResult RepoMensual()
+        {
+            return View("ReporteMensual");
+        }
+
+        public JsonResult GetMesAnyo()
+        {
+            List<SelectListItem> mes = new List<SelectListItem>();
+            List<SelectListItem> anyo = new List<SelectListItem>();
+
+            mes.Add( new SelectListItem
+            {
+                Text = "Enero",
+                Value = "01"
+            });
+            mes.Add(new SelectListItem
+            {
+                Text = "Febrero",
+                Value = "02"
+            });
+            mes.Add(new SelectListItem
+            {
+                Text = "Marzo",
+                Value = "03"
+            });
+            mes.Add(new SelectListItem
+            {
+                Text = "Abril",
+                Value = "04"
+            });
+            mes.Add(new SelectListItem
+            {
+                Text = "Mayo",
+                Value = "05"
+            });
+         
+            mes.Add(new SelectListItem
+            {
+                Text = "Junio",
+                Value = "06"
+            });
+            mes.Add(new SelectListItem
+            {
+                Text = "Julio",
+                Value = "07"
+            });
+            mes.Add(new SelectListItem
+            {
+                Text = "Agosto",
+                Value = "08"
+            });
+            mes.Add(new SelectListItem
+            {
+                Text = "Septiembre",
+                Value = "09"
+            });
+            mes.Add(new SelectListItem
+            {
+                Text = "Octubre",
+                Value = "10"
+            });
+            mes.Add(new SelectListItem
+            {
+                Text = "Noviembre",
+                Value = "11"
+            });
+            mes.Add(new SelectListItem
+            {
+                Text = "Diciembre",
+                Value = "12"
+            });
+
+            anyo.Add(new SelectListItem
+            {
+                Text = "2019",
+                Value = "2019" 
+            });
+            anyo.Add(new SelectListItem
+            {
+                Text = "2020",
+                Value = "2020"
+            });
+            anyo.Add(new SelectListItem
+            {
+                Text = "2021",
+                Value = "2021"
+            });
+            anyo.Add(new SelectListItem
+            {
+                Text = "2022",
+                Value = "2022"
+            });
+            anyo.Add(new SelectListItem
+            {
+                Text = "2023",
+                Value = "2023"
+            });
+            anyo.Add(new SelectListItem
+            {
+                Text = "2024",
+                Value = "2024"
+            });
+            anyo.Add(new SelectListItem
+            {
+                Text = "2025",
+                Value = "2025"
+            });
+            anyo.Add(new SelectListItem
+            {
+                Text = "2026",
+                Value = "2026"
+            });
+
+            object json = new { mes, anyo };
+
+            return Json(json, JsonRequestBehavior.AllowGet);
+
+        }
 
         public JsonResult GetMovimientos2()
         {
@@ -99,6 +217,197 @@ namespace PuntoDeVenta.Controllers
             });
 
             return Json(Items, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult ReporteMes(TableHistorico model)
+        {
+            var RangosFecha = IntervalosMes(model.Mes, model.Anyo);
+
+            if (RangosFecha == null)
+            {
+
+
+                MemoryStream ms = new MemoryStream();
+                Document PdfHistorico = new Document(iTextSharp.text.PageSize.A4.Rotate());
+                PdfWriter pw = PdfWriter.GetInstance(PdfHistorico, ms);
+
+                PdfHistorico.Open();
+                PdfHistorico.GetTop(600f);
+
+
+                string rutaLogo = Server.MapPath("..\\Content\\css-yisus\\img\\SIVAREPORT.png");
+
+                iTextSharp.text.Image Logo = iTextSharp.text.Image.GetInstance(rutaLogo);
+                Logo.SetAbsolutePosition(650, 400);
+                PdfHistorico.Add(Logo);
+
+
+                Paragraph titulo = new Paragraph("FECHA INVALIDA O SIN DATOS\n", new Font(Font.FontFamily.HELVETICA, 22));
+                titulo.Alignment = Element.ALIGN_CENTER;
+                PdfHistorico.Add(titulo);
+
+                PdfHistorico.Close();
+
+
+                byte[] bytesStream = ms.ToArray();
+                ms = new MemoryStream();
+                ms.Write(bytesStream, 0, bytesStream.Length);
+                ms.Position = 0;
+
+                return new FileStreamResult(ms, "application/pdf");
+            }
+            else
+            {
+
+                MemoryStream ms = new MemoryStream();
+                Document PdfHistorico = new Document(iTextSharp.text.PageSize.A4.Rotate());
+                PdfWriter pw = PdfWriter.GetInstance(PdfHistorico, ms);
+
+                PdfHistorico.Open();
+                PdfHistorico.GetTop(600f);
+
+
+
+
+
+                string rutaLogo = Server.MapPath("..\\Content\\css-yisus\\img\\SIVAREPORT.png");
+
+                iTextSharp.text.Image Logo = iTextSharp.text.Image.GetInstance(rutaLogo);
+                Logo.SetAbsolutePosition(650, 400);
+                PdfHistorico.Add(Logo);
+
+
+
+
+
+                Paragraph titulo = new Paragraph("REPORTE MENSUAL PUNTO DE VENTA\n", new Font(Font.FontFamily.HELVETICA, 22));
+                titulo.Alignment = Element.ALIGN_CENTER;
+                PdfHistorico.Add(titulo);
+
+
+                Paragraph fecha = new Paragraph("Fecha de Generacion Reporte: " + DateTime.Today.ToShortDateString().ToString()+ "", new Font(Font.FontFamily.HELVETICA, 12));
+                fecha.Alignment = Element.PTABLE;
+                PdfHistorico.Add(fecha);
+
+
+                Paragraph _cliente = new Paragraph("Mes del Reporte: " + RangosFecha[4] + "", new Font(Font.FontFamily.HELVETICA, 12));
+                _cliente.Alignment = Element.PTABLE;
+                PdfHistorico.Add(_cliente);
+
+
+                Paragraph Saldo = new Paragraph("Año del Reporte: " + model.Anyo + "", new Font(Font.FontFamily.HELVETICA, 12));
+                Saldo.Alignment = Element.PTABLE;
+                PdfHistorico.Add(Saldo);
+
+
+                PdfHistorico.Add(Chunk.NEWLINE);
+                PdfHistorico.Add(Chunk.NEWLINE);
+                PdfHistorico.Add(Chunk.NEWLINE);
+
+
+
+                PdfPTable table = new PdfPTable(4);
+                table.WidthPercentage = 100f;
+                var coldWidthPorcentagesCliente = new[] { 2f, 2f, 2f, 2f };
+                table.SetWidths(coldWidthPorcentagesCliente);
+
+                PdfPCell _cellIni = new PdfPCell();
+                PdfHistorico.GetLeft(40f);
+                PdfHistorico.GetRight(40f);
+
+                var Tabla1List = TablaRepoMes1(RangosFecha);
+                foreach (var item in Tabla1List)
+                {
+
+
+                    _cellIni = new PdfPCell(new Paragraph(item.columnaDatos.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
+                    _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+
+                    table.AddCell(_cellIni);
+
+                    _cellIni = new PdfPCell(new Paragraph(item.totalAnterior.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
+                    _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+
+                    table.AddCell(_cellIni);
+
+                    _cellIni = new PdfPCell(new Paragraph(item.totalActual.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
+                    _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+
+                    table.AddCell(_cellIni);
+
+                    _cellIni = new PdfPCell(new Paragraph(item.totalRegistros.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
+                    _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+
+                    table.AddCell(_cellIni);
+                }
+
+                PdfHistorico.Add(table);
+
+
+                //-----------
+
+                PdfHistorico.Add(Chunk.NEWLINE);
+                PdfHistorico.Add(Chunk.NEWLINE);
+                PdfHistorico.Add(Chunk.NEWLINE);
+
+                PdfPTable table2 = new PdfPTable(7);
+                table2.WidthPercentage = 100f;
+                var coldWidthPorcentagesCliente2 = new[] { 2f, 1f, 1f, 1f, 1f, 1f, 1f };
+                table2.SetWidths(coldWidthPorcentagesCliente2);
+
+                PdfPCell _cellIni2 = new PdfPCell();
+                PdfHistorico.GetLeft(40f);
+                PdfHistorico.GetRight(40f);
+
+                var Tabla2List = TablaRepoMes2(RangosFecha);
+
+                foreach (var item2 in Tabla2List)
+                {
+
+                    _cellIni2 = new PdfPCell(new Paragraph(item2.columnaDatos.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
+                    _cellIni2.HorizontalAlignment = Element.ALIGN_CENTER;
+                    table2.AddCell(_cellIni2);
+
+                    _cellIni2 = new PdfPCell(new Paragraph(item2.recargaAnterior.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
+                    _cellIni2.HorizontalAlignment = Element.ALIGN_CENTER;
+                    table2.AddCell(_cellIni2);
+
+                    _cellIni2 = new PdfPCell(new Paragraph(item2.cruceAnterior.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
+                    _cellIni2.HorizontalAlignment = Element.ALIGN_CENTER;
+                    table2.AddCell(_cellIni2);
+
+                    _cellIni2 = new PdfPCell(new Paragraph(item2.totalAnterior.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
+                    _cellIni2.HorizontalAlignment = Element.ALIGN_CENTER;
+                    table2.AddCell(_cellIni2);
+
+                    _cellIni2 = new PdfPCell(new Paragraph(item2.recargaActual.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
+                    _cellIni2.HorizontalAlignment = Element.ALIGN_CENTER;
+                    table2.AddCell(_cellIni2);
+
+                    _cellIni2 = new PdfPCell(new Paragraph(item2.cruceActual.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
+                    _cellIni2.HorizontalAlignment = Element.ALIGN_CENTER;
+                    table2.AddCell(_cellIni2);
+
+                    _cellIni2 = new PdfPCell(new Paragraph(item2.totalEfectivo.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
+                    _cellIni2.HorizontalAlignment = Element.ALIGN_CENTER;
+                    table2.AddCell(_cellIni2);
+
+                }
+                //---------
+
+
+                PdfHistorico.Add(table2);
+
+                PdfHistorico.Close();
+
+
+                byte[] bytesStream = ms.ToArray();
+                ms = new MemoryStream();
+                ms.Write(bytesStream, 0, bytesStream.Length);
+                ms.Position = 0;
+
+                return new FileStreamResult(ms, "application/pdf");
+            }
         }
 
         public ActionResult GenerarXCuenta(TableHistorico model)
@@ -1935,6 +2244,166 @@ namespace PuntoDeVenta.Controllers
             return Lista;
         }
 
+        public List<RepoMensual1> TablaRepoMes1(string[] fechas)
+        {
+            AppDbContext db = new AppDbContext();
+            List<RepoMensual1> Lista = new List<RepoMensual1>();
+
+            DateTime AnteriorInicio = Convert.ToDateTime(fechas[2]);
+            DateTime AnteriorFin = Convert.ToDateTime(fechas[3]).AddDays(1);
+            DateTime ActualInicio = Convert.ToDateTime(fechas[0]);
+            DateTime ActualFin = Convert.ToDateTime(fechas[1]).AddDays(1);
+
+            int clienteAnterior = db.Clientes.Where(x => x.DateTCliente >= AnteriorInicio && x.DateTCliente < AnteriorFin).Count();
+            int clienteActual = db.Clientes.Where(x => x.DateTCliente >= ActualInicio && x.DateTCliente < ActualFin).Count();
+            int totalCliente = clienteAnterior + clienteActual;
+
+            int cuentaAnterior = db.CuentasTelepeajes.Where(x => x.DateTCuenta >= AnteriorInicio && x.DateTCuenta < AnteriorFin).Count();
+            int cuentaActual = db.CuentasTelepeajes.Where(x => x.DateTCuenta >= ActualInicio && x.DateTCuenta < ActualFin).Count();
+            int totalCuenta = cuentaAnterior + cuentaActual;
+
+            int tagAnterior = db.Tags.Where(x => x.DateTTag >= AnteriorInicio && x.DateTTag < AnteriorFin).Count();
+            int tagActual = db.Tags.Where(x => x.DateTTag >= ActualInicio && x.DateTTag < ActualFin).Count();
+            int totalTag = tagAnterior + tagActual;
+
+            Lista.Add(new RepoMensual1
+            {
+                columnaDatos = "",
+                totalAnterior = "Total Registros Mes Anterior",
+                totalActual = "Total de Registros Mes Actual",
+                totalRegistros = "Total de Registros"
+            });
+
+            Lista.Add(new RepoMensual1
+            {
+                columnaDatos = "Numero de Clientes Actuales",
+                totalAnterior = Convert.ToString(clienteAnterior),
+                totalActual = Convert.ToString(clienteActual),
+                totalRegistros = Convert.ToString(totalCliente)
+            });
+
+            Lista.Add(new RepoMensual1
+            {
+                columnaDatos = "Numero de Cuentas Actuales",
+                totalAnterior = Convert.ToString(cuentaAnterior),
+                totalActual = Convert.ToString(cuentaActual),
+                totalRegistros = Convert.ToString(totalCuenta)
+            });
+
+            Lista.Add(new RepoMensual1
+            {
+                columnaDatos = "Numero de Tags Actuales",
+                totalAnterior = Convert.ToString(tagAnterior),
+                totalActual = Convert.ToString(tagActual),
+                totalRegistros = Convert.ToString(totalTag)
+            });
+            return Lista;
+        }
+
+        public List<RepoMensual2> TablaRepoMes2(string[] fechas)
+        {
+
+            AppDbContext db = new AppDbContext();
+            List<RepoMensual2> Lista = new List<RepoMensual2>();
+
+            DateTime AnteriorInicio = Convert.ToDateTime(fechas[2]);
+            DateTime AnteriorFin = Convert.ToDateTime(fechas[3]).AddDays(1);
+            DateTime ActualInicio = Convert.ToDateTime(fechas[0]);
+            DateTime ActualFin = Convert.ToDateTime(fechas[1]).AddDays(1);
+
+            var recargasColectivosAnterior = db.OperacionesCajeros.Where(x => x.DateTOperacion >= AnteriorInicio && x.DateTOperacion < AnteriorFin && x.Concepto == "CUENTA RECARGA").Sum(x => x.Monto);
+            var recargasIndividualesAnterior = db.OperacionesCajeros.Where(x => x.DateTOperacion >= AnteriorInicio && x.DateTOperacion < AnteriorFin && x.Concepto == "TAG ACTIVADO").Sum(x => x.Monto);
+            var crucesColectivosAnterior = CruceColetivo(AnteriorInicio, AnteriorFin);                                             
+            var crucesIndividualesAnterior = CruceIndividual(AnteriorInicio, AnteriorFin);
+
+            var recargasColecticasActual = db.OperacionesCajeros.Where(x => x.DateTOperacion >= ActualInicio && x.DateTOperacion < ActualFin && x.Concepto == "CUENTA RECARGA").Sum(x => x.Monto);
+            var recargasIndividualesActual = db.OperacionesCajeros.Where(x => x.DateTOperacion >= ActualInicio && x.DateTOperacion < ActualFin && x.Concepto == "TAG RECARGA").Sum(x => x.Monto); 
+            var crucesColectivosActual = CruceColetivo(ActualInicio, ActualFin);
+            var crucesIndividualesActual = CruceIndividual(ActualInicio, ActualFin);
+
+            var totalRecargasAnterior = recargasColectivosAnterior + recargasIndividualesAnterior;
+            var totalCrucesAnterior = crucesColectivosAnterior + crucesIndividualesAnterior ;
+            var totalEfectivoAnterior = totalRecargasAnterior - totalCrucesAnterior;
+
+            var totalRecargasActual = recargasColecticasActual + recargasIndividualesActual;
+            var totalCrucesActual = crucesColectivosActual + crucesIndividualesActual ;
+            var totalEfectivo = totalRecargasActual - totalCrucesActual ;
+
+            Lista.Add(new RepoMensual2
+            {
+                columnaDatos = "",
+                recargaAnterior = "Recargas Mes Anterior",
+                cruceAnterior = "Cruces Mes Anteriro",
+                totalAnterior = "Total Efectivo Mes Anterior",
+                recargaActual = "Recargas Mes Actual",
+                cruceActual = "Cruces Mes Actual",
+                totalEfectivo = "Total Efectivo Actual"
+                
+            });
+
+            Lista.Add(new RepoMensual2
+            {
+                columnaDatos = "Recargas Cuenta Colectiva",
+                recargaAnterior = Convercion(Convert.ToString(recargasColectivosAnterior)),
+                cruceAnterior = "",
+                totalAnterior = "",
+                recargaActual = Convercion(Convert.ToString(recargasColecticasActual)),
+                cruceActual = "",
+                totalEfectivo = ""
+
+            });
+
+            Lista.Add(new RepoMensual2
+            {
+                columnaDatos = "Recargas Cuenta Individual",
+                recargaAnterior = Convercion(Convert.ToString(recargasIndividualesAnterior)),
+                cruceAnterior = "",
+                totalAnterior = "",
+                recargaActual = Convercion(Convert.ToString(recargasIndividualesActual)),
+                cruceActual = "",
+                totalEfectivo = ""
+
+            });
+
+            Lista.Add(new RepoMensual2
+            {
+                columnaDatos = "Cruces Cuenta Colectivas",
+                recargaAnterior = "",
+                cruceAnterior = Convercion(Convert.ToString(crucesColectivosAnterior)),
+                totalAnterior = "",
+                recargaActual = "",
+                cruceActual = Convercion(Convert.ToString(crucesColectivosActual)),
+                totalEfectivo = ""
+
+            });
+
+            Lista.Add(new RepoMensual2
+            {
+                columnaDatos = "Cruces Cuenta Individuales",
+                recargaAnterior = "",
+                cruceAnterior = Convercion(Convert.ToString(crucesIndividualesAnterior)),
+                totalAnterior = "",
+                recargaActual = "",
+                cruceActual = Convercion(Convert.ToString(crucesIndividualesActual)),
+                totalEfectivo = ""
+
+            });
+
+            Lista.Add(new RepoMensual2
+            {
+                columnaDatos = "Totales",
+                recargaAnterior = Convercion(Convert.ToString(totalRecargasAnterior)),
+                cruceAnterior = Convercion(Convert.ToString(totalCrucesAnterior)),
+                totalAnterior = Convercion(Convert.ToString(totalEfectivoAnterior)),
+                recargaActual = Convercion(Convert.ToString(totalRecargasActual)),
+                cruceActual = Convercion(Convert.ToString(totalCrucesActual)),
+                totalEfectivo = Convercion(Convert.ToString(totalEfectivo))
+
+            });
+            return Lista;
+        }
+
+
 
         public string BuscaTramo(string IdGare)
         {
@@ -2773,7 +3242,6 @@ namespace PuntoDeVenta.Controllers
 
             return new FileStreamResult(ms, "application/pdf");
         }
-
         enum DecisionesMetodos
         {
             Tag = 1,
@@ -2941,5 +3409,186 @@ namespace PuntoDeVenta.Controllers
             return 'Q' + Mandar;
         }
 
+        public double CruceColetivo(DateTime fecha1, DateTime fecha2)
+        {
+            AppDbContext db = new AppDbContext();
+
+            var lista = (from h in db.Historicos
+                         join t in db.Tags on h.Tag equals t.NumTag
+                         join c in db.CuentasTelepeajes on t.CuentaId equals c.Id
+                         where h.Fecha >= fecha1 && h.Fecha < fecha2
+                         where c.TypeCuenta == "Colectiva"
+                         select new hola
+                         {
+                             saldo = h.Saldo
+
+                         }).ToList();
+
+            return lista.Sum(x => x.saldo);
+        }
+
+        public double CruceIndividual(DateTime fecha1, DateTime fecha2)
+        {
+
+            AppDbContext db = new AppDbContext();
+
+            var lista = (from h in db.Historicos
+                         join t in db.Tags on h.Tag equals t.NumTag
+                         join c in db.CuentasTelepeajes on t.CuentaId equals c.Id
+                         where h.Fecha >= fecha1 && h.Fecha < fecha2
+                         where c.TypeCuenta == "Individual"
+                         select new hola
+                         {
+                             saldo = h.Saldo
+
+                         }).ToList();
+
+            return lista.Sum(x => x.saldo);
+        }
+
+        public string[] IntervalosMes(string mes,string anyo)
+        {
+            int DiaActual, DiaAnterior;
+            //string FechaInicioActual = string.Empty;
+            //string FechaFinActual = string.Empty;
+
+            //string FechaInicioAnterior = string.Empty;
+            //string FechaFinAnterior = string.Empty;
+
+            //string MesNombre = string.Empty;
+
+            string[] Fechas = new string[5];
+
+            DateTime Actual = DateTime.Today;
+
+            if (Convert.ToInt32(mes) <= Actual.Month && Convert.ToInt32(anyo) <= Actual.Year)
+            {
+
+                switch (mes)
+                {
+                    case "01":
+                        DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 01);
+                        Fechas[0] = "01" + "/" + mes + "/" + anyo;
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo;
+                        DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 12);
+                        Fechas[2] = "01" + "/" + 12 + "/" + anyo;
+                        Fechas[3] = DiaAnterior + "/" + 12 + "/" + anyo;
+                        Fechas[4] = "ENERO";
+                        break;
+                    case "02":
+                        DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 02);
+                        Fechas[0] = "01" + "/" + mes + "/" + anyo;
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo;
+                        DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 01);
+                        Fechas[2] = "01" + "/" + 01 + "/" + anyo;
+                        Fechas[3] = DiaAnterior + "/" + 01 + "/" + anyo;
+                        Fechas[4] = "FEBRERO";
+                        break;
+                    case "03":
+                        DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 03);
+                        Fechas[0] = "01" + "/" + mes + "/" + anyo;
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo;
+                        DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 02);
+                        Fechas[2] = "01" + "/" + 02 + "/" + anyo;
+                        Fechas[3] = DiaAnterior + "/" + 02 + "/" + anyo;
+                        Fechas[4] = "MARZO";
+                        break;
+                    case "04":
+                        DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 04);
+                        Fechas[0] = "01" + "/" + mes + "/" + anyo;
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo;
+                        DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 03);
+                        Fechas[2] = "01" + "/" + 03 + "/" + anyo;
+                        Fechas[3] = DiaAnterior + "/" + 03 + "/" + anyo;
+                        Fechas[4] = "ABRIL";
+                        break;
+                    case "05":
+                        DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 05);
+                        Fechas[0] = "01" + "/" + mes + "/" + anyo;
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo;
+                        DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 04);
+                        Fechas[2] = "01" + "/" + 04 + "/" + anyo;
+                        Fechas[3] = DiaAnterior + "/" + 04 + "/" + anyo;
+                        Fechas[4] = "MAYO";
+                        break;
+                    case "06":
+                        DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 06);
+                        Fechas[0] = "01" + "/" + mes + "/" + anyo;
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo;
+                        DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 05);
+                        Fechas[2] = "01" + "/" + 05 + "/" + anyo;
+                        Fechas[3] = DiaAnterior + "/" + 05 + "/" + anyo;
+                        Fechas[4] = "JUNIO";
+                        break;
+                    case "07":
+                        DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 07);
+                        Fechas[0] = "01" + "/" + mes + "/" + anyo;
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo;
+                        DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 06);
+                        Fechas[2] = "01" + "/" + 06 + "/" + anyo;
+                        Fechas[3] = DiaAnterior + "/" + 06 + "/" + anyo;
+                        Fechas[4] = "JULIO";
+                        break;
+                    case "08":
+                        DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 08);
+                        Fechas[0] = "01" + "/" + mes + "/" + anyo;
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo;
+                        DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 07);
+                        Fechas[2] = "01" + "/" + 07 + "/" + anyo;
+                        Fechas[3] = DiaAnterior + "/" + 07 + "/" + anyo;
+                        Fechas[4] = "AGOSTO";
+                        break;
+                    case "09":
+                        DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 09);
+                        Fechas[0] = "01" + "/" + mes + "/" + anyo;
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo;
+                        DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 08);
+                        Fechas[2] = "01" + "/" + 08 + "/" + anyo;
+                        Fechas[3] = DiaAnterior + "/" + 08 + "/" + anyo;
+                        Fechas[4] = "SEPTIEMBRE";
+                        break;
+                    case "10":
+                        DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 10);
+                        Fechas[0] = "01" + "/" + mes + "/" + anyo;
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo;
+                        DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 09);
+                        Fechas[2] = "01" + "/" + 09 + "/" + anyo;
+                        Fechas[3] = DiaAnterior + "/" + 09 + "/" + anyo;
+                        Fechas[4] = "OCTUBRE";
+                        break;
+                    case "11":
+                        DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 11);
+                        Fechas[0] = "01" + "/" + mes + "/" + anyo;
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo;
+                        DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 10);
+                        Fechas[2] = "01" + "/" + 10 + "/" + anyo;
+                        Fechas[3] = DiaAnterior + "/" + 10 + "/" + anyo;
+                        Fechas[4] = "NOVIEMBRE";
+                        break;
+                    case "12":
+                        DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 12);
+                        Fechas[0] = "01" + "/" + mes + "/" + anyo;
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo;
+                        DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 11);
+                        Fechas[2] = "01" + "/" + 11 + "/" + anyo;
+                        Fechas[3] = DiaAnterior + "/" + 11 + "/" + anyo;
+                        Fechas[4] = "DICIEMBRE";
+                        break;
+                    default:
+                        break;
+
+                }
+
+                //Object Fechas = new { FechaInicioActual, FechaFinActual, FechaInicioAnterior, FechaFinAnterior, MesNombre };
+                return Fechas;
+            }
+            else return null;
+        }
+        private class hola
+        {
+            public double saldo { get; set; }
+        }
+
     }
+    
 }

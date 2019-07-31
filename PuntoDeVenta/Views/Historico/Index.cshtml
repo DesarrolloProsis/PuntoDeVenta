@@ -25,6 +25,7 @@
                         <li class="nav-item">
                             <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Buscar Por Fecha</a>
                         </li>
+                      
                     </ul>
                     <div class="tab-content" id="myTabContent">
 
@@ -130,6 +131,7 @@
                                 }
                             </div>
                         </div>
+                        
                     </div>
                 </div>
 
@@ -191,6 +193,31 @@
                          $option.html(row.Text);
                          $('#TypeMovimiento').append($option);
                      });           
+
+                 },
+                 error: function (ex) {
+                        alert("Error!!!" + ex);
+                 },
+            });
+
+             $.ajax({
+                 url: '@Url.Action("GetMesAnyo", "Historico")',
+                 type: "GET",
+                 data: "{}",
+                 cache: false,
+                 success: function (data) {
+                     $.each(data.mes, function (i, row) {
+                         var $option = $('<option>');
+                         $option.val(row.Value);
+                         $option.html(row.Text);
+                         $('#Mes').append($option);
+                     });  
+                     $.each(data.anyo, function (i, row) {
+                         var $option = $('<option>');
+                         $option.val(row.Value);
+                         $option.html(row.Text);
+                         $('#Anyo').append($option);
+                     });
 
                  },
                  error: function (ex) {

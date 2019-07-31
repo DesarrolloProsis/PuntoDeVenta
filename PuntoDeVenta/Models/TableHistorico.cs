@@ -11,6 +11,8 @@ namespace PuntoDeVenta.Models
         public DateTime Fecha_Inicio { get; set; }
         public DateTime Fecha_Fin { get; set; }
         public string Tag { get; set; }
+        public string Mes { get; set; }
+        public string Anyo { get; set; }
         public string Cuenta { get; set; }
         public string TypeMovimiento { get; set; }
         public string TypeMovimiento2 { get; set; }
@@ -74,5 +76,26 @@ namespace PuntoDeVenta.Models
         public string Referencia { get; set; }
         public string SaldoActual { get; set; }
         public string TotalMonetarioMovimientos { get; set; }
+    }
+
+    public class RepoMensual1
+    {
+        public string columnaDatos { get; set; }
+        public string totalAnterior { get; set; }
+        public string totalActual { get; set; }
+        public string totalRegistros { get; set; }
+
+    }
+    public class RepoMensual2
+    {
+        public string columnaDatos { get; set; }
+        public string recargaAnterior { get; set; }
+        public string cruceAnterior { get; set; }
+        public string totalAnterior { get; set; }
+        public string recargaActual { get; set; }
+        public string cruceActual { get; set; }
+        public string totalEfectivo { get; set; }
+
+
     }
 }
