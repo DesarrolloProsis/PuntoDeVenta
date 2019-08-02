@@ -2451,7 +2451,7 @@ namespace PuntoDeVenta.Controllers
             Lista.Add(new RepoMensual2
             {
                 
-                recargaActual = Convercion(Convert.ToString(recargasMes)),
+                recargaActual = Convercion(Convert.ToString(recargasMes).Replace(".",",")),
                 cruceActual = "",
                 totalEfectivo = ""
 
@@ -2461,7 +2461,7 @@ namespace PuntoDeVenta.Controllers
             {
                 
                 recargaActual = "",
-                cruceActual = Convercion(Convert.ToString(crucesMes)),
+                cruceActual = Convercion(Convert.ToString(crucesMes).Replace(".", ",")),
                 totalEfectivo = ""
 
             });
@@ -2470,7 +2470,7 @@ namespace PuntoDeVenta.Controllers
             {                
                 recargaActual = "",
                 cruceActual = "",
-                totalEfectivo = Convercion(Convert.ToString(totales))
+                totalEfectivo = Convercion(Convert.ToString(totales).Replace(".", ","))
 
             });
 
