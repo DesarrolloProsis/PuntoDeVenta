@@ -93,17 +93,12 @@ namespace PuntoDeVenta.Models
     public class RepoMensual1
     {
         public string columnaDatos { get; set; }
-        public string totalAnterior { get; set; }
         public string totalActual { get; set; }
         public string totalRegistros { get; set; }
 
     }
     public class RepoMensual2
-    {
-        public string columnaDatos { get; set; }
-        public string recargaAnterior { get; set; }
-        public string cruceAnterior { get; set; }
-        public string totalAnterior { get; set; }
+    {         
         public string recargaActual { get; set; }
         public string cruceActual { get; set; }
         public string totalEfectivo { get; set; }

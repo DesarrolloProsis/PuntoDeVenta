@@ -13,6 +13,7 @@ using iTextSharp.testutils;
 using System.IO;
 using System.Collections;
 using System.Globalization;
+using iTextSharp.text.html;
 
 namespace PuntoDeVenta.Controllers
 {
@@ -229,7 +230,7 @@ namespace PuntoDeVenta.Controllers
 
 
                 MemoryStream ms = new MemoryStream();
-                Document PdfHistorico = new Document(iTextSharp.text.PageSize.A4.Rotate());
+                Document PdfHistorico = new Document(iTextSharp.text.PageSize.LETTER.Rotate());
                 PdfWriter pw = PdfWriter.GetInstance(PdfHistorico, ms);
 
                 PdfHistorico.Open();
@@ -261,7 +262,7 @@ namespace PuntoDeVenta.Controllers
             {
 
                 MemoryStream ms = new MemoryStream();
-                Document PdfHistorico = new Document(iTextSharp.text.PageSize.A4.Rotate());
+                Document PdfHistorico = new Document(iTextSharp.text.PageSize.LETTER.Rotate());
                 PdfWriter pw = PdfWriter.GetInstance(PdfHistorico, ms);
 
                 PdfHistorico.Open();
@@ -285,18 +286,19 @@ namespace PuntoDeVenta.Controllers
                 titulo.Alignment = Element.ALIGN_CENTER;
                 PdfHistorico.Add(titulo);
 
+                PdfHistorico.Add(Chunk.NEWLINE);
 
-                Paragraph fecha = new Paragraph("Fecha de Generacion Reporte: " + DateTime.Today.ToShortDateString().ToString()+ "", new Font(Font.FontFamily.HELVETICA, 12));
+                Paragraph fecha = new Paragraph("Fecha de Generacion Reporte: " + DateTime.Today.ToShortDateString().ToString()+ "", new Font(Font.FontFamily.HELVETICA, 14));
                 fecha.Alignment = Element.PTABLE;
                 PdfHistorico.Add(fecha);
 
 
-                Paragraph _cliente = new Paragraph("Mes del Reporte: " + RangosFecha[4] + "", new Font(Font.FontFamily.HELVETICA, 12));
+                Paragraph _cliente = new Paragraph("Mes del Reporte: " + RangosFecha[4] + "", new Font(Font.FontFamily.HELVETICA, 14));
                 _cliente.Alignment = Element.PTABLE;
                 PdfHistorico.Add(_cliente);
 
 
-                Paragraph Saldo = new Paragraph("Año del Reporte: " + model.Anyo + "", new Font(Font.FontFamily.HELVETICA, 12));
+                Paragraph Saldo = new Paragraph("Año del Reporte: " + model.Anyo + "", new Font(Font.FontFamily.HELVETICA, 14));
                 Saldo.Alignment = Element.PTABLE;
                 PdfHistorico.Add(Saldo);
 
@@ -307,38 +309,57 @@ namespace PuntoDeVenta.Controllers
 
 
 
-                PdfPTable table = new PdfPTable(4);
+                PdfPTable table = new PdfPTable(3);
                 table.WidthPercentage = 100f;
-                var coldWidthPorcentagesCliente = new[] { 2f, 2f, 2f, 2f };
+                var coldWidthPorcentagesCliente = new[] { 2f, 2f, 2f };
                 table.SetWidths(coldWidthPorcentagesCliente);
 
                 PdfPCell _cellIni = new PdfPCell();
                 PdfHistorico.GetLeft(40f);
                 PdfHistorico.GetRight(40f);
 
+
+                var FontColour1 = new BaseColor(255, 0, 0);
+                var ColorRojo = FontFactory.GetFont("Times New Roman", 12, FontColour1);
+
+                var FontColour2 = new BaseColor(0, 255, 0);
+                var ColorVerde = FontFactory.GetFont("Times New Roman", 12, FontColour2);
+
+   
                 var Tabla1List = TablaRepoMes1(RangosFecha);
+
+
+                _cellIni = new PdfPCell(new Paragraph("", new Font(Font.FontFamily.HELVETICA, 12)));
+                _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                _cellIni.BackgroundColor  = new iTextSharp.text.BaseColor(239, 127, 26);
+                table.AddCell(_cellIni);
+
+
+                _cellIni = new PdfPCell(new Paragraph("NUEVOS ESTE MES", new Font(Font.FontFamily.HELVETICA, 12)));
+                _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
+                table.AddCell(_cellIni);
+
+                _cellIni = new PdfPCell(new Paragraph("TOTAL", new Font(Font.FontFamily.HELVETICA, 12)));
+                _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
+                table.AddCell(_cellIni);
+
+
                 foreach (var item in Tabla1List)
                 {
-
-
+                
                     _cellIni = new PdfPCell(new Paragraph(item.columnaDatos.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
                     _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
-
                     table.AddCell(_cellIni);
 
-                    _cellIni = new PdfPCell(new Paragraph(item.totalAnterior.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
-                    _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
-
-                    table.AddCell(_cellIni);
 
                     _cellIni = new PdfPCell(new Paragraph(item.totalActual.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
                     _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
-
                     table.AddCell(_cellIni);
 
                     _cellIni = new PdfPCell(new Paragraph(item.totalRegistros.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
                     _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
-
                     table.AddCell(_cellIni);
                 }
 
@@ -351,9 +372,9 @@ namespace PuntoDeVenta.Controllers
                 PdfHistorico.Add(Chunk.NEWLINE);
                 PdfHistorico.Add(Chunk.NEWLINE);
 
-                PdfPTable table2 = new PdfPTable(7);
+                PdfPTable table2 = new PdfPTable(3);
                 table2.WidthPercentage = 100f;
-                var coldWidthPorcentagesCliente2 = new[] { 2f, 1f, 1f, 1f, 1f, 1f, 1f };
+                var coldWidthPorcentagesCliente2 = new[] {  1f, 1f, 1f };
                 table2.SetWidths(coldWidthPorcentagesCliente2);
 
                 PdfPCell _cellIni2 = new PdfPCell();
@@ -362,30 +383,31 @@ namespace PuntoDeVenta.Controllers
 
                 var Tabla2List = TablaRepoMes2(RangosFecha);
 
+
+                _cellIni2 = new PdfPCell(new Paragraph("RECARGAS DE ESTE MES", new Font(Font.FontFamily.HELVETICA, 12)));
+                _cellIni2.HorizontalAlignment = Element.ALIGN_CENTER;
+                _cellIni2.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
+                table2.AddCell(_cellIni2);
+
+                _cellIni2 = new PdfPCell(new Paragraph("CRUCES DE ESTE MES", new Font(Font.FontFamily.HELVETICA, 12)));
+                _cellIni2.HorizontalAlignment = Element.ALIGN_CENTER;
+                _cellIni2.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
+                table2.AddCell(_cellIni2);
+
+                _cellIni2 = new PdfPCell(new Paragraph("TOTAL DE ESTE MES", new Font(Font.FontFamily.HELVETICA, 12)));
+                _cellIni2.HorizontalAlignment = Element.ALIGN_CENTER;
+                _cellIni2.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
+                table2.AddCell(_cellIni2);
+
                 foreach (var item2 in Tabla2List)
                 {
 
-                    _cellIni2 = new PdfPCell(new Paragraph(item2.columnaDatos.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
+      
+                    _cellIni2 = new PdfPCell(new Paragraph(item2.recargaActual.ToString(), ColorVerde));
                     _cellIni2.HorizontalAlignment = Element.ALIGN_CENTER;
                     table2.AddCell(_cellIni2);
 
-                    _cellIni2 = new PdfPCell(new Paragraph(item2.recargaAnterior.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
-                    _cellIni2.HorizontalAlignment = Element.ALIGN_CENTER;
-                    table2.AddCell(_cellIni2);
-
-                    _cellIni2 = new PdfPCell(new Paragraph(item2.cruceAnterior.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
-                    _cellIni2.HorizontalAlignment = Element.ALIGN_CENTER;
-                    table2.AddCell(_cellIni2);
-
-                    _cellIni2 = new PdfPCell(new Paragraph(item2.totalAnterior.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
-                    _cellIni2.HorizontalAlignment = Element.ALIGN_CENTER;
-                    table2.AddCell(_cellIni2);
-
-                    _cellIni2 = new PdfPCell(new Paragraph(item2.recargaActual.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
-                    _cellIni2.HorizontalAlignment = Element.ALIGN_CENTER;
-                    table2.AddCell(_cellIni2);
-
-                    _cellIni2 = new PdfPCell(new Paragraph(item2.cruceActual.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
+                    _cellIni2 = new PdfPCell(new Paragraph(item2.cruceActual.ToString(), ColorRojo));
                     _cellIni2.HorizontalAlignment = Element.ALIGN_CENTER;
                     table2.AddCell(_cellIni2);
 
@@ -2319,27 +2341,7 @@ namespace PuntoDeVenta.Controllers
 
             return otraLista;
         }
-
-
-        //class Footer : PdfPageEventHelper
-        //{
-        //    public override void OnEndPage(PdfWriter writer, Document doc)
-        //    {
-        //        Paragraph footer = new Paragraph("THANK YOU", FontFactory.GetFont(FontFactory.TIMES, 10, iTextSharp.text.Font.NORMAL));
-        //        footer.Alignment = Element.ALIGN_RIGHT;
-        //        PdfPTable footerTbl = new PdfPTable(1);
-        //        footerTbl.TotalWidth = 300;
-        //        footerTbl.HorizontalAlignment = Element.ALIGN_CENTER;
-        //        PdfPCell cell = new PdfPCell(footer);
-        //        cell.Border = 0;
-        //        cell.PaddingLeft = 10;
-        //        footerTbl.AddCell(cell);
-        //        footerTbl.WriteSelectedRows(0, -1, 415, 30, writer.DirectContent);
-        //    }
-        //}
-
-
-
+    
         class HeaderFooter : PdfPageEventHelper
         {
             public override void OnEndPage(PdfWriter writer, Document PdfHistorico)
@@ -2396,47 +2398,34 @@ namespace PuntoDeVenta.Controllers
             DateTime AnteriorFin = Convert.ToDateTime(fechas[3]).AddDays(1);
             DateTime ActualInicio = Convert.ToDateTime(fechas[0]);
             DateTime ActualFin = Convert.ToDateTime(fechas[1]).AddDays(1);
-
-            int clienteAnterior = db.Clientes.Where(x => x.DateTCliente >= AnteriorInicio && x.DateTCliente < AnteriorFin).Count();
+            
             int clienteActual = db.Clientes.Where(x => x.DateTCliente >= ActualInicio && x.DateTCliente < ActualFin).Count();
-            int totalCliente = clienteAnterior + clienteActual;
-
-            int cuentaAnterior = db.CuentasTelepeajes.Where(x => x.DateTCuenta >= AnteriorInicio && x.DateTCuenta < AnteriorFin).Count();
+            int totalCliente = db.Clientes.Where(x => x.DateTCliente < ActualFin).Count();
+            
             int cuentaActual = db.CuentasTelepeajes.Where(x => x.DateTCuenta >= ActualInicio && x.DateTCuenta < ActualFin).Count();
-            int totalCuenta = cuentaAnterior + cuentaActual;
-
-            int tagAnterior = db.Tags.Where(x => x.DateTTag >= AnteriorInicio && x.DateTTag < AnteriorFin).Count();
+            int totalCuenta = db.CuentasTelepeajes.Where(x => x.DateTCuenta < ActualFin).Count();
+            
             int tagActual = db.Tags.Where(x => x.DateTTag >= ActualInicio && x.DateTTag < ActualFin).Count();
-            int totalTag = tagAnterior + tagActual;
+            int totalTag = db.Tags.Where(x => x.DateTTag < ActualFin).Count();
+   
 
             Lista.Add(new RepoMensual1
             {
-                columnaDatos = "",
-                totalAnterior = "Total Registros Mes Anterior",
-                totalActual = "Total de Registros Mes Actual",
-                totalRegistros = "Total de Registros"
-            });
-
-            Lista.Add(new RepoMensual1
-            {
-                columnaDatos = "Numero de Clientes Actuales",
-                totalAnterior = Convert.ToString(clienteAnterior),
+                columnaDatos = "CLIENTES",
                 totalActual = Convert.ToString(clienteActual),
                 totalRegistros = Convert.ToString(totalCliente)
             });
 
             Lista.Add(new RepoMensual1
             {
-                columnaDatos = "Numero de Cuentas Actuales",
-                totalAnterior = Convert.ToString(cuentaAnterior),
+                columnaDatos = "CUENTAS",
                 totalActual = Convert.ToString(cuentaActual),
                 totalRegistros = Convert.ToString(totalCuenta)
             });
 
             Lista.Add(new RepoMensual1
             {
-                columnaDatos = "Numero de Tags Actuales",
-                totalAnterior = Convert.ToString(tagAnterior),
+                columnaDatos = "TAGS",
                 totalActual = Convert.ToString(tagActual),
                 totalRegistros = Convert.ToString(totalTag)
             });
@@ -2449,48 +2438,20 @@ namespace PuntoDeVenta.Controllers
             AppDbContext db = new AppDbContext();
             List<RepoMensual2> Lista = new List<RepoMensual2>();
 
-            DateTime AnteriorInicio = Convert.ToDateTime(fechas[2]);
-            DateTime AnteriorFin = Convert.ToDateTime(fechas[3]).AddDays(1);
             DateTime ActualInicio = Convert.ToDateTime(fechas[0]);
             DateTime ActualFin = Convert.ToDateTime(fechas[1]).AddDays(1);
 
-            var recargasColectivosAnterior = db.OperacionesCajeros.Where(x => x.DateTOperacion >= AnteriorInicio && x.DateTOperacion < AnteriorFin && x.Concepto == "CUENTA RECARGA").Sum(x => x.Monto);
-            var recargasIndividualesAnterior = db.OperacionesCajeros.Where(x => x.DateTOperacion >= AnteriorInicio && x.DateTOperacion < AnteriorFin && x.Concepto == "TAG ACTIVADO").Sum(x => x.Monto);
-            var crucesColectivosAnterior = CruceColetivo(AnteriorInicio, AnteriorFin);                                             
-            var crucesIndividualesAnterior = CruceIndividual(AnteriorInicio, AnteriorFin);
 
-            var recargasColecticasActual = db.OperacionesCajeros.Where(x => x.DateTOperacion >= ActualInicio && x.DateTOperacion < ActualFin && x.Concepto == "CUENTA RECARGA").Sum(x => x.Monto);
-            var recargasIndividualesActual = db.OperacionesCajeros.Where(x => x.DateTOperacion >= ActualInicio && x.DateTOperacion < ActualFin && x.Concepto == "TAG RECARGA").Sum(x => x.Monto); 
-            var crucesColectivosActual = CruceColetivo(ActualInicio, ActualFin);
-            var crucesIndividualesActual = CruceIndividual(ActualInicio, ActualFin);
 
-            var totalRecargasAnterior = recargasColectivosAnterior + recargasIndividualesAnterior;
-            var totalCrucesAnterior = crucesColectivosAnterior + crucesIndividualesAnterior ;
-            var totalEfectivoAnterior = totalRecargasAnterior - totalCrucesAnterior;
-
-            var totalRecargasActual = recargasColecticasActual + recargasIndividualesActual;
-            var totalCrucesActual = crucesColectivosActual + crucesIndividualesActual ;
-            var totalEfectivo = totalRecargasActual - totalCrucesActual ;
+            var crucesMes = Convert.ToDouble(db.Historicos.Where(x => x.Fecha >= ActualInicio && x.Fecha < ActualFin).Sum(x => x.Saldo));
+            var recargasMes = Convert.ToDouble(db.OperacionesCajeros.Where(x => x.DateTOperacion >= ActualInicio && x.DateTOperacion < ActualFin).Sum(x => x.Monto));
+            var totales = recargasMes - crucesMes;
+           
 
             Lista.Add(new RepoMensual2
             {
-                columnaDatos = "",
-                recargaAnterior = "Recargas Mes Anterior",
-                cruceAnterior = "Cruces Mes Anteriro",
-                totalAnterior = "Total Efectivo Mes Anterior",
-                recargaActual = "Recargas Mes Actual",
-                cruceActual = "Cruces Mes Actual",
-                totalEfectivo = "Total Efectivo Actual"
                 
-            });
-
-            Lista.Add(new RepoMensual2
-            {
-                columnaDatos = "Recargas Cuenta Colectiva",
-                recargaAnterior = Convercion(Convert.ToString(recargasColectivosAnterior)),
-                cruceAnterior = "",
-                totalAnterior = "",
-                recargaActual = Convercion(Convert.ToString(recargasColecticasActual)),
+                recargaActual = Convercion(Convert.ToString(recargasMes)),
                 cruceActual = "",
                 totalEfectivo = ""
 
@@ -2498,51 +2459,22 @@ namespace PuntoDeVenta.Controllers
 
             Lista.Add(new RepoMensual2
             {
-                columnaDatos = "Recargas Cuenta Individual",
-                recargaAnterior = Convercion(Convert.ToString(recargasIndividualesAnterior)),
-                cruceAnterior = "",
-                totalAnterior = "",
-                recargaActual = Convercion(Convert.ToString(recargasIndividualesActual)),
+                
+                recargaActual = "",
+                cruceActual = Convercion(Convert.ToString(crucesMes)),
+                totalEfectivo = ""
+
+            });
+
+            Lista.Add(new RepoMensual2
+            {                
+                recargaActual = "",
                 cruceActual = "",
-                totalEfectivo = ""
+                totalEfectivo = Convercion(Convert.ToString(totales))
 
             });
 
-            Lista.Add(new RepoMensual2
-            {
-                columnaDatos = "Cruces Cuenta Colectivas",
-                recargaAnterior = "",
-                cruceAnterior = Convercion(Convert.ToString(crucesColectivosAnterior)),
-                totalAnterior = "",
-                recargaActual = "",
-                cruceActual = Convercion(Convert.ToString(crucesColectivosActual)),
-                totalEfectivo = ""
 
-            });
-
-            Lista.Add(new RepoMensual2
-            {
-                columnaDatos = "Cruces Cuenta Individuales",
-                recargaAnterior = "",
-                cruceAnterior = Convercion(Convert.ToString(crucesIndividualesAnterior)),
-                totalAnterior = "",
-                recargaActual = "",
-                cruceActual = Convercion(Convert.ToString(crucesIndividualesActual)),
-                totalEfectivo = ""
-
-            });
-
-            Lista.Add(new RepoMensual2
-            {
-                columnaDatos = "Totales",
-                recargaAnterior = Convercion(Convert.ToString(totalRecargasAnterior)),
-                cruceAnterior = Convercion(Convert.ToString(totalCrucesAnterior)),
-                totalAnterior = Convercion(Convert.ToString(totalEfectivoAnterior)),
-                recargaActual = Convercion(Convert.ToString(totalRecargasActual)),
-                cruceActual = Convercion(Convert.ToString(totalCrucesActual)),
-                totalEfectivo = Convercion(Convert.ToString(totalEfectivo))
-
-            });
             return Lista;
         }
 
@@ -2597,7 +2529,7 @@ namespace PuntoDeVenta.Controllers
                 Document PdfHistorico = new Document(iTextSharp.text.PageSize.LETTER);
                 PdfWriter pw = PdfWriter.GetInstance(PdfHistorico, ms);
                 pw.PageEvent = new HeaderFooter();
-
+                //pw.PageEvent.OnEndPage()
                 PdfHistorico.Open();
                 PdfHistorico.GetTop(600f);
 
@@ -2607,19 +2539,50 @@ namespace PuntoDeVenta.Controllers
                 Logo.SetAbsolutePosition(465, 570);
                 PdfHistorico.Add(Logo);
 
+                //PdfPTable tableIncio = new PdfPTable(1);
+                //tableIncio.WidthPercentage = 100f;
+                //var coldWidthPorcentagesCliente2 = new[] { 4f };
+                //tableIncio.SetWidths(coldWidthPorcentagesCliente2);
+
+                //PdfPCell _cellENcabezado = new PdfPCell();
+                //PdfHistorico.GetLeft(40f);
+                //PdfHistorico.GetRight(40f);
+
+
+                //_cellENcabezado = new PdfPCell(new Paragraph("NOMBRE: " + DatosCliente[0] + "", new Font(Font.FontFamily.HELVETICA, 10)));
+                //_cellENcabezado.HorizontalAlignment = Element.ALIGN_CENTER;
+                //_cellENcabezado.FixedHeight = 10f;
+                //tableIncio.AddCell(_cellENcabezado);
+                //_cellENcabezado = new PdfPCell(new Paragraph("SALDO ANTERIOR: " + Convercion(DatosCliente[1].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10)));
+                //_cellENcabezado.HorizontalAlignment = Element.ALIGN_CENTER;
+                //_cellENcabezado.FixedHeight = 10f;
+                //tableIncio.AddCell(_cellENcabezado);
+                //_cellENcabezado = new PdfPCell(new Paragraph("RECARGAS DEL MES: " + Convercion(DatosCliente[2].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10)));
+                //_cellENcabezado.HorizontalAlignment = Element.ALIGN_CENTER;
+                //_cellENcabezado.FixedHeight = 10f;
+                //tableIncio.AddCell(_cellENcabezado);
+                //_cellENcabezado = new PdfPCell(new Paragraph("CONSUMO DEL MES: " + Convercion(DatosCliente[3].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10)));
+                //_cellENcabezado.HorizontalAlignment = Element.ALIGN_CENTER;
+                //_cellENcabezado.FixedHeight = 10f;
+                //tableIncio.AddCell(_cellENcabezado);
+                //_cellENcabezado = new PdfPCell(new Paragraph("SALDO FINAL: " + Convercion(DatosCliente[4].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10)));
+                //_cellENcabezado.HorizontalAlignment = Element.ALIGN_CENTER;
+                //_cellENcabezado.FixedHeight = 10f;
+                //tableIncio.AddCell(_cellENcabezado);
+
 
                 Paragraph titulo = new Paragraph("ESTADO DE CUENTA DEL MES DE " + fechas[4] + " " + model.Anyo + " \n", new Font(Font.FontFamily.HELVETICA, 20));
                 titulo.Alignment = Element.ALIGN_CENTER;
                 PdfHistorico.Add(titulo);
 
-                PdfHistorico.Add(Chunk.NEWLINE);                
+                PdfHistorico.Add(Chunk.NEWLINE);
 
                 Paragraph _cliente = new Paragraph("NOMBRE: " + DatosCliente[0] + "", new Font(Font.FontFamily.HELVETICA, 10));
                 _cliente.Alignment = Element.PTABLE;
                 PdfHistorico.Add(_cliente);
 
 
-                Paragraph Saldo = new Paragraph("SALDO ANTERIOR: " + Convercion(DatosCliente[1].Replace(".",",")) + "", new Font(Font.FontFamily.HELVETICA, 10));
+                Paragraph Saldo = new Paragraph("SALDO ANTERIOR: " + Convercion(DatosCliente[1].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10));
                 Saldo.Alignment = Element.PTABLE;
                 PdfHistorico.Add(Saldo);
 
@@ -2636,7 +2599,8 @@ namespace PuntoDeVenta.Controllers
                 Paragraph saldo_ = new Paragraph("SALDO FINAL: " + Convercion(DatosCliente[4].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10));
                 saldo_.Alignment = Element.PTABLE;
                 PdfHistorico.Add(saldo_);
-            
+                //PdfHistorico.Add(tableIncio);
+
                 PdfHistorico.Add(Chunk.NEWLINE);
 
                 //----------------------
@@ -2681,29 +2645,34 @@ namespace PuntoDeVenta.Controllers
 
                     _cellIni = new PdfPCell(new Paragraph("Concepto",new Font(Font.FontFamily.HELVETICA, 14,3)));
                     _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                    _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
                     _cellIni.FixedHeight = 10f;
                     table.AddCell(_cellIni);
 
 
                     _cellIni = new PdfPCell(new Paragraph("Fecha", new Font(Font.FontFamily.HELVETICA, 14,3)));
                     _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                    _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
                     table.AddCell(_cellIni);
 
 
 
                     _cellIni = new PdfPCell(new Paragraph("Monto", new Font(Font.FontFamily.HELVETICA, 14,3)));
                     _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                    _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
                     _cellIni.FixedHeight = 10f;
                     table.AddCell(_cellIni);
 
                     _cellIni = new PdfPCell(new Paragraph("Carril", new Font(Font.FontFamily.HELVETICA, 14,3)));
                     _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                    _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
                     _cellIni.FixedHeight = 10f;
                     table.AddCell(_cellIni);
 
 
                     _cellIni = new PdfPCell(new Paragraph("Referencia", new Font(Font.FontFamily.HELVETICA, 14, 3)));
                     _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                    _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
                     _cellIni.FixedHeight = 10f;
                     table.AddCell(_cellIni);
 
@@ -4082,43 +4051,43 @@ namespace PuntoDeVenta.Controllers
                     case "01":
                         DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 01);
                         Fechas[0] = "01" + "/" + mes + "/" + anyo + " " + "00:00:00";
-                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "23:59:59";
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "00:00:00";
                         DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 12);
                         Fechas[2] = "01" + "/" + 12 + "/" + anyo + " " + "00:00:00";
-                        Fechas[3] = DiaAnterior + "/" + 12 + "/" + anyo + " " + "23:59:59";
+                        Fechas[3] = DiaAnterior + "/" + 12 + "/" + anyo + " " + "00:00:00";
                         Fechas[4] = "ENERO";
                         break;
                     case "02":
                         DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 02);
                         Fechas[0] = "01" + "/" + mes + "/" + anyo + " " + "00:00:00";
-                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "23:59:59";
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "00:00:00";
                         DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 01);
                         Fechas[2] = "01" + "/" + 01 + "/" + anyo + " " + "00:00:00";
-                        Fechas[3] = DiaAnterior + "/" + 01 + "/" + anyo + " " + "23:59:59";
+                        Fechas[3] = DiaAnterior + "/" + 01 + "/" + anyo + " " + "00:00:00";
                         Fechas[4] = "FEBRERO";
                         break;
                     case "03":
                         DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 03);
                         Fechas[0] = "01" + "/" + mes + "/" + anyo + " " + "00:00:00";
-                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "23:59:59";
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "00:00:00";
                         DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 02);
                         Fechas[2] = "01" + "/" + 02 + "/" + anyo + " " + "00:00:00";
-                        Fechas[3] = DiaAnterior + "/" + 02 + "/" + anyo + " " + "23:59:59";
+                        Fechas[3] = DiaAnterior + "/" + 02 + "/" + anyo + " " + "00:00:00";
                         Fechas[4] = "MARZO";
                         break;
                     case "04":
                         DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 04);
                         Fechas[0] = "01" + "/" + mes + "/" + anyo + " " + "00:00:00";
-                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "23:59:59";
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "00:00:00";
                         DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 03);
                         Fechas[2] = "01" + "/" + 03 + "/" + anyo + " " + "00:00:00";
-                        Fechas[3] = DiaAnterior + "/" + 03 + "/" + anyo + " " + "23:59:59";
+                        Fechas[3] = DiaAnterior + "/" + 03 + "/" + anyo + " " + "00:00:00";
                         Fechas[4] = "ABRIL";
                         break;
                     case "05":
                         DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 05);
                         Fechas[0] = "01" + "/" + mes + "/" + anyo + " " + "00:00:00";
-                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "23:59:59";
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "00:00:00";
                         DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 04);
                         Fechas[2] = "01" + "/" + 04 + "/" + anyo + " " + "00:00:00";
                         Fechas[3] = DiaAnterior + "/" + 04 + "/" + anyo + " " + "23:59:59";
@@ -4127,10 +4096,10 @@ namespace PuntoDeVenta.Controllers
                     case "06":
                         DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 06);
                         Fechas[0] = "01" + "/" + mes + "/" + anyo + " " + "00:00:00";
-                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "23:59:59";
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "00:00:00";
                         DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 05);
                         Fechas[2] = "01" + "/" + 05 + "/" + anyo + " " + "00:00:00";
-                        Fechas[3] = DiaAnterior + "/" + 05 + "/" + anyo + " " + "23:59:59";
+                        Fechas[3] = DiaAnterior + "/" + 05 + "/" + anyo + " " + "00:00:00";
                         Fechas[4] = "JUNIO";
                         break;
                     case "07":
@@ -4145,46 +4114,46 @@ namespace PuntoDeVenta.Controllers
                     case "08":
                         DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 08);
                         Fechas[0] = "01" + "/" + mes + "/" + anyo + " " + "00:00:00";
-                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "23:59:59";
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "00:00:00";
                         DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 07);
                         Fechas[2] = "01" + "/" + 07 + "/" + anyo + " " + "00:00:00";
-                        Fechas[3] = DiaAnterior + "/" + 07 + "/" + anyo + " " + "23:59:59";
+                        Fechas[3] = DiaAnterior + "/" + 07 + "/" + anyo + " " + "00:00:00";
                         Fechas[4] = "AGOSTO";
                         break;
                     case "09":
                         DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 09);
                         Fechas[0] = "01" + "/" + mes + "/" + anyo + " " + "00:00:00";
-                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "23:59:59";
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "00:00:00";
                         DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 08);
                         Fechas[2] = "01" + "/" + 08 + "/" + anyo + " " + "00:00:00";
-                        Fechas[3] = DiaAnterior + "/" + 08 + "/" + anyo + " " + "23:59:59";
+                        Fechas[3] = DiaAnterior + "/" + 08 + "/" + anyo + " " + "00:00:00";
                         Fechas[4] = "SEPTIEMBRE";
                         break;
                     case "10":
                         DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 10);
                         Fechas[0] = "01" + "/" + mes + "/" + anyo + " " + "00:00:00";
-                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "23:59:59";
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "00:00:00";
                         DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 09);
                         Fechas[2] = "01" + "/" + 09 + "/" + anyo + " " + "00:00:00";
-                        Fechas[3] = DiaAnterior + "/" + 09 + "/" + anyo + " " + "23:59:59";
+                        Fechas[3] = DiaAnterior + "/" + 09 + "/" + anyo + " " + "00:00:00";
                         Fechas[4] = "OCTUBRE";
                         break;
                     case "11":
                         DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 11);
                         Fechas[0] = "01" + "/" + mes + "/" + anyo + " " + "00:00:00";
-                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "23:59:59";
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "00:00:00";
                         DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 10);
                         Fechas[2] = "01" + "/" + 10 + "/" + anyo + " " + "00:00:00";
-                        Fechas[3] = DiaAnterior + "/" + 10 + "/" + anyo + " " + "23:59:59";
+                        Fechas[3] = DiaAnterior + "/" + 10 + "/" + anyo + " " + "00:00:00";
                         Fechas[4] = "NOVIEMBRE";
                         break;
                     case "12":
                         DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 12);
                         Fechas[0] = "01" + "/" + mes + "/" + anyo + " " + "00:00:00";
-                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "23:59:59";
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "00:00:00";
                         DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 11);
                         Fechas[2] = "01" + "/" + 11 + "/" + anyo + " " + "00:00:00";
-                        Fechas[3] = DiaAnterior + "/" + 11 + "/" + anyo + " " + "23:59:59";
+                        Fechas[3] = DiaAnterior + "/" + 11 + "/" + anyo + " " + "00:00:00";
                         Fechas[4] = "DICIEMBRE";
                         break;
                     default:
