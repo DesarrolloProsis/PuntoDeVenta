@@ -14,6 +14,7 @@ namespace PuntoDeVenta.Models
         public string Mes { get; set; }
         public string Anyo { get; set; }
         public string Cuenta { get; set; }
+        public string Cliente { get; set; }
         public string TypeMovimiento { get; set; }
         public string TypeMovimiento2 { get; set; }
         public bool Mensaje { get; set; }
@@ -31,6 +32,17 @@ namespace PuntoDeVenta.Models
         public string Concepto { get; set; }
         public string TagCuenta { get; set; }
         public string Fecha { get; set; }
+        public string CobroTag { get; set; }
+        public string Carril { get; set; }
+        public string Referencia { get; set; }
+
+    }
+
+    public class CruceMovimientoRepocliente
+    {
+        public string Concepto { get; set; }
+        public string TagCuenta { get; set; }
+        public DateTime Fecha { get; set; }
         public string CobroTag { get; set; }
         public string Carril { get; set; }
         public string Referencia { get; set; }

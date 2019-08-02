@@ -35,6 +35,7 @@ namespace PuntoDeVenta.Controllers
         public static string saldoMov;
         public static string saldoCru;
         public static object Info;
+        public string NmbredelCLiente;
 
         // GET: Historico
 
@@ -2244,6 +2245,148 @@ namespace PuntoDeVenta.Controllers
             return Lista;
         }
 
+        public List<CruceMovimientoRepocliente> FusionarListasMes(List<Cruces> ListCruces, List<Movimientos> ListMovimientos, bool TagOCuenta)
+        {
+
+            List<CruceMovimientoRepocliente> Lista = new List<CruceMovimientoRepocliente>();
+            List<CruceMovimientoRepocliente> otraLista = new List<CruceMovimientoRepocliente>();
+
+            if (TagOCuenta)
+            {
+
+                foreach (var item in ListCruces)
+                {
+                    Lista.Add(new CruceMovimientoRepocliente
+                    {
+
+
+                        Concepto = "CRUCE" + "   " + "#TAG:  " + item.Tag,
+                        Fecha = Convert.ToDateTime(item.Fecha),
+                        CobroTag = "-" + item.Saldo,
+                        Carril = item.Carril,
+                        Referencia = item.Tag,
+
+
+                    });
+                }
+            }
+            else
+            {
+                foreach (var item in ListCruces)
+                {
+                    Lista.Add(new CruceMovimientoRepocliente
+                    {
+
+
+                        Concepto = "CRUCE",
+                        Fecha = Convert.ToDateTime(item.Fecha),
+                        CobroTag = "-" + item.Saldo,
+                        Carril = item.Carril,
+                        Referencia = item.Tag,
+
+
+                    });
+                }
+            }
+
+            foreach (var item in ListMovimientos)
+            {
+                Lista.Add(new CruceMovimientoRepocliente
+                {
+
+                    Concepto = item.Concepto,
+                    Fecha = Convert.ToDateTime(item.Fecha),
+                    CobroTag = item.Monto,
+                    Carril = "-------------",
+                    Referencia = item.Referencia
+
+                });
+            }
+
+            var c = Lista.OrderByDescending(x => x.Fecha);
+
+            foreach(var item in c)
+            {
+                otraLista.Add(new CruceMovimientoRepocliente
+                {
+                    Concepto = item.Concepto,
+                    Fecha = item.Fecha,
+                    CobroTag = item.CobroTag,
+                    Carril = item.Carril,
+                    Referencia = item.Referencia
+                });
+            }
+
+            return otraLista;
+        }
+
+
+        //class Footer : PdfPageEventHelper
+        //{
+        //    public override void OnEndPage(PdfWriter writer, Document doc)
+        //    {
+        //        Paragraph footer = new Paragraph("THANK YOU", FontFactory.GetFont(FontFactory.TIMES, 10, iTextSharp.text.Font.NORMAL));
+        //        footer.Alignment = Element.ALIGN_RIGHT;
+        //        PdfPTable footerTbl = new PdfPTable(1);
+        //        footerTbl.TotalWidth = 300;
+        //        footerTbl.HorizontalAlignment = Element.ALIGN_CENTER;
+        //        PdfPCell cell = new PdfPCell(footer);
+        //        cell.Border = 0;
+        //        cell.PaddingLeft = 10;
+        //        footerTbl.AddCell(cell);
+        //        footerTbl.WriteSelectedRows(0, -1, 415, 30, writer.DirectContent);
+        //    }
+        //}
+
+
+
+        class HeaderFooter : PdfPageEventHelper
+        {
+            public override void OnEndPage(PdfWriter writer, Document PdfHistorico)
+            {
+                //base.OnEndPage(writer, document);
+                PdfPTable tbHeder = new PdfPTable(3);
+                tbHeder.TotalWidth = PdfHistorico.PageSize.Width - PdfHistorico.LeftMargin - PdfHistorico.RightMargin;
+                tbHeder.DefaultCell.Border = 0;
+
+                tbHeder.AddCell(new Paragraph(""));
+
+
+                PdfPCell _cell = new PdfPCell(new Paragraph(""));
+                _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                _cell.Border = 0;
+
+                tbHeder.AddCell(_cell);
+
+
+                tbHeder.WriteSelectedRows(0, -1, PdfHistorico.LeftMargin, writer.PageSize.GetTop(PdfHistorico.TopMargin) + 40, writer.DirectContent);
+
+
+                PdfPTable tbFoter = new PdfPTable(3);
+                tbFoter.TotalWidth = PdfHistorico.PageSize.Width - PdfHistorico.LeftMargin - PdfHistorico.RightMargin;
+                tbFoter.DefaultCell.Border = 0;
+                tbFoter.AddCell(new Paragraph());
+
+                _cell = new PdfPCell(new Paragraph());
+                _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                _cell.Border = 0;
+
+                tbFoter.AddCell(_cell);
+
+                _cell = new PdfPCell(new Paragraph("Pagina" + writer.PageNumber));
+                _cell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                _cell.Border = 0;
+
+                tbFoter.AddCell(_cell);
+
+
+
+                tbFoter.WriteSelectedRows(0, -1, PdfHistorico.LeftMargin, writer.PageSize.GetBottom(PdfHistorico.BottomMargin) - 5, writer.DirectContent);
+
+
+            }
+        }
+
         public List<RepoMensual1> TablaRepoMes1(string[] fechas)
         {
             AppDbContext db = new AppDbContext();
@@ -2403,6 +2546,476 @@ namespace PuntoDeVenta.Controllers
             return Lista;
         }
 
+        public ActionResult ReporteClienteMes(TableHistorico model)
+        {
+
+            AppDbContext db = new AppDbContext();
+
+            string[] fechas = IntervalosMes(model.Mes, model.Anyo);
+            DateTime FechaInicio = Convert.ToDateTime(fechas[0]);
+            DateTime FechaFin = Convert.ToDateTime(fechas[1]).AddDays(1);
+
+
+            var DatosCliente = BuscarInformacionCliente(model.Cliente, FechaInicio, FechaFin);
+            NmbredelCLiente = DatosCliente[0];
+
+            if (DatosCliente == null)
+            {
+
+                MemoryStream ms = new MemoryStream();
+                Document PdfHistorico = new Document(iTextSharp.text.PageSize.A4);
+                PdfWriter pw = PdfWriter.GetInstance(PdfHistorico, ms);
+                
+                PdfHistorico.Open();
+                PdfHistorico.GetTop(600f);
+
+
+                string rutaLogo = Server.MapPath("..\\Content\\css-yisus\\img\\SIVAREPORT.png");
+
+                iTextSharp.text.Image Logo = iTextSharp.text.Image.GetInstance(rutaLogo);
+                Logo.SetAbsolutePosition(700, 420);
+                PdfHistorico.Add(Logo);
+
+
+                Paragraph titulo = new Paragraph("FECHA INVALIDA O SIN DATOS\n", new Font(Font.FontFamily.HELVETICA, 22));
+                titulo.Alignment = Element.ALIGN_CENTER;
+                PdfHistorico.Add(titulo);
+
+                PdfHistorico.Close();
+
+
+                byte[] bytesStream = ms.ToArray();
+                ms = new MemoryStream();
+                ms.Write(bytesStream, 0, bytesStream.Length);
+                ms.Position = 0;
+
+                return new FileStreamResult(ms, "application/pdf");
+            }
+            else
+            {
+                MemoryStream ms = new MemoryStream();
+                Document PdfHistorico = new Document(iTextSharp.text.PageSize.LETTER);
+                PdfWriter pw = PdfWriter.GetInstance(PdfHistorico, ms);
+                pw.PageEvent = new HeaderFooter();
+
+                PdfHistorico.Open();
+                PdfHistorico.GetTop(600f);
+
+                string rutaLogo = Server.MapPath("..\\Content\\css-yisus\\img\\SIVAREPORT.png");
+
+                iTextSharp.text.Image Logo = iTextSharp.text.Image.GetInstance(rutaLogo);
+                Logo.SetAbsolutePosition(465, 570);
+                PdfHistorico.Add(Logo);
+
+
+                Paragraph titulo = new Paragraph("ESTADO DE CUENTA DEL MES DE " + fechas[4] + " " + model.Anyo + " \n", new Font(Font.FontFamily.HELVETICA, 20));
+                titulo.Alignment = Element.ALIGN_CENTER;
+                PdfHistorico.Add(titulo);
+
+                PdfHistorico.Add(Chunk.NEWLINE);                
+
+                Paragraph _cliente = new Paragraph("NOMBRE: " + DatosCliente[0] + "", new Font(Font.FontFamily.HELVETICA, 10));
+                _cliente.Alignment = Element.PTABLE;
+                PdfHistorico.Add(_cliente);
+
+
+                Paragraph Saldo = new Paragraph("SALDO ANTERIOR: " + Convercion(DatosCliente[1].Replace(".",",")) + "", new Font(Font.FontFamily.HELVETICA, 10));
+                Saldo.Alignment = Element.PTABLE;
+                PdfHistorico.Add(Saldo);
+
+                Paragraph fecha = new Paragraph("RECARGAS DEL MES: " + Convercion(DatosCliente[2].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10));
+                fecha.Alignment = Element.PTABLE;
+                PdfHistorico.Add(fecha);
+
+
+                Paragraph Event = new Paragraph("CONSUMO DEL MES: " + Convercion(DatosCliente[3].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10));
+                Event.Alignment = Element.PTABLE;
+                PdfHistorico.Add(Event);
+
+
+                Paragraph saldo_ = new Paragraph("SALDO FINAL: " + Convercion(DatosCliente[4].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10));
+                saldo_.Alignment = Element.PTABLE;
+                PdfHistorico.Add(saldo_);
+            
+                PdfHistorico.Add(Chunk.NEWLINE);
+
+                //----------------------
+                var listaCliente = (from c in db.Clientes
+                                    where c.NumCliente == model.Cliente
+                                    select new
+                                    {
+                                        Nombre = c.Nombre,
+                                        Apellido = c.Apellidos,
+                                        IdCliente = c.Id
+                                    }).ToList();
+
+                if (listaCliente.Count() > 0)
+                {
+
+
+
+
+                    DatosCliente[0] = listaCliente[0].Nombre + "  " + listaCliente[0].Apellido;
+                    var clientePruebas = listaCliente[0].IdCliente;
+
+                    var listaCuentas = (from c in db.CuentasTelepeajes
+                                        where c.ClienteId == clientePruebas
+                                        select new
+                                        {
+                                            Id = c.Id,
+                                            cuentaId = c.NumCuenta,
+                                            typeCuenta = c.TypeCuenta
+
+                                        }).ToList();
+
+                    PdfPTable table = new PdfPTable(5);
+                    table.WidthPercentage = 100f;
+                    var coldWidthPorcentagesCliente = new[] { 2f, 2f, 1f, 1f, 1f };
+                    table.SetWidths(coldWidthPorcentagesCliente);
+
+                    PdfPCell _cellIni = new PdfPCell();
+                    PdfHistorico.GetLeft(40f);
+                    PdfHistorico.GetRight(40f);
+
+
+
+                    _cellIni = new PdfPCell(new Paragraph("Concepto",new Font(Font.FontFamily.HELVETICA, 14,3)));
+                    _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                    _cellIni.FixedHeight = 10f;
+                    table.AddCell(_cellIni);
+
+
+                    _cellIni = new PdfPCell(new Paragraph("Fecha", new Font(Font.FontFamily.HELVETICA, 14,3)));
+                    _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                    table.AddCell(_cellIni);
+
+
+
+                    _cellIni = new PdfPCell(new Paragraph("Monto", new Font(Font.FontFamily.HELVETICA, 14,3)));
+                    _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                    _cellIni.FixedHeight = 10f;
+                    table.AddCell(_cellIni);
+
+                    _cellIni = new PdfPCell(new Paragraph("Carril", new Font(Font.FontFamily.HELVETICA, 14,3)));
+                    _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                    _cellIni.FixedHeight = 10f;
+                    table.AddCell(_cellIni);
+
+
+                    _cellIni = new PdfPCell(new Paragraph("Referencia", new Font(Font.FontFamily.HELVETICA, 14, 3)));
+                    _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                    _cellIni.FixedHeight = 10f;
+                    table.AddCell(_cellIni);
+
+                    int separadorHojas = 0;
+
+                    foreach (var item in listaCuentas)
+                    {
+
+                        if (item.typeCuenta == "Colectiva")
+                        {
+
+                            var listaCruces = Cruces(item.cuentaId, FechaInicio, FechaFin, 2, false);
+                            var listaMovimientos = Movimientos(item.cuentaId, FechaInicio, FechaFin, 2, false);
+                            var fusion = FusionarListasMes(listaCruces, listaMovimientos, false);
+
+
+
+                            foreach (var itemfusin in fusion)
+                            {
+                                separadorHojas++;
+
+
+
+                                PdfPCell _cell = new PdfPCell();
+                                PdfHistorico.GetLeft(40f);
+                                PdfHistorico.GetRight(40f);
+
+
+                                _cell = new PdfPCell(new Paragraph(itemfusin.Concepto.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
+                                _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                _cell.FixedHeight = 10f;
+                                table.AddCell(_cell);
+
+
+                                _cell = new PdfPCell(new Paragraph(itemfusin.Fecha.ToString("dd/MM/yyyy HH:mm:ss"), new Font(Font.FontFamily.HELVETICA, 9)));
+                                _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                table.AddCell(_cell);
+
+                                if (itemfusin.Concepto == "CRUCE")
+                                {
+
+                                    var FontColour = new BaseColor(255, 0, 0);
+                                    var ColorRojo = FontFactory.GetFont("Times New Roman", 9, FontColour);
+
+                                    _cell = new PdfPCell(new Paragraph(itemfusin.CobroTag.ToString(), ColorRojo));
+                                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                    _cell.FixedHeight = 10f;
+                                    table.AddCell(_cell);
+
+                                }
+                                else
+                                {
+                                    var FontColour = new BaseColor(0, 255, 0);
+                                    var ColorRojo = FontFactory.GetFont("Times New Roman", 9, FontColour);
+
+                                    _cell = new PdfPCell(new Paragraph(itemfusin.CobroTag.ToString(), ColorRojo));
+                                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                    _cell.FixedHeight = 10f;
+                                    table.AddCell(_cell);
+                                }
+
+                                _cell = new PdfPCell(new Paragraph(itemfusin.Carril.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
+                                _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                _cell.FixedHeight = 10f;
+                                table.AddCell(_cell);
+
+
+
+                                _cell = new PdfPCell(new Paragraph(itemfusin.Referencia.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
+                                _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                _cell.FixedHeight = 10f;
+                                table.AddCell(_cell);
+
+
+                            }
+                            PdfHistorico.Add(table);
+
+                            PdfHistorico.Add(Chunk.NEWLINE);
+                        }
+                        if(item.typeCuenta == "Individual")
+                        {
+                            var Tag = db.Tags.Where(x => x.CuentaId == item.Id).ToList();
+                            string NumTAG = Tag[0].NumTag;
+                            var listaCruces = Cruces(NumTAG, FechaInicio, FechaFin, 1, false);
+                            var listaMovimientos = Movimientos(NumTAG, FechaInicio, FechaFin, 1, false);
+                            var fusion = FusionarListasMes(listaCruces, listaMovimientos, false);
+
+
+
+                            foreach (var itemfusin in fusion)
+                            {
+                                separadorHojas++;
+
+
+
+                                PdfPCell _cell = new PdfPCell();
+                                PdfHistorico.GetLeft(40f);
+                                PdfHistorico.GetRight(40f);
+
+
+                                _cell = new PdfPCell(new Paragraph(itemfusin.Concepto.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
+                                _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                _cell.FixedHeight = 10f;
+                                table.AddCell(_cell);
+
+
+                                _cell = new PdfPCell(new Paragraph(itemfusin.Fecha.ToString("dd/MM/yyyy HH:mm:ss"), new Font(Font.FontFamily.HELVETICA, 9)));
+                                _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                table.AddCell(_cell);
+
+                                if (itemfusin.Concepto == "CRUCE")
+                                {
+
+                                    var FontColour = new BaseColor(255, 0, 0);
+                                    var ColorRojo = FontFactory.GetFont("Times New Roman", 9, FontColour);
+
+                                    _cell = new PdfPCell(new Paragraph(itemfusin.CobroTag.ToString(), ColorRojo));
+                                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                    _cell.FixedHeight = 10f;
+                                    table.AddCell(_cell);
+
+                                }
+                                else
+                                {
+                                    var FontColour = new BaseColor(0, 255, 0);
+                                    var ColorRojo = FontFactory.GetFont("Times New Roman", 9, FontColour);
+
+                                    _cell = new PdfPCell(new Paragraph(itemfusin.CobroTag.ToString(), ColorRojo));
+                                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                    _cell.FixedHeight = 10f;
+                                    table.AddCell(_cell);
+                                }
+
+                                _cell = new PdfPCell(new Paragraph(itemfusin.Carril.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
+                                _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                _cell.FixedHeight = 10f;
+                                table.AddCell(_cell);
+
+
+
+                                _cell = new PdfPCell(new Paragraph(itemfusin.Referencia.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
+                                _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                _cell.FixedHeight = 10f;
+                                table.AddCell(_cell);
+
+
+                            }
+                            PdfHistorico.Add(table);
+
+                        }
+
+
+
+                    }
+                }
+
+
+                PdfHistorico.Close();
+
+
+                byte[] bytesStream = ms.ToArray();
+                ms = new MemoryStream();
+                ms.Write(bytesStream, 0, bytesStream.Length);
+                ms.Position = 0;
+
+                return new FileStreamResult(ms, "application/pdf");
+            }
+        }
+
+        public string[] BuscarInformacionCliente(string numeroCliente, DateTime fecha1, DateTime fecha2)
+        {
+
+            AppDbContext db = new AppDbContext();
+
+            string[] DatosCliente = new string[6];
+            
+
+            var listaCliente = (from c in db.Clientes
+                            where c.NumCliente == numeroCliente
+                            select new
+                            {
+                                Nombre = c.Nombre,
+                                Apellido = c.Apellidos,
+                                IdCliente = c.Id
+                            }).ToList();
+
+            if (listaCliente.Count() > 0) {
+
+                DatosCliente[0] = listaCliente[0].Nombre + "  " + listaCliente[0].Apellido;
+                var clientePruebas = listaCliente[0].IdCliente;
+
+
+                var listaCuentas = (from c in db.CuentasTelepeajes
+                                    where c.ClienteId == clientePruebas
+                                    select new
+                                    {
+                                        Id = c.Id,
+                                        cuentaId = c.NumCuenta,
+                                        typeCuenta = c.TypeCuenta
+
+                                    }).ToList();
+
+                double SaldoCliente = 0;
+
+                foreach(var item in listaCuentas)
+                {
+
+                    
+                    if(item.typeCuenta == "Colectiva")
+                    {
+                        var listcolectivo = (from c in db.CuentasTelepeajes
+                                             where c.Id == item.Id
+                                             select new
+                                             {
+                                                 saldos = c.SaldoCuenta
+                                             }).ToList();
+                        if (listcolectivo.Count > 0)
+                        {
+                            foreach (var itemcolect in listcolectivo)
+                            {
+                                SaldoCliente += Convert.ToDouble(itemcolect.saldos);                    
+                            }
+                              
+                        }
+                       
+                    }
+                    if(item.typeCuenta == "Individual")
+                    {
+                        var listindividual = (from c in db.Tags
+                                              where c.CuentaId == item.Id
+                                              select new
+                                              {
+                                                  saldos = c.SaldoTag
+                                              }).ToList();
+                        if(listindividual.Count() > 0)
+                        {
+                            foreach(var itemindividual in listindividual)
+                            {
+                                SaldoCliente += Convert.ToDouble(itemindividual.saldos)/100;
+                            }
+                            
+                        }
+
+                       
+                    }
+
+                    
+//                    SaldoCliente += Math.Round(Convert.ToDouble(item.SALDOCUENTA), 2);
+                }
+
+                DatosCliente[1] = SaldoCliente.ToString("F");
+
+                double RecargasTotales = 0;
+
+                
+               foreach(var item in listaCuentas)
+               {
+                    if (item.typeCuenta == "Colectiva")
+                    {
+                        RecargasTotales += Convert.ToDouble(db.OperacionesCajeros.Where(x => x.DateTOperacion >= fecha1 && x.DateTOperacion < fecha2 && x.Numero == item.cuentaId).Sum(x => x.Monto));
+
+                    }
+                    if (item.typeCuenta == "Individual")
+                    {
+
+                        var Tag = db.Tags.Where(x => x.CuentaId == item.Id).ToList();
+                        string NumTAG = Tag[0].NumTag;
+                        RecargasTotales += Convert.ToDouble(db.OperacionesCajeros.Where(x => x.DateTOperacion >= fecha1 && x.DateTOperacion < fecha2 && x.Numero == NumTAG).Sum(x => x.Monto));
+
+
+                    }
+                    //RecargasTotales  += Convert.ToDouble(db.OperacionesCajeros.Where(x => x.DateTOperacion >= fecha1 && x.DateTOperacion < fecha2 && x.Numero == item.cuentaId).Sum(x => x.Monto));                              
+               }
+
+                DatosCliente[2] = RecargasTotales.ToString("F");
+
+
+                double CrucesTotales = 0;
+                foreach(var item in listaCuentas)
+                {
+                    var listaCruces = (from h in db.Historicos
+                                       join t in db.Tags on h.Tag equals t.NumTag
+                                       join c in db.CuentasTelepeajes on t.CuentaId equals c.Id
+                                       where h.Fecha >= fecha1 && h.Fecha < fecha2
+                                       where c.NumCuenta == item.cuentaId
+                                       select new
+                                       {
+                                           saldosCruces = h.Saldo
+                                       }).ToList();
+
+                    CrucesTotales += listaCruces.Sum(x => x.saldosCruces);
+                }
+
+                DatosCliente[3] = CrucesTotales.ToString("F");
+
+                //SaldoFinal
+
+                DatosCliente[4] = (SaldoCliente - CrucesTotales).ToString("F");
+
+
+                return DatosCliente;
+
+                     
+                
+
+
+
+
+            }
+            else return null;
+        }
+  
 
 
         public string BuscaTramo(string IdGare)
@@ -2417,7 +3030,7 @@ namespace PuntoDeVenta.Controllers
         {
 
             MemoryStream ms = new MemoryStream();
-            Document PdfHistorico = new Document(iTextSharp.text.PageSize.A4.Rotate());
+            Document PdfHistorico = new Document(iTextSharp.text.PageSize.LETTER.Rotate());
             PdfWriter pw = PdfWriter.GetInstance(PdfHistorico, ms);
 
             PdfHistorico.Open();
@@ -3468,110 +4081,110 @@ namespace PuntoDeVenta.Controllers
                 {
                     case "01":
                         DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 01);
-                        Fechas[0] = "01" + "/" + mes + "/" + anyo;
-                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo;
+                        Fechas[0] = "01" + "/" + mes + "/" + anyo + " " + "00:00:00";
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "23:59:59";
                         DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 12);
-                        Fechas[2] = "01" + "/" + 12 + "/" + anyo;
-                        Fechas[3] = DiaAnterior + "/" + 12 + "/" + anyo;
+                        Fechas[2] = "01" + "/" + 12 + "/" + anyo + " " + "00:00:00";
+                        Fechas[3] = DiaAnterior + "/" + 12 + "/" + anyo + " " + "23:59:59";
                         Fechas[4] = "ENERO";
                         break;
                     case "02":
                         DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 02);
-                        Fechas[0] = "01" + "/" + mes + "/" + anyo;
-                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo;
+                        Fechas[0] = "01" + "/" + mes + "/" + anyo + " " + "00:00:00";
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "23:59:59";
                         DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 01);
-                        Fechas[2] = "01" + "/" + 01 + "/" + anyo;
-                        Fechas[3] = DiaAnterior + "/" + 01 + "/" + anyo;
+                        Fechas[2] = "01" + "/" + 01 + "/" + anyo + " " + "00:00:00";
+                        Fechas[3] = DiaAnterior + "/" + 01 + "/" + anyo + " " + "23:59:59";
                         Fechas[4] = "FEBRERO";
                         break;
                     case "03":
                         DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 03);
-                        Fechas[0] = "01" + "/" + mes + "/" + anyo;
-                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo;
+                        Fechas[0] = "01" + "/" + mes + "/" + anyo + " " + "00:00:00";
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "23:59:59";
                         DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 02);
-                        Fechas[2] = "01" + "/" + 02 + "/" + anyo;
-                        Fechas[3] = DiaAnterior + "/" + 02 + "/" + anyo;
+                        Fechas[2] = "01" + "/" + 02 + "/" + anyo + " " + "00:00:00";
+                        Fechas[3] = DiaAnterior + "/" + 02 + "/" + anyo + " " + "23:59:59";
                         Fechas[4] = "MARZO";
                         break;
                     case "04":
                         DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 04);
-                        Fechas[0] = "01" + "/" + mes + "/" + anyo;
-                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo;
+                        Fechas[0] = "01" + "/" + mes + "/" + anyo + " " + "00:00:00";
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "23:59:59";
                         DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 03);
-                        Fechas[2] = "01" + "/" + 03 + "/" + anyo;
-                        Fechas[3] = DiaAnterior + "/" + 03 + "/" + anyo;
+                        Fechas[2] = "01" + "/" + 03 + "/" + anyo + " " + "00:00:00";
+                        Fechas[3] = DiaAnterior + "/" + 03 + "/" + anyo + " " + "23:59:59";
                         Fechas[4] = "ABRIL";
                         break;
                     case "05":
                         DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 05);
-                        Fechas[0] = "01" + "/" + mes + "/" + anyo;
-                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo;
+                        Fechas[0] = "01" + "/" + mes + "/" + anyo + " " + "00:00:00";
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "23:59:59";
                         DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 04);
-                        Fechas[2] = "01" + "/" + 04 + "/" + anyo;
-                        Fechas[3] = DiaAnterior + "/" + 04 + "/" + anyo;
+                        Fechas[2] = "01" + "/" + 04 + "/" + anyo + " " + "00:00:00";
+                        Fechas[3] = DiaAnterior + "/" + 04 + "/" + anyo + " " + "23:59:59";
                         Fechas[4] = "MAYO";
                         break;
                     case "06":
                         DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 06);
-                        Fechas[0] = "01" + "/" + mes + "/" + anyo;
-                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo;
+                        Fechas[0] = "01" + "/" + mes + "/" + anyo + " " + "00:00:00";
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "23:59:59";
                         DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 05);
-                        Fechas[2] = "01" + "/" + 05 + "/" + anyo;
-                        Fechas[3] = DiaAnterior + "/" + 05 + "/" + anyo;
+                        Fechas[2] = "01" + "/" + 05 + "/" + anyo + " " + "00:00:00";
+                        Fechas[3] = DiaAnterior + "/" + 05 + "/" + anyo + " " + "23:59:59";
                         Fechas[4] = "JUNIO";
                         break;
                     case "07":
                         DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 07);
-                        Fechas[0] = "01" + "/" + mes + "/" + anyo;
-                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo;
+                        Fechas[0] = "01" + "/" + mes + "/" + anyo + " " + "00:00:00";
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "23:59:59";
                         DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 06);
-                        Fechas[2] = "01" + "/" + 06 + "/" + anyo;
-                        Fechas[3] = DiaAnterior + "/" + 06 + "/" + anyo;
+                        Fechas[2] = "01" + "/" + 06 + "/" + anyo + " " + "00:00:00";
+                        Fechas[3] = DiaAnterior + "/" + 06 + "/" + anyo + " " + "23:59:59";
                         Fechas[4] = "JULIO";
                         break;
                     case "08":
                         DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 08);
-                        Fechas[0] = "01" + "/" + mes + "/" + anyo;
-                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo;
+                        Fechas[0] = "01" + "/" + mes + "/" + anyo + " " + "00:00:00";
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "23:59:59";
                         DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 07);
-                        Fechas[2] = "01" + "/" + 07 + "/" + anyo;
-                        Fechas[3] = DiaAnterior + "/" + 07 + "/" + anyo;
+                        Fechas[2] = "01" + "/" + 07 + "/" + anyo + " " + "00:00:00";
+                        Fechas[3] = DiaAnterior + "/" + 07 + "/" + anyo + " " + "23:59:59";
                         Fechas[4] = "AGOSTO";
                         break;
                     case "09":
                         DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 09);
-                        Fechas[0] = "01" + "/" + mes + "/" + anyo;
-                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo;
+                        Fechas[0] = "01" + "/" + mes + "/" + anyo + " " + "00:00:00";
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "23:59:59";
                         DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 08);
-                        Fechas[2] = "01" + "/" + 08 + "/" + anyo;
-                        Fechas[3] = DiaAnterior + "/" + 08 + "/" + anyo;
+                        Fechas[2] = "01" + "/" + 08 + "/" + anyo + " " + "00:00:00";
+                        Fechas[3] = DiaAnterior + "/" + 08 + "/" + anyo + " " + "23:59:59";
                         Fechas[4] = "SEPTIEMBRE";
                         break;
                     case "10":
                         DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 10);
-                        Fechas[0] = "01" + "/" + mes + "/" + anyo;
-                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo;
+                        Fechas[0] = "01" + "/" + mes + "/" + anyo + " " + "00:00:00";
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "23:59:59";
                         DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 09);
-                        Fechas[2] = "01" + "/" + 09 + "/" + anyo;
-                        Fechas[3] = DiaAnterior + "/" + 09 + "/" + anyo;
+                        Fechas[2] = "01" + "/" + 09 + "/" + anyo + " " + "00:00:00";
+                        Fechas[3] = DiaAnterior + "/" + 09 + "/" + anyo + " " + "23:59:59";
                         Fechas[4] = "OCTUBRE";
                         break;
                     case "11":
                         DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 11);
-                        Fechas[0] = "01" + "/" + mes + "/" + anyo;
-                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo;
+                        Fechas[0] = "01" + "/" + mes + "/" + anyo + " " + "00:00:00";
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "23:59:59";
                         DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 10);
-                        Fechas[2] = "01" + "/" + 10 + "/" + anyo;
-                        Fechas[3] = DiaAnterior + "/" + 10 + "/" + anyo;
+                        Fechas[2] = "01" + "/" + 10 + "/" + anyo + " " + "00:00:00";
+                        Fechas[3] = DiaAnterior + "/" + 10 + "/" + anyo + " " + "23:59:59";
                         Fechas[4] = "NOVIEMBRE";
                         break;
                     case "12":
                         DiaActual = DateTime.DaysInMonth(Convert.ToInt32(anyo), 12);
-                        Fechas[0] = "01" + "/" + mes + "/" + anyo;
-                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo;
+                        Fechas[0] = "01" + "/" + mes + "/" + anyo + " " + "00:00:00";
+                        Fechas[1] = DiaActual + "/" + mes + "/" + anyo + " " + "23:59:59";
                         DiaAnterior = DateTime.DaysInMonth(Convert.ToInt32(anyo), 11);
-                        Fechas[2] = "01" + "/" + 11 + "/" + anyo;
-                        Fechas[3] = DiaAnterior + "/" + 11 + "/" + anyo;
+                        Fechas[2] = "01" + "/" + 11 + "/" + anyo + " " + "00:00:00";
+                        Fechas[3] = DiaAnterior + "/" + 11 + "/" + anyo + " " + "23:59:59";
                         Fechas[4] = "DICIEMBRE";
                         break;
                     default:

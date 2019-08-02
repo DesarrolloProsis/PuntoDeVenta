@@ -25,7 +25,10 @@
                         <li class="nav-item">
                             <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Buscar Por Fecha</a>
                         </li>
-                      
+                        <li class="nav-item">
+                            <a class="nav-link" id="cliente-tab" data-toggle="tab" href="#clienteRepo" role="tab" aria-controls="contact" aria-selected="false">Reporte Mensual Cliente</a>
+                        </li>
+
                     </ul>
                     <div class="tab-content" id="myTabContent">
 
@@ -131,7 +134,49 @@
                                 }
                             </div>
                         </div>
-                        
+                        <div class="tab-pane fade" id="clienteRepo" role="tabpanel" aria-labelledby="Buscar Solo Por Fecha">
+                            <div>
+                                @using (Html.BeginForm("ReporteClienteMes", "Historico", FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+
+
+                                    <div class="row justify-content-md-center">
+                                        <div class="col-md-12">
+
+                                            <div class="card">
+                                                <div class="card-body">
+
+
+                                                    <div class="col-md-12">
+                                                        <label style="float:left !important">#Cliente</label>
+                                                        @Html.EditorFor(x => x.Cliente, "", new { htmlAttributes = new { @class = "form-control espacio", placeholder = "Tag" } })
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <label style="float:left !important">Mes</label>
+                                                        @Html.DropDownListFor(x => x.Mes, new SelectList(string.Empty, "Value", "Text"), htmlAttributes: new { @class = "form-control espacio", placeholder = "Seleccione.." })
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <label style="float:left !important">Año</label>
+                                                        @Html.DropDownListFor(x => x.Anyo, new SelectList(string.Empty, "Value", "Text"), htmlAttributes: new { @class = "form-control espacio", placeholder = "Seleccione.." })
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <button type="submit" class="btn btn-primary botonbuscar">
+                                                            <img class="search" src="~/Content/css-yisus/img/search-solid.svg" />Buscar
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -212,6 +257,30 @@
                          $option.html(row.Text);
                          $('#Mes').append($option);
                      });  
+                     $.each(data.anyo, function (i, row) {
+                         var $option = $('<option>');
+                         $option.val(row.Value);
+                         $option.html(row.Text);
+                         $('#Anyo').append($option);
+                     });
+
+                 },
+                 error: function (ex) {
+                        alert("Error!!!" + ex);
+                 },
+            });
+             $.ajax({
+                 url: '@Url.Action("GetMesAnyo", "Historico")',
+                 type: "GET",
+                 data: "{}",
+                 cache: false,
+                 success: function (data) {
+                     $.each(data.mes, function (i, row) {
+                         var $option = $('<option>');
+                         $option.val(row.Value);
+                         $option.html(row.Text);
+                         $('#Mes').append($option);
+                     });
                      $.each(data.anyo, function (i, row) {
                          var $option = $('<option>');
                          $option.val(row.Value);
