@@ -2285,6 +2285,7 @@ namespace PuntoDeVenta.Controllers
                         Concepto = "CRUCE" + "   " + "#TAG:  " + item.Tag,
                         Fecha = Convert.ToDateTime(item.Fecha),
                         CobroTag = "-" + item.Saldo,
+                        SaldoNuevo = item.SaldoDespues,
                         Carril = item.Carril,
                         Referencia = item.Tag,
 
@@ -2303,6 +2304,7 @@ namespace PuntoDeVenta.Controllers
                         Concepto = "CRUCE",
                         Fecha = Convert.ToDateTime(item.Fecha),
                         CobroTag = "-" + item.Saldo,
+                        SaldoNuevo = item.SaldoDespues,
                         Carril = item.Carril,
                         Referencia = item.Tag,
 
@@ -2319,6 +2321,7 @@ namespace PuntoDeVenta.Controllers
                     Concepto = item.Concepto,
                     Fecha = Convert.ToDateTime(item.Fecha),
                     CobroTag = item.Monto,
+                    SaldoNuevo = item.SaldoActual,
                     Carril = "-------------",
                     Referencia = item.Referencia
 
@@ -2334,6 +2337,7 @@ namespace PuntoDeVenta.Controllers
                     Concepto = item.Concepto,
                     Fecha = item.Fecha,
                     CobroTag = item.CobroTag,
+                    SaldoNuevo = item.SaldoNuevo,
                     Carril = item.Carril,
                     Referencia = item.Referencia
                 });
@@ -2486,12 +2490,12 @@ namespace PuntoDeVenta.Controllers
             string[] fechas = IntervalosMes(model.Mes, model.Anyo);
             DateTime FechaInicio = Convert.ToDateTime(fechas[0]);
             DateTime FechaFin = Convert.ToDateTime(fechas[1]).AddDays(1);
+            DateTime FechaActual = DateTime.Now;
 
 
-            var DatosCliente = BuscarInformacionCliente(model.Cliente, FechaInicio, FechaFin);
-            NmbredelCLiente = DatosCliente[0];
+            //var DatosCliente = BuscarInformacionCliente(model.Cliente, FechaInicio, FechaFin);
 
-            if (DatosCliente == null)
+            if (FechaActual <= FechaFin)
             {
 
                 MemoryStream ms = new MemoryStream();
@@ -2539,70 +2543,6 @@ namespace PuntoDeVenta.Controllers
                 Logo.SetAbsolutePosition(465, 570);
                 PdfHistorico.Add(Logo);
 
-                //PdfPTable tableIncio = new PdfPTable(1);
-                //tableIncio.WidthPercentage = 100f;
-                //var coldWidthPorcentagesCliente2 = new[] { 4f };
-                //tableIncio.SetWidths(coldWidthPorcentagesCliente2);
-
-                //PdfPCell _cellENcabezado = new PdfPCell();
-                //PdfHistorico.GetLeft(40f);
-                //PdfHistorico.GetRight(40f);
-
-
-                //_cellENcabezado = new PdfPCell(new Paragraph("NOMBRE: " + DatosCliente[0] + "", new Font(Font.FontFamily.HELVETICA, 10)));
-                //_cellENcabezado.HorizontalAlignment = Element.ALIGN_CENTER;
-                //_cellENcabezado.FixedHeight = 10f;
-                //tableIncio.AddCell(_cellENcabezado);
-                //_cellENcabezado = new PdfPCell(new Paragraph("SALDO ANTERIOR: " + Convercion(DatosCliente[1].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10)));
-                //_cellENcabezado.HorizontalAlignment = Element.ALIGN_CENTER;
-                //_cellENcabezado.FixedHeight = 10f;
-                //tableIncio.AddCell(_cellENcabezado);
-                //_cellENcabezado = new PdfPCell(new Paragraph("RECARGAS DEL MES: " + Convercion(DatosCliente[2].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10)));
-                //_cellENcabezado.HorizontalAlignment = Element.ALIGN_CENTER;
-                //_cellENcabezado.FixedHeight = 10f;
-                //tableIncio.AddCell(_cellENcabezado);
-                //_cellENcabezado = new PdfPCell(new Paragraph("CONSUMO DEL MES: " + Convercion(DatosCliente[3].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10)));
-                //_cellENcabezado.HorizontalAlignment = Element.ALIGN_CENTER;
-                //_cellENcabezado.FixedHeight = 10f;
-                //tableIncio.AddCell(_cellENcabezado);
-                //_cellENcabezado = new PdfPCell(new Paragraph("SALDO FINAL: " + Convercion(DatosCliente[4].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10)));
-                //_cellENcabezado.HorizontalAlignment = Element.ALIGN_CENTER;
-                //_cellENcabezado.FixedHeight = 10f;
-                //tableIncio.AddCell(_cellENcabezado);
-
-
-                Paragraph titulo = new Paragraph("ESTADO DE CUENTA DEL MES DE " + fechas[4] + " " + model.Anyo + " \n", new Font(Font.FontFamily.HELVETICA, 20));
-                titulo.Alignment = Element.ALIGN_CENTER;
-                PdfHistorico.Add(titulo);
-
-                PdfHistorico.Add(Chunk.NEWLINE);
-
-                Paragraph _cliente = new Paragraph("NOMBRE: " + DatosCliente[0] + "", new Font(Font.FontFamily.HELVETICA, 10));
-                _cliente.Alignment = Element.PTABLE;
-                PdfHistorico.Add(_cliente);
-
-
-                Paragraph Saldo = new Paragraph("SALDO ANTERIOR: " + Convercion(DatosCliente[1].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10));
-                Saldo.Alignment = Element.PTABLE;
-                PdfHistorico.Add(Saldo);
-
-                Paragraph fecha = new Paragraph("RECARGAS DEL MES: " + Convercion(DatosCliente[2].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10));
-                fecha.Alignment = Element.PTABLE;
-                PdfHistorico.Add(fecha);
-
-
-                Paragraph Event = new Paragraph("CONSUMO DEL MES: " + Convercion(DatosCliente[3].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10));
-                Event.Alignment = Element.PTABLE;
-                PdfHistorico.Add(Event);
-
-
-                Paragraph saldo_ = new Paragraph("SALDO FINAL: " + Convercion(DatosCliente[4].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10));
-                saldo_.Alignment = Element.PTABLE;
-                PdfHistorico.Add(saldo_);
-                //PdfHistorico.Add(tableIncio);
-
-                PdfHistorico.Add(Chunk.NEWLINE);
-
                 //----------------------
                 var listaCliente = (from c in db.Clientes
                                     where c.NumCliente == model.Cliente
@@ -2610,225 +2550,290 @@ namespace PuntoDeVenta.Controllers
                                     {
                                         Nombre = c.Nombre,
                                         Apellido = c.Apellidos,
-                                        IdCliente = c.Id
+                                        IdCliente = c.Id,                                        
                                     }).ToList();
 
-                if (listaCliente.Count() > 0)
+
+                
+                var clientePruebas = listaCliente[0].IdCliente;
+
+                var listaCuentas = (from c in db.CuentasTelepeajes
+                                    where c.ClienteId == clientePruebas
+                                    select new
+                                    {
+                                        Id = c.Id,
+                                        cuentaId = c.NumCuenta,
+                                        typeCuenta = c.TypeCuenta
+
+                                    }).ToList();
+
+                //-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                foreach (var itemPrincipal in listaCuentas)
                 {
+                    var DatosCliente = BuscarInformacionCliente(model.Cliente, itemPrincipal.cuentaId, FechaInicio, FechaFin);
+
+                    Paragraph titulo = new Paragraph("ESTADO DE CUENTA DEL MES DE " + fechas[4] + " " + model.Anyo + " \n", new Font(Font.FontFamily.HELVETICA, 20));
+                    titulo.Alignment = Element.ALIGN_CENTER;
+                    PdfHistorico.Add(titulo);
+
+                    PdfHistorico.Add(Chunk.NEWLINE);
+
+                    Paragraph _cliente = new Paragraph("NOMBRE: " + DatosCliente[0] + "", new Font(Font.FontFamily.HELVETICA, 10));
+                    _cliente.Alignment = Element.PTABLE;
+                    PdfHistorico.Add(_cliente);
+
+
+                    Paragraph Saldo = new Paragraph("SALDO ANTERIOR: " + Convercion(DatosCliente[1].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10));
+                    Saldo.Alignment = Element.PTABLE;
+                    PdfHistorico.Add(Saldo);
+
+                    Paragraph fecha = new Paragraph("RECARGAS DEL MES: " + Convercion(DatosCliente[2].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10));
+                    fecha.Alignment = Element.PTABLE;
+                    PdfHistorico.Add(fecha);
+
+
+                    Paragraph Event = new Paragraph("CONSUMO DEL MES: " + Convercion(DatosCliente[3].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10));
+                    Event.Alignment = Element.PTABLE;
+                    PdfHistorico.Add(Event);
+
+
+                    Paragraph saldo_ = new Paragraph("SALDO FINAL: " + Convercion(DatosCliente[4].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10));
+                    saldo_.Alignment = Element.PTABLE;
+                    PdfHistorico.Add(saldo_);
+                    //PdfHistorico.Add(tableIncio);
+
+                    PdfHistorico.Add(Chunk.NEWLINE);
 
 
 
-
-                    DatosCliente[0] = listaCliente[0].Nombre + "  " + listaCliente[0].Apellido;
-                    var clientePruebas = listaCliente[0].IdCliente;
-
-                    var listaCuentas = (from c in db.CuentasTelepeajes
-                                        where c.ClienteId == clientePruebas
-                                        select new
-                                        {
-                                            Id = c.Id,
-                                            cuentaId = c.NumCuenta,
-                                            typeCuenta = c.TypeCuenta
-
-                                        }).ToList();
-
-                    PdfPTable table = new PdfPTable(5);
-                    table.WidthPercentage = 100f;
-                    var coldWidthPorcentagesCliente = new[] { 2f, 2f, 1f, 1f, 1f };
-                    table.SetWidths(coldWidthPorcentagesCliente);
-
-                    PdfPCell _cellIni = new PdfPCell();
-                    PdfHistorico.GetLeft(40f);
-                    PdfHistorico.GetRight(40f);
-
-
-
-                    _cellIni = new PdfPCell(new Paragraph("Concepto",new Font(Font.FontFamily.HELVETICA, 14,3)));
-                    _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
-                    _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
-                    _cellIni.FixedHeight = 10f;
-                    table.AddCell(_cellIni);
-
-
-                    _cellIni = new PdfPCell(new Paragraph("Fecha", new Font(Font.FontFamily.HELVETICA, 14,3)));
-                    _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
-                    _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
-                    table.AddCell(_cellIni);
-
-
-
-                    _cellIni = new PdfPCell(new Paragraph("Monto", new Font(Font.FontFamily.HELVETICA, 14,3)));
-                    _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
-                    _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
-                    _cellIni.FixedHeight = 10f;
-                    table.AddCell(_cellIni);
-
-                    _cellIni = new PdfPCell(new Paragraph("Carril", new Font(Font.FontFamily.HELVETICA, 14,3)));
-                    _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
-                    _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
-                    _cellIni.FixedHeight = 10f;
-                    table.AddCell(_cellIni);
-
-
-                    _cellIni = new PdfPCell(new Paragraph("Referencia", new Font(Font.FontFamily.HELVETICA, 14, 3)));
-                    _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
-                    _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
-                    _cellIni.FixedHeight = 10f;
-                    table.AddCell(_cellIni);
-
-                    int separadorHojas = 0;
-
-                    foreach (var item in listaCuentas)
+                    if (listaCliente.Count() > 0)
                     {
 
-                        if (item.typeCuenta == "Colectiva")
-                        {
-
-                            var listaCruces = Cruces(item.cuentaId, FechaInicio, FechaFin, 2, false);
-                            var listaMovimientos = Movimientos(item.cuentaId, FechaInicio, FechaFin, 2, false);
-                            var fusion = FusionarListasMes(listaCruces, listaMovimientos, false);
 
 
 
-                            foreach (var itemfusin in fusion)
+                        PdfPTable table = new PdfPTable(6);
+                        table.WidthPercentage = 100f;
+                        var coldWidthPorcentagesCliente = new[] { 2f, 2f, 1f, 1f, 1f, 2f };
+                        table.SetWidths(coldWidthPorcentagesCliente);
+
+                        PdfPCell _cellIni = new PdfPCell();
+                        PdfHistorico.GetLeft(40f);
+                        PdfHistorico.GetRight(40f);
+
+
+
+                        _cellIni = new PdfPCell(new Paragraph("Concepto", new Font(Font.FontFamily.HELVETICA, 14, 3)));
+                        _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                        _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
+                        _cellIni.FixedHeight = 10f;
+                        table.AddCell(_cellIni);
+
+
+                        _cellIni = new PdfPCell(new Paragraph("Fecha", new Font(Font.FontFamily.HELVETICA, 14, 3)));
+                        _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                        _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
+                        table.AddCell(_cellIni);
+
+
+
+                        _cellIni = new PdfPCell(new Paragraph("Monto", new Font(Font.FontFamily.HELVETICA, 14, 3)));
+                        _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                        _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
+                        _cellIni.FixedHeight = 10f;
+                        table.AddCell(_cellIni);
+
+                        _cellIni = new PdfPCell(new Paragraph("Saldo Final", new Font(Font.FontFamily.HELVETICA, 14, 3)));
+                        _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                        _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
+                        _cellIni.FixedHeight = 10f;
+                        table.AddCell(_cellIni);
+
+
+                        _cellIni = new PdfPCell(new Paragraph("Carril", new Font(Font.FontFamily.HELVETICA, 14, 3)));
+                        _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                        _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
+                        _cellIni.FixedHeight = 10f;
+                        table.AddCell(_cellIni);
+
+
+                        _cellIni = new PdfPCell(new Paragraph("Referencia", new Font(Font.FontFamily.HELVETICA, 14, 3)));
+                        _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                        _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
+                        _cellIni.FixedHeight = 10f;
+                        table.AddCell(_cellIni);
+
+                        int separadorHojas = 0;
+
+                    
+
+                            if (itemPrincipal.typeCuenta == "Colectiva")
                             {
-                                separadorHojas++;
+
+                                var listaCruces = Cruces(itemPrincipal.cuentaId, FechaInicio, FechaFin, 2, false);
+                                var listaMovimientos = Movimientos(itemPrincipal.cuentaId, FechaInicio, FechaFin, 2, false);
+                                var fusion = FusionarListasMes(listaCruces, listaMovimientos, false);
 
 
 
-                                PdfPCell _cell = new PdfPCell();
-                                PdfHistorico.GetLeft(40f);
-                                PdfHistorico.GetRight(40f);
+                                foreach (var itemfusin in fusion)
+                                {
+                                    separadorHojas++;
 
 
-                                _cell = new PdfPCell(new Paragraph(itemfusin.Concepto.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
+
+                                    PdfPCell _cell = new PdfPCell();
+                                    PdfHistorico.GetLeft(40f);
+                                    PdfHistorico.GetRight(40f);
+
+
+                                    _cell = new PdfPCell(new Paragraph(itemfusin.Concepto.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
+                                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                    _cell.FixedHeight = 10f;
+                                    table.AddCell(_cell);
+
+
+                                    _cell = new PdfPCell(new Paragraph(itemfusin.Fecha.ToString("dd/MM/yyyy HH:mm:ss"), new Font(Font.FontFamily.HELVETICA, 9)));
+                                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                    table.AddCell(_cell);
+
+                                    if (itemfusin.Concepto == "CRUCE")
+                                    {
+
+                                        var FontColour = new BaseColor(255, 0, 0);
+                                        var ColorRojo = FontFactory.GetFont("Times New Roman", 9, FontColour);
+
+                                        _cell = new PdfPCell(new Paragraph(itemfusin.CobroTag.ToString(), ColorRojo));
+                                        _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                        _cell.FixedHeight = 10f;
+                                        table.AddCell(_cell);
+
+                                    }
+                                    else
+                                    {
+                                        var FontColour = new BaseColor(0, 255, 0);
+                                        var ColorRojo = FontFactory.GetFont("Times New Roman", 9, FontColour);
+
+                                        _cell = new PdfPCell(new Paragraph(itemfusin.CobroTag.ToString(), ColorRojo));
+                                        _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                        _cell.FixedHeight = 10f;
+                                        table.AddCell(_cell);
+                                    }
+
+
+                                _cell = new PdfPCell(new Paragraph(itemfusin.SaldoNuevo.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
                                 _cell.HorizontalAlignment = Element.ALIGN_CENTER;
                                 _cell.FixedHeight = 10f;
                                 table.AddCell(_cell);
 
-
-                                _cell = new PdfPCell(new Paragraph(itemfusin.Fecha.ToString("dd/MM/yyyy HH:mm:ss"), new Font(Font.FontFamily.HELVETICA, 9)));
-                                _cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                                table.AddCell(_cell);
-
-                                if (itemfusin.Concepto == "CRUCE")
-                                {
-
-                                    var FontColour = new BaseColor(255, 0, 0);
-                                    var ColorRojo = FontFactory.GetFont("Times New Roman", 9, FontColour);
-
-                                    _cell = new PdfPCell(new Paragraph(itemfusin.CobroTag.ToString(), ColorRojo));
-                                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                                    _cell.FixedHeight = 10f;
-                                    table.AddCell(_cell);
-
-                                }
-                                else
-                                {
-                                    var FontColour = new BaseColor(0, 255, 0);
-                                    var ColorRojo = FontFactory.GetFont("Times New Roman", 9, FontColour);
-
-                                    _cell = new PdfPCell(new Paragraph(itemfusin.CobroTag.ToString(), ColorRojo));
-                                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                                    _cell.FixedHeight = 10f;
-                                    table.AddCell(_cell);
-                                }
 
                                 _cell = new PdfPCell(new Paragraph(itemfusin.Carril.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
-                                _cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                                _cell.FixedHeight = 10f;
-                                table.AddCell(_cell);
+                                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                    _cell.FixedHeight = 10f;
+                                    table.AddCell(_cell);
 
 
 
-                                _cell = new PdfPCell(new Paragraph(itemfusin.Referencia.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
-                                _cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                                _cell.FixedHeight = 10f;
-                                table.AddCell(_cell);
+                                    _cell = new PdfPCell(new Paragraph(itemfusin.Referencia.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
+                                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                    _cell.FixedHeight = 10f;
+                                    table.AddCell(_cell);
 
 
+                                }
+                                PdfHistorico.Add(table);
+
+                                PdfHistorico.Add(Chunk.NEWLINE);
                             }
-                            PdfHistorico.Add(table);
 
-                            PdfHistorico.Add(Chunk.NEWLINE);
-                        }
-                        if(item.typeCuenta == "Individual")
-                        {
-                            var Tag = db.Tags.Where(x => x.CuentaId == item.Id).ToList();
-                            string NumTAG = Tag[0].NumTag;
-                            var listaCruces = Cruces(NumTAG, FechaInicio, FechaFin, 1, false);
-                            var listaMovimientos = Movimientos(NumTAG, FechaInicio, FechaFin, 1, false);
-                            var fusion = FusionarListasMes(listaCruces, listaMovimientos, false);
-
-
-
-                            foreach (var itemfusin in fusion)
+                            if (itemPrincipal.typeCuenta == "Individual")
                             {
-                                separadorHojas++;
+                                var Tag = db.Tags.Where(x => x.CuentaId == itemPrincipal.Id).ToList();
+                                string NumTAG = Tag[0].NumTag;
+                                var listaCruces = Cruces(NumTAG, FechaInicio, FechaFin, 1, false);
+                                var listaMovimientos = Movimientos(NumTAG, FechaInicio, FechaFin, 1, false);
+                                var fusion = FusionarListasMes(listaCruces, listaMovimientos, false);
 
 
 
-                                PdfPCell _cell = new PdfPCell();
-                                PdfHistorico.GetLeft(40f);
-                                PdfHistorico.GetRight(40f);
+                                foreach (var itemfusin in fusion)
+                                {
+                                    separadorHojas++;
 
 
-                                _cell = new PdfPCell(new Paragraph(itemfusin.Concepto.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
+
+                                    PdfPCell _cell = new PdfPCell();
+                                    PdfHistorico.GetLeft(40f);
+                                    PdfHistorico.GetRight(40f);
+
+
+                                    _cell = new PdfPCell(new Paragraph(itemfusin.Concepto.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
+                                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                    _cell.FixedHeight = 10f;
+                                    table.AddCell(_cell);
+
+
+                                    _cell = new PdfPCell(new Paragraph(itemfusin.Fecha.ToString("dd/MM/yyyy HH:mm:ss"), new Font(Font.FontFamily.HELVETICA, 9)));
+                                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                    table.AddCell(_cell);
+
+                                    if (itemfusin.Concepto == "CRUCE")
+                                    {
+
+                                        var FontColour = new BaseColor(255, 0, 0);
+                                        var ColorRojo = FontFactory.GetFont("Times New Roman", 9, FontColour);
+
+                                        _cell = new PdfPCell(new Paragraph(itemfusin.CobroTag.ToString(), ColorRojo));
+                                        _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                        _cell.FixedHeight = 10f;
+                                        table.AddCell(_cell);
+
+                                    }
+                                    else
+                                    {
+                                        var FontColour = new BaseColor(0, 255, 0);
+                                        var ColorRojo = FontFactory.GetFont("Times New Roman", 9, FontColour);
+
+                                        _cell = new PdfPCell(new Paragraph(itemfusin.CobroTag.ToString(), ColorRojo));
+                                        _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                        _cell.FixedHeight = 10f;
+                                        table.AddCell(_cell);
+                                    }
+
+
+
+                                _cell = new PdfPCell(new Paragraph(itemfusin.SaldoNuevo.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
                                 _cell.HorizontalAlignment = Element.ALIGN_CENTER;
                                 _cell.FixedHeight = 10f;
                                 table.AddCell(_cell);
-
-
-                                _cell = new PdfPCell(new Paragraph(itemfusin.Fecha.ToString("dd/MM/yyyy HH:mm:ss"), new Font(Font.FontFamily.HELVETICA, 9)));
-                                _cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                                table.AddCell(_cell);
-
-                                if (itemfusin.Concepto == "CRUCE")
-                                {
-
-                                    var FontColour = new BaseColor(255, 0, 0);
-                                    var ColorRojo = FontFactory.GetFont("Times New Roman", 9, FontColour);
-
-                                    _cell = new PdfPCell(new Paragraph(itemfusin.CobroTag.ToString(), ColorRojo));
-                                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                                    _cell.FixedHeight = 10f;
-                                    table.AddCell(_cell);
-
-                                }
-                                else
-                                {
-                                    var FontColour = new BaseColor(0, 255, 0);
-                                    var ColorRojo = FontFactory.GetFont("Times New Roman", 9, FontColour);
-
-                                    _cell = new PdfPCell(new Paragraph(itemfusin.CobroTag.ToString(), ColorRojo));
-                                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                                    _cell.FixedHeight = 10f;
-                                    table.AddCell(_cell);
-                                }
 
                                 _cell = new PdfPCell(new Paragraph(itemfusin.Carril.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
-                                _cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                                _cell.FixedHeight = 10f;
-                                table.AddCell(_cell);
+                                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                    _cell.FixedHeight = 10f;
+                                    table.AddCell(_cell);
 
 
 
-                                _cell = new PdfPCell(new Paragraph(itemfusin.Referencia.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
-                                _cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                                _cell.FixedHeight = 10f;
-                                table.AddCell(_cell);
+                                    _cell = new PdfPCell(new Paragraph(itemfusin.Referencia.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
+                                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                    _cell.FixedHeight = 10f;
+                                    table.AddCell(_cell);
 
+
+                                }
+                                PdfHistorico.Add(table);
 
                             }
-                            PdfHistorico.Add(table);
-
-                        }
 
 
 
+                        
                     }
+
                 }
 
+            //***********************************************************************************************************************************************************************
 
                 PdfHistorico.Close();
 
@@ -2842,7 +2847,7 @@ namespace PuntoDeVenta.Controllers
             }
         }
 
-        public string[] BuscarInformacionCliente(string numeroCliente, DateTime fecha1, DateTime fecha2)
+        public string[] BuscarInformacionCliente(string numeroCliente, string numeroCuenta, DateTime fecha1, DateTime fecha2)
         {
 
             AppDbContext db = new AppDbContext();
@@ -2866,7 +2871,7 @@ namespace PuntoDeVenta.Controllers
 
 
                 var listaCuentas = (from c in db.CuentasTelepeajes
-                                    where c.ClienteId == clientePruebas
+                                    where c.NumCuenta == numeroCuenta
                                     select new
                                     {
                                         Id = c.Id,
@@ -2875,111 +2880,142 @@ namespace PuntoDeVenta.Controllers
 
                                     }).ToList();
 
-                double SaldoCliente = 0;
+                string SaldoCliente = string.Empty;
+                string SaldoFinal = string.Empty;
+                double CrucesTotales = 0;
+                double RecargasTotales = 0;
 
-                foreach(var item in listaCuentas)
+                foreach (var item in listaCuentas)
                 {
 
                     
                     if(item.typeCuenta == "Colectiva")
                     {
-                        var listcolectivo = (from c in db.CuentasTelepeajes
-                                             where c.Id == item.Id
+                        //var listcolectivo = (from c in db.CuentasTelepeajes
+                        //                     where c.Id == item.Id
+                        //                     select new
+                        //                     {
+                        //                         saldos = c.SaldoCuenta
+                        //                     }).ToList();
+                        var listcolectivo = (from h in db.Historicos
+                                             join t in db.Tags on h.Tag equals t.NumTag
+                                             join c in db.CuentasTelepeajes on t.CuentaId equals c.Id
+                                             where h.Fecha >= fecha1 && h.Fecha < fecha2 && c.Id == item.Id
                                              select new
                                              {
-                                                 saldos = c.SaldoCuenta
+                                                 fecha = h.Fecha,
+                                                 saldoANteriro =  h.SaldoAnterior,
+                                                 saldoActualizado = h.SaldoActualizado
                                              }).ToList();
+
                         if (listcolectivo.Count > 0)
                         {
-                            foreach (var itemcolect in listcolectivo)
-                            {
-                                SaldoCliente += Convert.ToDouble(itemcolect.saldos);                    
-                            }
-                              
+                          for(int i = 0; i < 1; i++)
+                          {
+
+                                SaldoCliente = Convert.ToString(listcolectivo[i].saldoANteriro);
+                          }
+                                                           
                         }
-                       
+
+                        var ListaVolteada = listcolectivo.OrderByDescending(x => x.fecha).ToList();
+
+
+                        if (ListaVolteada.Count > 0)
+                        {
+                            for (int i = 0; i < 1; i++)
+                            {
+
+                                SaldoFinal = Convert.ToString(ListaVolteada[i].saldoActualizado);
+                            }
+
+                        }
+
+                        RecargasTotales += Convert.ToDouble(db.OperacionesCajeros.Where(x => x.DateTOperacion >= fecha1 && x.DateTOperacion < fecha2 && x.Numero == item.cuentaId).Sum(x => x.Monto));
+
+
+
+
+
                     }
                     if(item.typeCuenta == "Individual")
                     {
-                        var listindividual = (from c in db.Tags
-                                              where c.CuentaId == item.Id
-                                              select new
-                                              {
-                                                  saldos = c.SaldoTag
-                                              }).ToList();
-                        if(listindividual.Count() > 0)
+
+                        var listindividual = (from h in db.Historicos
+                                             join t in db.Tags on h.Tag equals t.NumTag
+                                             join c in db.CuentasTelepeajes on t.CuentaId equals c.Id
+                                             where h.Fecha >= fecha1 && h.Fecha < fecha2 && c.Id == item.Id
+                                             select new
+                                             {
+                                                 fecha = h.Fecha,
+                                                 saldoANteriro = h.SaldoAnterior,
+                                                 saldoActual = h.SaldoActualizado
+                                             }).ToList();
+
+                        //var listindividual = (from c in db.Tags
+                        //                      where c.CuentaId == item.Id
+                        //                      select new
+                        //                      {
+                        //                          saldos = c.SaldoTag
+                        //                      }).ToList();
+                        if (listindividual.Count() > 0)
                         {
-                            foreach(var itemindividual in listindividual)
+                            for(int i = 0; i < 1; i++)
                             {
-                                SaldoCliente += Convert.ToDouble(itemindividual.saldos)/100;
+                                SaldoCliente = Convert.ToString(listindividual[i].saldoANteriro);
                             }
-                            
+                                                                                        
                         }
 
-                       
-                    }
 
-                    
-//                    SaldoCliente += Math.Round(Convert.ToDouble(item.SALDOCUENTA), 2);
-                }
+                        var ListaVolteada = listindividual.OrderByDescending(x => x.fecha).ToList();
 
-                DatosCliente[1] = SaldoCliente.ToString("F");
 
-                double RecargasTotales = 0;
+                        if (ListaVolteada.Count > 0)
+                        {
+                            for (int i = 0; i < 1; i++)
+                            {
 
-                
-               foreach(var item in listaCuentas)
-               {
-                    if (item.typeCuenta == "Colectiva")
-                    {
-                        RecargasTotales += Convert.ToDouble(db.OperacionesCajeros.Where(x => x.DateTOperacion >= fecha1 && x.DateTOperacion < fecha2 && x.Numero == item.cuentaId).Sum(x => x.Monto));
+                                SaldoFinal = Convert.ToString(ListaVolteada[i].saldoActual);
+                            }
 
-                    }
-                    if (item.typeCuenta == "Individual")
-                    {
+                        }
+
 
                         var Tag = db.Tags.Where(x => x.CuentaId == item.Id).ToList();
                         string NumTAG = Tag[0].NumTag;
                         RecargasTotales += Convert.ToDouble(db.OperacionesCajeros.Where(x => x.DateTOperacion >= fecha1 && x.DateTOperacion < fecha2 && x.Numero == NumTAG).Sum(x => x.Monto));
 
 
+
                     }
-                    //RecargasTotales  += Convert.ToDouble(db.OperacionesCajeros.Where(x => x.DateTOperacion >= fecha1 && x.DateTOperacion < fecha2 && x.Numero == item.cuentaId).Sum(x => x.Monto));                              
-               }
 
-                DatosCliente[2] = RecargasTotales.ToString("F");
+                  
+                    foreach (var item2 in listaCuentas)
+                    {
+                        var listaCruces = (from h in db.Historicos
+                                           join t in db.Tags on h.Tag equals t.NumTag
+                                           join c in db.CuentasTelepeajes on t.CuentaId equals c.Id
+                                           where h.Fecha >= fecha1 && h.Fecha < fecha2
+                                           where c.NumCuenta == item2.cuentaId
+                                           select new
+                                           {
+                                               saldosCruces = h.Saldo
+                                           }).ToList();
+
+                        CrucesTotales += listaCruces.Sum(x => x.saldosCruces);
+                    }
 
 
-                double CrucesTotales = 0;
-                foreach(var item in listaCuentas)
-                {
-                    var listaCruces = (from h in db.Historicos
-                                       join t in db.Tags on h.Tag equals t.NumTag
-                                       join c in db.CuentasTelepeajes on t.CuentaId equals c.Id
-                                       where h.Fecha >= fecha1 && h.Fecha < fecha2
-                                       where c.NumCuenta == item.cuentaId
-                                       select new
-                                       {
-                                           saldosCruces = h.Saldo
-                                       }).ToList();
-
-                    CrucesTotales += listaCruces.Sum(x => x.saldosCruces);
+                    //                    SaldoCliente += Math.Round(Convert.ToDouble(item.SALDOCUENTA), 2);
                 }
 
-                DatosCliente[3] = CrucesTotales.ToString("F");
-
-                //SaldoFinal
-
-                DatosCliente[4] = (SaldoCliente - CrucesTotales).ToString("F");
-
+                DatosCliente[1] = SaldoCliente;
+                DatosCliente[2] = RecargasTotales.ToString("F");
+                DatosCliente[3] = CrucesTotales.ToString("F");                
+                DatosCliente[4] = SaldoFinal;
 
                 return DatosCliente;
-
-                     
-                
-
-
-
 
             }
             else return null;

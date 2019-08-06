@@ -44,6 +44,7 @@ namespace PuntoDeVenta.Models
         public string TagCuenta { get; set; }
         public DateTime Fecha { get; set; }
         public string CobroTag { get; set; }
+        public string SaldoNuevo { get; set; }
         public string Carril { get; set; }
         public string Referencia { get; set; }
 
