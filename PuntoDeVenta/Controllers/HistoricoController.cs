@@ -1444,9 +1444,12 @@ namespace PuntoDeVenta.Controllers
                             Cuerpo = item._Cuerpo,
                             Carril = item._Carril,
                             Clase = item._Clase,
-                            SaldoAntes = Convert.ToDouble(item._SaldoAntes.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
-                            Saldo = Convert.ToDouble(Convert.ToString(item._Saldo).Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
-                            SaldoDespues = Convert.ToDouble(item._SaldoNuevo.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                            SaldoAntes = Convercion(item._SaldoAntes),
+                            Saldo = Convercion(item._Saldo.ToString().Replace(".", ",")),
+                            SaldoDespues = Convercion(item._SaldoNuevo),
+                            //SaldoAntes = Convert.ToDouble(item._SaldoAntes.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                            //Saldo = Convert.ToDouble(Convert.ToString(item._Saldo).Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                            //SaldoDespues = Convert.ToDouble(item._SaldoNuevo.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                             SaldoActual = (Convert.ToDouble(item._SaldoActual) / 100).ToString("C2", culture).Replace("$", "Q"),
                             Operador = item._Operadora,
                             TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
@@ -1506,9 +1509,12 @@ namespace PuntoDeVenta.Controllers
                             Cuerpo = item._Cuerpo,
                             Carril = item._Carril,
                             Clase = item._Clase,
-                            SaldoAntes = Convert.ToDouble(item._SaldoAntes.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
-                            Saldo = Convert.ToDouble(Convert.ToString(item._Saldo).Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
-                            SaldoDespues = Convert.ToDouble(item._SaldoNuevo.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                            SaldoAntes = Convercion(item._SaldoAntes),
+                            Saldo = Convercion(item._Saldo.ToString().Replace(".", ",")),
+                            SaldoDespues = Convercion(item._SaldoNuevo),
+                            //SaldoAntes = Convert.ToDouble(item._SaldoAntes.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                            //Saldo = Convert.ToDouble(Convert.ToString(item._Saldo).Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                            //SaldoDespues = Convert.ToDouble(item._SaldoNuevo.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                             SaldoActual = (Convert.ToDouble(item._SaldoActual) / 100).ToString("C2", culture).Replace("$", "Q"),
                             Operador = item._Operadora,
                             TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
@@ -1585,9 +1591,12 @@ namespace PuntoDeVenta.Controllers
                                 Cuerpo = item2._Cuerpo,
                                 Carril = item2._Carril,
                                 Clase = item2._Clase,
-                                SaldoAntes = Convert.ToDouble(item2._SaldoAntes.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
-                                Saldo = Convert.ToDouble(Convert.ToString(item2._Saldo).Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
-                                SaldoDespues = Convert.ToDouble(item2._SaldoNuevo.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                                SaldoAntes = Convercion(item2._SaldoAntes),
+                                Saldo = Convercion(item2._Saldo.ToString().Replace(".", ",")),
+                                SaldoDespues = Convercion(item2._SaldoNuevo),
+                                //SaldoAntes = Convert.ToDouble(item2._SaldoAntes.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                                //Saldo = Convert.ToDouble(Convert.ToString(item2._Saldo).Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                                //SaldoDespues = Convert.ToDouble(item2._SaldoNuevo.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                                 SaldoActual = (Convert.ToDouble(item2._SaldoActual) / 100).ToString("C2", culture).Replace("$", "Q"),
                                 Operador = item2._Operadora,
                                 //TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
@@ -1660,9 +1669,12 @@ namespace PuntoDeVenta.Controllers
                                 Cuerpo = item2._Cuerpo,
                                 Carril = item2._Carril,
                                 Clase = item2._Clase,
-                                SaldoAntes = Convert.ToDouble(item2._SaldoAntes.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
-                                Saldo = Convert.ToDouble(Convert.ToString(item2._Saldo).Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
-                                SaldoDespues = Convert.ToDouble(item2._SaldoNuevo.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                                SaldoAntes = Convercion(item2._SaldoAntes),
+                                Saldo = Convercion(item2._Saldo.ToString().Replace(".", ",")),
+                                SaldoDespues = Convercion(item2._SaldoNuevo),
+                                //SaldoAntes = Convert.ToDouble(item2._SaldoAntes.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                                //Saldo = Convert.ToDouble(Convert.ToString(item2._Saldo).Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                                //SaldoDespues = Convert.ToDouble(item2._SaldoNuevo.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                                 SaldoActual = (Convert.ToDouble(item2._SaldoActual) / 100).ToString("C2", culture).Replace("$", "Q"),
                                 Operador = item2._Operadora,
                                 //TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
@@ -2262,9 +2274,23 @@ namespace PuntoDeVenta.Controllers
                 });
             }
 
-            Lista.OrderBy(x => x.Fecha);
+            var otraLista =  Lista.OrderBy(x => x.Fecha).ToList();
 
-            return Lista;
+            List<CruceMovimiento> ListaLista = new List<CruceMovimiento>();
+
+            foreach (var item in otraLista)
+            {
+                ListaLista.Add(new CruceMovimiento
+                {
+                    Concepto = item.Concepto,
+                    Fecha = item.Fecha,
+                    CobroTag = item.CobroTag,
+                    Carril = item.Carril,
+                    Referencia = item.Referencia
+                });
+            }
+
+            return ListaLista;
         }
 
         public List<CruceMovimientoRepocliente> FusionarListasMes(List<Cruces> ListCruces, List<Movimientos> ListMovimientos, bool TagOCuenta)
@@ -2344,8 +2370,7 @@ namespace PuntoDeVenta.Controllers
             }
 
             return otraLista;
-        }
-    
+        }    
         class HeaderFooter : PdfPageEventHelper
         {
             public override void OnEndPage(PdfWriter writer, Document PdfHistorico)
@@ -2537,11 +2562,15 @@ namespace PuntoDeVenta.Controllers
                 PdfHistorico.Open();
                 PdfHistorico.GetTop(600f);
 
-                string rutaLogo = Server.MapPath("..\\Content\\css-yisus\\img\\SIVAREPORT.png");
+                //string rutaLogo = Server.MapPath("..\\Content\\css-yisus\\img\\SIVAREPORT.png");
 
-                iTextSharp.text.Image Logo = iTextSharp.text.Image.GetInstance(rutaLogo);
-                Logo.SetAbsolutePosition(465, 570);
-                PdfHistorico.Add(Logo);
+                //iTextSharp.text.Image Logo = iTextSharp.text.Image.GetInstance(rutaLogo);
+                //Logo.SetAbsolutePosition(465, 570);
+                //PdfHistorico.Add(Logo);
+
+                //Paragraph titulo = new Paragraph("ESTADO DE CUENTA DEL MES DE " + fechas[4] + " " + model.Anyo + " \n", new Font(Font.FontFamily.HELVETICA, 20));
+                //titulo.Alignment = Element.ALIGN_CENTER;
+                //PdfHistorico.Add(titulo);
 
                 //----------------------
                 var listaCliente = (from c in db.Clientes
@@ -2550,12 +2579,14 @@ namespace PuntoDeVenta.Controllers
                                     {
                                         Nombre = c.Nombre,
                                         Apellido = c.Apellidos,
+                                        numCliente = c.NumCliente,
                                         IdCliente = c.Id,                                        
                                     }).ToList();
 
 
                 
                 var clientePruebas = listaCliente[0].IdCliente;
+                var numCLientes = listaCliente[0].numCliente;
 
                 var listaCuentas = (from c in db.CuentasTelepeajes
                                     where c.ClienteId == clientePruebas
@@ -2573,15 +2604,30 @@ namespace PuntoDeVenta.Controllers
                 {
                     var DatosCliente = BuscarInformacionCliente(model.Cliente, itemPrincipal.cuentaId, FechaInicio, FechaFin);
 
+                    string rutaLogo = Server.MapPath("..\\Content\\css-yisus\\img\\SIVAREPORT.png");
+
+                    iTextSharp.text.Image Logo = iTextSharp.text.Image.GetInstance(rutaLogo);
+                    Logo.SetAbsolutePosition(465, 570);
+                    PdfHistorico.Add(Logo);
+
                     Paragraph titulo = new Paragraph("ESTADO DE CUENTA DEL MES DE " + fechas[4] + " " + model.Anyo + " \n", new Font(Font.FontFamily.HELVETICA, 20));
                     titulo.Alignment = Element.ALIGN_CENTER;
                     PdfHistorico.Add(titulo);
+
 
                     PdfHistorico.Add(Chunk.NEWLINE);
 
                     Paragraph _cliente = new Paragraph("NOMBRE: " + DatosCliente[0] + "", new Font(Font.FontFamily.HELVETICA, 10));
                     _cliente.Alignment = Element.PTABLE;
                     PdfHistorico.Add(_cliente);
+
+                    Paragraph _clientenum = new Paragraph("#Cliente: " + numCLientes + "", new Font(Font.FontFamily.HELVETICA, 10));
+                    _clientenum.Alignment = Element.PTABLE;
+                    PdfHistorico.Add(_clientenum);
+
+                    Paragraph _clienteCuenta = new Paragraph("#Cuenta: " + itemPrincipal.cuentaId+ "", new Font(Font.FontFamily.HELVETICA, 10));
+                    _clienteCuenta.Alignment = Element.PTABLE;
+                    PdfHistorico.Add(_clienteCuenta);
 
 
                     Paragraph Saldo = new Paragraph("SALDO ANTERIOR: " + Convercion(DatosCliente[1].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10));
@@ -2827,8 +2873,9 @@ namespace PuntoDeVenta.Controllers
                             }
 
 
+                        PdfHistorico.Add(Chunk.NEWLINE);
+                        PdfHistorico.NewPage();
 
-                        
                     }
 
                 }
