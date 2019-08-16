@@ -1425,6 +1425,31 @@ namespace PuntoDeVenta.Controllers
 
                                          }).ToList();
 
+                    var ListaNegra = (from historico in db.Historicos
+                                      join listaNegra in db.ListaNegras on historico.Tag equals listaNegra.Numero
+                                      join cuentas in db.CuentasTelepeajes on listaNegra.NumCuenta equals cuentas.NumCuenta
+                                      join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
+                                      where (historico.Fecha >= Fecha_Inicio && historico.Fecha <= Fecha_Fin)
+                                      where (historico.Tag == TagCuenta)
+                                      orderby (historico.Fecha) descending
+                                      select new
+                                      {
+                                          _Tag = historico.Tag,                                          
+                                          _ClienteID = cliente.NumCliente,
+                                          _Nombre = cliente.Nombre + cliente.Apellidos,
+                                          _TypeCuenta = cuentas.TypeCuenta,
+                                          _Plaza = historico.Delegacion,
+                                          _Cuerpo = historico.Cuerpo,
+                                          _Carril = historico.Carril,
+                                          _Fecha = historico.Fecha,
+                                          _Clase = historico.Clase,
+                                          _SaldoAntes = historico.SaldoAnterior,
+                                          _Saldo = historico.Saldo,
+                                          _SaldoNuevo = historico.SaldoActualizado,
+                                          _Operadora = historico.Operador,                                          
+
+                                      }).ToList();
+
                     var total = ListaCompleta.Sum(x => x._Saldo);
 
                     List<Cruces> List = new List<Cruces>();
@@ -1818,6 +1843,8 @@ namespace PuntoDeVenta.Controllers
             }
             return null;
         }
+
+        
 
         public List<Movimientos> Movimientos(string TagCuenta, DateTime Fecha_Inicio, DateTime Fecha_Fin, int Tipo, bool Rango)
         {
@@ -2600,119 +2627,122 @@ namespace PuntoDeVenta.Controllers
 
                 //-------------------------------------------------------------------------------------------------------------------------------------------------------
 
-                foreach (var itemPrincipal in listaCuentas)
+                if (listaCuentas.Count > 0)
                 {
-                    var DatosCliente = BuscarInformacionCliente(model.Cliente, itemPrincipal.cuentaId, FechaInicio, FechaFin);
 
-                    string rutaLogo = Server.MapPath("..\\Content\\css-yisus\\img\\SIVAREPORT.png");
-
-                    iTextSharp.text.Image Logo = iTextSharp.text.Image.GetInstance(rutaLogo);
-                    Logo.SetAbsolutePosition(465, 570);
-                    PdfHistorico.Add(Logo);
-
-                    Paragraph titulo = new Paragraph("ESTADO DE CUENTA DEL MES DE " + fechas[4] + " " + model.Anyo + " \n", new Font(Font.FontFamily.HELVETICA, 20));
-                    titulo.Alignment = Element.ALIGN_CENTER;
-                    PdfHistorico.Add(titulo);
-
-
-                    PdfHistorico.Add(Chunk.NEWLINE);
-
-                    Paragraph _cliente = new Paragraph("NOMBRE: " + DatosCliente[0] + "", new Font(Font.FontFamily.HELVETICA, 10));
-                    _cliente.Alignment = Element.PTABLE;
-                    PdfHistorico.Add(_cliente);
-
-                    Paragraph _clientenum = new Paragraph("#Cliente: " + numCLientes + "", new Font(Font.FontFamily.HELVETICA, 10));
-                    _clientenum.Alignment = Element.PTABLE;
-                    PdfHistorico.Add(_clientenum);
-
-                    Paragraph _clienteCuenta = new Paragraph("#Cuenta: " + itemPrincipal.cuentaId+ "", new Font(Font.FontFamily.HELVETICA, 10));
-                    _clienteCuenta.Alignment = Element.PTABLE;
-                    PdfHistorico.Add(_clienteCuenta);
-
-
-                    Paragraph Saldo = new Paragraph("SALDO ANTERIOR: " + Convercion(DatosCliente[1].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10));
-                    Saldo.Alignment = Element.PTABLE;
-                    PdfHistorico.Add(Saldo);
-
-                    Paragraph fecha = new Paragraph("RECARGAS DEL MES: " + Convercion(DatosCliente[2].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10));
-                    fecha.Alignment = Element.PTABLE;
-                    PdfHistorico.Add(fecha);
-
-
-                    Paragraph Event = new Paragraph("CONSUMO DEL MES: " + Convercion(DatosCliente[3].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10));
-                    Event.Alignment = Element.PTABLE;
-                    PdfHistorico.Add(Event);
-
-
-                    Paragraph saldo_ = new Paragraph("SALDO FINAL: " + Convercion(DatosCliente[4].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10));
-                    saldo_.Alignment = Element.PTABLE;
-                    PdfHistorico.Add(saldo_);
-                    //PdfHistorico.Add(tableIncio);
-
-                    PdfHistorico.Add(Chunk.NEWLINE);
-
-
-
-                    if (listaCliente.Count() > 0)
+                    foreach (var itemPrincipal in listaCuentas)
                     {
+                        var DatosCliente = BuscarInformacionCliente(model.Cliente, itemPrincipal.cuentaId, FechaInicio, FechaFin);
+
+                        string rutaLogo = Server.MapPath("..\\Content\\css-yisus\\img\\SIVAREPORT.png");
+
+                        iTextSharp.text.Image Logo = iTextSharp.text.Image.GetInstance(rutaLogo);
+                        Logo.SetAbsolutePosition(465, 570);
+                        PdfHistorico.Add(Logo);
+
+                        Paragraph titulo = new Paragraph("ESTADO DE CUENTA DEL MES DE " + fechas[4] + " " + model.Anyo + " \n", new Font(Font.FontFamily.HELVETICA, 20));
+                        titulo.Alignment = Element.ALIGN_CENTER;
+                        PdfHistorico.Add(titulo);
+
+
+                        PdfHistorico.Add(Chunk.NEWLINE);
+
+                        Paragraph _cliente = new Paragraph("NOMBRE: " + DatosCliente[0] + "", new Font(Font.FontFamily.HELVETICA, 10));
+                        _cliente.Alignment = Element.PTABLE;
+                        PdfHistorico.Add(_cliente);
+
+                        Paragraph _clientenum = new Paragraph("#Cliente: " + numCLientes + "", new Font(Font.FontFamily.HELVETICA, 10));
+                        _clientenum.Alignment = Element.PTABLE;
+                        PdfHistorico.Add(_clientenum);
+
+                        Paragraph _clienteCuenta = new Paragraph("#Cuenta: " + itemPrincipal.cuentaId + "", new Font(Font.FontFamily.HELVETICA, 10));
+                        _clienteCuenta.Alignment = Element.PTABLE;
+                        PdfHistorico.Add(_clienteCuenta);
+
+
+                        Paragraph Saldo = new Paragraph("SALDO ANTERIOR: " + Convercion(DatosCliente[1].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10));
+                        Saldo.Alignment = Element.PTABLE;
+                        PdfHistorico.Add(Saldo);
+
+                        Paragraph fecha = new Paragraph("RECARGAS DEL MES: " + Convercion(DatosCliente[2].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10));
+                        fecha.Alignment = Element.PTABLE;
+                        PdfHistorico.Add(fecha);
+
+
+                        Paragraph Event = new Paragraph("CONSUMO DEL MES: " + Convercion(DatosCliente[3].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10));
+                        Event.Alignment = Element.PTABLE;
+                        PdfHistorico.Add(Event);
+
+
+                        Paragraph saldo_ = new Paragraph("SALDO FINAL: " + Convercion(DatosCliente[4].Replace(".", ",")) + "", new Font(Font.FontFamily.HELVETICA, 10));
+                        saldo_.Alignment = Element.PTABLE;
+                        PdfHistorico.Add(saldo_);
+                        //PdfHistorico.Add(tableIncio);
+
+                        PdfHistorico.Add(Chunk.NEWLINE);
+
+
+
+                        if (listaCliente.Count() > 0)
+                        {
 
 
 
 
-                        PdfPTable table = new PdfPTable(6);
-                        table.WidthPercentage = 100f;
-                        var coldWidthPorcentagesCliente = new[] { 2f, 2f, 1f, 1f, 1f, 2f };
-                        table.SetWidths(coldWidthPorcentagesCliente);
+                            PdfPTable table = new PdfPTable(6);
+                            table.WidthPercentage = 100f;
+                            var coldWidthPorcentagesCliente = new[] { 2f, 2f, 1f, 1f, 1f, 2f };
+                            table.SetWidths(coldWidthPorcentagesCliente);
 
-                        PdfPCell _cellIni = new PdfPCell();
-                        PdfHistorico.GetLeft(40f);
-                        PdfHistorico.GetRight(40f);
-
-
-
-                        _cellIni = new PdfPCell(new Paragraph("Concepto", new Font(Font.FontFamily.HELVETICA, 14, 3)));
-                        _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
-                        _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
-                        _cellIni.FixedHeight = 10f;
-                        table.AddCell(_cellIni);
-
-
-                        _cellIni = new PdfPCell(new Paragraph("Fecha", new Font(Font.FontFamily.HELVETICA, 14, 3)));
-                        _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
-                        _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
-                        table.AddCell(_cellIni);
+                            PdfPCell _cellIni = new PdfPCell();
+                            PdfHistorico.GetLeft(40f);
+                            PdfHistorico.GetRight(40f);
 
 
 
-                        _cellIni = new PdfPCell(new Paragraph("Monto", new Font(Font.FontFamily.HELVETICA, 14, 3)));
-                        _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
-                        _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
-                        _cellIni.FixedHeight = 10f;
-                        table.AddCell(_cellIni);
-
-                        _cellIni = new PdfPCell(new Paragraph("Saldo Final", new Font(Font.FontFamily.HELVETICA, 14, 3)));
-                        _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
-                        _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
-                        _cellIni.FixedHeight = 10f;
-                        table.AddCell(_cellIni);
+                            _cellIni = new PdfPCell(new Paragraph("Concepto", new Font(Font.FontFamily.HELVETICA, 14, 3)));
+                            _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                            _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
+                            _cellIni.FixedHeight = 10f;
+                            table.AddCell(_cellIni);
 
 
-                        _cellIni = new PdfPCell(new Paragraph("Carril", new Font(Font.FontFamily.HELVETICA, 14, 3)));
-                        _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
-                        _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
-                        _cellIni.FixedHeight = 10f;
-                        table.AddCell(_cellIni);
+                            _cellIni = new PdfPCell(new Paragraph("Fecha", new Font(Font.FontFamily.HELVETICA, 14, 3)));
+                            _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                            _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
+                            table.AddCell(_cellIni);
 
 
-                        _cellIni = new PdfPCell(new Paragraph("Referencia", new Font(Font.FontFamily.HELVETICA, 14, 3)));
-                        _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
-                        _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
-                        _cellIni.FixedHeight = 10f;
-                        table.AddCell(_cellIni);
 
-                        int separadorHojas = 0;
+                            _cellIni = new PdfPCell(new Paragraph("Monto", new Font(Font.FontFamily.HELVETICA, 14, 3)));
+                            _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                            _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
+                            _cellIni.FixedHeight = 10f;
+                            table.AddCell(_cellIni);
 
-                    
+                            _cellIni = new PdfPCell(new Paragraph("Saldo Final", new Font(Font.FontFamily.HELVETICA, 14, 3)));
+                            _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                            _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
+                            _cellIni.FixedHeight = 10f;
+                            table.AddCell(_cellIni);
+
+
+                            _cellIni = new PdfPCell(new Paragraph("Carril", new Font(Font.FontFamily.HELVETICA, 14, 3)));
+                            _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                            _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
+                            _cellIni.FixedHeight = 10f;
+                            table.AddCell(_cellIni);
+
+
+                            _cellIni = new PdfPCell(new Paragraph("Referencia", new Font(Font.FontFamily.HELVETICA, 14, 3)));
+                            _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
+                            _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
+                            _cellIni.FixedHeight = 10f;
+                            table.AddCell(_cellIni);
+
+                            int separadorHojas = 0;
+
+
 
                             if (itemPrincipal.typeCuenta == "Colectiva")
                             {
@@ -2768,13 +2798,13 @@ namespace PuntoDeVenta.Controllers
                                     }
 
 
-                                _cell = new PdfPCell(new Paragraph(itemfusin.SaldoNuevo.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
-                                _cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                                _cell.FixedHeight = 10f;
-                                table.AddCell(_cell);
+                                    _cell = new PdfPCell(new Paragraph(itemfusin.SaldoNuevo.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
+                                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                    _cell.FixedHeight = 10f;
+                                    table.AddCell(_cell);
 
 
-                                _cell = new PdfPCell(new Paragraph(itemfusin.Carril.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
+                                    _cell = new PdfPCell(new Paragraph(itemfusin.Carril.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
                                     _cell.HorizontalAlignment = Element.ALIGN_CENTER;
                                     _cell.FixedHeight = 10f;
                                     table.AddCell(_cell);
@@ -2849,12 +2879,12 @@ namespace PuntoDeVenta.Controllers
 
 
 
-                                _cell = new PdfPCell(new Paragraph(itemfusin.SaldoNuevo.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
-                                _cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                                _cell.FixedHeight = 10f;
-                                table.AddCell(_cell);
+                                    _cell = new PdfPCell(new Paragraph(itemfusin.SaldoNuevo.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
+                                    _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                                    _cell.FixedHeight = 10f;
+                                    table.AddCell(_cell);
 
-                                _cell = new PdfPCell(new Paragraph(itemfusin.Carril.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
+                                    _cell = new PdfPCell(new Paragraph(itemfusin.Carril.ToString(), new Font(Font.FontFamily.HELVETICA, 9)));
                                     _cell.HorizontalAlignment = Element.ALIGN_CENTER;
                                     _cell.FixedHeight = 10f;
                                     table.AddCell(_cell);
@@ -2873,16 +2903,51 @@ namespace PuntoDeVenta.Controllers
                             }
 
 
-                        PdfHistorico.Add(Chunk.NEWLINE);
-                        PdfHistorico.NewPage();
+                            PdfHistorico.Add(Chunk.NEWLINE);
+                            PdfHistorico.NewPage();
+
+                        }
 
                     }
+                    PdfHistorico.Close();
+                }
+                else
+                {
+                   
+
+                    string rutaLogo = Server.MapPath("..\\Content\\css-yisus\\img\\SIVAREPORT.png");
+
+                    iTextSharp.text.Image Logo = iTextSharp.text.Image.GetInstance(rutaLogo);
+                    Logo.SetAbsolutePosition(465, 570);
+                    PdfHistorico.Add(Logo);
+
+                    Paragraph titulo = new Paragraph("ESTADO DE CUENTA DEL MES DE " + fechas[4] + " " + model.Anyo + " \n", new Font(Font.FontFamily.HELVETICA, 20));
+                    titulo.Alignment = Element.ALIGN_CENTER;
+                    PdfHistorico.Add(titulo);
+
+
+                    PdfHistorico.Add(Chunk.NEWLINE);
+
+              
+
+                    Paragraph _clientenum = new Paragraph("#Cliente: " + numCLientes + "", new Font(Font.FontFamily.HELVETICA, 10));
+                    _clientenum.Alignment = Element.PTABLE;
+                    PdfHistorico.Add(_clientenum);
+
+                    Paragraph _clienteCuenta = new Paragraph("#Cuenta: SIN CUENTAS", new Font(Font.FontFamily.HELVETICA, 10));
+                    _clienteCuenta.Alignment = Element.PTABLE;
+                    PdfHistorico.Add(_clienteCuenta);
+
+
+                    PdfHistorico.Add(Chunk.NEWLINE);
+
+                    PdfHistorico.Close();
 
                 }
 
             //***********************************************************************************************************************************************************************
 
-                PdfHistorico.Close();
+              
 
 
                 byte[] bytesStream = ms.ToArray();
@@ -4083,13 +4148,13 @@ namespace PuntoDeVenta.Controllers
                          join c in db.CuentasTelepeajes on t.CuentaId equals c.Id
                          where h.Fecha >= fecha1 && h.Fecha < fecha2
                          where c.TypeCuenta == "Colectiva"
-                         select new hola
+                         select new
                          {
-                             saldo = h.Saldo
+                             saldos = h.Saldo
 
                          }).ToList();
 
-            return lista.Sum(x => x.saldo);
+            return lista.Sum(x => x.saldos);
         }
 
         public double CruceIndividual(DateTime fecha1, DateTime fecha2)
@@ -4102,13 +4167,13 @@ namespace PuntoDeVenta.Controllers
                          join c in db.CuentasTelepeajes on t.CuentaId equals c.Id
                          where h.Fecha >= fecha1 && h.Fecha < fecha2
                          where c.TypeCuenta == "Individual"
-                         select new hola
+                         select new 
                          {
-                             saldo = h.Saldo
+                             saldos = h.Saldo
 
                          }).ToList();
 
-            return lista.Sum(x => x.saldo);
+            return lista.Sum(x => x.saldos);
         }
 
         public string[] IntervalosMes(string mes,string anyo)
@@ -4249,10 +4314,7 @@ namespace PuntoDeVenta.Controllers
             }
             else return null;
         }
-        private class hola
-        {
-            public double saldo { get; set; }
-        }
+
 
     }
     
