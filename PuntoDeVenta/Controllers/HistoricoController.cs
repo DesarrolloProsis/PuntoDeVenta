@@ -833,7 +833,7 @@ namespace PuntoDeVenta.Controllers
 
                             foreach (var item in ListCruces)
                             {
-                                total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
+                                total += Convert.ToDouble(item.Saldo.Replace("Q", "").Replace(".", ","));
                             }
                             //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
                             var totalfinal = Convercion(total.ToString().Replace(".", ","));
@@ -886,7 +886,7 @@ namespace PuntoDeVenta.Controllers
 
                                 foreach (var item in ListCruces)
                                 {
-                                    total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
+                                    total += Convert.ToDouble(item.Saldo.Replace("Q", "").Replace(".",","));
                                 }
                                 //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
                                 var totalfinal = Convercion(total.ToString().Replace(".", ","));
@@ -935,8 +935,7 @@ namespace PuntoDeVenta.Controllers
 
                             foreach (var item in ListCruces)
                             {
-                                total +=  Convert.ToDouble(item.Saldo.Replace("Q",""));
-                                //total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
+                                total += Convert.ToDouble(item.Saldo.Replace("Q", "").Replace(".", ","));
                             }
                             //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
                             var totalfinal = Convercion(total.ToString().Replace(".", ","));
@@ -973,7 +972,7 @@ namespace PuntoDeVenta.Controllers
                         {
                             foreach (var item in ListCruces)
                             {
-                                total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
+                                total += Convert.ToDouble(item.Saldo.Replace("Q", "").Replace(".", ","));
                             }
                             //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
                             var totalfinal = Convercion(total.ToString().Replace(".", ","));
@@ -1024,7 +1023,7 @@ namespace PuntoDeVenta.Controllers
                             {
                                 foreach (var item in ListCruces)
                                 {
-                                    total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
+                                    total += Convert.ToDouble(item.Saldo.Replace("Q", "").Replace(".", ","));
                                 }
                                 //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
                                 var totalfinal = Convercion(total.ToString().Replace(".", ","));
@@ -1072,7 +1071,7 @@ namespace PuntoDeVenta.Controllers
                         {
                             foreach (var item in ListCruces)
                             {
-                                total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
+                                total += Convert.ToDouble(item.Saldo.Replace("Q", "").Replace(".", ","));
                             }
                             //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
                             var totalfinal = Convercion(total.ToString().Replace(".", ","));
@@ -1111,7 +1110,7 @@ namespace PuntoDeVenta.Controllers
                             //{
                             foreach (var item in ListCruces)
                             {
-                                total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
+                                total += Convert.ToDouble(item.Saldo.Replace("Q", "").Replace(".", ","));
                             }
                             //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
                             var totalfinal = Convercion(total.ToString().Replace(".", ","));
@@ -1160,7 +1159,7 @@ namespace PuntoDeVenta.Controllers
                             {
                                 foreach (var item in ListCruces)
                                 {
-                                    total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
+                                    total += Convert.ToDouble(item.Saldo.Replace("Q", "").Replace(".", ","));
                                 }
                                 //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
                                 var totalfinal = Convercion(total.ToString().Replace(".", ","));
@@ -1205,7 +1204,7 @@ namespace PuntoDeVenta.Controllers
                         {
                             foreach (var item in ListCruces)
                             {
-                                total += Convert.ToDouble(item.Saldo.Replace("Q", ""));
+                                total += Convert.ToDouble(item.Saldo.Replace("Q", "").Replace(".", ","));
                             }
                             //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
                             var totalfinal = Convercion(total.ToString().Replace(".", ","));
@@ -1269,7 +1268,7 @@ namespace PuntoDeVenta.Controllers
 
                         if (ListMovimiento.Any())
                         {
-                            Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListMovimiento.Count, ListMovimiento[0].SaldoActual, Tipo };
+                            Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListMovimiento.Count, ListMovimiento[0].SaldoActual, Tipo,ListMovimiento[0].TotalMonetarioMovimientos };
                             model.Info = Info;
                             Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = ListMovimiento.Count.ToString();
                             model.ListaMovimientos = ListMovimiento;
@@ -1286,7 +1285,7 @@ namespace PuntoDeVenta.Controllers
 
                         if (ListCruces.Any())
                         {
-                            Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListCruces.Count, ListCruces[0].SaldoActual, Tipo };
+                            Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListCruces.Count, ListCruces[0].SaldoActual, Tipo, ListCruces[0].TotalMonetarioCruces };
                             model.Info = Info;
                             Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = ListCruces.Count.ToString();
                             model.ListaCruces = ListCruces;
@@ -1309,7 +1308,7 @@ namespace PuntoDeVenta.Controllers
 
                         if (ListMovimiento.Any())
                         {
-                            Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListMovimiento.Count, ListMovimiento[0].SaldoActual, Tipo };
+                            Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListMovimiento.Count, ListMovimiento[0].SaldoActual, Tipo, ListMovimiento[0].TotalMonetarioMovimientos };
                             model.Info = Info;
                             Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = ListMovimiento.Count.ToString();
                             model.ListaMovimientos = ListMovimiento;
@@ -1326,7 +1325,7 @@ namespace PuntoDeVenta.Controllers
 
                         if (ListCruces.Any())
                         {
-                            Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListCruces.Count, ListCruces[0].SaldoActual, Tipo };
+                            Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListCruces.Count, ListCruces[0].SaldoActual, Tipo, ListCruces[0].TotalMonetarioCruces };
                             model.Info = Info;
                             Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = ListCruces.Count.ToString();
                             model.ListaCruces = ListCruces;
@@ -1345,11 +1344,11 @@ namespace PuntoDeVenta.Controllers
 
                     if (TypeMovimiento == "01")
                     {
-                        ListMovimiento = Movimientos(Tag, model.Fecha_Inicio, model.Fecha_Fin, 3, false);
+                        ListMovimiento = Movimientos(Tag, model.Fecha_Inicio, model.Fecha_Fin.AddDays(1), 3, false);
 
                         if (ListMovimiento.Any())
                         {
-                            Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListMovimiento.Count, ListMovimiento[0].SaldoActual, Tipo };
+                            Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListMovimiento.Count, ListMovimiento[0].SaldoActual, Tipo, ListMovimiento[0].TotalMonetarioMovimientos };
                             model.Info = Info;
                             Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = ListMovimiento.Count.ToString();
                             model.ListaMovimientos = ListMovimiento;
@@ -1362,11 +1361,11 @@ namespace PuntoDeVenta.Controllers
                     }
                     else
                     {
-                        ListCruces = Cruces(Tag, model.Fecha_Inicio, model.Fecha_Fin, 3, false);
+                        ListCruces = Cruces(Tag, model.Fecha_Inicio, model.Fecha_Fin.AddDays(1), 3, false);
 
                         if (ListCruces.Any())
                         {
-                            Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListCruces.Count, ListCruces[0].SaldoActual, Tipo };
+                            Info = new { ListCruces[0].NomCliente, Tag, ListCruces[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListCruces.Count, ListCruces[0].SaldoActual, Tipo, ListCruces[0].TotalMonetarioCruces };
                             model.Info = Info;
                             Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Cuenta; cliente = ListCruces[0].NomCliente; saldo = ListCruces[0].SaldoActual; eventos = ListCruces.Count.ToString();
                             model.ListaCruces = ListCruces;
@@ -1436,7 +1435,7 @@ namespace PuntoDeVenta.Controllers
                                       orderby (historico.Fecha) descending
                                       select new
                                       {
-                                          _Tag = historico.Tag,                                          
+                                          _Tag = historico.Tag,
                                           _ClienteID = cliente.NumCliente,
                                           _Nombre = cliente.Nombre + cliente.Apellidos,
                                           _TypeCuenta = cuentas.TypeCuenta,
@@ -1448,14 +1447,14 @@ namespace PuntoDeVenta.Controllers
                                           _SaldoAntes = historico.SaldoAnterior,
                                           _Saldo = historico.Saldo,
                                           _SaldoNuevo = historico.SaldoActualizado,
-                                          _Operadora = historico.Operador,                                          
+                                          _Operadora = historico.Operador,
 
                                       }).ToList();
 
                     //var total = ListaCompleta.Sum(x => x._Saldo);
                     double total = 0;
 
-                    foreach(var ite in ListaCompleta)
+                    foreach (var ite in ListaCompleta)
                     {
                         total = total + ite._Saldo;
                     }
@@ -1491,7 +1490,7 @@ namespace PuntoDeVenta.Controllers
                         });
                         id++;
                     }
-                    foreach(var item2 in ListaNegra)
+                    foreach (var item2 in ListaNegra)
                     {
                         List.Add(new Cruces
                         {
@@ -1513,7 +1512,7 @@ namespace PuntoDeVenta.Controllers
                             SaldoActual = "Tag en Lista Negra",
                             Operador = item2._Operadora,
                             TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
-                        });                        
+                        });
                     }
 
                     return List;
@@ -1739,7 +1738,7 @@ namespace PuntoDeVenta.Controllers
                                                  _SaldoActual = cuentas.SaldoCuenta
 
                                              }).ToList();
-       
+
 
 
                         //var total = ListaCompleta.Sum(x => x._Saldo);
@@ -1772,7 +1771,7 @@ namespace PuntoDeVenta.Controllers
                         }
 
 
-                       
+
 
                     }
 
@@ -1911,244 +1910,309 @@ namespace PuntoDeVenta.Controllers
             //RangoFecha
             else if (Tipo == (int)DecisionesMetodos.RangoFecha)
             {
-                if (Rango)
+
+                var ListaCompleta = (from historico in db.Historicos                                     
+                                     where (historico.Fecha >= Fecha_Inicio && historico.Fecha < Fecha_Fin)
+                                     orderby (historico.Fecha) descending
+                                     select new
+                                     {
+                                         _Tag = historico.Tag,                                  
+                                         _Plaza = historico.Delegacion,
+                                         _Cuerpo = historico.Cuerpo,
+                                         _Carril = historico.Carril,
+                                         _Fecha = historico.Fecha,
+                                         _Clase = historico.Clase,
+                                         _SaldoAntes = historico.SaldoAnterior,
+                                         _Saldo = historico.Saldo,
+                                         _SaldoNuevo = historico.SaldoActualizado,
+                                         _Operadora = historico.Operador,                                         
+
+
+                                     }).ToList();
+               
+
+
+                //var total = ListaCompleta.Sum(x => x._Saldo);
+                double total = 0;
+
+                foreach (var ite in ListaCompleta)
                 {
-                    var ListaCompleta = (from historico in db.Historicos
-                                         join tags in db.Tags on historico.Tag equals tags.NumTag
-                                         join cuentas in db.CuentasTelepeajes on tags.CuentaId equals cuentas.Id
-                                         join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
-                                         where (historico.Fecha >= Fecha_Inicio && historico.Fecha <= Fecha_Fin)
-                                         orderby (historico.Fecha) descending
-                                         select new
-                                         {
-                                             _Tag = tags.NumTag,
-                                             _CuentaID = tags.CuentaId,
-                                             _ClienteID = cliente.NumCliente,
-                                             _Nombre = cliente.Nombre + cliente.Apellidos,
-                                             _TypeCuenta = cuentas.TypeCuenta,
-                                             _Plaza = historico.Delegacion,
-                                             _Cuerpo = historico.Cuerpo,
-                                             _Carril = historico.Carril,
-                                             _Fecha = historico.Fecha,
-                                             _Clase = historico.Clase,
-                                             _SaldoAntes = historico.SaldoAnterior,
-                                             _Saldo = historico.Saldo,
-                                             _SaldoNuevo = historico.SaldoActualizado,
-                                             _Operadora = historico.Operador,
-                                             _SaldoActual = cuentas.SaldoCuenta
-
-                                         }).ToList();
-
-
-
-                    var ListaNegra = (from historico in db.Historicos
-                                      join listaNegra in db.ListaNegras on historico.Tag equals listaNegra.Numero
-                                      join cuentas in db.CuentasTelepeajes on listaNegra.NumCuenta equals cuentas.NumCuenta
-                                      join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
-                                      where (historico.Fecha >= Fecha_Inicio && historico.Fecha <= Fecha_Fin)
-                                      orderby (historico.Fecha) descending
-                                      select new
-                                      {
-                                          _Tag = historico.Tag,
-                                          _ClienteID = cliente.NumCliente,
-                                          _Nombre = cliente.Nombre + cliente.Apellidos,
-                                          _TypeCuenta = cuentas.TypeCuenta,
-                                          _Plaza = historico.Delegacion,
-                                          _Cuerpo = historico.Cuerpo,
-                                          _Carril = historico.Carril,
-                                          _Fecha = historico.Fecha,
-                                          _Clase = historico.Clase,
-                                          _SaldoAntes = historico.SaldoAnterior,
-                                          _Saldo = historico.Saldo,
-                                          _SaldoNuevo = historico.SaldoActualizado,
-                                          _Operadora = historico.Operador,
-
-                                      }).ToList();
-
-
-
-                    //var total = ListaCompleta.Sum(x => x._Saldo);
-                    double total = 0;
-
-                    foreach (var ite in ListaCompleta)
-                    {
-                        total = total + ite._Saldo;
-                    }
-
-                    List<Cruces> List = new List<Cruces>();
-
-                    int id = 1;
-
-                    foreach (var item in ListaCompleta)
-                    {
-
-                        List.Add(new Cruces
-                        {
-                            Id = id,
-                            Tag = item._Tag,
-                            NumCliente = item._ClienteID,
-                            NomCliente = item._Nombre,
-                            TypeCuenta = item._TypeCuenta,
-                            Plaza = item._Plaza,
-                            Fecha = Convert.ToString(item._Fecha),
-                            Cuerpo = item._Cuerpo,
-                            Carril = item._Carril,
-                            Clase = item._Clase,
-                            SaldoAntes = Convercion(item._SaldoAntes),
-                            Saldo = Convercion(item._Saldo.ToString().Replace(".", ",")),
-                            SaldoDespues = Convercion(item._SaldoNuevo),
-                            SaldoActual = (Convert.ToDouble(item._SaldoActual) / 100).ToString("C", culture).Replace("$", "Q"),
-                            Operador = item._Operadora,
-                            TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
-
-                        });
-                        id++;
-                    }
-
-                    foreach (var item2 in ListaNegra)
-                    {
-                        List.Add(new Cruces
-                        {
-                            Id = id,
-                            NomCliente = item2._Nombre,
-                            TypeCuenta = item2._TypeCuenta,
-                            Tag = item2._Tag,
-                            Plaza = item2._Plaza,
-                            Fecha = Convert.ToString(item2._Fecha),
-                            Cuerpo = item2._Cuerpo,
-                            Carril = item2._Carril,
-                            Clase = item2._Clase,
-                            SaldoAntes = Convercion(item2._SaldoAntes),
-                            Saldo = Convercion(item2._Saldo.ToString().Replace(".", ",")),
-                            SaldoDespues = Convercion(item2._SaldoNuevo),
-                            //SaldoAntes = Convert.ToDouble(item._SaldoAntes.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
-                            //Saldo = Convert.ToDouble(Convert.ToString(item._Saldo).Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
-                            //SaldoDespues = Convert.ToDouble(item._SaldoNuevo.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
-                            SaldoActual = "Tag en Lista Negra",
-                            Operador = item2._Operadora,
-                            TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
-                        });
-                    }
-
-                    return List;
+                    total = total + ite._Saldo;
                 }
-                else
+             
+
+                List<Cruces> List = new List<Cruces>();
+
+                int id = 1;
+
+                foreach (var item in ListaCompleta)
                 {
-                    var ListaCompleta = (from historico in db.Historicos
-                                         join tags in db.Tags on historico.Tag equals tags.NumTag
-                                         join cuentas in db.CuentasTelepeajes on tags.CuentaId equals cuentas.Id
-                                         join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
-                                         where (historico.Fecha >= Fecha_Inicio && historico.Fecha < Fecha_Fin)
-                                         orderby (historico.Fecha) descending
-                                         select new
-                                         {
-                                             _Tag = historico.Tag,
-                                             _CuentaID = tags.CuentaId,
-                                             _ClienteID = cliente.NumCliente,
-                                             _Nombre = cliente.Nombre + cliente.Apellidos,
-                                             _TypeCuenta = cuentas.TypeCuenta,
-                                             _Plaza = historico.Delegacion,
-                                             _Cuerpo = historico.Cuerpo,
-                                             _Carril = historico.Carril,
-                                             _Fecha = historico.Fecha,
-                                             _Clase = historico.Clase,
-                                             _SaldoAntes = historico.SaldoAnterior,
-                                             _Saldo = historico.Saldo,
-                                             _SaldoNuevo = historico.SaldoActualizado,
-                                             _Operadora = historico.Operador,
-                                             _SaldoActual = cuentas.SaldoCuenta
-
-
-                                         }).ToList();
-                    var ListaNegra = (from historico in db.Historicos
-                                      join listaNegra in db.ListaNegras on historico.Tag equals listaNegra.Numero
-                                      join cuentas in db.CuentasTelepeajes on listaNegra.NumCuenta equals cuentas.NumCuenta
-                                      join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
-                                      where (historico.Fecha >= Fecha_Inicio && historico.Fecha < Fecha_Fin)
-                                      orderby (historico.Fecha) descending
-                                      select new
-                                      {
-                                          _Tag = historico.Tag,
-                                          _ClienteID = cliente.NumCliente,
-                                          _Nombre = cliente.Nombre + cliente.Apellidos,
-                                          _TypeCuenta = cuentas.TypeCuenta,
-                                          _Plaza = historico.Delegacion,
-                                          _Cuerpo = historico.Cuerpo,
-                                          _Carril = historico.Carril,
-                                          _Fecha = historico.Fecha,
-                                          _Clase = historico.Clase,
-                                          _SaldoAntes = historico.SaldoAnterior,
-                                          _Saldo = historico.Saldo,
-                                          _SaldoNuevo = historico.SaldoActualizado,
-                                          _Operadora = historico.Operador,
-
-                                      }).ToList();
-
-
-                    //var total = ListaCompleta.Sum(x => x._Saldo);
-                    double total = 0;
-
-                    foreach (var ite in ListaCompleta)
+                    List.Add(new Cruces
                     {
-                        total = total + ite._Saldo;
-                    }
+                        Id = id,
+                        Tag = item._Tag,
+                        NumCliente = "",
+                        NomCliente = "",
+                        TypeCuenta =  "",
+                        Plaza = item._Plaza,
+                        Fecha = Convert.ToString(item._Fecha),
+                        Cuerpo = item._Cuerpo,
+                        Carril = item._Carril,
+                        Clase = item._Clase,
+                        SaldoAntes = Convercion(item._SaldoAntes),
+                        Saldo = Convercion(item._Saldo.ToString().Replace(".", ",")),
+                        SaldoDespues = Convercion(item._SaldoNuevo),
+                        SaldoActual = "",
+                        Operador = item._Operadora,
+                        TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
 
-                    List<Cruces> List = new List<Cruces>();
-
-                    int id = 1;
-
-                    foreach (var item in ListaCompleta)
-                    {
-                        List.Add(new Cruces
-                        {
-                            Id = id,
-                            Tag = item._Tag,
-                            NumCliente = item._ClienteID,
-                            NomCliente = item._Nombre,
-                            TypeCuenta = item._TypeCuenta,
-                            Plaza = item._Plaza,
-                            Fecha = Convert.ToString(item._Fecha),
-                            Cuerpo = item._Cuerpo,
-                            Carril = item._Carril,
-                            Clase = item._Clase,
-                            SaldoAntes = Convercion(item._SaldoAntes),
-                            Saldo = Convercion(item._Saldo.ToString().Replace(".",",")),
-                            SaldoDespues = Convercion(item._SaldoNuevo),
-                            SaldoActual = (Convert.ToDouble(item._SaldoActual) / 100).ToString("C", culture).Replace("$", "Q"),
-                            Operador = item._Operadora,
-                            TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
-
-                        });
-                        id++;
-                    }
-
-                    foreach (var item2 in ListaNegra)
-                    {
-                        List.Add(new Cruces
-                        {
-                            Id = id,
-                            NomCliente = item2._Nombre,
-                            TypeCuenta = item2._TypeCuenta,
-                            Tag = item2._Tag,
-                            Plaza = item2._Plaza,
-                            Fecha = Convert.ToString(item2._Fecha),
-                            Cuerpo = item2._Cuerpo,
-                            Carril = item2._Carril,
-                            Clase = item2._Clase,
-                            SaldoAntes = Convercion(item2._SaldoAntes),
-                            Saldo = Convercion(item2._Saldo.ToString().Replace(".", ",")),
-                            SaldoDespues = Convercion(item2._SaldoNuevo),
-                            //SaldoAntes = Convert.ToDouble(item._SaldoAntes.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
-                            //Saldo = Convert.ToDouble(Convert.ToString(item._Saldo).Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
-                            //SaldoDespues = Convert.ToDouble(item._SaldoNuevo.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
-                            SaldoActual = "Tag en Lista Negra",
-                            Operador = item2._Operadora,
-                            TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
-                        });
-                    }
-
-                    return List;
+                    });
+                    id++;
                 }
+
+                return List;
+                //if (Rango)
+                //{
+                //    var ListaCompleta = (from historico in db.Historicos
+                //                         join tags in db.Tags on historico.Tag equals tags.NumTag
+                //                         join cuentas in db.CuentasTelepeajes on tags.CuentaId equals cuentas.Id
+                //                         join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
+                //                         where (historico.Fecha >= Fecha_Inicio && historico.Fecha <= Fecha_Fin)
+                //                         orderby (historico.Fecha) descending
+                //                         select new
+                //                         {
+                //                             _Tag = tags.NumTag,
+                //                             _CuentaID = tags.CuentaId,
+                //                             _ClienteID = cliente.NumCliente,
+                //                             _Nombre = cliente.Nombre + cliente.Apellidos,
+                //                             _TypeCuenta = cuentas.TypeCuenta,
+                //                             _Plaza = historico.Delegacion,
+                //                             _Cuerpo = historico.Cuerpo,
+                //                             _Carril = historico.Carril,
+                //                             _Fecha = historico.Fecha,
+                //                             _Clase = historico.Clase,
+                //                             _SaldoAntes = historico.SaldoAnterior,
+                //                             _Saldo = historico.Saldo,
+                //                             _SaldoNuevo = historico.SaldoActualizado,
+                //                             _Operadora = historico.Operador,
+                //                             _SaldoActual = cuentas.SaldoCuenta
+
+                //                         }).ToList();
+
+
+
+                //    var ListaNegra = (from historico in db.Historicos
+                //                      join listaNegra in db.ListaNegras on historico.Tag equals listaNegra.Numero
+                //                      join cuentas in db.CuentasTelepeajes on listaNegra.NumCuenta equals cuentas.NumCuenta
+                //                      join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
+                //                      where (historico.Fecha >= Fecha_Inicio && historico.Fecha <= Fecha_Fin)
+                //                      orderby (historico.Fecha) descending
+                //                      select new
+                //                      {
+                //                          _Tag = historico.Tag,
+                //                          _ClienteID = cliente.NumCliente,
+                //                          _Nombre = cliente.Nombre + cliente.Apellidos,
+                //                          _TypeCuenta = cuentas.TypeCuenta,
+                //                          _Plaza = historico.Delegacion,
+                //                          _Cuerpo = historico.Cuerpo,
+                //                          _Carril = historico.Carril,
+                //                          _Fecha = historico.Fecha,
+                //                          _Clase = historico.Clase,
+                //                          _SaldoAntes = historico.SaldoAnterior,
+                //                          _Saldo = historico.Saldo,
+                //                          _SaldoNuevo = historico.SaldoActualizado,
+                //                          _Operadora = historico.Operador,
+
+                //                      }).ToList();
+
+
+
+                //    //var total = ListaCompleta.Sum(x => x._Saldo);
+                //    double total = 0;
+
+                //    foreach (var ite in ListaCompleta)
+                //    {
+                //        total = total + ite._Saldo;
+                //    }
+
+                //    List<Cruces> List = new List<Cruces>();
+
+                //    int id = 1;
+
+                //    foreach (var item in ListaCompleta)
+                //    {
+
+                //        List.Add(new Cruces
+                //        {
+                //            Id = id,
+                //            Tag = item._Tag,
+                //            NumCliente = item._ClienteID,
+                //            NomCliente = item._Nombre,
+                //            TypeCuenta = item._TypeCuenta,
+                //            Plaza = item._Plaza,
+                //            Fecha = Convert.ToString(item._Fecha),
+                //            Cuerpo = item._Cuerpo,
+                //            Carril = item._Carril,
+                //            Clase = item._Clase,
+                //            SaldoAntes = Convercion(item._SaldoAntes),
+                //            Saldo = Convercion(item._Saldo.ToString().Replace(".", ",")),
+                //            SaldoDespues = Convercion(item._SaldoNuevo),
+                //            SaldoActual = (Convert.ToDouble(item._SaldoActual) / 100).ToString("C", culture).Replace("$", "Q"),
+                //            Operador = item._Operadora,
+                //            TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
+
+                //        });
+                //        id++;
+                //    }
+
+                //    foreach (var item2 in ListaNegra)
+                //    {
+                //        List.Add(new Cruces
+                //        {
+                //            Id = id,
+                //            NomCliente = item2._Nombre,
+                //            TypeCuenta = item2._TypeCuenta,
+                //            Tag = item2._Tag,
+                //            Plaza = item2._Plaza,
+                //            Fecha = Convert.ToString(item2._Fecha),
+                //            Cuerpo = item2._Cuerpo,
+                //            Carril = item2._Carril,
+                //            Clase = item2._Clase,
+                //            SaldoAntes = Convercion(item2._SaldoAntes),
+                //            Saldo = Convercion(item2._Saldo.ToString().Replace(".", ",")),
+                //            SaldoDespues = Convercion(item2._SaldoNuevo),
+                //            //SaldoAntes = Convert.ToDouble(item._SaldoAntes.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                //            //Saldo = Convert.ToDouble(Convert.ToString(item._Saldo).Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                //            //SaldoDespues = Convert.ToDouble(item._SaldoNuevo.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                //            SaldoActual = "Tag en Lista Negra",
+                //            Operador = item2._Operadora,
+                //            TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
+                //        });
+                //    }
+
+                //    return List;
+                //}
+                //else
+                //{
+                //    var ListaCompleta = (from historico in db.Historicos
+                //                         join tags in db.Tags on historico.Tag equals tags.NumTag
+                //                         join cuentas in db.CuentasTelepeajes on tags.CuentaId equals cuentas.Id
+                //                         join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
+                //                         where (historico.Fecha >= Fecha_Inicio && historico.Fecha < Fecha_Fin)
+                //                         orderby (historico.Fecha) descending
+                //                         select new
+                //                         {
+                //                             _Tag = historico.Tag,
+                //                             _CuentaID = tags.CuentaId,
+                //                             _ClienteID = cliente.NumCliente,
+                //                             _Nombre = cliente.Nombre + cliente.Apellidos,
+                //                             _TypeCuenta = cuentas.TypeCuenta,
+                //                             _Plaza = historico.Delegacion,
+                //                             _Cuerpo = historico.Cuerpo,
+                //                             _Carril = historico.Carril,
+                //                             _Fecha = historico.Fecha,
+                //                             _Clase = historico.Clase,
+                //                             _SaldoAntes = historico.SaldoAnterior,
+                //                             _Saldo = historico.Saldo,
+                //                             _SaldoNuevo = historico.SaldoActualizado,
+                //                             _Operadora = historico.Operador,
+                //                             _SaldoActual = cuentas.SaldoCuenta
+
+
+                //                         }).ToList();
+                //    var ListaNegra = (from historico in db.Historicos
+                //                      join listaNegra in db.ListaNegras on historico.Tag equals listaNegra.Numero
+                //                      join cuentas in db.CuentasTelepeajes on listaNegra.NumCuenta equals cuentas.NumCuenta
+                //                      join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
+                //                      where (historico.Fecha >= Fecha_Inicio && historico.Fecha < Fecha_Fin)
+                //                      orderby (historico.Fecha) descending
+                //                      select new
+                //                      {
+                //                          _Tag = historico.Tag,
+                //                          _ClienteID = cliente.NumCliente,
+                //                          _Nombre = cliente.Nombre + cliente.Apellidos,
+                //                          _TypeCuenta = cuentas.TypeCuenta,
+                //                          _Plaza = historico.Delegacion,
+                //                          _Cuerpo = historico.Cuerpo,
+                //                          _Carril = historico.Carril,
+                //                          _Fecha = historico.Fecha,
+                //                          _Clase = historico.Clase,
+                //                          _SaldoAntes = historico.SaldoAnterior,
+                //                          _Saldo = historico.Saldo,
+                //                          _SaldoNuevo = historico.SaldoActualizado,
+                //                          _Operadora = historico.Operador,
+
+                //                      }).ToList();
+
+
+                //    //var total = ListaCompleta.Sum(x => x._Saldo);
+                //    double total = 0;
+
+                //    foreach (var ite in ListaCompleta)
+                //    {
+                //        total = total + ite._Saldo;
+                //    }
+                //    foreach(var it in ListaNegra)
+                //    {
+                //        total += it._Saldo;
+                //    }
+
+                //    List<Cruces> List = new List<Cruces>();
+
+                //    int id = 1;
+
+                //    foreach (var item in ListaCompleta)
+                //    {
+                //        List.Add(new Cruces
+                //        {
+                //            Id = id,
+                //            Tag = item._Tag,
+                //            NumCliente = item._ClienteID,
+                //            NomCliente = item._Nombre,
+                //            TypeCuenta = item._TypeCuenta,
+                //            Plaza = item._Plaza,
+                //            Fecha = Convert.ToString(item._Fecha),
+                //            Cuerpo = item._Cuerpo,
+                //            Carril = item._Carril,
+                //            Clase = item._Clase,
+                //            SaldoAntes = Convercion(item._SaldoAntes),
+                //            Saldo = Convercion(item._Saldo.ToString().Replace(".",",")),
+                //            SaldoDespues = Convercion(item._SaldoNuevo),
+                //            SaldoActual = (Convert.ToDouble(item._SaldoActual) / 100).ToString("C", culture).Replace("$", "Q"),
+                //            Operador = item._Operadora,
+                //            TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
+
+                //        });
+                //        id++;
+                //    }
+
+                //    foreach (var item2 in ListaNegra)
+                //    {
+                //        List.Add(new Cruces
+                //        {
+                //            Id = id,
+                //            NomCliente = item2._Nombre,
+                //            TypeCuenta = item2._TypeCuenta,
+                //            Tag = item2._Tag,
+                //            Plaza = item2._Plaza,
+                //            Fecha = Convert.ToString(item2._Fecha),
+                //            Cuerpo = item2._Cuerpo,
+                //            Carril = item2._Carril,
+                //            Clase = item2._Clase,
+                //            SaldoAntes = Convercion(item2._SaldoAntes),
+                //            Saldo = Convercion(item2._Saldo.ToString().Replace(".", ",")),
+                //            SaldoDespues = Convercion(item2._SaldoNuevo),
+                //            //SaldoAntes = Convert.ToDouble(item._SaldoAntes.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                //            //Saldo = Convert.ToDouble(Convert.ToString(item._Saldo).Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                //            //SaldoDespues = Convert.ToDouble(item._SaldoNuevo.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
+                //            SaldoActual = "Tag en Lista Negra",
+                //            Operador = item2._Operadora,
+                //            TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
+                //        });
+                //    }
+
+                //    return List;
+                //}
 
             }
             return null;
@@ -2424,91 +2488,109 @@ namespace PuntoDeVenta.Controllers
             }
             else if (Tipo == (int)DecisionesMetodos.RangoFecha)
             {
-                if (Rango)
-                {
+                //if (Rango)
+                //{
 
 
                     //var ListaCompleta = db.OperacionesCajeros.Where(x => x.DateTOperacion >= Fecha_Inicio && x.DateTOperacion <= Fecha_Fin).OrderByDescending(x => x.DateTOperacion).ToList();
 
-                    var ListaCompleta = (from operaciones in db.OperacionesCajeros
-                                         join tags in db.Tags on operaciones.Numero equals tags.NumTag
-                                         join cuentas in db.CuentasTelepeajes on tags.CuentaId equals cuentas.Id
-                                         join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
-                                         where (operaciones.DateTOperacion >= Fecha_Inicio && operaciones.DateTOperacion <= Fecha_Fin)
-                                         where (operaciones.StatusCancelacion == false)
-                                         orderby (operaciones.DateTOperacion) descending
-                                         select new
-                                         {
-                                             _Tag = tags.NumTag,
-                                             _CuentaID = tags.CuentaId,
-                                             _ClienteID = cliente.NumCliente,
-                                             _Nombre = cliente.Nombre + cliente.Apellidos,
-                                             _TypeCuenta = cuentas.TypeCuenta,
-                                             _Fecha = operaciones.DateTOperacion,
-                                             _Concepto = operaciones.Concepto,
-                                             _TipoPago = operaciones.TipoPago,
-                                             _Monto = operaciones.Monto,
-                                             _SaldoActual = tags.SaldoTag,
-                                             _TipoCuenta = operaciones.Tipo,
-                                             _CobroTag = operaciones.CobroTag,
-                                             _Referencia = operaciones.NoReferencia,
-                                             _TagCuenta = operaciones.Numero
+                //    var ListaCompleta = (from operaciones in db.OperacionesCajeros
+                //                         join tags in db.Tags on operaciones.Numero equals tags.NumTag
+                //                         join cuentas in db.CuentasTelepeajes on tags.CuentaId equals cuentas.Id
+                //                         join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
+                //                         where (operaciones.DateTOperacion >= Fecha_Inicio && operaciones.DateTOperacion <= Fecha_Fin)
+                //                         where (operaciones.StatusCancelacion == false)
+                //                         orderby (operaciones.DateTOperacion) descending
+                //                         select new
+                //                         {
+                //                             _Tag = tags.NumTag,
+                //                             _CuentaID = tags.CuentaId,
+                //                             _ClienteID = cliente.NumCliente,
+                //                             _Nombre = cliente.Nombre + cliente.Apellidos,
+                //                             _TypeCuenta = cuentas.TypeCuenta,
+                //                             _Fecha = operaciones.DateTOperacion,
+                //                             _Concepto = operaciones.Concepto,
+                //                             _TipoPago = operaciones.TipoPago,
+                //                             _Monto = operaciones.Monto,
+                //                             _SaldoActual = tags.SaldoTag,
+                //                             _TipoCuenta = operaciones.Tipo,
+                //                             _CobroTag = operaciones.CobroTag,
+                //                             _Referencia = operaciones.NoReferencia,
+                //                             _TagCuenta = operaciones.Numero
 
-                                         }).ToList();
-
-
-                    var total = ListaCompleta.Sum(x => x._Monto);
-                    List<Movimientos> List = new List<Movimientos>();
-
-                    int id = 1;
-
-                    foreach (var item in ListaCompleta)
-                    {
-                        List.Add(new Movimientos
-                        {
-                            Id = id,
-                            Concepto = item._Concepto,
-                            TipoPago = item._TipoPago,
-                            Monto = Convert.ToDouble(item._Monto).ToString("C2", culture).Replace("$", "Q"),
-                            Fecha = Convert.ToString(item._Fecha),
-                            Tag = item._Tag,
-                            TagCuenta = item._TagCuenta,
-                            Cuenta = Convert.ToString(item._CuentaID),
-                            NomCliente = item._Nombre,
-                            TypeCuenta = item._TypeCuenta,
-                            CobroTag = Convert.ToDouble(item._CobroTag).ToString("C2", culture).Replace("$", "Q"),
-                            Referencia = item._Referencia,
-                            TotalMonetarioMovimientos = Convert.ToDouble(total).ToString("C2", culture).Replace("$", "Q")
+                //                         }).ToList();
 
 
-                        });
-                        id++;
-                    }
+                //    var total = ListaCompleta.Sum(x => x._Monto);
+                //    List<Movimientos> List = new List<Movimientos>();
 
-                    return List;
-                }
-                else
-                {
+                //    int id = 1;
+
+                //    foreach (var item in ListaCompleta)
+                //    {
+                //        List.Add(new Movimientos
+                //        {
+                //            Id = id,
+                //            Concepto = item._Concepto,
+                //            TipoPago = item._TipoPago,
+                //            Monto = Convert.ToDouble(item._Monto).ToString("C2", culture).Replace("$", "Q"),
+                //            Fecha = Convert.ToString(item._Fecha),
+                //            Tag = item._Tag,
+                //            TagCuenta = item._TagCuenta,
+                //            Cuenta = Convert.ToString(item._CuentaID),
+                //            NomCliente = item._Nombre,
+                //            TypeCuenta = item._TypeCuenta,
+                //            CobroTag = Convert.ToDouble(item._CobroTag).ToString("C2", culture).Replace("$", "Q"),
+                //            Referencia = item._Referencia,
+                //            TotalMonetarioMovimientos = Convert.ToDouble(total).ToString("C2", culture).Replace("$", "Q")
+
+
+                //        });
+                //        id++;
+                //    }
+
+                //    return List;
+                //}
+                //else
+                //{
                     //var ListaCompleta = db.OperacionesCajeros.Where(x => x.DateTOperacion >= Fecha_Inicio && x.DateTOperacion < Fecha_Fin).OrderByDescending(x => x.DateTOperacion).ToList();
-                    var ListaCompleta = (from operaciones in db.OperacionesCajeros
-                                         join tags in db.Tags on operaciones.Numero equals tags.NumTag
-                                         join cuentas in db.CuentasTelepeajes on tags.CuentaId equals cuentas.Id
-                                         join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
-                                         where (operaciones.DateTOperacion >= Fecha_Inicio && operaciones.DateTOperacion < Fecha_Fin)
-                                         where (operaciones.StatusCancelacion == false)
+                    //var ListaCompleta = (from operaciones in db.OperacionesCajeros
+                    //                     join tags in db.Tags on operaciones.Numero equals tags.NumTag
+                    //                     join cuentas in db.CuentasTelepeajes on tags.CuentaId equals cuentas.Id
+                    //                     join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
+                    //                     where (operaciones.DateTOperacion >= Fecha_Inicio && operaciones.DateTOperacion <= Fecha_Fin)
+                    //                     where (operaciones.StatusCancelacion == false)
+                    //                     orderby (operaciones.DateTOperacion) descending
+                    //                     select new
+                    //                     {
+                    //                         _Tag = tags.NumTag,
+                    //                         _CuentaID = tags.CuentaId,
+                    //                         _ClienteID = cliente.NumCliente,
+                    //                         _Nombre = cliente.Nombre + cliente.Apellidos,
+                    //                         _TypeCuenta = cuentas.TypeCuenta,
+                    //                         _Fecha = operaciones.DateTOperacion,
+                    //                         _Concepto = operaciones.Concepto,
+                    //                         _TipoPago = operaciones.TipoPago,
+                    //                         _Monto = operaciones.Monto,
+                    //                         _SaldoActual = tags.SaldoTag,
+                    //                         _TipoCuenta = operaciones.Tipo,
+                    //                         _CobroTag = operaciones.CobroTag,
+                    //                         _Referencia = operaciones.NoReferencia,
+                    //                         _TagCuenta = operaciones.Numero
+
+                    //                     }).ToList();
+
+                    var ListaCompleta = (from operaciones in db.OperacionesCajeros                                        
+                                         where (operaciones.DateTOperacion >= Fecha_Inicio && operaciones.DateTOperacion < Fecha_Fin)                                         
                                          orderby (operaciones.DateTOperacion) descending
                                          select new
                                          {
-                                             _Tag = tags.NumTag,
-                                             _CuentaID = tags.CuentaId,
-                                             _ClienteID = cliente.NumCliente,
-                                             _Nombre = cliente.Nombre + cliente.Apellidos,
-                                             _TypeCuenta = cuentas.TypeCuenta,
+                                             _Tag = operaciones.Numero,                                                                                        
+                                             _TypeCuenta = operaciones.Tipo,
                                              _Fecha = operaciones.DateTOperacion,
                                              _Concepto = operaciones.Concepto,
                                              _TipoPago = operaciones.TipoPago,
-                                             _Monto = operaciones.Monto,
-                                             _SaldoActual = tags.SaldoTag,
+                                             _Monto = operaciones.Monto,                                             
                                              _TipoCuenta = operaciones.Tipo,
                                              _CobroTag = operaciones.CobroTag,
                                              _Referencia = operaciones.NoReferencia,
@@ -2517,7 +2599,13 @@ namespace PuntoDeVenta.Controllers
                                          }).ToList();
 
 
-                    var total = ListaCompleta.Sum(x => x._Monto);
+                //var total = ListaCompleta.Sum(x => x._Monto);
+                double total = 0;
+
+                foreach(var item2 in ListaCompleta)
+                {
+                    total +=  Convert.ToDouble(item2._Monto);
+                }
                     List<Movimientos> List = new List<Movimientos>();
 
                     int id = 1;
@@ -2533,8 +2621,8 @@ namespace PuntoDeVenta.Controllers
                             Fecha = Convert.ToString(item._Fecha),
                             Tag = item._Tag,
                             TagCuenta = item._TagCuenta,
-                            Cuenta = Convert.ToString(item._CuentaID),
-                            NomCliente = item._Nombre,
+                            Cuenta = "",
+                            NomCliente = "",
                             TypeCuenta = item._TypeCuenta,
                             CobroTag = Convert.ToDouble(item._CobroTag).ToString("C2", culture).Replace("$", "Q"),
                             Referencia = item._Referencia,
@@ -2545,8 +2633,31 @@ namespace PuntoDeVenta.Controllers
                         id++;
                     }
 
-                    return List;
-                }
+                    //foreach (var item in ListaCompleta)
+                    //{
+                    //    List.Add(new Movimientos
+                    //    {
+                    //        Id = id,
+                    //        Concepto = item._Concepto,
+                    //        TipoPago = item._TipoPago,
+                    //        Monto = Convert.ToDouble(item._Monto).ToString("C2", culture).Replace("$", "Q"),
+                    //        Fecha = Convert.ToString(item._Fecha),
+                    //        Tag = item._Tag,
+                    //        TagCuenta = item._TagCuenta,
+                    //        Cuenta = Convert.ToString(item._CuentaID),
+                    //        NomCliente = item._Nombre,
+                    //        TypeCuenta = item._TypeCuenta,
+                    //        CobroTag = Convert.ToDouble(item._CobroTag).ToString("C2", culture).Replace("$", "Q"),
+                    //        Referencia = item._Referencia,
+                    //        TotalMonetarioMovimientos = Convert.ToDouble(total).ToString("C2", culture).Replace("$", "Q")
+
+
+                    //    });
+                    //    id++;
+                    //}
+
+                 return List;
+                //}
             }
 
             return null;
@@ -2806,9 +2917,20 @@ namespace PuntoDeVenta.Controllers
             DateTime ActualFin = Convert.ToDateTime(fechas[1]).AddDays(1);
 
 
-
-            var crucesMes = Convert.ToDouble(db.Historicos.Where(x => x.Fecha >= ActualInicio && x.Fecha < ActualFin).Sum(x => x.Saldo));
-            var recargasMes = Convert.ToDouble(db.OperacionesCajeros.Where(x => x.DateTOperacion >= ActualInicio && x.DateTOperacion < ActualFin).Sum(x => x.Monto));
+            var listCruces = db.Historicos.Where(x => x.Fecha >= ActualInicio && x.Fecha < ActualFin).ToList();
+            double crucesMes = 0;
+            foreach(var ite in listCruces)
+            {
+                crucesMes += ite.Saldo;
+            }
+            //var crucesMes = Convert.ToDouble(db.Historicos.Where(x => x.Fecha >= ActualInicio && x.Fecha < ActualFin).Sum(x => x.Saldo));
+            //var recargasMes = Convert.ToDouble(db.OperacionesCajeros.Where(x => x.DateTOperacion >= ActualInicio && x.DateTOperacion < ActualFin).Sum(x => x.Monto));
+            var listRecarga = db.OperacionesCajeros.Where(x => x.DateTOperacion >= ActualInicio && x.DateTOperacion < ActualFin).ToList();
+            double recargasMes = 0;
+            foreach(var item in listRecarga)
+            {
+                recargasMes +=  Convert.ToDouble(item.Monto);
+            }
             var totales = recargasMes - crucesMes;
            
 

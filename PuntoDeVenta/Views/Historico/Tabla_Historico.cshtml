@@ -41,8 +41,7 @@
                     <thead>
                         <tr>
 
-                            <th>Tag</th>
-                            <th>Cliente</th>
+                            <th>Tag</th>             
                             <th>Plaza</th>
                             <th>Fecha del Cruce</th>
                             <th>Tramo</th>
@@ -58,7 +57,6 @@
                         <tr v-for="item in items">
 
                             <td>{{item.Tag}}</td>
-                            <td>{{item.NumCliente}}</td>
                             <td>{{item.Plaza}}</td>
                             <td>{{item.Fecha}}</td>
                             <td>{{item.Cuerpo}}</td>
@@ -369,8 +367,7 @@
 
                         $('#Cuen').remove();
                         $('#Sal').remove();
-                        $('#clien').remove();
-                        $('#Salcru').remove();
+                        $('#clien').remove();                        
                         $('#SalMov').remove();
                         $('#mess').remove();
 
@@ -382,6 +379,7 @@
                                 Fecha1: info.Fecha_Inicio,
                                 Fecha2: info.Fecha_Fin,
                                 Movimientos: info.Count,
+                                TotalMonetarioCruces: info.TotalMonetarioCruces,
                                 muestra: true,
                             }
 
@@ -443,7 +441,7 @@
                         $('#clien').remove();
                         $('#mess').remove();
                         $('#Salcru').remove();
-                        $('#SalMov').remove();
+                        //$('#SalMov').remove();
 
 
                         var Mensaje = new Vue({
@@ -454,6 +452,7 @@
                                 Fecha1: info.Fecha_Inicio,
                                 Fecha2: info.Fecha_Fin,
                                 Movimientos: info.Count,
+                                TotalMonetarioMovimientos: info.TotalMonetarioMovimientos,
                                 muestra: true,
                             }
 

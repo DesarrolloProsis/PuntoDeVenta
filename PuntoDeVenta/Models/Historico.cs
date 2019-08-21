@@ -40,6 +40,10 @@ namespace PuntoDeVenta.Models
         [StringLength(20)]
         public string Operador { get; set; }
 
+        [StringLength(20)]
+        public string NumeroCuenta { get; set; }
 
+        [StringLength(20)]
+        public string TipoCuenta { get; set; }
     }
 }

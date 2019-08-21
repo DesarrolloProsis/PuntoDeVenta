@@ -385,6 +385,10 @@
     <Compile Include="Migrations\201905240016516_keycompoamount.Designer.cs">
       <DependentUpon>201905240016516_keycompoamount.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908191827574_migracion19082019.cs" />
+    <Compile Include="Migrations\201908191827574_migracion19082019.Designer.cs">
+      <DependentUpon>201908191827574_migracion19082019.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AmountConfiguration.cs" />
@@ -16563,6 +16567,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905240016516_keycompoamount.resx">
       <DependentUpon>201905240016516_keycompoamount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908191827574_migracion19082019.resx">
+      <DependentUpon>201908191827574_migracion19082019.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
