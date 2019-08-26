@@ -68,7 +68,7 @@ namespace PuntoDeVenta.Controllers
             List<SelectListItem> mes = new List<SelectListItem>();
             List<SelectListItem> anyo = new List<SelectListItem>();
 
-            mes.Add( new SelectListItem
+            mes.Add(new SelectListItem
             {
                 Text = "Enero",
                 Value = "01"
@@ -93,7 +93,7 @@ namespace PuntoDeVenta.Controllers
                 Text = "Mayo",
                 Value = "05"
             });
-         
+
             mes.Add(new SelectListItem
             {
                 Text = "Junio",
@@ -133,7 +133,7 @@ namespace PuntoDeVenta.Controllers
             anyo.Add(new SelectListItem
             {
                 Text = "2019",
-                Value = "2019" 
+                Value = "2019"
             });
             anyo.Add(new SelectListItem
             {
@@ -288,7 +288,7 @@ namespace PuntoDeVenta.Controllers
 
                 PdfHistorico.Add(Chunk.NEWLINE);
 
-                Paragraph fecha = new Paragraph("Fecha de Generacion Reporte: " + DateTime.Today.ToShortDateString().ToString()+ "", new Font(Font.FontFamily.HELVETICA, 14));
+                Paragraph fecha = new Paragraph("Fecha de Generacion Reporte: " + DateTime.Today.ToShortDateString().ToString() + "", new Font(Font.FontFamily.HELVETICA, 14));
                 fecha.Alignment = Element.PTABLE;
                 PdfHistorico.Add(fecha);
 
@@ -325,13 +325,13 @@ namespace PuntoDeVenta.Controllers
                 var FontColour2 = new BaseColor(0, 255, 0);
                 var ColorVerde = FontFactory.GetFont("Times New Roman", 12, FontColour2);
 
-   
+
                 var Tabla1List = TablaRepoMes1(RangosFecha);
 
 
                 _cellIni = new PdfPCell(new Paragraph("", new Font(Font.FontFamily.HELVETICA, 12)));
                 _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
-                _cellIni.BackgroundColor  = new iTextSharp.text.BaseColor(239, 127, 26);
+                _cellIni.BackgroundColor = new iTextSharp.text.BaseColor(239, 127, 26);
                 table.AddCell(_cellIni);
 
 
@@ -348,7 +348,7 @@ namespace PuntoDeVenta.Controllers
 
                 foreach (var item in Tabla1List)
                 {
-                
+
                     _cellIni = new PdfPCell(new Paragraph(item.columnaDatos.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
                     _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
                     table.AddCell(_cellIni);
@@ -374,7 +374,7 @@ namespace PuntoDeVenta.Controllers
 
                 PdfPTable table2 = new PdfPTable(3);
                 table2.WidthPercentage = 100f;
-                var coldWidthPorcentagesCliente2 = new[] {  1f, 1f, 1f };
+                var coldWidthPorcentagesCliente2 = new[] { 1f, 1f, 1f };
                 table2.SetWidths(coldWidthPorcentagesCliente2);
 
                 PdfPCell _cellIni2 = new PdfPCell();
@@ -402,7 +402,7 @@ namespace PuntoDeVenta.Controllers
                 foreach (var item2 in Tabla2List)
                 {
 
-      
+
                     _cellIni2 = new PdfPCell(new Paragraph(item2.recargaActual.ToString(), ColorVerde));
                     _cellIni2.HorizontalAlignment = Element.ALIGN_CENTER;
                     table2.AddCell(_cellIni2);
@@ -886,7 +886,7 @@ namespace PuntoDeVenta.Controllers
 
                                 foreach (var item in ListCruces)
                                 {
-                                    total += Convert.ToDouble(item.Saldo.Replace("Q", "").Replace(".",","));
+                                    total += Convert.ToDouble(item.Saldo.Replace("Q", "").Replace(".", ","));
                                 }
                                 //var totalfinal = Convercion((total / 100).ToString().Replace(".", ","));
                                 var totalfinal = Convercion(total.ToString().Replace(".", ","));
@@ -1268,7 +1268,7 @@ namespace PuntoDeVenta.Controllers
 
                         if (ListMovimiento.Any())
                         {
-                            Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListMovimiento.Count, ListMovimiento[0].SaldoActual, Tipo,ListMovimiento[0].TotalMonetarioMovimientos };
+                            Info = new { ListMovimiento[0].NomCliente, Tag, ListMovimiento[0].TypeCuenta, Fecha_Inicio, Fecha_Fin, ListMovimiento.Count, ListMovimiento[0].SaldoActual, Tipo, ListMovimiento[0].TotalMonetarioMovimientos };
                             model.Info = Info;
                             Fecha1 = Fecha_Inicio; Fecha2 = Fecha_Fin; Plaza = ""; cuenta = Tag; cliente = ListMovimiento[0].NomCliente; saldo = ListMovimiento[0].SaldoActual; eventos = ListMovimiento.Count.ToString();
                             model.ListaMovimientos = ListMovimiento;
@@ -1911,12 +1911,12 @@ namespace PuntoDeVenta.Controllers
             else if (Tipo == (int)DecisionesMetodos.RangoFecha)
             {
 
-                var ListaCompleta = (from historico in db.Historicos                                     
+                var ListaCompleta = (from historico in db.Historicos
                                      where (historico.Fecha >= Fecha_Inicio && historico.Fecha < Fecha_Fin)
                                      orderby (historico.Fecha) descending
                                      select new
                                      {
-                                         _Tag = historico.Tag,                                  
+                                         _Tag = historico.Tag,
                                          _Plaza = historico.Delegacion,
                                          _Cuerpo = historico.Cuerpo,
                                          _Carril = historico.Carril,
@@ -1925,11 +1925,11 @@ namespace PuntoDeVenta.Controllers
                                          _SaldoAntes = historico.SaldoAnterior,
                                          _Saldo = historico.Saldo,
                                          _SaldoNuevo = historico.SaldoActualizado,
-                                         _Operadora = historico.Operador,                                         
+                                         _Operadora = historico.Operador,
 
 
                                      }).ToList();
-               
+
 
 
                 //var total = ListaCompleta.Sum(x => x._Saldo);
@@ -1939,7 +1939,7 @@ namespace PuntoDeVenta.Controllers
                 {
                     total = total + ite._Saldo;
                 }
-             
+
 
                 List<Cruces> List = new List<Cruces>();
 
@@ -1953,7 +1953,7 @@ namespace PuntoDeVenta.Controllers
                         Tag = item._Tag,
                         NumCliente = "",
                         NomCliente = "",
-                        TypeCuenta =  "",
+                        TypeCuenta = "",
                         Plaza = item._Plaza,
                         Fecha = Convert.ToString(item._Fecha),
                         Cuerpo = item._Cuerpo,
@@ -2216,7 +2216,7 @@ namespace PuntoDeVenta.Controllers
 
             }
             return null;
-        }        
+        }
 
         public List<Movimientos> Movimientos(string TagCuenta, DateTime Fecha_Inicio, DateTime Fecha_Fin, int Tipo, bool Rango)
         {
@@ -2492,7 +2492,7 @@ namespace PuntoDeVenta.Controllers
                 //{
 
 
-                    //var ListaCompleta = db.OperacionesCajeros.Where(x => x.DateTOperacion >= Fecha_Inicio && x.DateTOperacion <= Fecha_Fin).OrderByDescending(x => x.DateTOperacion).ToList();
+                //var ListaCompleta = db.OperacionesCajeros.Where(x => x.DateTOperacion >= Fecha_Inicio && x.DateTOperacion <= Fecha_Fin).OrderByDescending(x => x.DateTOperacion).ToList();
 
                 //    var ListaCompleta = (from operaciones in db.OperacionesCajeros
                 //                         join tags in db.Tags on operaciones.Numero equals tags.NumTag
@@ -2553,110 +2553,110 @@ namespace PuntoDeVenta.Controllers
                 //}
                 //else
                 //{
-                    //var ListaCompleta = db.OperacionesCajeros.Where(x => x.DateTOperacion >= Fecha_Inicio && x.DateTOperacion < Fecha_Fin).OrderByDescending(x => x.DateTOperacion).ToList();
-                    //var ListaCompleta = (from operaciones in db.OperacionesCajeros
-                    //                     join tags in db.Tags on operaciones.Numero equals tags.NumTag
-                    //                     join cuentas in db.CuentasTelepeajes on tags.CuentaId equals cuentas.Id
-                    //                     join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
-                    //                     where (operaciones.DateTOperacion >= Fecha_Inicio && operaciones.DateTOperacion <= Fecha_Fin)
-                    //                     where (operaciones.StatusCancelacion == false)
-                    //                     orderby (operaciones.DateTOperacion) descending
-                    //                     select new
-                    //                     {
-                    //                         _Tag = tags.NumTag,
-                    //                         _CuentaID = tags.CuentaId,
-                    //                         _ClienteID = cliente.NumCliente,
-                    //                         _Nombre = cliente.Nombre + cliente.Apellidos,
-                    //                         _TypeCuenta = cuentas.TypeCuenta,
-                    //                         _Fecha = operaciones.DateTOperacion,
-                    //                         _Concepto = operaciones.Concepto,
-                    //                         _TipoPago = operaciones.TipoPago,
-                    //                         _Monto = operaciones.Monto,
-                    //                         _SaldoActual = tags.SaldoTag,
-                    //                         _TipoCuenta = operaciones.Tipo,
-                    //                         _CobroTag = operaciones.CobroTag,
-                    //                         _Referencia = operaciones.NoReferencia,
-                    //                         _TagCuenta = operaciones.Numero
+                //var ListaCompleta = db.OperacionesCajeros.Where(x => x.DateTOperacion >= Fecha_Inicio && x.DateTOperacion < Fecha_Fin).OrderByDescending(x => x.DateTOperacion).ToList();
+                //var ListaCompleta = (from operaciones in db.OperacionesCajeros
+                //                     join tags in db.Tags on operaciones.Numero equals tags.NumTag
+                //                     join cuentas in db.CuentasTelepeajes on tags.CuentaId equals cuentas.Id
+                //                     join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
+                //                     where (operaciones.DateTOperacion >= Fecha_Inicio && operaciones.DateTOperacion <= Fecha_Fin)
+                //                     where (operaciones.StatusCancelacion == false)
+                //                     orderby (operaciones.DateTOperacion) descending
+                //                     select new
+                //                     {
+                //                         _Tag = tags.NumTag,
+                //                         _CuentaID = tags.CuentaId,
+                //                         _ClienteID = cliente.NumCliente,
+                //                         _Nombre = cliente.Nombre + cliente.Apellidos,
+                //                         _TypeCuenta = cuentas.TypeCuenta,
+                //                         _Fecha = operaciones.DateTOperacion,
+                //                         _Concepto = operaciones.Concepto,
+                //                         _TipoPago = operaciones.TipoPago,
+                //                         _Monto = operaciones.Monto,
+                //                         _SaldoActual = tags.SaldoTag,
+                //                         _TipoCuenta = operaciones.Tipo,
+                //                         _CobroTag = operaciones.CobroTag,
+                //                         _Referencia = operaciones.NoReferencia,
+                //                         _TagCuenta = operaciones.Numero
 
-                    //                     }).ToList();
+                //                     }).ToList();
 
-                    var ListaCompleta = (from operaciones in db.OperacionesCajeros                                        
-                                         where (operaciones.DateTOperacion >= Fecha_Inicio && operaciones.DateTOperacion < Fecha_Fin)                                         
-                                         orderby (operaciones.DateTOperacion) descending
-                                         select new
-                                         {
-                                             _Tag = operaciones.Numero,                                                                                        
-                                             _TypeCuenta = operaciones.Tipo,
-                                             _Fecha = operaciones.DateTOperacion,
-                                             _Concepto = operaciones.Concepto,
-                                             _TipoPago = operaciones.TipoPago,
-                                             _Monto = operaciones.Monto,                                             
-                                             _TipoCuenta = operaciones.Tipo,
-                                             _CobroTag = operaciones.CobroTag,
-                                             _Referencia = operaciones.NoReferencia,
-                                             _TagCuenta = operaciones.Numero
+                var ListaCompleta = (from operaciones in db.OperacionesCajeros
+                                     where (operaciones.DateTOperacion >= Fecha_Inicio && operaciones.DateTOperacion < Fecha_Fin)
+                                     orderby (operaciones.DateTOperacion) descending
+                                     select new
+                                     {
+                                         _Tag = operaciones.Numero,
+                                         _TypeCuenta = operaciones.Tipo,
+                                         _Fecha = operaciones.DateTOperacion,
+                                         _Concepto = operaciones.Concepto,
+                                         _TipoPago = operaciones.TipoPago,
+                                         _Monto = operaciones.Monto,
+                                         _TipoCuenta = operaciones.Tipo,
+                                         _CobroTag = operaciones.CobroTag,
+                                         _Referencia = operaciones.NoReferencia,
+                                         _TagCuenta = operaciones.Numero
 
-                                         }).ToList();
+                                     }).ToList();
 
 
                 //var total = ListaCompleta.Sum(x => x._Monto);
                 double total = 0;
 
-                foreach(var item2 in ListaCompleta)
+                foreach (var item2 in ListaCompleta)
                 {
-                    total +=  Convert.ToDouble(item2._Monto);
+                    total += Convert.ToDouble(item2._Monto);
                 }
-                    List<Movimientos> List = new List<Movimientos>();
+                List<Movimientos> List = new List<Movimientos>();
 
-                    int id = 1;
+                int id = 1;
 
-                    foreach (var item in ListaCompleta)
+                foreach (var item in ListaCompleta)
+                {
+                    List.Add(new Movimientos
                     {
-                        List.Add(new Movimientos
-                        {
-                            Id = id,
-                            Concepto = item._Concepto,
-                            TipoPago = item._TipoPago,
-                            Monto = Convert.ToDouble(item._Monto).ToString("C2", culture).Replace("$", "Q"),
-                            Fecha = Convert.ToString(item._Fecha),
-                            Tag = item._Tag,
-                            TagCuenta = item._TagCuenta,
-                            Cuenta = "",
-                            NomCliente = "",
-                            TypeCuenta = item._TypeCuenta,
-                            CobroTag = Convert.ToDouble(item._CobroTag).ToString("C2", culture).Replace("$", "Q"),
-                            Referencia = item._Referencia,
-                            TotalMonetarioMovimientos = Convert.ToDouble(total).ToString("C2", culture).Replace("$", "Q")
+                        Id = id,
+                        Concepto = item._Concepto,
+                        TipoPago = item._TipoPago,
+                        Monto = Convert.ToDouble(item._Monto).ToString("C2", culture).Replace("$", "Q"),
+                        Fecha = Convert.ToString(item._Fecha),
+                        Tag = item._Tag,
+                        TagCuenta = item._TagCuenta,
+                        Cuenta = "",
+                        NomCliente = "",
+                        TypeCuenta = item._TypeCuenta,
+                        CobroTag = Convert.ToDouble(item._CobroTag).ToString("C2", culture).Replace("$", "Q"),
+                        Referencia = item._Referencia,
+                        TotalMonetarioMovimientos = Convert.ToDouble(total).ToString("C2", culture).Replace("$", "Q")
 
 
-                        });
-                        id++;
-                    }
+                    });
+                    id++;
+                }
 
-                    //foreach (var item in ListaCompleta)
-                    //{
-                    //    List.Add(new Movimientos
-                    //    {
-                    //        Id = id,
-                    //        Concepto = item._Concepto,
-                    //        TipoPago = item._TipoPago,
-                    //        Monto = Convert.ToDouble(item._Monto).ToString("C2", culture).Replace("$", "Q"),
-                    //        Fecha = Convert.ToString(item._Fecha),
-                    //        Tag = item._Tag,
-                    //        TagCuenta = item._TagCuenta,
-                    //        Cuenta = Convert.ToString(item._CuentaID),
-                    //        NomCliente = item._Nombre,
-                    //        TypeCuenta = item._TypeCuenta,
-                    //        CobroTag = Convert.ToDouble(item._CobroTag).ToString("C2", culture).Replace("$", "Q"),
-                    //        Referencia = item._Referencia,
-                    //        TotalMonetarioMovimientos = Convert.ToDouble(total).ToString("C2", culture).Replace("$", "Q")
+                //foreach (var item in ListaCompleta)
+                //{
+                //    List.Add(new Movimientos
+                //    {
+                //        Id = id,
+                //        Concepto = item._Concepto,
+                //        TipoPago = item._TipoPago,
+                //        Monto = Convert.ToDouble(item._Monto).ToString("C2", culture).Replace("$", "Q"),
+                //        Fecha = Convert.ToString(item._Fecha),
+                //        Tag = item._Tag,
+                //        TagCuenta = item._TagCuenta,
+                //        Cuenta = Convert.ToString(item._CuentaID),
+                //        NomCliente = item._Nombre,
+                //        TypeCuenta = item._TypeCuenta,
+                //        CobroTag = Convert.ToDouble(item._CobroTag).ToString("C2", culture).Replace("$", "Q"),
+                //        Referencia = item._Referencia,
+                //        TotalMonetarioMovimientos = Convert.ToDouble(total).ToString("C2", culture).Replace("$", "Q")
 
 
-                    //    });
-                    //    id++;
-                    //}
+                //    });
+                //    id++;
+                //}
 
-                 return List;
+                return List;
                 //}
             }
 
@@ -2720,7 +2720,7 @@ namespace PuntoDeVenta.Controllers
                 });
             }
 
-            var otraLista =  Lista.OrderBy(x => x.Fecha).ToList();
+            var otraLista = Lista.OrderBy(x => x.Fecha).ToList();
 
             List<CruceMovimiento> ListaLista = new List<CruceMovimiento>();
 
@@ -2802,7 +2802,7 @@ namespace PuntoDeVenta.Controllers
 
             var c = Lista.OrderByDescending(x => x.Fecha);
 
-            foreach(var item in c)
+            foreach (var item in c)
             {
                 otraLista.Add(new CruceMovimientoRepocliente
                 {
@@ -2816,7 +2816,7 @@ namespace PuntoDeVenta.Controllers
             }
 
             return otraLista;
-        }    
+        }
         class HeaderFooter : PdfPageEventHelper
         {
             public override void OnEndPage(PdfWriter writer, Document PdfHistorico)
@@ -2873,16 +2873,16 @@ namespace PuntoDeVenta.Controllers
             DateTime AnteriorFin = Convert.ToDateTime(fechas[3]).AddDays(1);
             DateTime ActualInicio = Convert.ToDateTime(fechas[0]);
             DateTime ActualFin = Convert.ToDateTime(fechas[1]).AddDays(1);
-            
+
             int clienteActual = db.Clientes.Where(x => x.DateTCliente >= ActualInicio && x.DateTCliente < ActualFin).Count();
             int totalCliente = db.Clientes.Where(x => x.DateTCliente < ActualFin).Count();
-            
+
             int cuentaActual = db.CuentasTelepeajes.Where(x => x.DateTCuenta >= ActualInicio && x.DateTCuenta < ActualFin).Count();
             int totalCuenta = db.CuentasTelepeajes.Where(x => x.DateTCuenta < ActualFin).Count();
-            
+
             int tagActual = db.Tags.Where(x => x.DateTTag >= ActualInicio && x.DateTTag < ActualFin).Count();
             int totalTag = db.Tags.Where(x => x.DateTTag < ActualFin).Count();
-   
+
 
             Lista.Add(new RepoMensual1
             {
@@ -2919,7 +2919,7 @@ namespace PuntoDeVenta.Controllers
 
             var listCruces = db.Historicos.Where(x => x.Fecha >= ActualInicio && x.Fecha < ActualFin).ToList();
             double crucesMes = 0;
-            foreach(var ite in listCruces)
+            foreach (var ite in listCruces)
             {
                 crucesMes += ite.Saldo;
             }
@@ -2927,17 +2927,17 @@ namespace PuntoDeVenta.Controllers
             //var recargasMes = Convert.ToDouble(db.OperacionesCajeros.Where(x => x.DateTOperacion >= ActualInicio && x.DateTOperacion < ActualFin).Sum(x => x.Monto));
             var listRecarga = db.OperacionesCajeros.Where(x => x.DateTOperacion >= ActualInicio && x.DateTOperacion < ActualFin).ToList();
             double recargasMes = 0;
-            foreach(var item in listRecarga)
+            foreach (var item in listRecarga)
             {
-                recargasMes +=  Convert.ToDouble(item.Monto);
+                recargasMes += Convert.ToDouble(item.Monto);
             }
             var totales = recargasMes - crucesMes;
-           
+
 
             Lista.Add(new RepoMensual2
             {
-                
-                recargaActual = Convercion(Convert.ToString(recargasMes).Replace(".",",")),
+
+                recargaActual = Convercion(Convert.ToString(recargasMes).Replace(".", ",")),
                 cruceActual = "",
                 totalEfectivo = ""
 
@@ -2945,7 +2945,7 @@ namespace PuntoDeVenta.Controllers
 
             Lista.Add(new RepoMensual2
             {
-                
+
                 recargaActual = "",
                 cruceActual = Convercion(Convert.ToString(crucesMes).Replace(".", ",")),
                 totalEfectivo = ""
@@ -2953,7 +2953,7 @@ namespace PuntoDeVenta.Controllers
             });
 
             Lista.Add(new RepoMensual2
-            {                
+            {
                 recargaActual = "",
                 cruceActual = "",
                 totalEfectivo = Convercion(Convert.ToString(totales).Replace(".", ","))
@@ -2983,7 +2983,7 @@ namespace PuntoDeVenta.Controllers
                 MemoryStream ms = new MemoryStream();
                 Document PdfHistorico = new Document(iTextSharp.text.PageSize.A4);
                 PdfWriter pw = PdfWriter.GetInstance(PdfHistorico, ms);
-                
+
                 PdfHistorico.Open();
                 PdfHistorico.GetTop(600f);
 
@@ -3037,11 +3037,11 @@ namespace PuntoDeVenta.Controllers
                                         Nombre = c.Nombre,
                                         Apellido = c.Apellidos,
                                         numCliente = c.NumCliente,
-                                        IdCliente = c.Id,                                        
+                                        IdCliente = c.Id,
                                     }).ToList();
 
 
-                
+
                 var clientePruebas = listaCliente[0].IdCliente;
                 var numCLientes = listaCliente[0].numCliente;
 
@@ -3343,7 +3343,7 @@ namespace PuntoDeVenta.Controllers
                 }
                 else
                 {
-                   
+
 
                     string rutaLogo = Server.MapPath("..\\Content\\css-yisus\\img\\SIVAREPORT.png");
 
@@ -3358,7 +3358,7 @@ namespace PuntoDeVenta.Controllers
 
                     PdfHistorico.Add(Chunk.NEWLINE);
 
-              
+
 
                     Paragraph _clientenum = new Paragraph("#Cliente: " + numCLientes + "", new Font(Font.FontFamily.HELVETICA, 10));
                     _clientenum.Alignment = Element.PTABLE;
@@ -3375,9 +3375,9 @@ namespace PuntoDeVenta.Controllers
 
                 }
 
-            //***********************************************************************************************************************************************************************
+                //***********************************************************************************************************************************************************************
 
-              
+
 
 
                 byte[] bytesStream = ms.ToArray();
@@ -3395,18 +3395,19 @@ namespace PuntoDeVenta.Controllers
             AppDbContext db = new AppDbContext();
 
             string[] DatosCliente = new string[6];
-            
+
 
             var listaCliente = (from c in db.Clientes
-                            where c.NumCliente == numeroCliente
-                            select new
-                            {
-                                Nombre = c.Nombre,
-                                Apellido = c.Apellidos,
-                                IdCliente = c.Id
-                            }).ToList();
+                                where c.NumCliente == numeroCliente
+                                select new
+                                {
+                                    Nombre = c.Nombre,
+                                    Apellido = c.Apellidos,
+                                    IdCliente = c.Id
+                                }).ToList();
 
-            if (listaCliente.Count() > 0) {
+            if (listaCliente.Count() > 0)
+            {
 
                 DatosCliente[0] = listaCliente[0].Nombre + "  " + listaCliente[0].Apellido;
                 var clientePruebas = listaCliente[0].IdCliente;
@@ -3430,8 +3431,8 @@ namespace PuntoDeVenta.Controllers
                 foreach (var item in listaCuentas)
                 {
 
-                    
-                    if(item.typeCuenta == "Colectiva")
+
+                    if (item.typeCuenta == "Colectiva")
                     {
                         //var listcolectivo = (from c in db.CuentasTelepeajes
                         //                     where c.Id == item.Id
@@ -3446,18 +3447,18 @@ namespace PuntoDeVenta.Controllers
                                              select new
                                              {
                                                  fecha = h.Fecha,
-                                                 saldoANteriro =  h.SaldoAnterior,
+                                                 saldoANteriro = h.SaldoAnterior,
                                                  saldoActualizado = h.SaldoActualizado
                                              }).ToList();
 
                         if (listcolectivo.Count > 0)
                         {
-                          for(int i = 0; i < 1; i++)
-                          {
+                            for (int i = 0; i < 1; i++)
+                            {
 
                                 SaldoCliente = Convert.ToString(listcolectivo[i].saldoANteriro);
-                          }
-                                                           
+                            }
+
                         }
 
                         var ListaVolteada = listcolectivo.OrderByDescending(x => x.fecha).ToList();
@@ -3480,19 +3481,19 @@ namespace PuntoDeVenta.Controllers
 
 
                     }
-                    if(item.typeCuenta == "Individual")
+                    if (item.typeCuenta == "Individual")
                     {
 
                         var listindividual = (from h in db.Historicos
-                                             join t in db.Tags on h.Tag equals t.NumTag
-                                             join c in db.CuentasTelepeajes on t.CuentaId equals c.Id
-                                             where h.Fecha >= fecha1 && h.Fecha < fecha2 && c.Id == item.Id
-                                             select new
-                                             {
-                                                 fecha = h.Fecha,
-                                                 saldoANteriro = h.SaldoAnterior,
-                                                 saldoActual = h.SaldoActualizado
-                                             }).ToList();
+                                              join t in db.Tags on h.Tag equals t.NumTag
+                                              join c in db.CuentasTelepeajes on t.CuentaId equals c.Id
+                                              where h.Fecha >= fecha1 && h.Fecha < fecha2 && c.Id == item.Id
+                                              select new
+                                              {
+                                                  fecha = h.Fecha,
+                                                  saldoANteriro = h.SaldoAnterior,
+                                                  saldoActual = h.SaldoActualizado
+                                              }).ToList();
 
                         //var listindividual = (from c in db.Tags
                         //                      where c.CuentaId == item.Id
@@ -3502,11 +3503,11 @@ namespace PuntoDeVenta.Controllers
                         //                      }).ToList();
                         if (listindividual.Count() > 0)
                         {
-                            for(int i = 0; i < 1; i++)
+                            for (int i = 0; i < 1; i++)
                             {
                                 SaldoCliente = Convert.ToString(listindividual[i].saldoANteriro);
                             }
-                                                                                        
+
                         }
 
 
@@ -3532,7 +3533,7 @@ namespace PuntoDeVenta.Controllers
 
                     }
 
-                  
+
                     foreach (var item2 in listaCuentas)
                     {
                         var listaCruces = (from h in db.Historicos
@@ -3554,7 +3555,7 @@ namespace PuntoDeVenta.Controllers
 
                 DatosCliente[1] = SaldoCliente;
                 DatosCliente[2] = RecargasTotales.ToString("F");
-                DatosCliente[3] = CrucesTotales.ToString("F");                
+                DatosCliente[3] = CrucesTotales.ToString("F");
                 DatosCliente[4] = SaldoFinal;
 
                 return DatosCliente;
@@ -3562,7 +3563,7 @@ namespace PuntoDeVenta.Controllers
             }
             else return null;
         }
-  
+
 
         public string BuscaTramo(string IdGare)
         {
@@ -3575,16 +3576,12 @@ namespace PuntoDeVenta.Controllers
         public ActionResult Pdf()
         {
 
-            MemoryStream ms = new MemoryStream();
             Document PdfHistorico = new Document(iTextSharp.text.PageSize.LETTER.Rotate());
+            MemoryStream ms = new MemoryStream();
             PdfWriter pw = PdfWriter.GetInstance(PdfHistorico, ms);
 
             PdfHistorico.Open();
             PdfHistorico.GetTop(600f);
-
-
-
-
 
             string rutaLogo = Server.MapPath("..\\Content\\css-yisus\\img\\SIVAREPORT.png");
 
@@ -3769,16 +3766,15 @@ namespace PuntoDeVenta.Controllers
                 //Reporte Willy
                 if (ClienteAdmin)
                 {
-                    PdfPTable table = new PdfPTable(9);
+
+                    PdfPTable table = new PdfPTable(8);
                     table.WidthPercentage = 100f;
-                    var coldWidthPorcentagesCliente = new[] { 2f, 2f, 2f, 1f, 1f, 1f, 2f, 2f, 2f };
+                    var coldWidthPorcentagesCliente = new[] { 2f, 2f, 1f, 1f, 1f, 2f, 2f, 2f };
                     table.SetWidths(coldWidthPorcentagesCliente);
 
                     PdfPCell _cellIni = new PdfPCell();
                     PdfHistorico.GetLeft(40f);
                     PdfHistorico.GetRight(40f);
-
-
 
 
                     _cellIni = new PdfPCell(new Paragraph("Numero de Tag"));
@@ -3787,23 +3783,10 @@ namespace PuntoDeVenta.Controllers
                     table.AddCell(_cellIni);
 
 
-                    _cellIni = new PdfPCell(new Paragraph("Numero de Cliente"));
-                    _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
-                    table.AddCell(_cellIni);
-
-
-
-                    //_cellIni = new PdfPCell(new Paragraph("Plaza"));
-                    //_cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
-                    //_cellIni.FixedHeight = 10f;
-                    //table.AddCell(_cellIni);
-
-
-
                     _cellIni = new PdfPCell(new Paragraph("Fecha"));
                     _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
-                    _cellIni.FixedHeight = 10f;
                     table.AddCell(_cellIni);
+
 
 
                     _cellIni = new PdfPCell(new Paragraph("Tramo"));
@@ -3812,11 +3795,11 @@ namespace PuntoDeVenta.Controllers
                     table.AddCell(_cellIni);
 
 
+
                     _cellIni = new PdfPCell(new Paragraph("Carril"));
                     _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
                     _cellIni.FixedHeight = 10f;
                     table.AddCell(_cellIni);
-
 
                     _cellIni = new PdfPCell(new Paragraph("Clase"));
                     _cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
@@ -3841,87 +3824,102 @@ namespace PuntoDeVenta.Controllers
                     table.AddCell(_cellIni);
 
 
-                    //_cellIni = new PdfPCell(new Paragraph("Operadora"));
-                    //_cellIni.HorizontalAlignment = Element.ALIGN_CENTER;
-                    //_cellIni.FixedHeight = 10f;
-                    //table.AddCell(_cellIni);
-
-
 
 
                     foreach (var item in ListPDFCruces)
                     {
+
+
                         PdfPCell _cell = new PdfPCell();
                         PdfHistorico.GetLeft(40f);
                         PdfHistorico.GetRight(40f);
 
 
-
                         _cell = new PdfPCell(new Paragraph(item.Tag.ToString()));
                         _cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                        _cell.FixedHeight = 10f;
                         table.AddCell(_cell);
-
-
-                        _cell = new PdfPCell(new Paragraph(item.NumCliente.ToString()));
-                        _cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                        table.AddCell(_cell);
-
-
-
-                        //_cell = new PdfPCell(new Paragraph(item.Plaza.ToString()));
-                        //_cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                        //_cell.FixedHeight = 10f;
-                        //table.AddCell(_cell);
 
 
 
                         _cell = new PdfPCell(new Paragraph(item.Fecha.ToString()));
                         _cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                        _cell.FixedHeight = 10f;
                         table.AddCell(_cell);
+
 
 
                         _cell = new PdfPCell(new Paragraph(item.Cuerpo.ToString()));
                         _cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                        _cell.FixedHeight = 10f;
                         table.AddCell(_cell);
-
 
                         _cell = new PdfPCell(new Paragraph(item.Carril.ToString()));
                         _cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                        _cell.FixedHeight = 10f;
                         table.AddCell(_cell);
+
 
 
                         _cell = new PdfPCell(new Paragraph(item.Clase.ToString()));
                         _cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                        _cell.FixedHeight = 10f;
                         table.AddCell(_cell);
 
 
                         _cell = new PdfPCell(new Paragraph(item.SaldoAntes.ToString()));
                         _cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                        _cell.FixedHeight = 10f;
                         table.AddCell(_cell);
-
 
                         _cell = new PdfPCell(new Paragraph(item.Saldo.ToString()));
                         _cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                        _cell.FixedHeight = 10f;
                         table.AddCell(_cell);
 
                         _cell = new PdfPCell(new Paragraph(item.SaldoDespues.ToString()));
                         _cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                        _cell.FixedHeight = 10f;
                         table.AddCell(_cell);
 
 
-                        //_cell = new PdfPCell(new Paragraph(item.Operador.ToString()));
-                        //_cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                        //_cell.FixedHeight = 10f;
-                        //table.AddCell(_cell);
+                        //PdfPCell _cellnew = new PdfPCell();
+                        //PdfHistorico.GetLeft(40f);
+                        //PdfHistorico.GetRight(40f);
 
+
+                        //_cellnew = new PdfPCell(new Paragraph(item.Tag.ToString()));
+                        //_cellnew.HorizontalAlignment = Element.ALIGN_CENTER;
+                        //_cellnew.FixedHeight = 10f;
+                        //table.AddCell(_cellnew);
+
+                        //_cellnew = new PdfPCell(new Paragraph(item.Fecha.ToString()));
+                        //_cellnew.HorizontalAlignment = Element.ALIGN_CENTER;
+                        //_cellnew.FixedHeight = 10f;
+                        //table.AddCell(_cellnew);
+
+                        //_cellnew = new PdfPCell(new Paragraph(item.Cuerpo.ToString()));
+                        //_cellnew.HorizontalAlignment = Element.ALIGN_CENTER;
+                        //_cellnew.FixedHeight = 10f;
+                        //table.AddCell(_cellnew);
+
+                        //_cellnew = new PdfPCell(new Paragraph(item.Carril.ToString()));
+                        //_cellnew.HorizontalAlignment = Element.ALIGN_CENTER;
+                        //_cellnew.FixedHeight = 10f;
+                        //table.AddCell(_cellnew);
+
+                        //_cellnew = new PdfPCell(new Paragraph(item.Clase.ToString()));
+                        //_cellnew.HorizontalAlignment = Element.ALIGN_CENTER;
+                        //_cellnew.FixedHeight = 10f;
+                        //table.AddCell(_cellnew);
+
+                        //_cellnew = new PdfPCell(new Paragraph(item.SaldoAntes.ToString()));
+                        //_cellnew.HorizontalAlignment = Element.ALIGN_CENTER;
+                        //_cellnew.FixedHeight = 10f;
+                        //table.AddCell(_cellnew);
+
+
+                        //_cellnew = new PdfPCell(new Paragraph(item.Saldo.ToString()));
+                        //_cellnew.HorizontalAlignment = Element.ALIGN_CENTER;
+                        //_cellnew.FixedHeight = 10f;
+                        //table.AddCell(_cellnew);
+
+                        //_cellnew = new PdfPCell(new Paragraph(item.SaldoDespues.ToString()));
+                        //_cellnew.HorizontalAlignment = Element.ALIGN_CENTER;
+                        //_cellnew.FixedHeight = 10f;
+                        //table.AddCell(_cellnew);
 
 
 
@@ -4123,10 +4121,20 @@ namespace PuntoDeVenta.Controllers
                         table.AddCell(_cell);
 
 
-                        _cell = new PdfPCell(new Paragraph(item.TipoPago));
-                        _cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                        table.AddCell(_cell);
+                        if (item.TipoPago == null)
+                        {
+                            _cell = new PdfPCell(new Paragraph("-----------"));
+                            _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                            table.AddCell(_cell);
+                        }
 
+                        else
+                        {
+
+                            _cell = new PdfPCell(new Paragraph(item.TipoPago));
+                            _cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                            table.AddCell(_cell);
+                        }
 
 
                         _cell = new PdfPCell(new Paragraph(item.Monto.ToString()));
@@ -4453,7 +4461,7 @@ namespace PuntoDeVenta.Controllers
                     {
                         var array = tipo[0].ToCharArray();
 
-                        for (int i = 0; i < array.Length ; i++)
+                        for (int i = 0; i < array.Length; i++)
                         {
                             if (contar == 3)
                             {
@@ -4498,13 +4506,13 @@ namespace PuntoDeVenta.Controllers
                     {
                         Mandar = tipo[0] + '.' + tipo[1];
                     }
-                    
+
                 }
 
             }
             else
             {
-               if(tipo[0].Length >3)
+                if (tipo[0].Length > 3)
                 {
                     var numeroDigitos = tipo[0].Length;
                     var modulo = numeroDigitos % 3;
@@ -4560,9 +4568,9 @@ namespace PuntoDeVenta.Controllers
                         Mandar = Mandar + ".00";
                     }
                 }
-               else
-                
-                Mandar = tipo[0] + ".00";
+                else
+
+                    Mandar = tipo[0] + ".00";
             }
 
             return 'Q' + Mandar;
@@ -4596,7 +4604,7 @@ namespace PuntoDeVenta.Controllers
                          join c in db.CuentasTelepeajes on t.CuentaId equals c.Id
                          where h.Fecha >= fecha1 && h.Fecha < fecha2
                          where c.TypeCuenta == "Individual"
-                         select new 
+                         select new
                          {
                              saldos = h.Saldo
 
@@ -4605,7 +4613,7 @@ namespace PuntoDeVenta.Controllers
             return lista.Sum(x => x.saldos);
         }
 
-        public string[] IntervalosMes(string mes,string anyo)
+        public string[] IntervalosMes(string mes, string anyo)
         {
             int DiaActual, DiaAnterior;
             //string FechaInicioActual = string.Empty;
@@ -4746,5 +4754,5 @@ namespace PuntoDeVenta.Controllers
 
 
     }
-    
+
 }
