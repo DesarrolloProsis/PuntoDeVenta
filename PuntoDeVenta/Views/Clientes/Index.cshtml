@@ -458,7 +458,7 @@
 
             /***************************** CLIENTES *****************************/
 
-            /* Formatting function for row details - modify as you need */
+            /* Formatting function for row details - modify as you need  */
             function format(d) {
 
                 var status = (d.StatusCliente) ? "Válido" : "Inválido";
@@ -507,8 +507,8 @@
                     '</table>';
             }
 
-            var table = $('#example').DataTable({
-                language: {
+            var table = $("#example").DataTable({
+                "language": {
                     "lengthMenu": "Desplegar _MENU_ por página",
                     "zeroRecords": "Sin resultados - disculpe",
                     "info": "Mostrando página _PAGE_ de _PAGES_",
@@ -522,23 +522,26 @@
                         "previous": "Anterior"
                     },
                 },
-                ajax: {
-                    url: "/Clientes/GetDataClientes",
-                    type: "GET",
-                    datatype: "json",
+                "processing": true, // for show progress bar
+                "serverSide": true, // for process server side
+                "orderMulti": false, // for disable multiple column at once
+                "ajax": {
+                    "url": "/Clientes/LoadData",
+                    "type": "POST",
+                    "datatype": "json",
                 },
-                columns: [
+                "columns": [
                     {
                         "className": 'details-control',
                         "orderable": false,
                         "data": null,
                         "defaultContent": ''
                     },
-                    { "data": "NumCliente" },
-                    { "data": "NombreCompleto" },
-                    { "data": "Empresa" },
-                    { "data": "EmailCliente" },
-                    { "data": "PhoneCliente" },
+                    { "data": "NumCliente", "name": "NumCliente", "autoWidth": true },
+                    { "data": "NombreCompleto", "name": "NombreCompleto", "autoWidth": true },
+                    { "data": "Empresa", "name": "Empresa", "autoWidth": true},
+                    { "data": "EmailCliente", "name": "EmailCliente", "autoWidth": true },
+                    { "data": "PhoneCliente", "name": "PhoneCliente", "autoWidth": true },
                     {
                         "className": "ncuentaclie",
                         "orderable": false,

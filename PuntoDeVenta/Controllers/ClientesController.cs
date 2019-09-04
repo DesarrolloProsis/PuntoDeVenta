@@ -14,6 +14,9 @@ using Microsoft.AspNet.Identity;
 using System.Globalization;
 using System.Dynamic;
 using System.Data.Entity.Validation;
+using PuntoDeVenta.Services;
+using System.Linq.Expressions;
+using System.Linq.Dynamic;
 
 namespace PuntoDeVenta.Controllers
 {
@@ -21,6 +24,85 @@ namespace PuntoDeVenta.Controllers
     public class ClientesController : Controller
     {
         private AppDbContext db = new AppDbContext();
+
+        [HttpPost]
+        public ActionResult LoadData()
+        {
+            try
+            {
+                var draw = Request.Form.GetValues("draw").FirstOrDefault();
+                var start = Request.Form.GetValues("start").FirstOrDefault();
+                var length = Request.Form.GetValues("length").FirstOrDefault();
+
+                //Find Order Column
+                var sortColumn = Request.Form.GetValues("columns[" + Request.Form.GetValues("order[0][column]").FirstOrDefault() + "][name]").FirstOrDefault();
+                var sortColumnDir = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
+
+                //Find search value
+                var searchValue = Request.Form.GetValues("search[value]").FirstOrDefault();
+
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+                using (AppDbContext dc = new AppDbContext())
+                {
+                    dc.Configuration.LazyLoadingEnabled = false; // if your table is relational, contain foreign key
+
+                    var v = (from a in dc.Clientes select a).AsEnumerable();
+
+                    // FILTER
+                    if (!string.IsNullOrEmpty(searchValue))
+                    {
+                        v = v.Where(x => x.NumCliente.ToLower().Contains(searchValue.ToLower()));
+                    }
+
+                    //SORT
+                    if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDir)))
+                    {
+                        v = v.OrderBy(sortColumn + " " + sortColumnDir);
+                    }
+
+                    // PAGING
+
+                    recordsTotal = v.Count();
+                    var query = v.Skip(skip).Take(pageSize).ToList();
+
+                    // MODIFICAMOS LOS DATOS
+
+                    var data = new List<Clientes>();
+
+                    query.ForEach(x =>
+                    {
+                        var value = new Clientes
+                        {
+                            Id = x.Id,
+                            NumCliente = x.NumCliente,
+                            NombreCompleto = $"{x.Nombre} {x.Apellidos}",
+                            EmailCliente = x.EmailCliente,
+                            AddressCliente = x.AddressCliente,
+                            PhoneCliente = x.PhoneCliente,
+                            StatusCliente = x.StatusCliente,
+                            DateTCliente = x.DateTCliente,
+                            Empresa = x.Empresa,
+                            CP = x.CP,
+                            Pais = x.Pais,
+                            City = x.City,
+                            Departamento = x.Departamento,
+                            NIT = x.NIT,
+                            PhoneOffice = x.PhoneOffice ?? string.Empty,
+                        };
+                        data.Add(value);
+                    });
+
+                    return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
 
         public async Task<ActionResult> CuentasTags(int? IdCliente)
         {
@@ -87,37 +169,6 @@ namespace PuntoDeVenta.Controllers
             }
         }
 
-        public async Task<ActionResult> GetDataClientes()
-        {
-            List<Clientes> clientes = new List<Clientes>();
-
-            var query = await db.Clientes.ToListAsync();
-
-            query.ForEach(x =>
-            {
-                var value = new Clientes
-                {
-                    Id = x.Id,
-                    NumCliente = x.NumCliente,
-                    NombreCompleto = $"{x.Nombre} {x.Apellidos}",
-                    EmailCliente = x.EmailCliente,
-                    AddressCliente = x.AddressCliente,
-                    PhoneCliente = x.PhoneCliente,
-                    StatusCliente = x.StatusCliente,
-                    DateTCliente = x.DateTCliente,
-                    Empresa = x.Empresa,
-                    CP = x.CP,
-                    Pais = x.Pais,
-                    City = x.City,
-                    Departamento = x.Departamento,
-                    NIT = x.NIT,
-                    PhoneOffice = x.PhoneOffice ?? string.Empty,
-                };
-                clientes.Add(value);
-            });
-
-            return Json(new { data = clientes }, JsonRequestBehavior.AllowGet);
-        }
 
         // GET: Clientes
         public ActionResult Index()
