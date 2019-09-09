@@ -48,32 +48,32 @@ namespace PuntoDeVenta.Controllers
                 {
                     dc.Configuration.LazyLoadingEnabled = false; // if your table is relational, contain foreign key
 
-                    var v = (from a in dc.Clientes select a).AsEnumerable();
+                    var v = (from a in dc.Clientes select a).ToList();
 
                     // FILTER
                     if (!string.IsNullOrEmpty(searchValue))
                     {
-                        v = v.Where(x => x.NumCliente.ToLower().Contains(searchValue.ToLower()) ||
-                                        x.Nombre.ToLower().Contains(searchValue.ToLower()) ||
-                                        x.Apellidos.ToLower().Contains(searchValue.ToLower()) ||
-                                        x.EmailCliente.ToLower().Contains(searchValue.ToLower()) ||
-                                        x.AddressCliente.ToLower().Contains(searchValue.ToLower()) ||
-                                        x.PhoneCliente.ToLower().Contains(searchValue.ToLower()) ||
-                                        x.DateTCliente.ToString().ToLower().Contains(searchValue.ToLower()) ||
-                                        x.Empresa.ToLower().Contains(searchValue.ToLower()) ||
-                                        x.CP.ToLower().Contains(searchValue.ToLower()) ||
-                                        x.Pais.ToLower().Contains(searchValue.ToLower()) ||
-                                        x.City.ToLower().Contains(searchValue.ToLower()) ||
-                                        x.Departamento.ToLower().Contains(searchValue.ToLower()) ||
-                                        x.NIT.ToLower().Contains(searchValue.ToLower()) ||
-                                        x.PhoneOffice.ToLower().Contains(searchValue.ToLower())
-                                        );
+                        v = v.Where(x => !string.IsNullOrEmpty(x.NumCliente) && x.NumCliente.ToLower().Contains(searchValue.ToLower()) ||
+                                        !string.IsNullOrEmpty(x.Nombre) && x.Nombre.ToLower().Contains(searchValue.ToLower()) ||
+                                        !string.IsNullOrEmpty(x.Apellidos) && x.Apellidos.ToLower().Contains(searchValue.ToLower()) ||
+                                        !string.IsNullOrEmpty(x.EmailCliente) && x.EmailCliente.ToLower().Contains(searchValue.ToLower()) ||
+                                        !string.IsNullOrEmpty(x.AddressCliente) && x.AddressCliente.ToLower().Contains(searchValue.ToLower()) ||
+                                        !string.IsNullOrEmpty(x.PhoneCliente) && x.PhoneCliente.ToLower().Contains(searchValue.ToLower()) ||
+                                        !string.IsNullOrEmpty(x.DateTCliente.ToString()) && x.DateTCliente.ToString().ToLower().Contains(searchValue.ToLower()) ||
+                                        !string.IsNullOrEmpty(x.Empresa) && x.Empresa.ToLower().Contains(searchValue.ToLower()) ||
+                                        !string.IsNullOrEmpty(x.CP) && x.CP.ToLower().Contains(searchValue.ToLower()) ||
+                                        !string.IsNullOrEmpty(x.Pais) && x.Pais.ToLower().Contains(searchValue.ToLower()) ||
+                                        !string.IsNullOrEmpty(x.City) && x.City.ToLower().Contains(searchValue.ToLower()) ||
+                                        !string.IsNullOrEmpty(x.Departamento) && x.Departamento.ToLower().Contains(searchValue.ToLower()) ||
+                                        !string.IsNullOrEmpty(x.NIT) && x.NIT.ToLower().Contains(searchValue.ToLower()) ||
+                                        !string.IsNullOrEmpty(x.PhoneOffice) && x.PhoneOffice.ToLower().Contains(searchValue.ToLower())
+                                        ).ToList();
                     }
 
                     //SORT
                     if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDir)))
                     {
-                        v = v.OrderBy(sortColumn + " " + sortColumnDir);
+                        v = v.OrderBy(sortColumn + " " + sortColumnDir).ToList();
                     }
 
                     // PAGING
