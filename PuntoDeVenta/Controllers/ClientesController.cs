@@ -53,7 +53,21 @@ namespace PuntoDeVenta.Controllers
                     // FILTER
                     if (!string.IsNullOrEmpty(searchValue))
                     {
-                        v = v.Where(x => x.NumCliente.ToLower().Contains(searchValue.ToLower()));
+                        v = v.Where(x => x.NumCliente.ToLower().Contains(searchValue.ToLower()) ||
+                                        x.Nombre.ToLower().Contains(searchValue.ToLower()) ||
+                                        x.Apellidos.ToLower().Contains(searchValue.ToLower()) ||
+                                        x.EmailCliente.ToLower().Contains(searchValue.ToLower()) ||
+                                        x.AddressCliente.ToLower().Contains(searchValue.ToLower()) ||
+                                        x.PhoneCliente.ToLower().Contains(searchValue.ToLower()) ||
+                                        x.DateTCliente.ToString().ToLower().Contains(searchValue.ToLower()) ||
+                                        x.Empresa.ToLower().Contains(searchValue.ToLower()) ||
+                                        x.CP.ToLower().Contains(searchValue.ToLower()) ||
+                                        x.Pais.ToLower().Contains(searchValue.ToLower()) ||
+                                        x.City.ToLower().Contains(searchValue.ToLower()) ||
+                                        x.Departamento.ToLower().Contains(searchValue.ToLower()) ||
+                                        x.NIT.ToLower().Contains(searchValue.ToLower()) ||
+                                        x.PhoneOffice.ToLower().Contains(searchValue.ToLower())
+                                        );
                     }
 
                     //SORT
