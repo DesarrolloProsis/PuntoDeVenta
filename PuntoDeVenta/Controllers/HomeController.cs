@@ -233,7 +233,7 @@ namespace PuntoDeVenta.Controllers
                                 listTags.Add(new
                                 {
                                     NumTag = m.NumTag,
-                                    SaldoTag = string.IsNullOrEmpty(m.SaldoTag) ? "0.00" : (double.Parse(m.SaldoTag) / 100).ToString("F2"),
+                                    //SaldoTag = string.IsNullOrEmpty(m.SaldoTag) ? "0.00" : (double.Parse(m.SaldoTag) / 100).ToString("F2"),
                                     StatusTag = m.StatusTag == true ? "Válido" : "Inválido"
                                 });
                             });
@@ -242,7 +242,7 @@ namespace PuntoDeVenta.Controllers
                             {
                                 NombreCompleto = $"{x.Nombre} {x.Apellidos}",
                                 NumCuenta = x.NumCuenta,
-                                SaldoCuenta = string.IsNullOrEmpty(x.SaldoCuenta) ? "0.00" : (double.Parse(x.SaldoCuenta) / 100).ToString("F2"),
+                                //SaldoCuenta = string.IsNullOrEmpty(x.SaldoCuenta) ? "0.00" : (double.Parse(x.SaldoCuenta) / 100).ToString("F2"),
                                 TypeCuenta = x.TypeCuenta,
                                 DateTCuenta = x.DateTCuenta,
                                 StatusCuenta = x.StatusCuenta == true ? "Válido" : "Inválido",
@@ -274,7 +274,7 @@ namespace PuntoDeVenta.Controllers
                                 NumCuenta = x.NumCuenta,
                                 TypeCuenta = x.TypeCuenta,
                                 NumTag = x.NumTag,
-                                SaldoTag = string.IsNullOrEmpty(x.SaldoTag) ? "0.00" : (double.Parse(x.SaldoTag) / 100).ToString("F2"),
+                               // SaldoTag = string.IsNullOrEmpty(x.SaldoTag) ? "0.00" : (double.Parse(x.SaldoTag) / 100).ToString("F2"),
                                 StatusTag = x.StatusTag == true ? "Válido" : "Inválido",
                             });
                         });
@@ -680,7 +680,7 @@ namespace PuntoDeVenta.Controllers
                     if (SelectedOperacion.Tipo == "TAG")                                //Si el movimiento cancelado en una recarga de Tag:
                     {
                         var UpdatedTag = db.Tags.Where(x => x.NumTag == SelectedOperacion.Numero).FirstOrDefault();
-                        UpdatedTag.SaldoTag = (Convert.ToDouble(UpdatedTag.SaldoTag) - (Convert.ToDouble(SelectedOperacion.Monto) * 100)).ToString();
+                        //UpdatedTag.SaldoTag = (Convert.ToDouble(UpdatedTag.SaldoTag) - (Convert.ToDouble(SelectedOperacion.Monto) * 100)).ToString();
                         if (Convert.ToDouble(UpdatedTag.SaldoTag) < 1525)               //Si el saldo es menor a 15.25 Quetzales, se convierte en tag inválido
                             UpdatedTag.StatusTag = false;
                     }
@@ -688,12 +688,12 @@ namespace PuntoDeVenta.Controllers
                     {
                         var UpdatedCuenta = db.CuentasTelepeajes.Where(x => x.NumCuenta == SelectedOperacion.Numero).FirstOrDefault();
                         var UpdatedTags = db.Tags.Where(x => x.CuentaId == UpdatedCuenta.Id).ToList();
-                        UpdatedCuenta.SaldoCuenta = (Convert.ToDouble(UpdatedCuenta.SaldoCuenta) - (Convert.ToDouble(SelectedOperacion.Monto)) * 100).ToString();
+                       // UpdatedCuenta.SaldoCuenta = (Convert.ToDouble(UpdatedCuenta.SaldoCuenta) - (Convert.ToDouble(SelectedOperacion.Monto)) * 100).ToString();
                         if (Convert.ToDouble(UpdatedCuenta.SaldoCuenta) < 5000)         //Si el saldo es menor a 50 Quetzales, se convierte en cuenta invalida
                             UpdatedCuenta.StatusCuenta = false;
                         foreach (var item in UpdatedTags)
                         {
-                            item.SaldoTag = (Convert.ToDouble(item.SaldoTag) - (Convert.ToDouble(SelectedOperacion.Monto)) * 100).ToString(); //Se le resta el monto cancelado a cada tag relacionado con la cuenta
+                            //item.SaldoTag = (Convert.ToDouble(item.SaldoTag) - (Convert.ToDouble(SelectedOperacion.Monto)) * 100).ToString(); //Se le resta el monto cancelado a cada tag relacionado con la cuenta
                             if (!UpdatedCuenta.StatusCuenta)                            //Si la cuenta es invalida, por ende los Tags relacionados a ella también son inválidos.
                                 item.StatusTag = false;
                         }

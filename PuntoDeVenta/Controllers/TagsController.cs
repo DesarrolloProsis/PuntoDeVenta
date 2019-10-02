@@ -53,7 +53,7 @@ namespace PuntoDeVenta.Controllers
                         DateTTag = x.cuex.tag.DateTTag,
                         NumTag = x.cuex.tag.NumTag,
                         IdCajero = x.cuex.tag.IdCajero,
-                        SaldoTag = x.cuex.tag.SaldoTag != null ? (double.Parse(x.cuex.tag.SaldoTag) / 100).ToString("F2") : "Sin saldo",
+                        //SaldoTag = x.cuex.tag.SaldoTag != null ? (double.Parse(x.cuex.tag.SaldoTag) / 100).ToString("F2") : "Sin saldo",
                         StatusTag = x.cuex.tag.StatusTag,
                         TypeCuenta = x.cuex.cue.TypeCuenta,
                         StatusResidente = x.cuex.tag.StatusResidente,
@@ -85,7 +85,7 @@ namespace PuntoDeVenta.Controllers
                         DateTTag = x.cuex.tag.DateTTag,
                         NumTag = x.cuex.tag.NumTag,
                         IdCajero = x.cuex.tag.IdCajero,
-                        SaldoTag = x.cuex.tag.SaldoTag != null ? (double.Parse(x.cuex.tag.SaldoTag) / 100).ToString("F2") : "Sin saldo",
+                        //SaldoTag = x.cuex.tag.SaldoTag != null ? (double.Parse(x.cuex.tag.SaldoTag) / 100).ToString("F2") : "Sin saldo",
                         StatusTag = x.cuex.tag.StatusTag,
                         TypeCuenta = x.cuex.cue.TypeCuenta,
                         StatusResidente = x.cuex.tag.StatusResidente,
@@ -149,20 +149,20 @@ namespace PuntoDeVenta.Controllers
                     {
                         if (FoundTag.cue.StatusCuenta == true)
                         {
-                            var Saldo = (double.Parse(FoundTag.tag.SaldoTag) / 100).ToString("F2");
+                            //var Saldo = (double.Parse(FoundTag.tag.SaldoTag) / 100).ToString("F2");
 
-                            var SaldoNuevo = (Convert.ToDouble(Saldo) + double.Parse(modelTag.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }));
+                            //var SaldoNuevo = (Convert.ToDouble(Saldo) + double.Parse(modelTag.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }));
 
-                            var SaldoSend = Math.Round(SaldoNuevo, 2).ToString("F2");
+                           //var SaldoSend = Math.Round(SaldoNuevo, 2).ToString("F2");
 
-                            SaldoSend = SaldoSend.Replace(",", string.Empty);
-                            FoundTag.tag.SaldoTag = SaldoSend.Replace(".", string.Empty);
+                            //SaldoSend = SaldoSend.Replace(",", string.Empty);
+                            //FoundTag.tag.SaldoTag = SaldoSend.Replace(".", string.Empty);
 
-                            if ((double.Parse(FoundTag.tag.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }) / 100) >= 20)
-                            {
-                                if (FoundTag.tag.StatusTag == false)
-                                    FoundTag.tag.StatusTag = true;
-                            }
+                            //if ((double.Parse(FoundTag.tag.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }) / 100) >= 20)
+                            //{
+                            //    if (FoundTag.tag.StatusTag == false)
+                            //        FoundTag.tag.StatusTag = true;
+                            //}
 
                             var detalle = new OperacionesCajero
                             {
@@ -314,12 +314,12 @@ namespace PuntoDeVenta.Controllers
                                         tags.SaldoTag = cuenta.SaldoCuenta;
                                         detalle.Monto = null;
                                         break;
-                                    case "Individual":
-                                        detalle.Monto = double.Parse(tags.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," });
-                                        var SaldoSend = double.Parse(tags.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }).ToString("F2");
-                                        SaldoSend = SaldoSend.Replace(",", string.Empty);
-                                        tags.SaldoTag = SaldoSend.Replace(".", string.Empty);
-                                        break;
+                                    //case "Individual":
+                                    //    detalle.Monto = double.Parse(tags.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," });
+                                    //    var SaldoSend = double.Parse(tags.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }).ToString("F2");
+                                    //    SaldoSend = SaldoSend.Replace(",", string.Empty);
+                                    //    tags.SaldoTag = SaldoSend.Replace(".", string.Empty);
+                                    //    break;
                                     default:
                                         break;
                                 }
@@ -429,12 +429,12 @@ namespace PuntoDeVenta.Controllers
                                         tags.SaldoTag = cuenta.SaldoCuenta;
                                         detalle.Monto = null;
                                         break;
-                                    case "Individual":
-                                        var SaldoSend = tags.SaldoTag;
-                                        SaldoSend = SaldoSend.Replace(",", string.Empty);
-                                        tags.SaldoTag = SaldoSend.Replace(".", string.Empty);
-                                        detalle.Monto = double.Parse(tags.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," });
-                                        break;
+                                    //case "Individual":
+                                    //    var SaldoSend = tags.SaldoTag;
+                                    //    SaldoSend = SaldoSend.Replace(",", string.Empty);
+                                    //    tags.SaldoTag = SaldoSend.Replace(".", string.Empty);
+                                    //    detalle.Monto = double.Parse(tags.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," });
+                                    //    break;
                                     default:
                                         break;
                                 }
@@ -528,7 +528,7 @@ namespace PuntoDeVenta.Controllers
             Tags tags = await db.Tags.FindAsync(id);
             var cuenta = await db.CuentasTelepeajes.FindAsync(tags.CuentaId);
             tags.TipoTag = cuenta.TypeCuenta;
-            tags.SaldoTag = (Convert.ToInt64(tags.SaldoTag) / 100).ToString("F2");
+            //tags.SaldoTag = (Convert.ToInt64(tags.SaldoTag) / 100).ToString("F2");
             ViewBag.TagsModelTras = new Tags();
             ViewBag.AmountsCobroTag = new SelectList(db.AmountConfigurations.Where(x => x.Concept == "COBROTAG").AsEnumerable(), "Amount", "Amount");
 
@@ -589,7 +589,7 @@ namespace PuntoDeVenta.Controllers
                     case "Individual":
                         var SaldoSend = tag.SaldoAnterior.Value.ToString("F2");
                         SaldoSend = SaldoSend.Replace(",", string.Empty);
-                        tagNew.SaldoTag = SaldoSend.Replace(".", string.Empty);
+                        //tagNew.SaldoTag = SaldoSend.Replace(".", string.Empty);
                         break;
                     default:
                         break;
@@ -674,12 +674,12 @@ namespace PuntoDeVenta.Controllers
                         {
                             case "Colectiva":
                                 tagNew.SaldoTag = cuenta.cue.SaldoCuenta;
-                                detalle.Monto = double.Parse(tagNew.SaldoTag);
+                               // detalle.Monto = double.Parse(tagNew.SaldoTag);
                                 break;
                             case "Individual":
                                 var SaldoSend = model.SaldoTag;
                                 SaldoSend = SaldoSend.Replace(",", string.Empty);
-                                tagNew.SaldoTag = SaldoSend.Replace(".", string.Empty);
+                               // tagNew.SaldoTag = SaldoSend.Replace(".", string.Empty);
                                 detalle.Monto = double.Parse(model.SaldoTag);
                                 break;
                             default:

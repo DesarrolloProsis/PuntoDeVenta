@@ -10,6 +10,7 @@ namespace PuntoDeVenta.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true;
         }
 
         protected override void Seed(PuntoDeVenta.Models.AppDbContext context)

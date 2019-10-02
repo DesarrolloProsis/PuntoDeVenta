@@ -535,19 +535,19 @@ namespace PuntoDeVenta.Controllers
                         switch (item.cuentas.TypeCuenta)
                         {
                             case "Colectiva":
-                                if ((double.Parse(item.cuentas.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ",", NumberGroupSeparator = "." }) / 100) >= 100)
-                                {
-                                    item.cuentas.StatusCuenta = true;
-                                    db.CuentasTelepeajes.Attach(item.cuentas);
-                                    db.Entry(item.cuentas).State = EntityState.Modified;
+                                //if ((double.Parse(item.cuentas.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ",", NumberGroupSeparator = "." }) / 100) >= 100)
+                                //{
+                                //    item.cuentas.StatusCuenta = true;
+                                //    db.CuentasTelepeajes.Attach(item.cuentas);
+                                //    db.Entry(item.cuentas).State = EntityState.Modified;
 
-                                    item.Tags.ForEach(x =>
-                                    {
-                                        x.StatusTag = true;
-                                        db.Tags.Attach(x);
-                                        db.Entry(x).State = EntityState.Modified;
-                                    });
-                                }
+                                //    item.Tags.ForEach(x =>
+                                //    {
+                                //        x.StatusTag = true;
+                                //        db.Tags.Attach(x);
+                                //        db.Entry(x).State = EntityState.Modified;
+                                //    });
+                                //}
                                 break;
 
                             case "Individual":
@@ -558,12 +558,12 @@ namespace PuntoDeVenta.Controllers
 
                                 item.Tags.ForEach(x =>
                                 {
-                                    if ((double.Parse(x.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ",", NumberGroupSeparator = "." }) / 100) >= 20)
-                                    {
-                                        x.StatusTag = true;
-                                        db.Tags.Attach(x);
-                                        db.Entry(x).State = EntityState.Modified;
-                                    }
+                                    //if ((double.Parse(x.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ",", NumberGroupSeparator = "." }) / 100) >= 20)
+                                    //{
+                                    //    x.StatusTag = true;
+                                    //    db.Tags.Attach(x);
+                                    //    db.Entry(x).State = EntityState.Modified;
+                                    //}
                                 });
                                 break;
                             default:

@@ -60,32 +60,32 @@ namespace PuntoDeVenta.Controllers
 
                         if (lastCorteUser != null)
                         {
-                            var Saldo = (double.Parse(FoundCuenta.cue.SaldoCuenta) / 100).ToString("F2");
+                            //var Saldo = (double.Parse(FoundCuenta.cue.SaldoCuenta) / 100).ToString("F2");
 
-                            var SaldoNuevo = (double.Parse(Saldo) + double.Parse(modelCuenta.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }));
+                            //var SaldoNuevo = (double.Parse(Saldo) + double.Parse(modelCuenta.SaldoARecargar, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }));
 
-                            var SaldoSend = Math.Round(SaldoNuevo, 2).ToString("F2");
+                            //var SaldoSend = Math.Round(SaldoNuevo, 2).ToString("F2");
 
-                            SaldoSend = SaldoSend.Replace(",", string.Empty);
-                            FoundCuenta.cue.SaldoCuenta = SaldoSend.Replace(".", string.Empty);
+                            //SaldoSend = SaldoSend.Replace(",", string.Empty);
+                            //FoundCuenta.cue.SaldoCuenta = SaldoSend.Replace(".", string.Empty);
 
-                            if ((double.Parse(FoundCuenta.cue.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }) / 100) >= 100)
-                            {
-                                if (FoundCuenta.cue.StatusCuenta == false)
-                                    FoundCuenta.cue.StatusCuenta = true;
+                            //if ((double.Parse(FoundCuenta.cue.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }) / 100) >= 100)
+                            //{
+                            //    if (FoundCuenta.cue.StatusCuenta == false)
+                            //        FoundCuenta.cue.StatusCuenta = true;
 
-                                List<Tags> tags = await db.Tags.Where(x => x.CuentaId == FoundCuenta.cue.Id).ToListAsync();
+                            //    List<Tags> tags = await db.Tags.Where(x => x.CuentaId == FoundCuenta.cue.Id).ToListAsync();
 
-                                foreach (var item in tags)
-                                {
-                                    if (item.StatusTag == false)
-                                        item.StatusTag = true;
+                            //    foreach (var item in tags)
+                            //    {
+                            //        if (item.StatusTag == false)
+                            //            item.StatusTag = true;
 
-                                    item.SaldoTag = FoundCuenta.cue.SaldoCuenta;
-                                    db.Tags.Attach(item);
-                                    db.Entry(item).State = EntityState.Modified;
-                                }
-                            }
+                            //        item.SaldoTag = FoundCuenta.cue.SaldoCuenta;
+                            //        db.Tags.Attach(item);
+                            //        db.Entry(item).State = EntityState.Modified;
+                            //    }
+                            //}
 
                             var detalle = new OperacionesCajero
                             {
@@ -201,7 +201,7 @@ namespace PuntoDeVenta.Controllers
                     if (lastCorteUser != null)
                     {
                         if (cuentasTelepeaje.TypeCuenta == "Individual")
-                            cuentasTelepeaje.SaldoCuenta = null;
+                            //cuentasTelepeaje.SaldoCuenta = null;
 
                         cuentasTelepeaje.StatusCuenta = true;
                         cuentasTelepeaje.StatusResidenteCuenta = false;
@@ -241,11 +241,11 @@ namespace PuntoDeVenta.Controllers
                             if (cuentasTelepeaje.TypeCuenta == "Colectiva")
                             {
                                 detalle.TipoPago = "EFE";
-                                detalle.Monto = double.Parse(cuentasTelepeaje.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," });
+                               // detalle.Monto = double.Parse(cuentasTelepeaje.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," });
 
-                                var SaldoSend = double.Parse(cuentasTelepeaje.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }).ToString("F2");
-                                SaldoSend = SaldoSend.Replace(",", string.Empty);
-                                cuentasTelepeaje.SaldoCuenta = SaldoSend.Replace(".", string.Empty);
+                               // var SaldoSend = double.Parse(cuentasTelepeaje.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }).ToString("F2");
+                                //SaldoSend = SaldoSend.Replace(",", string.Empty);
+                               // cuentasTelepeaje.SaldoCuenta = SaldoSend.Replace(".", string.Empty);
                             }
 
                             db.OperacionesCajeros.Add(detalle);
@@ -293,7 +293,7 @@ namespace PuntoDeVenta.Controllers
                     if (lastCorteUser != null)
                     {
                         if (cuentasTelepeaje.TypeCuenta == "Individual")
-                            cuentasTelepeaje.SaldoCuenta = null;
+                           // cuentasTelepeaje.SaldoCuenta = null;
 
                         cuentasTelepeaje.StatusCuenta = true;
                         cuentasTelepeaje.StatusResidenteCuenta = false;
@@ -333,11 +333,11 @@ namespace PuntoDeVenta.Controllers
                             if (cuentasTelepeaje.TypeCuenta == "Colectiva")
                             {
                                 detalle.TipoPago = "EFE";
-                                detalle.Monto = double.Parse(cuentasTelepeaje.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," });
+                                //detalle.Monto = double.Parse(cuentasTelepeaje.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," });
 
-                                var SaldoSend = double.Parse(cuentasTelepeaje.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }).ToString("F2");
-                                SaldoSend = SaldoSend.Replace(",", string.Empty);
-                                cuentasTelepeaje.SaldoCuenta = SaldoSend.Replace(".", string.Empty);
+                                //var SaldoSend = double.Parse(cuentasTelepeaje.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }).ToString("F2");
+                                //SaldoSend = SaldoSend.Replace(",", string.Empty);
+                                //cuentasTelepeaje.SaldoCuenta = SaldoSend.Replace(".", string.Empty);
                             }
 
                             db.OperacionesCajeros.Add(detalle);
@@ -530,24 +530,24 @@ namespace PuntoDeVenta.Controllers
                     switch (cuentasTelepeaje.cuentas.TypeCuenta)
                     {
                         case "Colectiva":
-                            if ((double.Parse(cuentasTelepeaje.cuentas.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }) / 100) >= 100)
-                            {
-                                cuentasTelepeaje.cuentas.StatusCuenta = true;
-                                db.CuentasTelepeajes.Attach(cuentasTelepeaje.cuentas);
-                                db.Entry(cuentasTelepeaje.cuentas).State = EntityState.Modified;
+                            //if ((double.Parse(cuentasTelepeaje.cuentas.SaldoCuenta, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }) / 100) >= 100)
+                            //{
+                            //    cuentasTelepeaje.cuentas.StatusCuenta = true;
+                            //    db.CuentasTelepeajes.Attach(cuentasTelepeaje.cuentas);
+                            //    db.Entry(cuentasTelepeaje.cuentas).State = EntityState.Modified;
 
-                                cuentasTelepeaje.Tags.ForEach(x =>
-                                {
-                                    x.StatusTag = true;
-                                    db.Tags.Attach(x);
-                                    db.Entry(x).State = EntityState.Modified;
-                                });
-                            }
-                            else
-                            {
-                                TempData["EDelete"] = $"No es posible habilitar la cuenta: {cuentasTelepeaje.cuentas.NumCuenta} por saldo insuficiente.";
-                                return RedirectToAction("Index", "Clientes");
-                            }
+                            //    cuentasTelepeaje.Tags.ForEach(x =>
+                            //    {
+                            //        x.StatusTag = true;
+                            //        db.Tags.Attach(x);
+                            //        db.Entry(x).State = EntityState.Modified;
+                            //    });
+                            //}
+                            //else
+                            //{
+                            //    TempData["EDelete"] = $"No es posible habilitar la cuenta: {cuentasTelepeaje.cuentas.NumCuenta} por saldo insuficiente.";
+                            //    return RedirectToAction("Index", "Clientes");
+                            //}
                             break;
 
                         case "Individual":
@@ -558,12 +558,12 @@ namespace PuntoDeVenta.Controllers
 
                             cuentasTelepeaje.Tags.ForEach(x =>
                             {
-                                if ((double.Parse(x.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }) / 100) >= 20)
-                                {
-                                    x.StatusTag = true;
-                                    db.Tags.Attach(x);
-                                    db.Entry(x).State = EntityState.Modified;
-                                }
+                                //if ((double.Parse(x.SaldoTag, new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," }) / 100) >= 20)
+                                //{
+                                //    x.StatusTag = true;
+                                //    db.Tags.Attach(x);
+                                //    db.Entry(x).State = EntityState.Modified;
+                                //}
                             });
 
                             break;

@@ -1412,15 +1412,15 @@ namespace PuntoDeVenta.Controllers
                                              _ClienteID = cliente.NumCliente,
                                              _Nombre = cliente.Nombre + cliente.Apellidos,
                                              _TypeCuenta = cuentas.TypeCuenta,
-                                             _Plaza = historico.Delegacion,
-                                             _Cuerpo = historico.Cuerpo,
+                                            // _Plaza = historico.Delegacion,
+                                             //_Cuerpo = historico.Cuerpo,
                                              _Carril = historico.Carril,
                                              _Fecha = historico.Fecha,
-                                             _Clase = historico.Clase,
+                                             //_Clase = historico.Clase,
                                              _SaldoAntes = historico.SaldoAnterior,
                                              _Saldo = historico.Saldo,
                                              _SaldoNuevo = historico.SaldoActualizado,
-                                             _Operadora = historico.Operador,
+                                             //_Operadora = historico.Operador,
                                              _SaldoActual = tags.SaldoTag
 
                                          }).ToList();
@@ -1439,15 +1439,15 @@ namespace PuntoDeVenta.Controllers
                                           _ClienteID = cliente.NumCliente,
                                           _Nombre = cliente.Nombre + cliente.Apellidos,
                                           _TypeCuenta = cuentas.TypeCuenta,
-                                          _Plaza = historico.Delegacion,
-                                          _Cuerpo = historico.Cuerpo,
-                                          _Carril = historico.Carril,
+                                         // _Plaza = historico.Delegacion,
+                                          //_Cuerpo = historico.Cuerpo,
+                                          //_Carril = historico.Carril,
                                           _Fecha = historico.Fecha,
-                                          _Clase = historico.Clase,
+                                          //_Clase = historico.Clase,
                                           _SaldoAntes = historico.SaldoAnterior,
                                           _Saldo = historico.Saldo,
                                           _SaldoNuevo = historico.SaldoActualizado,
-                                          _Operadora = historico.Operador,
+                                          //_Operadora = historico.Operador,
 
                                       }).ToList();
 
@@ -1456,7 +1456,7 @@ namespace PuntoDeVenta.Controllers
 
                     foreach (var ite in ListaCompleta)
                     {
-                        total = total + ite._Saldo;
+                       // total = total + ite._Saldo;
                     }
 
                     List<Cruces> List = new List<Cruces>();
@@ -1471,19 +1471,19 @@ namespace PuntoDeVenta.Controllers
                             NomCliente = item._Nombre,
                             TypeCuenta = item._TypeCuenta,
                             Tag = item._Tag,
-                            Plaza = item._Plaza,
+                            //Plaza = item._Plaza,
                             Fecha = Convert.ToString(item._Fecha),
-                            Cuerpo = item._Cuerpo,
+                            //Cuerpo = item._Cuerpo,
                             Carril = item._Carril,
-                            Clase = item._Clase,
-                            SaldoAntes = Convercion(item._SaldoAntes),
+                            //Clase = item._Clase,
+                            //SaldoAntes = Convercion(item._SaldoAntes),
                             Saldo = Convercion(item._Saldo.ToString().Replace(".", ",")),
-                            SaldoDespues = Convercion(item._SaldoNuevo),
+                            //SaldoDespues = Convercion(item._SaldoNuevo),
                             //SaldoAntes = Convert.ToDouble(item._SaldoAntes.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                             //Saldo = Convert.ToDouble(Convert.ToString(item._Saldo).Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                             //SaldoDespues = Convert.ToDouble(item._SaldoNuevo.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                             SaldoActual = (Convert.ToDouble(item._SaldoActual) / 100).ToString("C2", culture).Replace("$", "Q"),
-                            Operador = item._Operadora,
+                            //Operador = item._Operadora,
                             TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
 
 
@@ -1498,19 +1498,19 @@ namespace PuntoDeVenta.Controllers
                             NomCliente = item2._Nombre,
                             TypeCuenta = item2._TypeCuenta,
                             Tag = item2._Tag,
-                            Plaza = item2._Plaza,
+                            //Plaza = item2._Plaza,
                             Fecha = Convert.ToString(item2._Fecha),
-                            Cuerpo = item2._Cuerpo,
-                            Carril = item2._Carril,
-                            Clase = item2._Clase,
-                            SaldoAntes = Convercion(item2._SaldoAntes),
-                            Saldo = Convercion(item2._Saldo.ToString().Replace(".", ",")),
-                            SaldoDespues = Convercion(item2._SaldoNuevo),
+                            //Cuerpo = item2._Cuerpo,
+                            //Carril = item2._Carril,
+                            //Clase = item2._Clase,
+                            //SaldoAntes = Convercion(item2._SaldoAntes),
+                            //Saldo = Convercion(item2._Saldo.ToString().Replace(".", ",")),
+                            //SaldoDespues = Convercion(item2._SaldoNuevo),
                             //SaldoAntes = Convert.ToDouble(item._SaldoAntes.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                             //Saldo = Convert.ToDouble(Convert.ToString(item._Saldo).Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                             //SaldoDespues = Convert.ToDouble(item._SaldoNuevo.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                             SaldoActual = "Tag en Lista Negra",
-                            Operador = item2._Operadora,
+                            //Operador = item2._Operadora,
                             TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
                         });
                     }
@@ -1535,15 +1535,15 @@ namespace PuntoDeVenta.Controllers
                                              _Nombre = cliente.Nombre + cliente.Apellidos,
                                              _TypeCuenta = cuentas.TypeCuenta,
                                              _Tag = tags.NumTag,
-                                             _Plaza = historico.Delegacion,
-                                             _Cuerpo = historico.Cuerpo,
+                                            // _Plaza = historico.Delegacion,
+                                            // _Cuerpo = historico.Cuerpo,
                                              _Carril = historico.Carril,
                                              _Fecha = historico.Fecha,
-                                             _Clase = historico.Clase,
+                                            // _Clase = historico.Clase,
                                              _SaldoAntes = historico.SaldoAnterior,
                                              _Saldo = historico.Saldo,
                                              _SaldoNuevo = historico.SaldoActualizado,
-                                             _Operadora = historico.Operador,
+                                            // _Operadora = historico.Operador,
                                              _SaldoActual = tags.SaldoTag
                                          }).ToList();
 
@@ -1551,7 +1551,7 @@ namespace PuntoDeVenta.Controllers
                     double total = 0;
                     foreach (var ite in ListaCompleta)
                     {
-                        total = total + ite._Saldo;
+                       // total = total + ite._Saldo;
                     }
 
                     var ListaNegra = (from historico in db.Historicos
@@ -1567,15 +1567,15 @@ namespace PuntoDeVenta.Controllers
                                           _ClienteID = cliente.NumCliente,
                                           _Nombre = cliente.Nombre + cliente.Apellidos,
                                           _TypeCuenta = cuentas.TypeCuenta,
-                                          _Plaza = historico.Delegacion,
-                                          _Cuerpo = historico.Cuerpo,
-                                          _Carril = historico.Carril,
+                                         // _Plaza = historico.Delegacion,
+                                         // _Cuerpo = historico.Cuerpo,
+                                         // _Carril = historico.Carril,
                                           _Fecha = historico.Fecha,
-                                          _Clase = historico.Clase,
+                                        // _Clase = historico.Clase,
                                           _SaldoAntes = historico.SaldoAnterior,
-                                          _Saldo = historico.Saldo,
+                                         // _Saldo = historico.Saldo,
                                           _SaldoNuevo = historico.SaldoActualizado,
-                                          _Operadora = historico.Operador,
+                                          //_Operadora = historico.Operador,
 
                                       }).ToList();
 
@@ -1591,19 +1591,19 @@ namespace PuntoDeVenta.Controllers
                             NomCliente = item._Nombre,
                             TypeCuenta = item._TypeCuenta,
                             Tag = item._Tag,
-                            Plaza = item._Plaza,
+                          //  Plaza = item._Plaza,
                             Fecha = Convert.ToString(item._Fecha),
-                            Cuerpo = item._Cuerpo,
+                          //  Cuerpo = item._Cuerpo,
                             Carril = item._Carril,
-                            Clase = item._Clase,
-                            SaldoAntes = Convercion(item._SaldoAntes),
-                            Saldo = Convercion(item._Saldo.ToString().Replace(".", ",")),
-                            SaldoDespues = Convercion(item._SaldoNuevo),
+                           // Clase = item._Clase,
+                           // SaldoAntes = Convercion(item._SaldoAntes),
+                          //  Saldo = Convercion(item._Saldo.ToString().Replace(".", ",")),
+                           // SaldoDespues = Convercion(item._SaldoNuevo),
                             //SaldoAntes = Convert.ToDouble(item._SaldoAntes.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                             //Saldo = Convert.ToDouble(Convert.ToString(item._Saldo).Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                             //SaldoDespues = Convert.ToDouble(item._SaldoNuevo.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                             SaldoActual = (Convert.ToDouble(item._SaldoActual) / 100).ToString("C2", culture).Replace("$", "Q"),
-                            Operador = item._Operadora,
+                          //  Operador = item._Operadora,
                             TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
 
                         });
@@ -1618,19 +1618,19 @@ namespace PuntoDeVenta.Controllers
                             NomCliente = item2._Nombre,
                             TypeCuenta = item2._TypeCuenta,
                             Tag = item2._Tag,
-                            Plaza = item2._Plaza,
+                           // Plaza = item2._Plaza,
                             Fecha = Convert.ToString(item2._Fecha),
-                            Cuerpo = item2._Cuerpo,
-                            Carril = item2._Carril,
-                            Clase = item2._Clase,
-                            SaldoAntes = Convercion(item2._SaldoAntes),
-                            Saldo = Convercion(item2._Saldo.ToString().Replace(".", ",")),
-                            SaldoDespues = Convercion(item2._SaldoNuevo),
+                            //Cuerpo = item2._Cuerpo,
+                            //Carril = item2._Carril,
+                            //Clase = item2._Clase,
+                            //SaldoAntes = Convercion(item2._SaldoAntes),
+                            //Saldo = Convercion(item2._Saldo.ToString().Replace(".", ",")),
+                            //SaldoDespues = Convercion(item2._SaldoNuevo),
                             //SaldoAntes = Convert.ToDouble(item._SaldoAntes.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                             //Saldo = Convert.ToDouble(Convert.ToString(item._Saldo).Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                             //SaldoDespues = Convert.ToDouble(item._SaldoNuevo.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                             SaldoActual = "Tag en Lista Negra",
-                            Operador = item2._Operadora,
+                            //Operador = item2._Operadora,
                             TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
                         });
                     }
@@ -1668,15 +1668,15 @@ namespace PuntoDeVenta.Controllers
                                           _ClienteID = cliente.NumCliente,
                                           _Nombre = cliente.Nombre + cliente.Apellidos,
                                           _TypeCuenta = cuentas.TypeCuenta,
-                                          _Plaza = historico.Delegacion,
-                                          _Cuerpo = historico.Cuerpo,
+                                          //_Plaza = historico.Delegacion,
+                                          //_Cuerpo = historico.Cuerpo,
                                           _Carril = historico.Carril,
                                           _Fecha = historico.Fecha,
-                                          _Clase = historico.Clase,
+                                          //_Clase = historico.Clase,
                                           _SaldoAntes = historico.SaldoAnterior,
                                           _Saldo = historico.Saldo,
                                           _SaldoNuevo = historico.SaldoActualizado,
-                                          _Operadora = historico.Operador,
+                                          //_Operadora = historico.Operador,
 
                                       }).ToList();
 
@@ -1689,19 +1689,19 @@ namespace PuntoDeVenta.Controllers
                             NomCliente = item2._Nombre,
                             TypeCuenta = item2._TypeCuenta,
                             Tag = item2._Tag,
-                            Plaza = item2._Plaza,
+                            //Plaza = item2._Plaza,
                             Fecha = Convert.ToString(item2._Fecha),
-                            Cuerpo = item2._Cuerpo,
+                            //Cuerpo = item2._Cuerpo,
                             Carril = item2._Carril,
-                            Clase = item2._Clase,
-                            SaldoAntes = Convercion(item2._SaldoAntes),
-                            Saldo = Convercion(item2._Saldo.ToString().Replace(".", ",")),
-                            SaldoDespues = Convercion(item2._SaldoNuevo),
+                            //Clase = item2._Clase,
+                            //SaldoAntes = Convercion(item2._SaldoAntes),
+                            //Saldo = Convercion(item2._Saldo.ToString().Replace(".", ",")),
+                            //SaldoDespues = Convercion(item2._SaldoNuevo),
                             //SaldoAntes = Convert.ToDouble(item._SaldoAntes.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                             //Saldo = Convert.ToDouble(Convert.ToString(item._Saldo).Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                             //SaldoDespues = Convert.ToDouble(item._SaldoNuevo.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                             SaldoActual = "Tag en Lista Negra",
-                            Operador = item2._Operadora,
+                            //Operador = item2._Operadora,
                             TotalMonetarioCruces = "Tag en Lista Negra"
                         });
                     }
@@ -1726,15 +1726,15 @@ namespace PuntoDeVenta.Controllers
                                                  _ClienteID = cliente.NumCliente,
                                                  _Nombre = cliente.Nombre + cliente.Apellidos,
                                                  _TypeCuenta = cuentas.TypeCuenta,
-                                                 _Plaza = historico.Delegacion,
-                                                 _Cuerpo = historico.Cuerpo,
+                                                 //_Plaza = historico.Delegacion,
+                                                 //_Cuerpo = historico.Cuerpo,
                                                  _Carril = historico.Carril,
                                                  _Fecha = historico.Fecha,
-                                                 _Clase = historico.Clase,
+                                                 //_Clase = historico.Clase,
                                                  _SaldoAntes = historico.SaldoAnterior,
                                                  _Saldo = historico.Saldo,
                                                  _SaldoNuevo = historico.SaldoActualizado,
-                                                 _Operadora = historico.Operador,
+                                                 //_Operadora = historico.Operador,
                                                  _SaldoActual = cuentas.SaldoCuenta
 
                                              }).ToList();
@@ -1751,19 +1751,19 @@ namespace PuntoDeVenta.Controllers
                                 NomCliente = item2._Nombre,
                                 TypeCuenta = item2._TypeCuenta,
                                 Tag = item._Tag,
-                                Plaza = item2._Plaza,
+                                //Plaza = item2._Plaza,
                                 Fecha = Convert.ToString(item2._Fecha),
-                                Cuerpo = item2._Cuerpo,
-                                Carril = item2._Carril,
-                                Clase = item2._Clase,
-                                SaldoAntes = Convercion(item2._SaldoAntes),
+                                //Cuerpo = item2._Cuerpo,
+                                //Carril = item2._Carril,
+                                //Clase = item2._Clase,
+                                //SaldoAntes = Convercion(item2._SaldoAntes),
                                 Saldo = Convercion(item2._Saldo.ToString().Replace(".", ",")),
-                                SaldoDespues = Convercion(item2._SaldoNuevo),
+                                //SaldoDespues = Convercion(item2._SaldoNuevo),
                                 //SaldoAntes = Convert.ToDouble(item2._SaldoAntes.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                                 //Saldo = Convert.ToDouble(Convert.ToString(item2._Saldo).Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                                 //SaldoDespues = Convert.ToDouble(item2._SaldoNuevo.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                                 SaldoActual = (Convert.ToDouble(item2._SaldoActual) / 100).ToString("C2", culture).Replace("$", "Q"),
-                                Operador = item2._Operadora,
+                                //Operador = item2._Operadora,
                                 //TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
 
                             });
@@ -1803,15 +1803,15 @@ namespace PuntoDeVenta.Controllers
                                           _ClienteID = cliente.NumCliente,
                                           _Nombre = cliente.Nombre + cliente.Apellidos,
                                           _TypeCuenta = cuentas.TypeCuenta,
-                                          _Plaza = historico.Delegacion,
-                                          _Cuerpo = historico.Cuerpo,
+                                          //_Plaza = historico.Delegacion,
+                                          //_Cuerpo = historico.Cuerpo,
                                           _Carril = historico.Carril,
                                           _Fecha = historico.Fecha,
-                                          _Clase = historico.Clase,
+                                          //_Clase = historico.Clase,
                                           _SaldoAntes = historico.SaldoAnterior,
                                           _Saldo = historico.Saldo,
                                           _SaldoNuevo = historico.SaldoActualizado,
-                                          _Operadora = historico.Operador,
+                                          //_Operadora = historico.Operador,
 
                                       }).ToList();
 
@@ -1824,19 +1824,19 @@ namespace PuntoDeVenta.Controllers
                             NomCliente = item2._Nombre,
                             TypeCuenta = item2._TypeCuenta,
                             Tag = item2._Tag,
-                            Plaza = item2._Plaza,
+                            //Plaza = item2._Plaza,
                             Fecha = Convert.ToString(item2._Fecha),
-                            Cuerpo = item2._Cuerpo,
+                            //Cuerpo = item2._Cuerpo,
                             Carril = item2._Carril,
-                            Clase = item2._Clase,
-                            SaldoAntes = Convercion(item2._SaldoAntes),
+                            //Clase = item2._Clase,
+                            //SaldoAntes = Convercion(item2._SaldoAntes),
                             Saldo = Convercion(item2._Saldo.ToString().Replace(".", ",")),
-                            SaldoDespues = Convercion(item2._SaldoNuevo),
+                            //SaldoDespues = Convercion(item2._SaldoNuevo),
                             //SaldoAntes = Convert.ToDouble(item._SaldoAntes.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                             //Saldo = Convert.ToDouble(Convert.ToString(item._Saldo).Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                             //SaldoDespues = Convert.ToDouble(item._SaldoNuevo.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                             SaldoActual = "Tag en Lista Negra",
-                            Operador = item2._Operadora,
+                            //Operador = item2._Operadora,
                             TotalMonetarioCruces = "Tag en Lista Negra"
                         });
                     }
@@ -1860,15 +1860,15 @@ namespace PuntoDeVenta.Controllers
                                                  _ClienteID = cliente.NumCliente,
                                                  _Nombre = cliente.Nombre + cliente.Apellidos,
                                                  _TypeCuenta = cuentas.TypeCuenta,
-                                                 _Plaza = historico.Delegacion,
-                                                 _Cuerpo = historico.Cuerpo,
+                                                 //_Plaza = historico.Delegacion,
+                                                 //_Cuerpo = historico.Cuerpo,
                                                  _Carril = historico.Carril,
                                                  _Fecha = historico.Fecha,
-                                                 _Clase = historico.Clase,
+                                                 //_Clase = historico.Clase,
                                                  _SaldoAntes = historico.SaldoAnterior,
                                                  _Saldo = historico.Saldo,
                                                  _SaldoNuevo = historico.SaldoActualizado,
-                                                 _Operadora = historico.Operador,
+                                                 //_Operadora = historico.Operador,
                                                  _SaldoActual = cuentas.SaldoCuenta
 
 
@@ -1884,19 +1884,19 @@ namespace PuntoDeVenta.Controllers
                                 NomCliente = item2._Nombre,
                                 TypeCuenta = item2._TypeCuenta,
                                 Tag = item._Tag,
-                                Plaza = item2._Plaza,
+                                //Plaza = item2._Plaza,
                                 Fecha = Convert.ToString(item2._Fecha),
-                                Cuerpo = item2._Cuerpo,
+                                //Cuerpo = item2._Cuerpo,
                                 Carril = item2._Carril,
-                                Clase = item2._Clase,
-                                SaldoAntes = Convercion(item2._SaldoAntes),
+                                //Clase = item2._Clase,
+                                //SaldoAntes = Convercion(item2._SaldoAntes),
                                 Saldo = Convercion(item2._Saldo.ToString().Replace(".", ",")),
-                                SaldoDespues = Convercion(item2._SaldoNuevo),
+                                //SaldoDespues = Convercion(item2._SaldoNuevo),
                                 //SaldoAntes = Convert.ToDouble(item2._SaldoAntes.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                                 //Saldo = Convert.ToDouble(Convert.ToString(item2._Saldo).Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                                 //SaldoDespues = Convert.ToDouble(item2._SaldoNuevo.Replace(",", ",")).ToString("C2", culture).Replace("$", "Q"),
                                 SaldoActual = (Convert.ToDouble(item2._SaldoActual) / 100).ToString("C2", culture).Replace("$", "Q"),
-                                Operador = item2._Operadora,
+                                //Operador = item2._Operadora,
                                 //TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
 
                             });
@@ -1917,15 +1917,15 @@ namespace PuntoDeVenta.Controllers
                                      select new
                                      {
                                          _Tag = historico.Tag,
-                                         _Plaza = historico.Delegacion,
-                                         _Cuerpo = historico.Cuerpo,
+                                         //_Plaza = historico.Delegacion,
+                                         //_Cuerpo = historico.Cuerpo,
                                          _Carril = historico.Carril,
                                          _Fecha = historico.Fecha,
-                                         _Clase = historico.Clase,
+                                         //_Clase = historico.Clase,
                                          _SaldoAntes = historico.SaldoAnterior,
                                          _Saldo = historico.Saldo,
                                          _SaldoNuevo = historico.SaldoActualizado,
-                                         _Operadora = historico.Operador,
+                                         //_Operadora = historico.Operador,
 
 
                                      }).ToList();
@@ -1937,7 +1937,7 @@ namespace PuntoDeVenta.Controllers
 
                 foreach (var ite in ListaCompleta)
                 {
-                    total = total + ite._Saldo;
+                    //total = total + ite._Saldo;
                 }
 
 
@@ -1954,16 +1954,16 @@ namespace PuntoDeVenta.Controllers
                         NumCliente = "",
                         NomCliente = "",
                         TypeCuenta = "",
-                        Plaza = item._Plaza,
+                        //Plaza = item._Plaza,
                         Fecha = Convert.ToString(item._Fecha),
-                        Cuerpo = item._Cuerpo,
+                        //Cuerpo = item._Cuerpo,
                         Carril = item._Carril,
-                        Clase = item._Clase,
-                        SaldoAntes = Convercion(item._SaldoAntes),
+                        //Clase = item._Clase,
+                        //SaldoAntes = Convercion(item._SaldoAntes),
                         Saldo = Convercion(item._Saldo.ToString().Replace(".", ",")),
-                        SaldoDespues = Convercion(item._SaldoNuevo),
+                        //SaldoDespues = Convercion(item._SaldoNuevo),
                         SaldoActual = "",
-                        Operador = item._Operadora,
+                        //Operador = item._Operadora,
                         TotalMonetarioCruces = total.ToString("C2", culture).Replace("$", "Q")
 
                     });
@@ -2921,7 +2921,7 @@ namespace PuntoDeVenta.Controllers
             double crucesMes = 0;
             foreach (var ite in listCruces)
             {
-                crucesMes += ite.Saldo;
+                //crucesMes += ite.Saldo;
             }
             //var crucesMes = Convert.ToDouble(db.Historicos.Where(x => x.Fecha >= ActualInicio && x.Fecha < ActualFin).Sum(x => x.Saldo));
             //var recargasMes = Convert.ToDouble(db.OperacionesCajeros.Where(x => x.DateTOperacion >= ActualInicio && x.DateTOperacion < ActualFin).Sum(x => x.Monto));
@@ -3546,7 +3546,7 @@ namespace PuntoDeVenta.Controllers
                                                saldosCruces = h.Saldo
                                            }).ToList();
 
-                        CrucesTotales += listaCruces.Sum(x => x.saldosCruces);
+                        //CrucesTotales += listaCruces.Sum(x => x.saldosCruces);
                     }
 
 
@@ -4576,42 +4576,42 @@ namespace PuntoDeVenta.Controllers
             return 'Q' + Mandar;
         }
 
-        public double CruceColetivo(DateTime fecha1, DateTime fecha2)
-        {
-            AppDbContext db = new AppDbContext();
+        //public double CruceColetivo(DateTime fecha1, DateTime fecha2)
+        //{
+        //    AppDbContext db = new AppDbContext();
 
-            var lista = (from h in db.Historicos
-                         join t in db.Tags on h.Tag equals t.NumTag
-                         join c in db.CuentasTelepeajes on t.CuentaId equals c.Id
-                         where h.Fecha >= fecha1 && h.Fecha < fecha2
-                         where c.TypeCuenta == "Colectiva"
-                         select new
-                         {
-                             saldos = h.Saldo
+        //    var lista = (from h in db.Historicos
+        //                 join t in db.Tags on h.Tag equals t.NumTag
+        //                 join c in db.CuentasTelepeajes on t.CuentaId equals c.Id
+        //                 where h.Fecha >= fecha1 && h.Fecha < fecha2
+        //                 where c.TypeCuenta == "Colectiva"
+        //                 select new
+        //                 {
+        //                     saldos = h.Saldo
 
-                         }).ToList();
+        //                 }).ToList();
 
-            return lista.Sum(x => x.saldos);
-        }
+        //    return lista.Sum(x => x.saldos);
+        //}
 
-        public double CruceIndividual(DateTime fecha1, DateTime fecha2)
-        {
+        //public double CruceIndividual(DateTime fecha1, DateTime fecha2)
+        //{
 
-            AppDbContext db = new AppDbContext();
+        //    AppDbContext db = new AppDbContext();
 
-            var lista = (from h in db.Historicos
-                         join t in db.Tags on h.Tag equals t.NumTag
-                         join c in db.CuentasTelepeajes on t.CuentaId equals c.Id
-                         where h.Fecha >= fecha1 && h.Fecha < fecha2
-                         where c.TypeCuenta == "Individual"
-                         select new
-                         {
-                             saldos = h.Saldo
+        //    var lista = (from h in db.Historicos
+        //                 join t in db.Tags on h.Tag equals t.NumTag
+        //                 join c in db.CuentasTelepeajes on t.CuentaId equals c.Id
+        //                 where h.Fecha >= fecha1 && h.Fecha < fecha2
+        //                 where c.TypeCuenta == "Individual"
+        //                 select new
+        //                 {
+        //                     saldos = h.Saldo
 
-                         }).ToList();
+        //                 }).ToList();
 
-            return lista.Sum(x => x.saldos);
-        }
+        //    return lista.Sum(x => x.saldos);
+        //}
 
         public string[] IntervalosMes(string mes, string anyo)
         {

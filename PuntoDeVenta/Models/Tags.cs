@@ -17,13 +17,12 @@ namespace PuntoDeVenta.Models
 
         //[RegularExpression("^[0-9]*$", ErrorMessage = "{0} sólo acepta números.")]
         [Display(Name = "Número de tag")]
-        [StringLength(50)]
+        [StringLength(20)]
         [Required]
         public string NumTag { get; set; }
 
         [Display(Name = "Saldo de tag")]
-        [StringLength(20)]
-        public string SaldoTag { get; set; }
+        public decimal SaldoTag { get; set; }
 
         [Display(Name = "Estatus de tag")]
         [Required]

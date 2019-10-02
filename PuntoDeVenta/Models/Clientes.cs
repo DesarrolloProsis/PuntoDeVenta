@@ -15,33 +15,27 @@ namespace PuntoDeVenta.Models
         public long Id { get; set; }
 
         [Display(Name = "Número de cliente")]
-        [StringLength(30)]
         [Required]
         public string NumCliente { get; set; }
 
         [Display(Name = "Nombre del cliente")]
-        [StringLength(150)]
         [Required]
         public string Nombre { get; set; }
 
         [Display(Name = "Apellidos del cliente")]
-        [StringLength(150)]
         [Required]
         public string Apellidos { get; set; }
 
         [Display(Name = "Correo electrónico del cliente")]
-        [StringLength(150)]
         [DataType(DataType.EmailAddress)]
         [EmailAddress(ErrorMessage = "Invalid Email Address.")]
         //[Required]
         public string EmailCliente { get; set; }
 
         [Display(Name = "Dirección del cliente")]
-        [StringLength(300)]
         public string AddressCliente { get; set; }
 
         [Display(Name = "Número telefónico del cliente")]
-        [StringLength(50)]
         [Phone(ErrorMessage = "Invalid Phone Number.")]
         //[Required]
         public string PhoneCliente { get; set; }
@@ -54,7 +48,6 @@ namespace PuntoDeVenta.Models
         [Required]
         public DateTime DateTCliente { get; set; }
 
-        [StringLength(128)]
         [Column(TypeName = "nvarchar")]
         [Required]
         public string IdCajero { get; set; }

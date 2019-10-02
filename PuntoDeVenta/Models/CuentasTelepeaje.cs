@@ -20,8 +20,7 @@ namespace PuntoDeVenta.Models
         public string NumCuenta { get; set; }
 
         [Display(Name = "Saldo de cuenta")]
-        [StringLength(20)]
-        public string SaldoCuenta { get; set; }
+        public decimal SaldoCuenta { get; set; }
 
         [Display(Name = "Tipo de cuenta")]
         [StringLength(20)]
