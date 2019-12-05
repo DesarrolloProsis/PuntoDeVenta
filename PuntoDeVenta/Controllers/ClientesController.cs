@@ -50,42 +50,11 @@ namespace PuntoDeVenta.Controllers
 
                     var v = (from a in dc.Clientes select a).ToList();
 
-                    // FILTER
-                    if (!string.IsNullOrEmpty(searchValue))
-                    {
-                        v = v.Where(x => !string.IsNullOrEmpty(x.NumCliente) && x.NumCliente.ToLower().Contains(searchValue.ToLower()) ||
-                                        !string.IsNullOrEmpty(x.Nombre) && x.Nombre.ToLower().Contains(searchValue.ToLower()) ||
-                                        !string.IsNullOrEmpty(x.Apellidos) && x.Apellidos.ToLower().Contains(searchValue.ToLower()) ||
-                                        !string.IsNullOrEmpty(x.EmailCliente) && x.EmailCliente.ToLower().Contains(searchValue.ToLower()) ||
-                                        !string.IsNullOrEmpty(x.AddressCliente) && x.AddressCliente.ToLower().Contains(searchValue.ToLower()) ||
-                                        !string.IsNullOrEmpty(x.PhoneCliente) && x.PhoneCliente.ToLower().Contains(searchValue.ToLower()) ||
-                                        !string.IsNullOrEmpty(x.DateTCliente.ToString()) && x.DateTCliente.ToString().ToLower().Contains(searchValue.ToLower()) ||
-                                        !string.IsNullOrEmpty(x.Empresa) && x.Empresa.ToLower().Contains(searchValue.ToLower()) ||
-                                        !string.IsNullOrEmpty(x.CP) && x.CP.ToLower().Contains(searchValue.ToLower()) ||
-                                        !string.IsNullOrEmpty(x.Pais) && x.Pais.ToLower().Contains(searchValue.ToLower()) ||
-                                        !string.IsNullOrEmpty(x.City) && x.City.ToLower().Contains(searchValue.ToLower()) ||
-                                        !string.IsNullOrEmpty(x.Departamento) && x.Departamento.ToLower().Contains(searchValue.ToLower()) ||
-                                        !string.IsNullOrEmpty(x.NIT) && x.NIT.ToLower().Contains(searchValue.ToLower()) ||
-                                        !string.IsNullOrEmpty(x.PhoneOffice) && x.PhoneOffice.ToLower().Contains(searchValue.ToLower())
-                                        ).ToList();
-                    }
-
-                    //SORT
-                    if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDir)))
-                    {
-                        v = v.OrderBy(sortColumn + " " + sortColumnDir).ToList();
-                    }
-
-                    // PAGING
-
-                    recordsTotal = v.Count();
-                    var query = v.Skip(skip).Take(pageSize).ToList();
-
                     // MODIFICAMOS LOS DATOS
 
                     var data = new List<Clientes>();
 
-                    query.ForEach(x =>
+                    v.ForEach(x =>
                     {
                         var value = new Clientes
                         {
@@ -107,6 +76,38 @@ namespace PuntoDeVenta.Controllers
                         };
                         data.Add(value);
                     });
+
+                    // FILTER
+                    if (!string.IsNullOrEmpty(searchValue))
+                    {
+                        data = data.Where(x => !string.IsNullOrEmpty(x.NumCliente) && x.NumCliente.ToLower().Contains(searchValue.ToLower()) ||
+                                        !string.IsNullOrEmpty(x.NombreCompleto) && x.NombreCompleto.ToLower().Contains(searchValue.ToLower()) ||
+                                        !string.IsNullOrEmpty(x.EmailCliente) && x.EmailCliente.ToLower().Contains(searchValue.ToLower()) ||
+                                        !string.IsNullOrEmpty(x.AddressCliente) && x.AddressCliente.ToLower().Contains(searchValue.ToLower()) ||
+                                        !string.IsNullOrEmpty(x.PhoneCliente) && x.PhoneCliente.ToLower().Contains(searchValue.ToLower()) ||
+                                        !string.IsNullOrEmpty(x.DateTCliente.ToString()) && x.DateTCliente.ToString().ToLower().Contains(searchValue.ToLower()) ||
+                                        !string.IsNullOrEmpty(x.Empresa) && x.Empresa.ToLower().Contains(searchValue.ToLower()) ||
+                                        !string.IsNullOrEmpty(x.CP) && x.CP.ToLower().Contains(searchValue.ToLower()) ||
+                                        !string.IsNullOrEmpty(x.Pais) && x.Pais.ToLower().Contains(searchValue.ToLower()) ||
+                                        !string.IsNullOrEmpty(x.City) && x.City.ToLower().Contains(searchValue.ToLower()) ||
+                                        !string.IsNullOrEmpty(x.Departamento) && x.Departamento.ToLower().Contains(searchValue.ToLower()) ||
+                                        !string.IsNullOrEmpty(x.NIT) && x.NIT.ToLower().Contains(searchValue.ToLower()) ||
+                                        !string.IsNullOrEmpty(x.PhoneOffice) && x.PhoneOffice.ToLower().Contains(searchValue.ToLower())
+                                        ).ToList();
+                    }
+
+                    //SORT
+                    if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDir)))
+                    {
+                        data = data.OrderBy(sortColumn + " " + sortColumnDir).ToList();
+                    }
+
+                    // PAGING
+
+                    recordsTotal = data.Count();
+                    data = data.Skip(skip).Take(pageSize).ToList();
+
+                    
 
                     return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data }, JsonRequestBehavior.AllowGet);
                 }
