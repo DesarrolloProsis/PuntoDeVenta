@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using PuntoDeVenta.Models;
-using iTextSharp.text;
+﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
-using iTextSharp.testutils;
-using System.IO;
-using System.Collections;
+using PuntoDeVenta.Models;
+using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
-using iTextSharp.text.html;
+using System.IO;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace PuntoDeVenta.Controllers
 {
@@ -2255,9 +2249,48 @@ namespace PuntoDeVenta.Controllers
 
                                          }).ToList();
 
-
+                    var list_serbi = (from op_servi in db.OperacionesSerBIpagos
+                                      join tags in db.Tags on op_servi.Numero equals tags.NumTag
+                                      join cuentas in db.CuentasTelepeajes on tags.CuentaId equals cuentas.Id
+                                      join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
+                                      where op_servi.DateTOpSerBI >= Fecha_Inicio && op_servi.DateTOpSerBI <= Fecha_Fin
+                                      where op_servi.Numero == TagCuenta
+                                      where op_servi.Tipo == "TAG"
+                                      orderby (op_servi.DateTOpSerBI) descending
+                                      select new
+                                      {
+                                          _Tag = tags.NumTag,
+                                          _CuentaID = tags.CuentaId,
+                                          _ClienteID = cliente.NumCliente,
+                                          _Nombre = cliente.Nombre + cliente.Apellidos,
+                                          _TypeCuenta = cuentas.TypeCuenta,
+                                          _Fecha = op_servi.DateTOpSerBI,
+                                          _Concepto = op_servi.Concepto,
+                                          _TipoPago = "PEM",
+                                          _Monto = op_servi.SaldoModificar.Value,
+                                          _SaldoActual = tags.SaldoTag,
+                                          _TipoCuenta = cuentas.TypeCuenta,
+                                          _CobroTag = "-",
+                                          _Referencia = op_servi.NoReferencia,
+                                          _TagCuenta = op_servi.Numero
+                                      }).ToList();
 
                     var total = ListaCompleta.Sum(x => x._Monto);
+                    foreach (var item in list_serbi)
+                    {
+                        switch (item._Concepto)
+                        {
+                            case "CUENTA PAGAR":
+                            case "TAG PAGAR":
+                                total += Convert.ToDouble(item._Monto);
+                                break;
+                            case "CUENTA REVERSAR":
+                            case "TAG REVERSAR":
+                                total -= Convert.ToDouble(item._Monto);
+                                break;
+                        }
+                    }
+
 
                     List<Movimientos> List = new List<Movimientos>();
 
@@ -2287,8 +2320,29 @@ namespace PuntoDeVenta.Controllers
                         id++;
                     }
 
-                    return List;
+                    foreach (var item in list_serbi)
+                    {
+                        List.Add(new Movimientos
+                        {
+                            Id = id,
+                            Concepto = item._Concepto,
+                            TipoPago = item._TipoPago,
+                            Monto = Convert.ToDouble(item._Monto).ToString("C2", culture).Replace("$", "Q"),
+                            Fecha = Convert.ToString(item._Fecha),
+                            Tag = item._Tag,
+                            TagCuenta = item._TagCuenta,
+                            Cuenta = Convert.ToString(item._CuentaID),
+                            NomCliente = item._Nombre,
+                            TypeCuenta = item._TypeCuenta,
+                            CobroTag = item._CobroTag,
+                            Referencia = item._Referencia,
+                            SaldoActual = (Convert.ToDouble(item._SaldoActual) / 100).ToString("C2", culture).Replace("$", "Q"),
+                            TotalMonetarioMovimientos = Convert.ToDouble(total).ToString("C2", culture).Replace("$", "Q")
+                        });
+                        id++;
+                    }
 
+                    return List;
 
                 }
                 else
@@ -2322,7 +2376,47 @@ namespace PuntoDeVenta.Controllers
 
                                          }).ToList();
 
+                    var list_serbi = (from op_servi in db.OperacionesSerBIpagos
+                                      join tags in db.Tags on op_servi.Numero equals tags.NumTag
+                                      join cuentas in db.CuentasTelepeajes on tags.CuentaId equals cuentas.Id
+                                      join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
+                                      where op_servi.DateTOpSerBI >= Fecha_Inicio && op_servi.DateTOpSerBI < Fecha_Fin
+                                      where op_servi.Numero == TagCuenta
+                                      where op_servi.Tipo == "TAG"
+                                      orderby (op_servi.DateTOpSerBI) descending
+                                      select new
+                                      {
+                                          _Tag = tags.NumTag,
+                                          _CuentaID = tags.CuentaId,
+                                          _ClienteID = cliente.NumCliente,
+                                          _Nombre = cliente.Nombre + cliente.Apellidos,
+                                          _TypeCuenta = cuentas.TypeCuenta,
+                                          _Fecha = op_servi.DateTOpSerBI,
+                                          _Concepto = op_servi.Concepto,
+                                          _TipoPago = "PEM",
+                                          _Monto = op_servi.SaldoModificar.Value,
+                                          _SaldoActual = tags.SaldoTag,
+                                          _TipoCuenta = cuentas.TypeCuenta,
+                                          _CobroTag = "-",
+                                          _Referencia = op_servi.NoReferencia,
+                                          _TagCuenta = op_servi.Numero
+                                      }).ToList();
+
                     var total = ListaCompleta.Sum(x => x._Monto);
+                    foreach (var item in list_serbi)
+                    {
+                        switch (item._Concepto)
+                        {
+                            case "CUENTA PAGAR":
+                            case "TAG PAGAR":
+                                total += Convert.ToDouble(item._Monto);
+                                break;
+                            case "CUENTA REVERSAR":
+                            case "TAG REVERSAR":
+                                total -= Convert.ToDouble(item._Monto);
+                                break;
+                        }
+                    }
 
                     List<Movimientos> List = new List<Movimientos>();
 
@@ -2351,6 +2445,29 @@ namespace PuntoDeVenta.Controllers
                         });
                         id++;
                     }
+
+                    foreach (var item in list_serbi)
+                    {
+                        List.Add(new Movimientos
+                        {
+                            Id = id,
+                            Concepto = item._Concepto,
+                            TipoPago = item._TipoPago,
+                            Monto = Convert.ToDouble(item._Monto).ToString("C2", culture).Replace("$", "Q"),
+                            Fecha = Convert.ToString(item._Fecha),
+                            Tag = item._Tag,
+                            TagCuenta = item._TagCuenta,
+                            Cuenta = Convert.ToString(item._CuentaID),
+                            NomCliente = item._Nombre,
+                            TypeCuenta = item._TypeCuenta,
+                            CobroTag = item._CobroTag,
+                            Referencia = item._Referencia,
+                            SaldoActual = (Convert.ToDouble(item._SaldoActual) / 100).ToString("C2", culture).Replace("$", "Q"),
+                            TotalMonetarioMovimientos = Convert.ToDouble(total).ToString("C2", culture).Replace("$", "Q")
+                        });
+                        id++;
+                    }
+
 
                     return List;
                 }
@@ -2389,7 +2506,50 @@ namespace PuntoDeVenta.Controllers
 
                                          }).ToList();
 
+
+                    var list_serbi = (from operaciones in db.OperacionesSerBIpagos
+                                          //join tags in db.Tags on operaciones.Numero equals tags.NumTag
+                                          //join cuentas in db.CuentasTelepeajes on tags.CuentaId equals cuentas.Id
+                                      join cuentas in db.CuentasTelepeajes on operaciones.Numero equals cuentas.NumCuenta
+                                      join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
+                                      where (operaciones.DateTOpSerBI >= Fecha_Inicio && operaciones.DateTOpSerBI <= Fecha_Fin)
+                                      where (operaciones.Numero == TagCuenta)
+                                      where (operaciones.Tipo == "CUENTA")
+                                      orderby (operaciones.DateTOpSerBI) descending
+                                      select new
+                                      {
+                                          //_Tag = tags.NumTag,
+                                          //                                             _CuentaID = tags.CuentaId,
+                                          _ClienteID = cliente.NumCliente,
+                                          _Nombre = cliente.Nombre + cliente.Apellidos,
+                                          _TypeCuenta = cuentas.TypeCuenta,
+                                          _Fecha = operaciones.DateTOpSerBI,
+                                          _Concepto = operaciones.Concepto,
+                                          _TipoPago = "PEM",
+                                          _Monto = operaciones.SaldoModificar.Value,
+                                          _SaldoActual = cuentas.SaldoCuenta,
+                                          _TipoCuenta = operaciones.Tipo,
+                                          _CobroTag = "-",
+                                          _Referencia = operaciones.NoReferencia,
+                                          _TagCuenta = operaciones.Numero
+
+                                      }).ToList();
+
                     var total = ListaCompleta.Sum(x => x._Monto);
+                    foreach (var item in list_serbi)
+                    {
+                        switch (item._Concepto)
+                        {
+                            case "CUENTA PAGAR":
+                            case "TAG PAGAR":
+                                total += Convert.ToDouble(item._Monto);
+                                break;
+                            case "CUENTA REVERSAR":
+                            case "TAG REVERSAR":
+                                total -= Convert.ToDouble(item._Monto);
+                                break;
+                        }
+                    }
 
                     List<Movimientos> List = new List<Movimientos>();
 
@@ -2410,6 +2570,30 @@ namespace PuntoDeVenta.Controllers
                             NomCliente = item._Nombre,
                             TypeCuenta = item._TypeCuenta,
                             CobroTag = Convert.ToDouble(item._CobroTag).ToString("C2", culture).Replace("$", "Q"),
+                            Referencia = item._Referencia,
+                            SaldoActual = (Convert.ToDouble(item._SaldoActual) / 100).ToString("C2", culture).Replace("$", "Q"),
+                            TotalMonetarioMovimientos = Convert.ToDouble(total).ToString("C2", culture).Replace("$", "Q")
+                            //SaldoActual = "Q" + item._SaldoActual
+
+                        });
+                        id++;
+                    }
+
+                    foreach (var item in list_serbi)
+                    {
+                        List.Add(new Movimientos
+                        {
+                            Id = id,
+                            Concepto = item._Concepto,
+                            TipoPago = item._TipoPago,
+                            Monto = Convert.ToDouble(item._Monto).ToString("C2", culture).Replace("$", "Q"),
+                            Fecha = Convert.ToString(item._Fecha),
+                            //Tag = item._Tag,
+                            TagCuenta = item._TagCuenta,
+                            //Cuenta = Convert.ToString(item._CuentaID),
+                            NomCliente = item._Nombre,
+                            TypeCuenta = item._TypeCuenta,
+                            CobroTag = item._CobroTag,
                             Referencia = item._Referencia,
                             SaldoActual = (Convert.ToDouble(item._SaldoActual) / 100).ToString("C2", culture).Replace("$", "Q"),
                             TotalMonetarioMovimientos = Convert.ToDouble(total).ToString("C2", culture).Replace("$", "Q")
@@ -2456,7 +2640,51 @@ namespace PuntoDeVenta.Controllers
                                          }).ToList();
 
 
+                    var list_serbi = (from operaciones in db.OperacionesSerBIpagos
+                                          //join tags in db.Tags on operaciones.Numero equals tags.NumTag
+                                          //join cuentas in db.CuentasTelepeajes on tags.CuentaId equals cuentas.Id
+                                      join cuentas in db.CuentasTelepeajes on operaciones.Numero equals cuentas.NumCuenta
+                                      join cliente in db.Clientes on cuentas.ClienteId equals cliente.Id
+                                      where (operaciones.DateTOpSerBI >= Fecha_Inicio && operaciones.DateTOpSerBI < Fecha_Fin)
+                                      where (operaciones.Numero == TagCuenta)
+                                      where (operaciones.Tipo == "CUENTA")
+                                      orderby (operaciones.DateTOpSerBI) descending
+                                      select new
+                                      {
+                                          //_Tag = tags.NumTag,
+                                          //                                             _CuentaID = tags.CuentaId,
+                                          _ClienteID = cliente.NumCliente,
+                                          _Nombre = cliente.Nombre + cliente.Apellidos,
+                                          _TypeCuenta = cuentas.TypeCuenta,
+                                          _Fecha = operaciones.DateTOpSerBI,
+                                          _Concepto = operaciones.Concepto,
+                                          _TipoPago = "PEM",
+                                          _Monto = operaciones.SaldoModificar.Value,
+                                          _SaldoActual = cuentas.SaldoCuenta,
+                                          _TipoCuenta = operaciones.Tipo,
+                                          _CobroTag = "-",
+                                          _Referencia = operaciones.NoReferencia,
+                                          _TagCuenta = operaciones.Numero
+
+                                      }).ToList();
+
+
                     var total = ListaCompleta.Sum(x => x._Monto);
+                    foreach (var item in list_serbi)
+                    {
+                        switch (item._Concepto)
+                        {
+                            case "CUENTA PAGAR":
+                            case "TAG PAGAR":
+                                total += Convert.ToDouble(item._Monto);
+                                break;
+                            case "CUENTA REVERSAR":
+                            case "TAG REVERSAR":
+                                total -= Convert.ToDouble(item._Monto);
+                                break;
+                        }
+                    }
+
                     List<Movimientos> List = new List<Movimientos>();
 
                     int id = 1;
@@ -2484,6 +2712,31 @@ namespace PuntoDeVenta.Controllers
                         id++;
 
                     }
+
+                    foreach (var item in list_serbi)
+                    {
+                        List.Add(new Movimientos
+                        {
+                            Id = id,
+                            Concepto = item._Concepto,
+                            TipoPago = item._TipoPago,
+                            Monto = Convert.ToDouble(item._Monto).ToString("C2", culture).Replace("$", "Q"),
+                            Fecha = Convert.ToString(item._Fecha),
+                            //Tag = item._Tag,
+                            TagCuenta = item._TagCuenta,
+                            //Cuenta = Convert.ToString(item._CuentaID),
+                            NomCliente = item._Nombre,
+                            TypeCuenta = item._TypeCuenta,
+                            CobroTag = item._CobroTag,
+                            Referencia = item._Referencia,
+                            SaldoActual = (Convert.ToDouble(item._SaldoActual) / 100).ToString("C2", culture).Replace("$", "Q"),
+                            TotalMonetarioMovimientos = Convert.ToDouble(total).ToString("C2", culture).Replace("$", "Q")
+                            //SaldoActual = "Q" + item._SaldoActual
+
+                        });
+                        id++;
+                    }
+
 
                     return List;
                 }
@@ -2600,6 +2853,23 @@ namespace PuntoDeVenta.Controllers
 
                                      }).ToList();
 
+                var list_serbi = (from operaciones in db.OperacionesSerBIpagos
+                                  where (operaciones.DateTOpSerBI >= Fecha_Inicio && operaciones.DateTOpSerBI < Fecha_Fin)
+                                  orderby (operaciones.DateTOpSerBI) descending
+                                  select new
+                                  {
+                                      _Tag = operaciones.Numero,
+                                      _TypeCuenta = operaciones.Tipo,
+                                      _Fecha = operaciones.DateTOpSerBI,
+                                      _Concepto = operaciones.Concepto,
+                                      _TipoPago = "PEM",
+                                      _Monto = operaciones.SaldoModificar.Value,
+                                      _TipoCuenta = operaciones.Tipo,
+                                      _CobroTag = "-",
+                                      _Referencia = operaciones.NoReferencia,
+                                      _TagCuenta = operaciones.Numero
+
+                                  }).ToList();
 
                 //var total = ListaCompleta.Sum(x => x._Monto);
                 double total = 0;
@@ -2608,6 +2878,22 @@ namespace PuntoDeVenta.Controllers
                 {
                     total += Convert.ToDouble(item2._Monto);
                 }
+
+                foreach (var item in list_serbi)
+                {
+                    switch (item._Concepto)
+                    {
+                        case "CUENTA PAGAR":
+                        case "TAG PAGAR":
+                            total += Convert.ToDouble(item._Monto);
+                            break;
+                        case "CUENTA REVERSAR":
+                        case "TAG REVERSAR":
+                            total -= Convert.ToDouble(item._Monto);
+                            break;
+                    }
+                }
+
                 List<Movimientos> List = new List<Movimientos>();
 
                 int id = 1;
@@ -2627,6 +2913,29 @@ namespace PuntoDeVenta.Controllers
                         NomCliente = "",
                         TypeCuenta = item._TypeCuenta,
                         CobroTag = Convert.ToDouble(item._CobroTag).ToString("C2", culture).Replace("$", "Q"),
+                        Referencia = item._Referencia,
+                        TotalMonetarioMovimientos = Convert.ToDouble(total).ToString("C2", culture).Replace("$", "Q")
+
+
+                    });
+                    id++;
+                }
+
+                foreach (var item in list_serbi)
+                {
+                    List.Add(new Movimientos
+                    {
+                        Id = id,
+                        Concepto = item._Concepto,
+                        TipoPago = item._TipoPago,
+                        Monto = Convert.ToDouble(item._Monto).ToString("C2", culture).Replace("$", "Q"),
+                        Fecha = Convert.ToString(item._Fecha),
+                        Tag = item._Tag,
+                        TagCuenta = item._TagCuenta,
+                        Cuenta = "",
+                        NomCliente = "",
+                        TypeCuenta = item._TypeCuenta,
+                        CobroTag = item._CobroTag,
                         Referencia = item._Referencia,
                         TotalMonetarioMovimientos = Convert.ToDouble(total).ToString("C2", culture).Replace("$", "Q")
 
@@ -3477,10 +3786,7 @@ namespace PuntoDeVenta.Controllers
                         }
 
                         RecargasTotales += Convert.ToDouble(db.OperacionesCajeros.Where(x => x.DateTOperacion >= fecha1 && x.DateTOperacion < fecha2 && x.Numero == item.cuentaId).Sum(x => x.Monto));
-
-
-
-
+                        RecargasTotales += Convert.ToDouble(db.OperacionesSerBIpagos.Where(x => x.DateTOpSerBI >= fecha1 && x.DateTOpSerBI < fecha2 && x.Numero == item.cuentaId && x.StatusOperacion == true).Sum(x => x.SaldoModificar.Value));
 
                     }
                     if (item.typeCuenta == "Individual")
@@ -3530,7 +3836,7 @@ namespace PuntoDeVenta.Controllers
                         var Tag = db.Tags.Where(x => x.CuentaId == item.Id).ToList();
                         string NumTAG = Tag[0].NumTag;
                         RecargasTotales += Convert.ToDouble(db.OperacionesCajeros.Where(x => x.DateTOperacion >= fecha1 && x.DateTOperacion < fecha2 && x.Numero == NumTAG).Sum(x => x.Monto));
-
+                        RecargasTotales += Convert.ToDouble(db.OperacionesSerBIpagos.Where(x => x.DateTOpSerBI >= fecha1 && x.DateTOpSerBI < fecha2 && x.Numero == NumTAG).Sum(x => x.SaldoModificar.Value));
 
 
                     }
