@@ -2255,6 +2255,8 @@ namespace PuntoDeVenta.Controllers
 
                                          }).ToList();
 
+
+
                     var total = ListaCompleta.Sum(x => x._Monto);
 
                     List<Movimientos> List = new List<Movimientos>();

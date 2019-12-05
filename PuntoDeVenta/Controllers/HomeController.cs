@@ -381,6 +381,8 @@ namespace PuntoDeVenta.Controllers
                 var date = model.Date;
                 var prop = new List<Properties>();
                 var result = db.CortesCajeros.Where(x => DbFunctions.TruncateTime(x.DateTApertura) == date && x.DateTCierre != null).ToList();
+                ///FIRST OR DEFAULT NUM AUTORI PROVEEDOR ARREGLAR CUANDO SEAN MAS BANCOS U OPERACIONES DE EXTERNOS
+                var rows_serbipagos = db.OperacionesSerBIpagos.Where(x => DbFunctions.TruncateTime(x.DateTOpSerBI) == date).ToList();
 
                 if (result.Any())
                 {
@@ -397,13 +399,29 @@ namespace PuntoDeVenta.Controllers
                                 NumCorte = item.NumCorte,
                                 NomCajero = user.Email,
                                 DateInicio = item.DateTApertura,
-                                DateFin = item.DateTCierre.Value
+                                DateFin = item.DateTCierre.Value,
+                                Type = "PV"
                             });
                         }
                     }
 
-                    model.PropertiesList = prop;
                 }
+
+                ///FIRST OR DEFAULT NUM AUTORI PROVEEDOR ARREGLAR CUANDO SEAN MAS BANCOS U OPERACIONES DE EXTERNOS
+                if (rows_serbipagos.Any())
+                {
+                    prop.Add(new Properties
+                    {
+                        Id = null,
+                        NumCorte = "-",
+                        NomCajero = rows_serbipagos.FirstOrDefault().NumAutoriProveedor,
+                        DateInicio = date,
+                        DateFin = date.AddHours(23).AddMinutes(59).AddSeconds(59),
+                        Type = "EL"
+                    });
+                }
+
+                model.PropertiesList = prop;
 
                 return View(model);
             }
@@ -415,91 +433,175 @@ namespace PuntoDeVenta.Controllers
 
         // POST: ReporteCajero
         [AllowAnonymous]
-        public async Task<ActionResult> ReporteCajero(long? id)
+        public async Task<ActionResult> ReporteCajero(long? id, string type, string date)
         {
             try
             {
-                if (id == null)
-                {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                }
-
-                var result = await db.CortesCajeros.FindAsync(id);
-
-                if (result == null)
-                {
-                    return HttpNotFound();
-                }
-
-                // Cuando agreguemos el username cambiamos en el obj nomcajero a UserName del UserManager
-                var _UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
-                var user = await _UserManager.FindByIdAsync(result.IdCajero);
-
                 var nfi = new NumberFormatInfo { NumberDecimalSeparator = ".", NumberGroupSeparator = "," };
-
-                var encabezado = new EncabezadoReporteCajero
-                {
-                    Cajero = user.Email,
-                    NumCorte = result.NumCorte,
-                    HoraI = result.DateTApertura.ToString("dd/MM/yyyy HH:mm:ss"),
-                    HoraF = result.DateTCierre.Value.ToString("dd/MM/yyyy HH:mm:ss"),
-                    TotalMonto = result.MontoTotal.Value.ToString("#,##0.00", nfi),
-                    Comentario = result.Comentario,
-                };
-
-                double ventatags = 0.0d;
+                var model = new List<object>();
                 double recargas = 0.0d;
 
-                var movimientos = await db.OperacionesCajeros.Where(x => x.CorteId == result.Id).ToListAsync();
-
-                var model = new List<object>();
-
-                foreach (var item in movimientos)
+                switch (type)
                 {
-                    recargas += item.Monto ?? 0;
-                    ventatags += item.CobroTag ?? 0;
+                    case "PV":
+                        if (id == null)
+                        {
+                            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                        }
 
-                    switch (item.Tipo)
-                    {
-                        case "TAG":
-                            var foundclientetag = await (from cliente in db.Clientes
-                                                         join cuentas in db.CuentasTelepeajes on cliente.Id equals cuentas.ClienteId
-                                                         join tags in db.Tags on cuentas.Id equals tags.CuentaId
-                                                         where tags.NumTag == item.Numero
-                                                         select new
-                                                         {
-                                                             cliente.NumCliente,
-                                                             cuentas.NumCuenta,
-                                                             tags.NumTag
-                                                         }
-                                                    ).FirstOrDefaultAsync();
+                        var result = await db.CortesCajeros.FindAsync(id);
 
-                            if (foundclientetag != null)
+                        if (result == null)
+                        {
+                            return HttpNotFound();
+                        }
+
+                        // Cuando agreguemos el username cambiamos en el obj nomcajero a UserName del UserManager
+                        var _UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(app));
+                        var user = await _UserManager.FindByIdAsync(result.IdCajero);
+
+                        var encabezado = new EncabezadoReporteCajero
+                        {
+                            Cajero = user.Email,
+                            NumCorte = result.NumCorte,
+                            HoraI = result.DateTApertura.ToString("dd/MM/yyyy HH:mm:ss"),
+                            HoraF = result.DateTCierre.Value.ToString("dd/MM/yyyy HH:mm:ss"),
+                            TotalMonto = result.MontoTotal.Value.ToString("#,##0.00", nfi),
+                            Comentario = result.Comentario,
+                        };
+
+                        double ventatags = 0.0d;
+
+                        var movimientos = await db.OperacionesCajeros.Where(x => x.CorteId == result.Id).ToListAsync();
+
+                        foreach (var item in movimientos)
+                        {
+                            recargas += item.Monto ?? 0;
+                            ventatags += item.CobroTag ?? 0;
+
+                            switch (item.Tipo)
                             {
-                                model.Add(new
-                                {
-                                    Concepto = item.Concepto,
-                                    TipoPago = item.TipoPago,
-                                    Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
-                                    DataTOperacion = item.DateTOperacion.ToString(),
-                                    CobroTag = item.CobroTag,
-                                    NumeroAdicional = "-",
-                                    NumCliente = foundclientetag.NumCliente,
-                                    NumCuenta = foundclientetag.NumCuenta,
-                                    NumTag = foundclientetag.NumTag,
-                                    Unidad = item.Concepto == "TAG ACTIVADO" || item.Concepto == "TAG TRASPASO" ? "1" : "-",
-                                    NoReferencia = item.NoReferencia,
-                                });
-                            }
-                            else
-                            {
-                                // LISTA NEGRA
-                                var foundblacklist = await (from list in db.ListaNegras
-                                                            where list.Numero == item.Numero
-                                                            select list).FirstOrDefaultAsync();
+                                case "TAG":
+                                    var foundclientetag = await (from cliente in db.Clientes
+                                                                 join cuentas in db.CuentasTelepeajes on cliente.Id equals cuentas.ClienteId
+                                                                 join tags in db.Tags on cuentas.Id equals tags.CuentaId
+                                                                 where tags.NumTag == item.Numero
+                                                                 select new
+                                                                 {
+                                                                     cliente.NumCliente,
+                                                                     cuentas.NumCuenta,
+                                                                     tags.NumTag
+                                                                 }
+                                                            ).FirstOrDefaultAsync();
 
-                                if (foundblacklist != null)
-                                {
+                                    if (foundclientetag != null)
+                                    {
+                                        model.Add(new
+                                        {
+                                            Concepto = item.Concepto,
+                                            TipoPago = item.TipoPago,
+                                            Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
+                                            DataTOperacion = item.DateTOperacion.ToString(),
+                                            CobroTag = item.CobroTag,
+                                            NumeroAdicional = "-",
+                                            NumCliente = foundclientetag.NumCliente,
+                                            NumCuenta = foundclientetag.NumCuenta,
+                                            NumTag = foundclientetag.NumTag,
+                                            Unidad = item.Concepto == "TAG ACTIVADO" || item.Concepto == "TAG TRASPASO" ? "1" : "-",
+                                            NoReferencia = item.NoReferencia,
+                                        });
+                                    }
+                                    else
+                                    {
+                                        // LISTA NEGRA
+                                        var foundblacklist = await (from list in db.ListaNegras
+                                                                    where list.Numero == item.Numero
+                                                                    select list).FirstOrDefaultAsync();
+
+                                        if (foundblacklist != null)
+                                        {
+                                            model.Add(new
+                                            {
+                                                Concepto = item.Concepto,
+                                                TipoPago = item.TipoPago,
+                                                Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
+                                                DataTOperacion = item.DateTOperacion.ToString(),
+                                                CobroTag = item.CobroTag,
+                                                NumeroAdicional = "-",
+                                                NumCliente = foundblacklist.NumCliente,
+                                                NumCuenta = foundblacklist.NumCuenta,
+                                                NumTag = foundblacklist.Numero,
+                                                Unidad = "-",
+                                                NoReferencia = item.NoReferencia,
+                                            });
+                                        }
+                                        else
+                                        {
+                                            model.Add(new
+                                            {
+                                                Concepto = item.Concepto,
+                                                TipoPago = item.TipoPago,
+                                                Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
+                                                DataTOperacion = item.DateTOperacion.ToString(),
+                                                CobroTag = item.CobroTag,
+                                                NumeroAdicional = "-",
+                                                NumCliente = "-",
+                                                NumCuenta = "-",
+                                                NumTag = item.Numero,
+                                                Unidad = item.Concepto == "TAG ACTIVADO" || item.Concepto == "TAG TRASPASO" ? "1" : "-",
+                                                NoReferencia = item.NoReferencia,
+                                            });
+                                        }
+                                    }
+
+                                    break;
+                                case "CUENTA":
+                                    var foundclientecuen = await (from cliente in db.Clientes
+                                                                  join cuentas in db.CuentasTelepeajes on cliente.Id equals cuentas.ClienteId
+                                                                  where cuentas.NumCuenta == item.Numero
+                                                                  select new
+                                                                  {
+                                                                      cliente.NumCliente,
+                                                                      cuentas.NumCuenta,
+                                                                  }
+                                                            ).FirstOrDefaultAsync();
+
+                                    if (foundclientecuen != null)
+                                    {
+                                        model.Add(new
+                                        {
+                                            Concepto = item.Concepto,
+                                            TipoPago = item.TipoPago,
+                                            Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
+                                            DataTOperacion = item.DateTOperacion.ToString(),
+                                            CobroTag = item.CobroTag,
+                                            NumeroAdicional = "-",
+                                            NumCliente = foundclientecuen.NumCliente,
+                                            NumCuenta = foundclientecuen.NumCuenta,
+                                            NumTag = "-",
+                                            Unidad = "-",
+                                            NoReferencia = item.NoReferencia,
+                                        });
+                                    }
+                                    else
+                                    {
+                                        model.Add(new
+                                        {
+                                            Concepto = item.Concepto,
+                                            TipoPago = item.TipoPago,
+                                            Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
+                                            DataTOperacion = item.DateTOperacion.ToString(),
+                                            CobroTag = item.CobroTag,
+                                            NumeroAdicional = "-",
+                                            NumCliente = "-",
+                                            NumCuenta = item.Numero,
+                                            NumTag = "-",
+                                            Unidad = "-",
+                                            NoReferencia = item.NoReferencia,
+                                        });
+                                    }
+                                    break;
+                                default:
                                     model.Add(new
                                     {
                                         Concepto = item.Concepto,
@@ -507,111 +609,219 @@ namespace PuntoDeVenta.Controllers
                                         Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
                                         DataTOperacion = item.DateTOperacion.ToString(),
                                         CobroTag = item.CobroTag,
-                                        NumeroAdicional = "-",
-                                        NumCliente = foundblacklist.NumCliente,
-                                        NumCuenta = foundblacklist.NumCuenta,
-                                        NumTag = foundblacklist.Numero,
+                                        NumeroAdicional = item.Numero,
+                                        NumCliente = "-",
+                                        NumCuenta = "-",
+                                        NumTag = "-",
                                         Unidad = "-",
                                         NoReferencia = item.NoReferencia,
                                     });
-                                }
-                                else
-                                {
-                                    model.Add(new
+                                    break;
+                            }
+                        }
+
+                        encabezado.SubtotalRecar = recargas.ToString("#,##0.00", nfi);
+                        encabezado.VentaTag = ventatags.ToString("#,##0.00", nfi);
+
+                        using (var client = new HttpClient())
+                        {
+                            string json = JsonConvert.SerializeObject(model);
+                            HttpContent postContent = new StringContent(json, Encoding.UTF8, "application/json");
+                            var response = await client.PostAsync(new Uri("http://localhost:56342/api/cajero?authenticationToken=abcxyz"), postContent);
+                            var message = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
+                        }
+
+                        return View("ReportViewerCajero", encabezado);
+
+                    case "EL":
+                        ///FIRST OR DEFAULT NUM AUTORI PROVEEDOR ARREGLAR CUANDO SEAN MAS BANCOS U OPERACIONES DE EXTERNOS
+                        DateTime fecha_movimientos = DateTime.Parse(date);
+                        var movimientos_serbi = await db.OperacionesSerBIpagos.Where(x => DbFunctions.TruncateTime(x.DateTOpSerBI) == fecha_movimientos).ToListAsync();
+
+                        var encabezado_serbi = new EncabezadoReporteCajero
+                        {
+                            Cajero = movimientos_serbi.FirstOrDefault().NumAutoriProveedor,
+                            NumCorte = "-",
+                            HoraI = fecha_movimientos.ToString("dd/MM/yyyy HH:mm:ss"),
+                            HoraF = fecha_movimientos.AddHours(23).AddMinutes(59).AddSeconds(59).ToString("dd/MM/yyyy HH:mm:ss"),
+                            Comentario = "-",
+                            VentaTag = "0.00"
+                        };
+
+                        foreach (var item in movimientos_serbi)
+                        {
+                            switch (item.Tipo)
+                            {
+                                case "CUENTA":
+                                    switch (item.Concepto)
                                     {
-                                        Concepto = item.Concepto,
-                                        TipoPago = item.TipoPago,
-                                        Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
-                                        DataTOperacion = item.DateTOperacion.ToString(),
-                                        CobroTag = item.CobroTag,
-                                        NumeroAdicional = "-",
-                                        NumCliente = "-",
-                                        NumCuenta = "-",
-                                        NumTag = item.Numero,
-                                        Unidad = item.Concepto == "TAG ACTIVADO" || item.Concepto == "TAG TRASPASO" ? "1" : "-",
-                                        NoReferencia = item.NoReferencia,
-                                    });
-                                }
-                            }
+                                        case "CUENTA PAGAR":
+                                            var foundclientecuen = await (from cliente in db.Clientes
+                                                                          join cuentas in db.CuentasTelepeajes on cliente.Id equals cuentas.ClienteId
+                                                                          where cuentas.NumCuenta == item.Numero
+                                                                          select new
+                                                                          {
+                                                                              cliente.NumCliente,
+                                                                              cuentas.NumCuenta,
+                                                                          }
+                                                           ).FirstOrDefaultAsync();
 
-                            break;
-                        case "CUENTA":
-                            var foundclientecuen = await (from cliente in db.Clientes
-                                                          join cuentas in db.CuentasTelepeajes on cliente.Id equals cuentas.ClienteId
-                                                          where cuentas.NumCuenta == item.Numero
-                                                          select new
-                                                          {
-                                                              cliente.NumCliente,
-                                                              cuentas.NumCuenta,
-                                                          }
-                                                    ).FirstOrDefaultAsync();
+                                            model.Add(new
+                                            {
+                                                Concepto = item.Concepto,
+                                                TipoPago = "PEM",
+                                                Monto = item.SaldoModificar.HasValue ? item.SaldoModificar.Value.ToString("#,##0.00", nfi) : null,
+                                                DataTOperacion = item.DateTOpSerBI.ToString(),
+                                                CobroTag = "-",
+                                                NumeroAdicional = "-",
+                                                NumCliente = foundclientecuen.NumCliente,
+                                                NumCuenta = foundclientecuen.NumCuenta,
+                                                NumTag = "-",
+                                                Unidad = "-",
+                                                NoReferencia = item.NoReferencia,
+                                            });
 
-                            if (foundclientecuen != null)
-                            {
-                                model.Add(new
-                                {
-                                    Concepto = item.Concepto,
-                                    TipoPago = item.TipoPago,
-                                    Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
-                                    DataTOperacion = item.DateTOperacion.ToString(),
-                                    CobroTag = item.CobroTag,
-                                    NumeroAdicional = "-",
-                                    NumCliente = foundclientecuen.NumCliente,
-                                    NumCuenta = foundclientecuen.NumCuenta,
-                                    NumTag = "-",
-                                    Unidad = "-",
-                                    NoReferencia = item.NoReferencia,
-                                });
+                                            recargas += item.SaldoModificar ?? 0;
+                                            break;
+                                        case "CUENTA REVERSAR":
+                                            model.Add(new
+                                            {
+                                                Concepto = item.Concepto,
+                                                TipoPago = "PEM",
+                                                Monto = item.SaldoModificar.HasValue ? "-" + item.SaldoModificar.Value.ToString("#,##0.00", nfi) : null,
+                                                DataTOperacion = item.DateTOpSerBI.ToString(),
+                                                CobroTag = "-",
+                                                NumeroAdicional = item.Numero,
+                                                NumCliente = "-",
+                                                NumCuenta = "-",
+                                                NumTag = "-",
+                                                Unidad = "-",
+                                                NoReferencia = item.NoReferencia,
+                                            });
+
+                                            recargas -= item.SaldoModificar ?? 0;
+                                            break;
+                                    }
+                                    break;
+                                case "TAG":
+                                    var foundclientetag = await (from cliente in db.Clientes
+                                                                 join cuentas in db.CuentasTelepeajes on cliente.Id equals cuentas.ClienteId
+                                                                 join tags in db.Tags on cuentas.Id equals tags.CuentaId
+                                                                 where tags.NumTag == item.Numero
+                                                                 select new
+                                                                 {
+                                                                     cliente.NumCliente,
+                                                                     cuentas.NumCuenta,
+                                                                     tags.NumTag
+                                                                 }
+                                                           ).FirstOrDefaultAsync();
+                                    switch (item.Concepto)
+                                    {
+                                        case "TAG PAGAR":
+                                            if (foundclientetag != null)
+                                            {
+                                                model.Add(new
+                                                {
+                                                    Concepto = item.Concepto,
+                                                    TipoPago = "PEM",
+                                                    Monto = item.SaldoModificar.HasValue ? item.SaldoModificar.Value.ToString("#,##0.00", nfi) : null,
+                                                    DataTOperacion = item.DateTOpSerBI.ToString(),
+                                                    CobroTag = "-",
+                                                    NumeroAdicional = "-",
+                                                    NumCliente = foundclientetag.NumCliente,
+                                                    NumCuenta = foundclientetag.NumCuenta,
+                                                    NumTag = foundclientetag.NumTag,
+                                                    Unidad = "-",
+                                                    NoReferencia = item.NoReferencia,
+                                                });
+                                            }
+                                            else
+                                            {
+                                                // LISTA NEGRA
+                                                var foundblacklist = await (from list in db.ListaNegras
+                                                                            where list.Numero == item.Numero
+                                                                            select list).FirstOrDefaultAsync();
+
+                                                if (foundblacklist != null)
+                                                {
+                                                    model.Add(new
+                                                    {
+                                                        Concepto = item.Concepto,
+                                                        TipoPago = "PEM",
+                                                        Monto = item.SaldoModificar.HasValue ? item.SaldoModificar.Value.ToString("#,##0.00", nfi) : null,
+                                                        DataTOperacion = item.DateTOpSerBI.ToString(),
+                                                        CobroTag = "-",
+                                                        NumeroAdicional = "-",
+                                                        NumCliente = foundblacklist.NumCliente,
+                                                        NumCuenta = foundblacklist.NumCuenta,
+                                                        NumTag = foundblacklist.Numero,
+                                                        Unidad = "-",
+                                                        NoReferencia = item.NoReferencia,
+                                                    });
+                                                }
+                                                else
+                                                {
+                                                    model.Add(new
+                                                    {
+                                                        Concepto = item.Concepto,
+                                                        TipoPago = "PEM",
+                                                        Monto = item.SaldoModificar.HasValue ? item.SaldoModificar.Value.ToString("#,##0.00", nfi) : null,
+                                                        DataTOperacion = item.DateTOpSerBI.ToString(),
+                                                        CobroTag = "-",
+                                                        NumeroAdicional = item.Numero,
+                                                        NumCliente = "-",
+                                                        NumCuenta = "-",
+                                                        NumTag = "-",
+                                                        Unidad = "-",
+                                                        NoReferencia = item.NoReferencia,
+                                                    });
+                                                }
+                                            }
+
+                                            recargas += item.SaldoModificar ?? 0;
+                                            break;
+                                        case "TAG REVERSAR":
+                                            model.Add(new
+                                            {
+                                                Concepto = item.Concepto,
+                                                TipoPago = "PEM",
+                                                Monto = item.SaldoModificar.HasValue ? "-" + item.SaldoModificar.Value.ToString("#,##0.00", nfi) : null,
+                                                DataTOperacion = item.DateTOpSerBI.ToString(),
+                                                CobroTag = "-",
+                                                NumeroAdicional = item.Numero,
+                                                NumCliente = "-",
+                                                NumCuenta = "-",
+                                                NumTag = "-",
+                                                Unidad = "-",
+                                                NoReferencia = item.NoReferencia,
+                                            });
+
+                                            recargas -= item.SaldoModificar ?? 0;
+                                            break;
+                                    }
+                                    break;
+                                default:
+                                    break;
                             }
-                            else
-                            {
-                                model.Add(new
-                                {
-                                    Concepto = item.Concepto,
-                                    TipoPago = item.TipoPago,
-                                    Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
-                                    DataTOperacion = item.DateTOperacion.ToString(),
-                                    CobroTag = item.CobroTag,
-                                    NumeroAdicional = "-",
-                                    NumCliente = "-",
-                                    NumCuenta = item.Numero,
-                                    NumTag = "-",
-                                    Unidad = "-",
-                                    NoReferencia = item.NoReferencia,
-                                });
-                            }
-                            break;
-                        default:
-                            model.Add(new
-                            {
-                                Concepto = item.Concepto,
-                                TipoPago = item.TipoPago,
-                                Monto = item.Monto.HasValue ? item.Monto.Value.ToString("#,##0.00", nfi) : null,
-                                DataTOperacion = item.DateTOperacion.ToString(),
-                                CobroTag = item.CobroTag,
-                                NumeroAdicional = item.Numero,
-                                NumCliente = "-",
-                                NumCuenta = "-",
-                                NumTag = "-",
-                                Unidad = "-",
-                                NoReferencia = item.NoReferencia,
-                            });
-                            break;
-                    }
+                        }
+
+                        //TotalMonto
+                        //SubtotalRecar
+                        encabezado_serbi.TotalMonto = recargas.ToString("#,##0.00", nfi);
+                        encabezado_serbi.SubtotalRecar = recargas.ToString("#,##0.00", nfi);
+
+                        using (var client = new HttpClient())
+                        {
+                            string json = JsonConvert.SerializeObject(model);
+                            HttpContent postContent = new StringContent(json, Encoding.UTF8, "application/json");
+                            var response = await client.PostAsync(new Uri("http://localhost:56342/api/cajero?authenticationToken=abcxyz"), postContent);
+                            var message = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
+                        }
+
+                        return View("ReportViewerCajero", encabezado_serbi);
+                    default:
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
-
-                encabezado.SubtotalRecar = recargas.ToString("#,##0.00", nfi);
-                encabezado.VentaTag = ventatags.ToString("#,##0.00", nfi);
-
-                using (var client = new HttpClient())
-                {
-                    string json = JsonConvert.SerializeObject(model);
-                    HttpContent postContent = new StringContent(json, Encoding.UTF8, "application/json");
-                    var response = await client.PostAsync(new Uri("http://10.1.10.109:56342/api/cajero?authenticationToken=abcxyz"), postContent);
-                    var message = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
-                }
-
-                return View("ReportViewerCajero", encabezado);
             }
             catch (Exception ex)
             {

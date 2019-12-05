@@ -22,6 +22,7 @@ namespace PuntoDeVenta.Models
         public string NomCajero { get; set; }
         public DateTime DateInicio { get; set; }
         public DateTime DateFin { get; set; }
+        public string Type { get; set; }
     }
 
     [NotMapped]

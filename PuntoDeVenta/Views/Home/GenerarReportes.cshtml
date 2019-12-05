@@ -65,9 +65,10 @@
                                 <tr>
                                     <th scope="row">@(++i)</th>
                                     <td class="td_1">@item.Id</td>
+                                    <td class="td_2">@item.Type</td>
                                     <td>@item.NumCorte</td>
                                     <td>@item.NomCajero</td>
-                                    <td>@item.DateInicio</td>
+                                    <td class="td_3">@item.DateInicio</td>
                                     <td>@item.DateFin</td>
                                     <td><button type="button" class="clickme btn btn-info">Generar</button></td>
                                 </tr>
@@ -130,6 +131,7 @@
     <script>
         $(document).ready(function () {
             $(".td_1").hide();
+            $(".td_2").hide();
             // Set form variable
 
             $(".clickme").on("click", function () {
@@ -142,6 +144,8 @@
                 //});
                 //alert($row.find(".td_1").html());
                 $('#form12').append('<input type="hidden" name="id" value="' + $row.find(".td_1").html() + '" />');
+                $('#form12').append('<input type="hidden" name="type" value="' + $row.find(".td_2").html() + '" />');
+                $('#form12').append('<input type="hidden" name="date" value="' + $row.find(".td_3").html() + '" />');
                 $("#form12").submit();
             });
         });
@@ -172,7 +176,7 @@
                 }
             }
         });
-                                                                                                // puedes invocar métodos en JavaScript tamibién
-                                                                                                //example2.greet() // -> 'Hello Vue.js!'
+                                                                                                    // puedes invocar métodos en JavaScript tamibién
+                                                                                                    //example2.greet() // -> 'Hello Vue.js!'
     </script>
 }
