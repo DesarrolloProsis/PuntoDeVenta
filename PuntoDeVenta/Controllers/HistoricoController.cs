@@ -3786,7 +3786,9 @@ namespace PuntoDeVenta.Controllers
                         }
 
                         RecargasTotales += Convert.ToDouble(db.OperacionesCajeros.Where(x => x.DateTOperacion >= fecha1 && x.DateTOperacion < fecha2 && x.Numero == item.cuentaId).Sum(x => x.Monto));
-                        RecargasTotales += Convert.ToDouble(db.OperacionesSerBIpagos.Where(x => x.DateTOpSerBI >= fecha1 && x.DateTOpSerBI < fecha2 && x.Numero == item.cuentaId && x.StatusOperacion == true).Sum(x => x.SaldoModificar.Value));
+                        var serbi_mov = db.OperacionesSerBIpagos.Where(x => x.DateTOpSerBI >= fecha1 && x.DateTOpSerBI < fecha2 && x.Numero == item.cuentaId && x.StatusOperacion == true).ToList();
+                        if (serbi_mov.Any())
+                            RecargasTotales += Convert.ToDouble(serbi_mov.Sum(x => x.SaldoModificar.Value));
 
                     }
                     if (item.typeCuenta == "Individual")
@@ -3836,7 +3838,9 @@ namespace PuntoDeVenta.Controllers
                         var Tag = db.Tags.Where(x => x.CuentaId == item.Id).ToList();
                         string NumTAG = Tag[0].NumTag;
                         RecargasTotales += Convert.ToDouble(db.OperacionesCajeros.Where(x => x.DateTOperacion >= fecha1 && x.DateTOperacion < fecha2 && x.Numero == NumTAG).Sum(x => x.Monto));
-                        RecargasTotales += Convert.ToDouble(db.OperacionesSerBIpagos.Where(x => x.DateTOpSerBI >= fecha1 && x.DateTOpSerBI < fecha2 && x.Numero == NumTAG).Sum(x => x.SaldoModificar.Value));
+                        var serbi_mov = db.OperacionesSerBIpagos.Where(x => x.DateTOpSerBI >= fecha1 && x.DateTOpSerBI < fecha2 && x.Numero == NumTAG && x.StatusOperacion == true).ToList();
+                        if (serbi_mov.Any())
+                            RecargasTotales += Convert.ToDouble(serbi_mov.Sum(x => x.SaldoModificar.Value));
 
 
                     }

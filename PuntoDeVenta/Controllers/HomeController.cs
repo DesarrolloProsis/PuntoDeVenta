@@ -443,6 +443,7 @@ namespace PuntoDeVenta.Controllers
 
                 switch (type)
                 {
+                    case null:
                     case "PV":
                         if (id == null)
                         {
